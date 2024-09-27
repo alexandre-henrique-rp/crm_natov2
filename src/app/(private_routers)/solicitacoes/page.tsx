@@ -104,6 +104,7 @@ export default function Solicitacao() {
   );
 }
 
+// 'use server'; 
 // export const metadata: Metadata = {
 //   title: "SOLICITAÇÕES",
 // };
