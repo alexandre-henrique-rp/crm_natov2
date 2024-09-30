@@ -19,10 +19,16 @@ import CardGridObs from "./Grid/CardGridObs";
 import CardGridHistorico from "./Grid/CardGridHistorico";
 import CardGridDistrato from "./Grid/CardGridDistrato";
 import CardGridUsuario from "./Grid/CardGridRegisterUsuario";
-import { Grid } from "@chakra-ui/react";
+import { Card, Grid } from "@chakra-ui/react";
 import CardGridCorretor from "./Grid/CardGridCorreto";
 import { CardGridUserConstrutora } from "./Grid/CardGridUserConstrutora";
 import { CardGridTagsAlert } from "./Grid/CardGridTagsAlert";
+import { CardGridUserEmpreedimento } from "./Grid/CardGridUserEmpreedimento";
+import { CardGridUserFinanceira} from "./Grid/CardGridUserFinanceira";
+import { CardGridUserCargo } from "./Grid/CardGridUserCargo";
+import { CardGridUserHierarquia } from "./Grid/CardGridUserHierarquia";
+import { CardGridUserSenha } from "./Grid/CardUserSenha";
+import { CardGridUserConfirSenha } from "./Grid/CardGridUserConfirSenha";
 
 
 
@@ -54,6 +60,7 @@ import { CardGridTagsAlert } from "./Grid/CardGridTagsAlert";
  * @property {CardGridUserConstrutora} GridUserConstrutora - criar e receber usuario construtora
  * @property {CardGridUserCorretor} GridUserCorretor - criar e receber usuario corretor
  * @property {CardGridTagsAlert} GridTagsAlert - criar e receber tags
+ * @property {CardGridUserEmpreedimento} GridUserEmpreedimento - criar e receber usuario empreendimento
   * 
  */
 export const CardCreateUpdate = {
@@ -81,4 +88,10 @@ export const CardCreateUpdate = {
   GridCorretor: CardGridCorretor,
   GridUserConstrutora: CardGridUserConstrutora,
   GridTagsAlert: CardGridTagsAlert,
+  GridUserEmpreendimento: CardGridUserEmpreedimento,
+  GridUserFinanceiro: CardGridUserFinanceira,
+  GridUserCargo: CardGridUserCargo,
+  GridUserHierarquia: CardGridUserHierarquia,
+  GridUserSenha : CardGridUserSenha,
+  GridUserConfirSenha : CardGridUserConfirSenha,
 };

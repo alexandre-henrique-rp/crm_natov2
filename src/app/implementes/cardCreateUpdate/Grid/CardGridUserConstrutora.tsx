@@ -1,5 +1,6 @@
 import { Box, BoxProps, FormLabel } from "@chakra-ui/react";
-import { SelectUserconstrutora } from "../dropdow/selectUserconstrutora";
+import { SelectUserConstrutora } from "../dropdow/selectUserconstrutora";
+import React from "react";
 
 interface CardGridUserConstrutoraProps extends BoxProps {
   UserConstrutora?: number | any;
@@ -13,9 +14,9 @@ export function CardGridUserConstrutora({
     <>
       <Box {...props}>
         <FormLabel fontSize="sm" fontWeight="md" m={0}>
-          Usuário
+          Construtora
         </FormLabel>
-        <SelectUserconstrutora setValue={UserConstrutora} />
+        <SelectUserConstrutora setValue={UserConstrutora} />
       </Box>
     </>
   );

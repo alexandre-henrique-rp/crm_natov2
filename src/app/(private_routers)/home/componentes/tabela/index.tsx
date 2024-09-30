@@ -155,12 +155,11 @@ export function Tabela({
 
     const regexExpirado = new RegExp("\\bexpirado\\b");
     const AssDocExp = regexExpirado.test(item.ass_doc);
-
     return (
       <Tr key={item.id} bg={colors} color={fontColor}>
         <Td>
           <Flex>
-            {item.tag.length > 0 &&
+            {item?.tag.length > 0 &&
             item.ativo &&
             !item.distrato &&
             item.Andamento !== "EMITIDO" ? (

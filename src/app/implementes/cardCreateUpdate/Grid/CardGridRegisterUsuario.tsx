@@ -1,5 +1,6 @@
 import { Box, BoxProps, FormLabel, GridItem } from "@chakra-ui/react";
 import InputUser from "../imputs/imputUsuario";
+import React from "react";
 
 interface CardGridUsuarioProps extends BoxProps {
   Usuario?: string;
