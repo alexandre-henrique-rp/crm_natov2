@@ -61,15 +61,17 @@ export function Tabela({
       return null;
     }
 
-    // console.log(item);
-
+    // console.log(item.id);
+    
     // Data de criação (createdAt) em UTC
     const dtSolicitacao = new Date(item.createdAt).getTime();
     // console.log(
     //   "🚀 ~ downTimeInDays ~ new Date(item.createdAt):",
     //   new Date(item.createdAt).toISOString()
     // );
-
+    // console.log(item.dt_aprovacao);
+    // console.log(item.hr_aprovacao);
+    
     let dtAprovacao: number;
 
     // Se temos data e hora de aprovação, combinamos ambas
@@ -77,6 +79,7 @@ export function Tabela({
       // Separando a data e a hora
       const dataAprovacao = item.dt_aprovacao.split("T")[0]; // Pegando apenas a parte da data
       const horaAprovacao = item.hr_aprovacao.split("T")[1].split("Z")[0]; // Pegando apenas a parte da hora, removendo o "Z"
+      // console.log("🚀 ~ downTimeInDays ~ horaAprovacao:", horaAprovacao)
 
       // Combinar data e hora em UTC
       const dataHoraAprovacao = new Date(`${dataAprovacao}T${horaAprovacao}Z`); // Adicionando "Z" para garantir que seja UTC

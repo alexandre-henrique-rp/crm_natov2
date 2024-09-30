@@ -20,8 +20,6 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
         if (!session) {
             return NextResponse.redirect(new URL("/login", req.url));
         }
-
-
         return NextResponse.next();
     }
 
@@ -51,18 +49,5 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
 }
 
 export const config = {
-    matcher: [
-        "/",
-        "/home",
-        "/solicitacoes/:path*",
-        "/solicitacoes",
-        "/redefinicao",
-        "/login",
-        "/register",
-        "/reset-password",
-        "/termos/uso",
-        "/usuario",
-        "/usuario/cadastrar",
-        "/usuario/:path*"
-    ]
+    matcher: '/((?!_next|favicon.ico|public|.*\\..*).*)',
 };

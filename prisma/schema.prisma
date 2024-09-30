@@ -400,6 +400,7 @@ model nato_empresas {
   financeiro          String?               @db.LongText
   atividade           String?               @db.VarChar(100)
   fantasia            String?               @db.VarChar(100)
+  status              Boolean               @default(true)
   nato_empreendimento nato_empreendimento[]
 }
 
