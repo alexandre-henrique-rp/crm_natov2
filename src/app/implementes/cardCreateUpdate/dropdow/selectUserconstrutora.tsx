@@ -15,14 +15,14 @@ import { FaPlus } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { BeatLoader } from "react-spinners";
 
-interface SelectUserconstrutoraProps extends SelectProps {
+interface SelectUserConstrutoraProps extends SelectProps {
   setValue: any;
 }
 
-export function SelectUserconstrutora({
+export function SelectUserConstrutora({
   setValue,
   ...props
-}: SelectUserconstrutoraProps) {
+}: SelectUserConstrutoraProps) {
   const [Construtora, setConstrutora] = useState<number | undefined>();
   const [ConstrutoraData, setConstrutoraData] = useState([]);
   const [ConstrutoraArray, setConstrutoraArray] = useState<any>([]);
@@ -70,7 +70,7 @@ export function SelectUserconstrutora({
           borderRadius={9}
           bg={"blue.200"}
         >
-          <Text fontSize={"0.6rem"}>{e.nome}</Text>
+          <Text fontSize={"0.6rem"}>{e.fantasia}</Text>
           <Icon
             as={RxCross2}
             fontSize={"0.8rem"}
@@ -136,7 +136,7 @@ export function SelectUserconstrutora({
       <Flex gap={2} mt={3} flexWrap="wrap">
         {RendBoard}
       </Flex>
-      <Box>
+      <Box hidden>
         <Input name="construtora" value={ConstrutoraArray} />
       </Box>
     </>

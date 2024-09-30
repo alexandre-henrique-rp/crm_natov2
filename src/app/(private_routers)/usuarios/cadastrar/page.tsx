@@ -2,9 +2,13 @@ import UserCreate from "@/actions/user/create";
 import { BotaoRetorno } from "@/app/componentes/btm_retorno";
 import { CardCreateUpdate } from "@/app/implementes/cardCreateUpdate";
 import UserRegisterProvider from "@/provider/UserRegister";
-import { Box, Divider, Flex, Heading, Input } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, Heading, Spacer } from "@chakra-ui/react";
+import React from "react";
+import BotaoCancelar from "@/app/componentes/btn_cancelar";
+
 
 export default function CadastrarUsuario() {
+
   return (
     <>
       <Flex
@@ -37,36 +41,19 @@ export default function CadastrarUsuario() {
                 <CardCreateUpdate.GridRegisterTel w={"10rem"} />
                 <CardCreateUpdate.GridEmail w={"25rem"} />
                 <CardCreateUpdate.GridUserConstrutora w={"23rem"} />
-
-                <Box>
-                  construtora
-                  <Input type="text" />
-                </Box>
-                <Box>
-                  empreendimento
-                  <Input type="text" />
-                </Box>
-                <Box>
-                  financeiro
-                  <Input type="text" />
-                </Box>
-                <Box>
-                  cargo
-                  <Input type="text" />
-                </Box>
-                <Box>
-                  hierarquia
-                  <Input type="text" />
-                </Box>
-                <Box>
-                  senha
-                  <Input type="text" />
-                </Box>
-                <Box>
-                  confirmar senha
-                  <Input type="text" />
-                </Box>
+                <CardCreateUpdate.GridUserEmpreendimento w={"25rem"} />
+                <CardCreateUpdate.GridUserFinanceiro w={"23rem"} />
+                <CardCreateUpdate.GridUserCargo w={"20rem"} />
+                <CardCreateUpdate.GridUserHierarquia w={"20rem"} />
+                <CardCreateUpdate.GridUserSenha w={"25rem"} />
+                <CardCreateUpdate.GridUserConfirSenha w={"25rem"} />
               </UserRegisterProvider>
+              <Spacer /> 
+              <Button type="submit" mt={2} alignSelf={'center'} colorScheme='green' size='lg'>
+                Salvar
+              </Button>
+              <BotaoCancelar mt={2} alignSelf={'center'} colorScheme='red' variant='outline' size='lg' />
+
             </Flex>
             <Divider my={4} borderColor="gray.300" />
             <Flex w={"full"} justifyContent={"end"}></Flex>

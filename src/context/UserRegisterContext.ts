@@ -5,6 +5,8 @@ type UserRegisterType = {
     setContrutoraCX: (value: number[]) => void,
     EmpreedimentoCX: number[],
     setEmpreedimentoCX: (value: number[]) => void,
+    FinanceiraCX: number[],
+    setFinanceiraCX: (value: number[]) => void,
 }
 
 export const UserRegisterContext = createContext<UserRegisterType>({
@@ -12,4 +14,6 @@ export const UserRegisterContext = createContext<UserRegisterType>({
     setContrutoraCX: () => { },
     EmpreedimentoCX: [],
     setEmpreedimentoCX: () => { },
+    FinanceiraCX: [],
+    setFinanceiraCX: () => { },
 });

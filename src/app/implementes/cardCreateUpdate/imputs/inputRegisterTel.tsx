@@ -1,6 +1,6 @@
 "use client";
 import { TelefoneMaskFunction } from "@/functions/mask_tel";
-import { Box, Input, InputProps, Text } from "@chakra-ui/react";
+import { Box, Input, InputProps, Switch, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { PropagateLoader, PulseLoader } from "react-spinners";
 
@@ -12,7 +12,7 @@ interface InputTel1Props extends InputProps {
 
 export const InputRegisterTel = ({ Index, ...props }: InputTel1Props) => {
   const [tel1, setTel1] = useState<string>("");
-  const [Teste, setTeste] = useState<boolean>(false);
+  const [Teste, setTeste] = useState<number>(0);
   const [Error, setError] = useState<boolean>(false);
   const [Loading, setLoading] = useState<boolean>(false);
 
@@ -51,11 +51,11 @@ export const InputRegisterTel = ({ Index, ...props }: InputTel1Props) => {
         setLoading(true);
         const request = await CheckWhatsApp(valorLimpo);
         if (request) {
-          setTeste(true);
+          setTeste(1);
           setError(false);
           setLoading(false);
         } else {
-          setTeste(false);
+          setTeste(0);
           setError(true);
           setLoading(false);
         }
@@ -83,7 +83,7 @@ export const InputRegisterTel = ({ Index, ...props }: InputTel1Props) => {
           onChange={handleChange}
           onBlur={HandleChekTel}
           placeholder="(__) _____-____"
-          name={`telefone${Index && Index > 0 && Index}`}
+          name={Index > 0 ?`telefone ${Index}`: "telefone"}
           variant="flushed"
           {...props} // Spread dos props adicionais do Chakra UI
         />
@@ -94,13 +94,18 @@ export const InputRegisterTel = ({ Index, ...props }: InputTel1Props) => {
         </Text>
       )}
       <Box hidden>
-        <input
+      <input 
+        type="number"
+        value={Teste}
+        name={Index > 0 ?`whatsapp ${Index}`: "whatsapp"}
+        />
+        {/* <input
           type="checkbox"
           checked={Teste}
-          name={`whatCheck${Index && Index > 0 && Index}`}
+          name={ Index > 0 ?`whatCheck ${Index}`: 'whatCheck' }
           onChange={(e) => console.log(e.target.checked)}
           hidden
-        />
+        /> */}
       </Box>
     </>
   );
