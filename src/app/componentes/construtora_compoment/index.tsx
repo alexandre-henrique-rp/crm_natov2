@@ -4,9 +4,36 @@ import { FaCopy } from "react-icons/fa6";
 import { mask } from "remask";
 import BtmExcluirConstrutora from "../btm_excluir_construtora";
 import { BtmCopy } from "../btm_copy";
+import { PrismaClient } from "@prisma/client";
+import { BtmConstrutoraListUser } from "../btm_construtora_list_user";
+
+const prisma = new PrismaClient();
 
 interface TypeConstrutora {
   data: ConstrutoraType[];
+}
+
+async function GetCorretorByConstrutora(Id: number) {
+  try {
+    const reqest = await prisma.nato_user.findMany({
+      where: {
+        construtora: {
+          contains: Id.toString()
+        }
+      },
+      select: {
+        id: true,
+        nome: true,
+        cargo: true,
+      }
+    })
+
+    return reqest
+
+  } catch (error) {
+    console.log(error);
+    return null
+  }
 }
 
 export default function Construtora({ data }: TypeConstrutora) {
@@ -19,8 +46,8 @@ export default function Construtora({ data }: TypeConstrutora) {
         alignItems="center"
       ></Flex>
       <Flex gap={4} flexWrap={"wrap"}>
-        {data.map((c: ConstrutoraType) => {
-          console.log(c.status);
+        {data.map(async(c: ConstrutoraType) => {
+          const corretores = await GetCorretorByConstrutora(c.id);
           return (
             <Box
               key={c.id}
@@ -62,7 +89,8 @@ export default function Construtora({ data }: TypeConstrutora) {
                   />
                 </Flex>
               </Flex>
-              <Flex mt={3} gap={2} w="100%" justifyContent="end">
+              <Flex mt={3} gap={2} w="100%" justifyContent="space-between">
+                <BtmConstrutoraListUser data={corretores}/>
                 <BtmExcluirConstrutora id={c.id} status={c.status} />
               </Flex>
             </Box>
