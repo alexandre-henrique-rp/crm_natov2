@@ -1,14 +1,16 @@
 import Construtora from "@/app/componentes/construtora_compoment";
+import { auth } from "@/lib/auth_confg";
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { PrismaClient } from "@prisma/client";
 import { Metadata } from "next";
+import { getServerSession } from "next-auth";
 
 const prisma = new PrismaClient();
 
 /**
  * Get construtora
  * @type {ConstrutoraType}
- * @param { number } id 
+ * @param { number } id
  * @param { string } cnpj
  * @param { string } razaosocial
  * @param { string | null } tel
@@ -27,13 +29,19 @@ export type ConstrutoraType = {
   email: string | null;
   createdAt: Date | string | any;
   fantasia: string | null;
+  status: boolean;
 };
 
 async function GetConstrutora() {
+  const session = await getServerSession(auth);
+  const hierarquia = session?.user?.hierarquia;
   try {
     const request = await prisma.nato_empresas.findMany({
       where: {
         atividade: "CONST",
+        ...(hierarquia !== "ADM" && {
+          status: true
+        })
       },
       select: {
         id: true,
@@ -43,7 +51,8 @@ async function GetConstrutora() {
         createdAt: true,
         tel: true,
         fantasia: true,
-      },
+        status: true
+      }
     });
     return { status: 200, message: "success", data: request };
   } catch (error: any) {
@@ -53,7 +62,7 @@ async function GetConstrutora() {
 
 export const metadata: Metadata = {
   title: "Construtoras",
-  description: "sistema de gestão de vendas de imóveis",
+  description: "sistema de gestão de vendas de imóveis"
 };
 export default async function ConstrutoraPage() {
   const Dados = await GetConstrutora();
@@ -90,7 +99,7 @@ export default async function ConstrutoraPage() {
         <Divider my={5} />
         <Box ml={4}>
           <Text fontSize="25px" fontWeight="bold" color="#333333">
-            CONTRUTORA CADASTRADAS
+            CONSTRUTORA CADASTRADAS
           </Text>
         </Box>
         <Box w={"100%"}>

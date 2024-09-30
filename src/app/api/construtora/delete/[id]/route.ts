@@ -1,6 +1,7 @@
-import { auth } from "@/lib/auth_confg";
-import { getServerSession } from "next-auth";
+import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+
+const prisma = new PrismaClient();
 
 export async function DELETE(
   request: Request,
@@ -8,29 +9,22 @@ export async function DELETE(
 ) {
   try {
     const { id } = params;
-    const session = await getServerSession(auth);
 
-    if (!session) {
-      return new NextResponse("Unauthorized", { status: 401 });
+    const request = await prisma.nato_empresas.update({
+      where: { 
+        id: Number(id) 
+      }, 
+      data: {
+        status: false
+      } 
+    });
+
+    if (!request) {
+      return NextResponse.json({message: "Construtora inexistente"}, { status: 404 });
     }
 
-    const reqest = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/empresa/delete/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.token}`,
-        },
-      }
-    );
-
-    const data = await reqest.json();
-    console.log("🚀 ~ file: route.ts:PUT ~ data:", data);
-    if (!reqest.ok) {
-      return new NextResponse("Invalid credentials", { status: 401 });
-    }
-    return NextResponse.json(data, { status: 200 });
+    return NextResponse.json({message: "Construtora excluída com sucesso"}, { status: 200 });
+    
   } catch (error: any) {
     return NextResponse.json({ error: error }, { status: 500 });
   }
