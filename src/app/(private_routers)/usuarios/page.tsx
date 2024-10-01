@@ -1,6 +1,7 @@
 import Usuarios from "@/app/componentes/usuarios_component";
 import { auth } from "@/lib/auth_confg";
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
+import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 
 async function GetUser() {
@@ -39,6 +40,10 @@ async function GetUser() {
     return { status: 500, message: "error", data: error };
   }
 }
+
+export const metadata: Metadata = {
+  title: "USUÁRIOS",
+};
 export default async function UsuariosPage() {
   const Dados = await GetUser();
   return (

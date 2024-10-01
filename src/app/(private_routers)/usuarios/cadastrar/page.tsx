@@ -5,7 +5,11 @@ import UserRegisterProvider from "@/provider/UserRegister";
 import { Box, Button, Divider, Flex, Heading, Spacer } from "@chakra-ui/react";
 import React from "react";
 import BotaoCancelar from "@/app/componentes/btn_cancelar";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "CADASTRO DE USUÁRIO",
+};
 
 export default function CadastrarUsuario() {
 
