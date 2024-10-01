@@ -62,7 +62,6 @@ async function GetConstrutora() {
 
 export const metadata: Metadata = {
   title: "Construtoras",
-  description: "sistema de gestão de vendas de imóveis"
 };
 export default async function ConstrutoraPage() {
   const Dados = await GetConstrutora();

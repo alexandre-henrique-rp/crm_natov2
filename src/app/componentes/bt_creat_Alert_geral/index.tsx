@@ -6,6 +6,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -14,7 +15,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  useDisclosure,
+  useDisclosure
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -38,7 +39,7 @@ export default function CreateAlertGeral() {
     const data = await reqest.json();
     console.log(data);
     setDataEmpreendimento(data);
-    if(data.length === 1){
+    if (data.length === 1) {
       setEmpreendimento(data[0].id);
     }
   };
@@ -59,7 +60,7 @@ export default function CreateAlertGeral() {
       }
     }
     if (Construtora > 0 && Financeiro > 0) {
-      console.log(`id ${Construtora} ${Financeiro}`)
+      console.log(`id ${Construtora} ${Financeiro}`);
       Handle();
     }
   }, [user, Construtora, Financeiro]);
@@ -74,15 +75,21 @@ export default function CreateAlertGeral() {
         alignItems={"center"}
         gap={"20px"}
       >
-        <Button
-          bg={"#00713D"}
-          textColor={"white"}
-          _hover={{ bg: "#00631B" }}
-          size="md"
+        <Link
+          py={1}
+          px={5}
+          border="none"
+          borderRadius="8px"
+          bg={"green.600"}
+          color={"white"}
+          _hover={{ bg: "green.500", textDecoration: "none" }}
+          boxShadow={"lg"}
+          cursor={"pointer"}
           onClick={onOpen}
+          fontSize={"0.8rem"}
         >
           Alerta Geral
-        </Button>
+        </Link>
       </Box>
       <Modal isOpen={isOpen} size={"xl"} onClose={onClose}>
         <ModalOverlay />
