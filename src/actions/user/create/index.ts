@@ -18,7 +18,7 @@ export default async function UserCreate(_: any, data: FormData) {
   const construtora = data.get("construtora") as string;
   const empreendimento = data.get("empreendimento") as string;
   const Financeira = data.get("financeira") as string;
-  const cargo = data.get("cargo") as string;
+  const Cargo = data.get("cargo") as string;
   const hierarquia = data.get("hierarquia") as string;
   const password = data.get("senha") as string;
   const passwordConfir = data.get("confirsenha") as string;
@@ -46,9 +46,10 @@ export default async function UserCreate(_: any, data: FormData) {
         construtora: JSON.stringify([construtora]),
         empreendimento: JSON.stringify([empreendimento]),
         Financeira: JSON.stringify([Financeira]),
-        cargo: data.get("cargo") as string,
         hierarquia: hierarquia,
         password: password,
+        status: false,
+        cargo: Cargo,
         password_key: Password_key,
         reset_password: true,
       }
