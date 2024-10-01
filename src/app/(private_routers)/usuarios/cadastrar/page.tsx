@@ -49,8 +49,8 @@ export default function CadastrarUsuario() {
                 <CardCreateUpdate.GridUserFinanceiro w={"23rem"} />
                 <CardCreateUpdate.GridUserCargo w={"20rem"} />
                 <CardCreateUpdate.GridUserHierarquia w={"20rem"} />
-                <CardCreateUpdate.GridUserSenha w={"25rem"} />
-                <CardCreateUpdate.GridUserConfirSenha w={"25rem"} />
+                <CardCreateUpdate.GridUserSenha w={"20rem"} />
+                <CardCreateUpdate.GridUserConfirSenha w={"20rem"} />
               </UserRegisterProvider>
               <Spacer /> 
               <Button type="submit" mt={2} alignSelf={'center'} colorScheme='green' size='lg'>

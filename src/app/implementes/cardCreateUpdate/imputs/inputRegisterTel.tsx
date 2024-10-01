@@ -1,20 +1,29 @@
 "use client";
 import { TelefoneMaskFunction } from "@/functions/mask_tel";
 import { Box, Input, InputProps, Switch, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { PropagateLoader, PulseLoader } from "react-spinners";
 
 
 // Definindo o tipo para SetValue, ajuste conforme necessário para o tipo correto da sua aplicação
 interface InputTel1Props extends InputProps {
   Index?: number|any;
+  tell?: string;
 }
 
-export const InputRegisterTel = ({ Index, ...props }: InputTel1Props) => {
+export const InputRegisterTel = ({ Index,tell, ...props }: InputTel1Props) => {
   const [tel1, setTel1] = useState<string>("");
   const [Teste, setTeste] = useState<number>(0);
   const [Error, setError] = useState<boolean>(false);
   const [Loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (tell) {
+      const MaskTel = TelefoneMaskFunction(tell);
+      setTel1(MaskTel);
+    }
+  }, [tell]);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target) {

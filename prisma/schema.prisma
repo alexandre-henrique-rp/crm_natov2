@@ -401,6 +401,7 @@ model nato_empresas {
   atividade           String?               @db.VarChar(100)
   fantasia            String?               @db.VarChar(100)
   status              Boolean               @default(true)
+  valor_cert          Float?                @db.Float
   nato_empreendimento nato_empreendimento[]
 }
 
@@ -463,6 +464,8 @@ model nato_solicitacoes_certificado {
   mult_link        String?       @db.LongText
   mult_ass_doc     String?       @db.LongText
   hr_aprovacao     DateTime?     @db.Time(0)
+  estatos_pgto     String?       @db.VarChar(100)
+  valorcd          Float?        @db.Float
   nato_alerta      nato_alerta[]
 
   @@index([id_fcw], map: "nato_solicitacoes_certificado_fcweb_FK")

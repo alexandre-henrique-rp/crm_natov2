@@ -11,6 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { set } from "react-hook-form";
 import { FaPlus } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { BeatLoader } from "react-spinners";
@@ -23,7 +24,7 @@ export function SelectUserConstrutora({
   setValue,
   ...props
 }: SelectUserConstrutoraProps) {
-  const [Construtora, setConstrutora] = useState<number | undefined>();
+  const [Construtora, setConstrutora] = useState<number | any>();
   const [ConstrutoraData, setConstrutoraData] = useState([]);
   const [ConstrutoraArray, setConstrutoraArray] = useState<any>([]);
   const [ConstrutoraArrayTotal, setConstrutoraArrayTotal] = useState<any>([]);
@@ -37,7 +38,20 @@ export function SelectUserConstrutora({
       setConstrutoraData(data);
     };
     getConstrutora();
-  }, []);
+
+    const dataValue = JSON.parse(setValue);
+    (async () => {
+      const data = await Promise.all(
+        dataValue.map(async (e: any) => {
+          const response = await fetch(`/api/construtora/get/${e}`);
+          return await response.json();
+        })
+      );
+      console.log("🚀 ~ data ~ data:", data);
+      setConstrutoraArrayTotal(data);
+    })();
+    setConstrutoraArray(dataValue);
+  }, [setValue]);
 
   // const GetConstrutora = async (e: React.ChangeEvent<HTMLSelectElement>) => {
   //   const value = e.target.value;
@@ -48,6 +62,7 @@ export function SelectUserConstrutora({
 
   const HandleSelectConstrutora = () => {
     setConstrutoraDisabled(true);
+
     const value = Construtora;
 
     const Filtro = ConstrutoraData.filter((e: any) => e.id === Number(value));
@@ -91,6 +106,23 @@ export function SelectUserConstrutora({
 
   useEffect(() => {
     setContrutoraCX(ConstrutoraArray);
+
+    // if(Construtora.length > 0){
+    //   for (let i = 0; i < ConstrutoraArray.length; i++) {
+
+    //     const value = Construtora[i];
+
+    //     const Filtro = ConstrutoraData.filter((e: any) => e.id === Number(value));
+    //     const Ids = Filtro.map((e: any) => e.id);
+
+    //     setConstrutoraArray([...ConstrutoraArray, ...Ids]);
+    //     setConstrutoraArrayTotal([...ConstrutoraArrayTotal, ...Filtro]);
+
+    //     setConstrutoraDisabled(false);
+
+    //     }
+
+    // }
   }, [ConstrutoraArray]);
 
   return (
@@ -136,7 +168,7 @@ export function SelectUserConstrutora({
       <Flex gap={2} mt={3} flexWrap="wrap">
         {RendBoard}
       </Flex>
-      <Box hidden>
+      <Box>
         <Input name="construtora" value={ConstrutoraArray} />
       </Box>
     </>
