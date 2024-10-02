@@ -58,29 +58,74 @@ export default function GerarCobranca() {
     const dados = await Requeste(Inicio, Fim, Construtora);
     setTotalArray(dados);
   }
+  console.log(TotalArray);
 
   async function handleDownload() {
     // Função para separar os objetos por id do empreendimento
     const separarPorEmpreendimentoId = () => {
-      const dados = TotalArray.reduce((acc: any, Total: any) => {
-        const empreendimentoId = Total.empreendimento.id;
-        
-        // Se o id do empreendimento ainda não existe no acumulador, cria uma lista para ele
-        if (!acc[empreendimentoId]) {
-          acc[empreendimentoId] = {
-            nome: Total.empreendimento.nome,
-            itens: []
-          };
-        }
-        
-        // Adiciona o objeto à lista do empreendimento correspondente
-        acc[empreendimentoId].itens.push(Total);
-        
-        return acc;
-      }, {});
+      return TotalArray.reduce(
+        (
+          acc: Record<number, { nome: string; itens: any[] }>,
+          Total: any
+        ) => {
+          const empreendimentoId = Total.empreedimento.id;
+
+          if (!acc[empreendimentoId]) {
+            acc[empreendimentoId] = {
+              nome: Total.empreedimento.nome,
+              itens: []
+            };
+          }
+
+          acc[empreendimentoId].itens.push(Total);
+
+          return acc;
+        },
+        {}
+      );
     };
-    console.log("🚀 ~ separarPorEmpreendimentoId ~ separarPorEmpreendimentoId:", separarPorEmpreendimentoId)
-    
+
+    const dadosSeparados = separarPorEmpreendimentoId();
+
+    // Criar cabeçalho do CSV no formato personalizado
+    let csvContent = "";
+
+    // Percorrer os dados por empreendimento e criar as linhas do CSV
+    for (const [empreendimentoId, dados] of Object.entries(dadosSeparados) as any) {
+      // Adicionar o cabeçalho do empreendimento
+      csvContent += `Empreendimento ${dados.nome};;;\n;;;\n`;
+
+      // Adicionar cabeçalho da tabela para cada empreendimento
+      csvContent += `x;id;nome;cpf\n`;
+
+      // Adicionar as linhas com os dados de cada item
+      dados.itens.forEach((item: any, index: number) => {
+        const linha = [
+          index + 1, // Contador (x)
+          item.id, // ID do item
+          item.nome, // Nome do cliente
+          item.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") // Formatar CPF
+        ].join(";"); // Junta todos os campos com ponto e vírgula
+        csvContent += linha + "\n"; // Adiciona a linha ao conteúdo CSV
+      });
+
+      // Adicionar separadores entre empreendimentos
+      csvContent += `;;;\n;;;\n`;
+    }
+
+    // Criar um Blob do conteúdo CSV
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+
+    // Criar um link para o download
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "relatorio.csv");
+    link.style.visibility = "hidden";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   return (
