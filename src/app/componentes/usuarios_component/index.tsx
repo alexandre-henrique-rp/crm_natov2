@@ -6,6 +6,7 @@ import { Box, Flex, IconButton, Stack, Text, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaCopy } from "react-icons/fa6";
 import { mask } from "remask";
+import { BtnEditarUser } from "../btn_editar_user";
 
 interface UsuariosType {
   data: any;
@@ -118,6 +119,7 @@ export default function Usuarios({ data }: UsuariosType) {
                 </Flex> */}
               </Flex>
               <Flex mt={3} gap={2} w="100%" justifyContent="end">
+                <BtnEditarUser id={solicitacao.id} />
                 <BtnResetSenha ID={solicitacao.id} />
                 <BtnExcluirUser id={solicitacao.id} />
               </Flex>

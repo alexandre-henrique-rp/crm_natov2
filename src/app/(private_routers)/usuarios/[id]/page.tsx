@@ -1,13 +1,10 @@
-import UserCreate from "@/actions/user/create";
+
 import { BotaoRetorno } from "@/app/componentes/btm_retorno";
-import { CardCreateUpdate } from "@/app/implementes/cardCreateUpdate";
-import UserRegisterProvider from "@/provider/UserRegister";
 import { Box, Button, Divider, Flex, Heading, Spacer } from "@chakra-ui/react";
 import React from "react";
-import BotaoCancelar from "@/app/componentes/btn_cancelar";
 import { Metadata } from "next";
 import { CardUpdateUsuario } from "@/app/componentes/card_update_usuario";
-import { GetUser } from "@/actions/user/service";
+import { GetUser, UpdateUser } from "@/actions/user/service";
 
 type Props = {
   params: { id: string };
@@ -24,8 +21,9 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
 export default async function EditarUsuario({params}: Props) {
 
-  const id = params.id;
-  const data = await GetUser(Number(id))
+  const id = Number(params.id);
+
+  const data = await GetUser(id)
 
   return (
     <>
@@ -50,7 +48,7 @@ export default async function EditarUsuario({params}: Props) {
             <Box> </Box>
           </Flex>
           <Divider my={4} borderColor="gray.300" />
-          <CardUpdateUsuario setUsuarioCard={data} />
+          <CardUpdateUsuario id={id}setUsuarioCard={data} />
         </Box>
       </Flex>
     </>

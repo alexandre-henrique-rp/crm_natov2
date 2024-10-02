@@ -7,21 +7,18 @@ import { UpdateUser } from "@/actions/user/service";
 import { set } from "react-hook-form";
 
 type Props = {
-    setUsuarioCard: any;
+    setUsuarioCard: any,
+    id?: number
   };
 
-export async function CardUpdateUsuario({setUsuarioCard}: Props) {
-    
-    console.log("🚀 ~ CardUpdateUsuario ~ setUsuarioCard:", setUsuarioCard)
-    
+export async function CardUpdateUsuario({id, setUsuarioCard}: Props) {
 
-    
     return (
         <>
         <CardCreateUpdate.Form action={UpdateUser}>
             <Flex w={"full"} flexWrap={"wrap"} gap={5}>
                 <UserRegisterProvider>
-                    <CardCreateUpdate.GridCpf w={"15rem"}  CPF={setUsuarioCard?.cpf ?? ''}/>
+                    <CardCreateUpdate.GridCpf w={"15rem"} idUser={id} CPF={setUsuarioCard?.cpf ?? ''}/>
                     <CardCreateUpdate.GridName w={"35rem" } Nome={setUsuarioCard?.nome ?? ''}/>
                     <CardCreateUpdate.GridUser w={"15rem"} Usuario={setUsuarioCard?.username ?? ''} />
                     <CardCreateUpdate.GridRegisterTel w={"10rem"} tell={setUsuarioCard?.telefone ?? ''}/>

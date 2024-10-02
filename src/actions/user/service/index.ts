@@ -1,5 +1,8 @@
 'use server'
 import { PrismaClient } from "@prisma/client";
+import { redirect } from "next/navigation";
+
+
 
 const prisma = new PrismaClient();
 
@@ -14,28 +17,43 @@ export async function GetUser(id: number){
 }
 
 
-export async function UpdateUser(data : any){
+
+export async function UpdateUser( _ : any, data : FormData){
+    const id = data.get("id") as string;
+    const cpf = data.get("cpf") as string;
+    const nome = data.get("nome") as string;
+    const username = data.get("usuario") as string;
+    const telefone = data.get("telefone") as string;
+    const email = data.get("email") as string;
+    const construtora = data.get("construtora") as string;
+    const empreendimento = data.get("empreendimento") as string;
+    const financeira = data.get("financeira") as string;
+    const cargo = data.get("cargo") as string;
+    const hierarquia = data.get("hierarquia") as string;
+    
+    
+    const construtoraArray = construtora.split(',').map(Number);
+    const empreendimentoArray = empreendimento.split(',').map(Number);
+    const FinanceiraArray = financeira.split(',').map(Number);
+
     const user = await prisma.nato_user.update({
         where: {
-            id: data.id
+            id: Number(id)
         },
         data: {
-            cpf: data.cpf,
-            nome: data.nome,
-            username: data.username,
-            telefone: data.telefone,
-            email: data.email,
-            construtora: data.construtora,
-            empreendimento: data.empreendimento,
-            Financeira: data.Financeira,
-            hierarquia: data.hierarquia,
-            password: data.password,
-            status: data.status,
-            cargo: data.cargo,
-            password_key: data.password_key,
-            reset_password: data.reset_password,
+            cpf: cpf,
+            nome: nome,
+            username: username,
+            telefone: telefone,
+            email: email,
+            construtora: JSON.stringify(construtoraArray),
+            empreendimento: JSON.stringify(empreendimentoArray),
+            Financeira: JSON.stringify(FinanceiraArray),
+            hierarquia: hierarquia,
+            cargo: cargo,
         }
     });
+    redirect('/usuarios');
     return user;
 }
 
