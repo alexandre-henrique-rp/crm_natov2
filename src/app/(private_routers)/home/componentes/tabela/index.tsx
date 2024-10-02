@@ -5,15 +5,12 @@ import {
   Table,
   Tbody,
   Td,
-  Tfoot,
   Th,
   Thead,
   Tr,
-  Text,
   Select,
   IconButton,
   Icon,
-  Tooltip,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -23,7 +20,7 @@ import {
   PopoverBody,
   PopoverFooter,
   Portal,
-  ButtonGroup,
+  ButtonGroup
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { use, useEffect, useState } from "react";
@@ -44,7 +41,7 @@ export function Tabela({
   ClientData,
   total,
   AtualPage,
-  SetVewPage,
+  SetVewPage
 }: TabelaProps) {
   const [SelectPage, setSelectPage] = useState(1);
   const { data: session } = useSession();
@@ -60,67 +57,28 @@ export function Tabela({
     if (item.distrato || !item.ativo) {
       return null;
     }
-
-    // console.log(item.id);
-    
-    // Data de criação (createdAt) em UTC
     const dtSolicitacao = new Date(item.createdAt).getTime();
-    // console.log(
-    //   "🚀 ~ downTimeInDays ~ new Date(item.createdAt):",
-    //   new Date(item.createdAt).toISOString()
-    // );
-    // console.log(item.dt_aprovacao);
-    // console.log(item.hr_aprovacao);
-    
     let dtAprovacao: number;
-
     // Se temos data e hora de aprovação, combinamos ambas
     if (item.dt_aprovacao && item.hr_aprovacao) {
-      // Separando a data e a hora
-      const dataAprovacao = item.dt_aprovacao.split("T")[0]; // Pegando apenas a parte da data
-      const horaAprovacao = item.hr_aprovacao.split("T")[1].split("Z")[0]; // Pegando apenas a parte da hora, removendo o "Z"
-      // console.log("🚀 ~ downTimeInDays ~ horaAprovacao:", horaAprovacao)
-
-      // Combinar data e hora em UTC
-      const dataHoraAprovacao = new Date(`${dataAprovacao}T${horaAprovacao}Z`); // Adicionando "Z" para garantir que seja UTC
-
-      // console.log(
-      //   "🚀 ~ downTimeInDays ~ dataHoraAprovacao:",
-      //   dataHoraAprovacao.toISOString()
-      // );
-
-      // Obter o timestamp
+      const dataAprovacao = item.dt_aprovacao.split("T")[0];
+      const horaAprovacao = item.hr_aprovacao.split("T")[1].split("Z")[0];
+      const dataHoraAprovacao = new Date(`${dataAprovacao}T${horaAprovacao}Z`);
       dtAprovacao = dataHoraAprovacao.getTime();
     } else {
-      // Se não houver aprovação, consideramos o tempo atual
       dtAprovacao = Date.now();
     }
-
-    // Calcula a diferença entre as datas
     let diffInMs = dtAprovacao - dtSolicitacao;
-    // console.log("🚀 ~ downTimeInDays ~ diffInMs:", diffInMs);
-
-    // Verificação se a diferença é negativa
     if (diffInMs < 0) {
-      // Inverte os valores
       diffInMs = dtSolicitacao - dtAprovacao;
     }
-
-    // Converte a diferença de milissegundos para horas
     const diffInHours = diffInMs / (1000 * 60 * 60);
-    // console.log("🚀 ~ downTimeInDays ~ diffInHours:", diffInHours);
-
-    // Se a diferença for menor que 48 horas, retorna em horas
     if (diffInHours < 48) {
       return `${Math.floor(diffInHours)} horas`;
     }
-
-    // Caso contrário, retorna em dias
     const diffInDays = Math.floor(diffInHours / 24);
     return `${diffInDays} dias`;
   };
-
-
 
   const tabela = ClientData.map((item) => {
     const ano = item.dt_agendamento?.split("-")[0];
@@ -205,9 +163,17 @@ export function Tabela({
         <Td>{item.id}</Td>
         <Td>{item.nome}</Td>
         <Td>
-          <Box>{dtAgenda}</Box>
-          <Box>{horaAgenda}</Box>
-          <Box>{item.type_validacao}</Box>
+          {!item.distrato && item.ativo ? (
+            <>
+              <Box>{dtAgenda}</Box>
+              <Box>{horaAgenda}</Box>
+              <Box>
+                {item.type_validacao && item.type_validacao.startsWith("VIDEO")
+                  ? "VÍDEO"
+                  : item.type_validacao}
+              </Box>
+            </>
+          ) : null}
         </Td>
         <Td>{andamento}</Td>
         <Td>{item.ativo && downTimeInDays(item)}</Td>

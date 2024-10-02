@@ -9,6 +9,7 @@ interface UserCompraProps {
 export default function UserRegisterProvider({ children }: UserCompraProps) {
   const [ContrutoraCX, setContrutoraCX] = useState<number[]>([]);
   const [EmpreedimentoCX, setEmpreedimentoCX] = useState<number[]>([]);
+  const [FinanceiraCX, setFinanceiraCX] = useState<number[]>([]);
 
   return (
     <UserRegisterContext.Provider
@@ -17,6 +18,8 @@ export default function UserRegisterProvider({ children }: UserCompraProps) {
         setContrutoraCX,
         EmpreedimentoCX,
         setEmpreedimentoCX,
+        FinanceiraCX,
+        setFinanceiraCX
       }}
     >
       {children}
