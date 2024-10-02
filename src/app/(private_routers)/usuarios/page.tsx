@@ -1,3 +1,4 @@
+import FiltroId from "@/app/componentes/filter_id";
 import Usuarios from "@/app/componentes/usuarios_component";
 import { auth } from "@/lib/auth_confg";
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
@@ -48,6 +49,9 @@ export default async function UsuariosPage() {
   const Dados = await GetUser();
   return (
     <>
+      <Flex w={"100%"} mb={8} justifyContent="center" alignItems="center">
+        {/* <FiltroId id={''} /> */}
+      </Flex>
       <Flex
         w={"100%"}
         minH={"90.9dvh"}
