@@ -39,19 +39,20 @@ export function SelectUserConstrutora({
     };
     getConstrutora();
 
-    const dataValue = JSON.parse(setValue);
-    (async () => {
-      const data = await Promise.all(
-        dataValue.map(async (e: any) => {
-          const response = await fetch(`/api/construtora/get/${e}`);
-          return await response.json();
-        })
-      );
-      console.log("🚀 ~ data ~ data:", data);
-      setConstrutoraArrayTotal(data);
-    })();
-    setConstrutoraArray(dataValue);
-  }, [setValue]);
+    if(setValue){
+      const dataValue = JSON.parse(setValue);
+      (async () => {
+        const data = await Promise.all(
+          dataValue.map(async (e: any) => {
+            const response = await fetch(`/api/construtora/get/${e}`);
+            return await response.json();
+          })
+        );
+        setConstrutoraArrayTotal(data);
+      })();
+      setConstrutoraArray(dataValue);
+    }
+    }, [setValue]);
 
   // const GetConstrutora = async (e: React.ChangeEvent<HTMLSelectElement>) => {
   //   const value = e.target.value;
@@ -168,7 +169,7 @@ export function SelectUserConstrutora({
       <Flex gap={2} mt={3} flexWrap="wrap">
         {RendBoard}
       </Flex>
-      <Box>
+      <Box hidden>
         <Input name="construtora" value={ConstrutoraArray} />
       </Box>
     </>

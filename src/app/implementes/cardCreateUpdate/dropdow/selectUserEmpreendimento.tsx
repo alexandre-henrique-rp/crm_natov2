@@ -11,6 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { set } from "react-hook-form";
 import { FaPlus } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { BeatLoader } from "react-spinners";
@@ -37,7 +38,22 @@ export function SelectUserEmpreendimento({
             setEmpreendimentoData(data);
         };
         getEmpreendimento();
-    }, []);
+
+        if (setValue) {
+        const dataValue = JSON.parse(setValue);
+        (async () => {
+            const data = await Promise.all(
+                dataValue.map(async (e: any) => {
+                    const response = await fetch(`/api/empreendimento/get/${e}`);
+                    return await response.json();
+                })
+            );
+            setEmpreendimentoArrayTotal(data);
+        })();
+        setEmpreendimentoArray(dataValue);
+    }
+        
+    }, [setValue]);
 
         const HandleSelectEmpreendimento = () => {
             setEmpreendimentoDisabled(true);

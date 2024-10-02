@@ -9,19 +9,24 @@ import { Metadata } from "next";
 import { CardUpdateUsuario } from "@/app/componentes/card_update_usuario";
 import { GetUser } from "@/actions/user/service";
 
-
-export const metadata: Metadata = {
-  title: "NOME USUARIO",
-};
-
 type Props = {
   params: { id: string };
 };
+
+export async function generateMetadata({params}: Props): Promise<Metadata> {
+  const id = params.id;
+  const data = await GetUser(Number(id))
+
+  return {
+    title: `Editar Usuário: ${data?.nome || 'Usuário'}`,
+  }
+}
 
 export default async function EditarUsuario({params}: Props) {
 
   const id = params.id;
   const data = await GetUser(Number(id))
+
   return (
     <>
       <Flex
