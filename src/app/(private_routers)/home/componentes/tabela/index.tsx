@@ -164,12 +164,13 @@ export function Tabela({
         <Td>{item.nome}</Td>
         <Td>
           {!item.distrato && item.ativo ? (
+
             <>
               <Box>{dtAgenda}</Box>
               <Box>{horaAgenda}</Box>
               <Box>
                 {item.type_validacao && item.type_validacao.startsWith("VIDEO")
-                  ? "VÍDEO"
+                  ? "VIDEO"
                   : item.type_validacao}
               </Box>
             </>
