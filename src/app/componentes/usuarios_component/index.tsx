@@ -3,10 +3,14 @@
 import { BtnExcluirUser } from "@/app/componentes/btm_exluir_user";
 import { BtnResetSenha } from "@/app/componentes/btn_reset_senha";
 import { Box, Flex, IconButton, Stack, Text, useToast } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { FaCopy } from "react-icons/fa6";
 import { mask } from "remask";
 import { BtnEditarUser } from "../btn_editar_user";
+import { FiltroContext } from "@/context/UserFiltroContext";
+import UserProvider from "@/provider/UserProvider";
+import UserFiltroContext from "@/hook/userFilterContext";
+import React from "react";
 
 interface UsuariosType {
   data: any;

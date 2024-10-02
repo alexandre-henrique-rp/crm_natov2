@@ -1,0 +1,124 @@
+"use client";
+import useUserRegisterContext from "@/hook/useUserRegister";
+import {
+  Flex,
+  Select,
+  SelectProps,
+} from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+interface SelectUserConstrutoraProps extends SelectProps {
+  setValue: any;
+}
+
+export function SelectUserConstrutora({
+  setValue,
+  ...props
+}: SelectUserConstrutoraProps) {
+  const [Construtora, setConstrutora] = useState<number | any>();
+  const [ConstrutoraData, setConstrutoraData] = useState([]);
+  const [ConstrutoraArray, setConstrutoraArray] = useState<any>([]);
+  const [ConstrutoraArrayTotal, setConstrutoraArrayTotal] = useState<any>([]);
+  const [ConstrutoraDisabled, setConstrutoraDisabled] = useState(false);
+  const { setContrutoraCX } = useUserRegisterContext();
+
+  useEffect(() => {
+    const getConstrutora = async () => {
+      const response = await fetch("/api/construtora/getall");
+      const data = await response.json();
+      setConstrutoraData(data);
+    };
+    getConstrutora();
+
+    if(setValue){
+      const dataValue = JSON.parse(setValue);
+      (async () => {
+        const data = await Promise.all(
+          dataValue.map(async (e: any) => {
+            const response = await fetch(`/api/construtora/get/${e}`);
+            return await response.json();
+          })
+        );
+        setConstrutoraArrayTotal(data);
+      })();
+      setConstrutoraArray(dataValue);
+    }
+    }, [setValue]);
+
+  // const GetConstrutora = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const value = e.target.value;
+  //   const response = await fetch(`src/app/api/construtora/get/${value}`);
+  //   const data = await response.json();
+  //   setConstrutora(data);
+  // };
+
+  const HandleSelectConstrutora = () => {
+    setConstrutoraDisabled(true);
+
+    const value = Construtora;
+
+    const Filtro = ConstrutoraData.filter((e: any) => e.id === Number(value));
+    const Ids = Filtro.map((e: any) => e.id);
+
+    setConstrutoraArray([...ConstrutoraArray, ...Ids]);
+    setConstrutoraArrayTotal([...ConstrutoraArrayTotal, ...Filtro]);
+
+    setConstrutoraDisabled(false);
+  };
+
+
+
+  useEffect(() => {
+    setContrutoraCX(ConstrutoraArray);
+
+    // if(Construtora.length > 0){
+    //   for (let i = 0; i < ConstrutoraArray.length; i++) {
+
+    //     const value = Construtora[i];
+
+    //     const Filtro = ConstrutoraData.filter((e: any) => e.id === Number(value));
+    //     const Ids = Filtro.map((e: any) => e.id);
+
+    //     setConstrutoraArray([...ConstrutoraArray, ...Ids]);
+    //     setConstrutoraArrayTotal([...ConstrutoraArrayTotal, ...Filtro]);
+
+    //     setConstrutoraDisabled(false);
+
+    //     }
+
+    // }
+  }, [ConstrutoraArray]);
+
+  return (
+    <>
+      <Flex gap={2}>
+        <Select
+          {...props}
+          border="1px solid #b8b8b8cc"
+          borderTop={"none"}
+          borderRight={"none"}
+          borderLeft={"none"}
+          borderRadius="0"
+          bg={"gray.100"}
+          borderColor={"gray.400"}
+          isDisabled={ConstrutoraDisabled}
+          onChange={(e: any) => setConstrutora(e.target.value)}
+          value={Construtora}
+        >
+          <option style={{ backgroundColor: "#EDF2F7" }} value={0}>
+            Selecione uma construtora
+          </option>
+          {ConstrutoraData.length > 0 &&
+            ConstrutoraData.map((construtora: any) => (
+              <option
+                style={{ backgroundColor: "#EDF2F7" }}
+                key={construtora.id}
+                value={construtora.id}
+              >
+                {construtora.fantasia}
+              </option>
+            ))}
+        </Select>
+      </Flex>
+    </>
+  );
+}
