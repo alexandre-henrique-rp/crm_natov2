@@ -102,7 +102,7 @@ export default function Usuarios({ data }: UsuariosType) {
                   <Text fontWeight="bold" fontSize="sm">
                     Telefone:
                   </Text>
-                  {mask(solicitacao.telefone, [
+                  {solicitacao.telefone && mask(solicitacao.telefone, [
                     "(99) 9 9999-9999",
                     "(99) 9999-9999",
                   ])}

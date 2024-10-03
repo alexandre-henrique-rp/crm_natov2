@@ -44,7 +44,7 @@ export async function UpdateUser( _ : any, data : FormData){
             cpf: cpf,
             nome: nome,
             username: username,
-            telefone: telefone,
+            telefone: telefone && telefone.replace(/\D/gm, ""),
             email: email,
             construtora: JSON.stringify(construtoraArray),
             empreendimento: JSON.stringify(empreendimentoArray),
