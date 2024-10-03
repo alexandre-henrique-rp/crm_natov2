@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
-    console.log("🚀 ~ POST ~ data:", data);
     const dados = await prisma.nato_solicitacoes_certificado.findMany({
       where: {
         construtora: Number(data.construtora),
@@ -13,11 +12,11 @@ export async function POST(request: NextRequest) {
           gte: new Date(data.inicio),
           lte: new Date(data.fim)
         },
-        dt_aprovacao: {
-          not: null
+        Andamento: {
+          in: ["APROVADO", "EMITIDO"]
         },
-        estatos_pgto: {
-          not: "Pago"
+        situacao_pg: {
+          equals: Number(data.situacao)
         }
       },
       select: {
@@ -28,33 +27,34 @@ export async function POST(request: NextRequest) {
         valorcd: true,
         dt_aprovacao: true,
         createdAt: true,
-        empreedimento: true,
+        empreedimento: true
       }
     });
 
-    const resultado = await Promise.all( dados.map(async(item) => {
-      const request = await prisma.nato_empreendimento.findUnique({
-        where: {
-          id: Number(item.empreedimento)
-        },
-        select: {
-          id: true,
-          nome: true
-        }
-        
+    const resultado = await Promise.all(
+      dados.map(async (item) => {
+        const request = await prisma.nato_empreendimento.findUnique({
+          where: {
+            id: Number(item.empreedimento)
+          },
+          select: {
+            id: true,
+            nome: true
+          }
+        });
+        return {
+          id: item.id,
+          nome: item.nome,
+          cpf: item.cpf,
+          estatos_pgto: item.estatos_pgto,
+          valorcd: item.valorcd,
+          dt_aprovacao: item.dt_aprovacao,
+          createdAt: item.createdAt,
+          empreedimento: request
+        };
       })
-      return {
-        id: item.id,
-        nome: item.nome,
-        cpf: item.cpf,
-        estatos_pgto: item.estatos_pgto,
-        valorcd: item.valorcd,
-        dt_aprovacao: item.dt_aprovacao,
-        createdAt: item.createdAt,
-        empreedimento: request
-      };
-    }));
-    console.log("🚀 ~ resultado ~ resultado:", resultado)
+    );
+    console.log("🚀 ~ resultado ~ resultado:", resultado);
 
     return NextResponse.json(resultado, { status: 200 });
   } catch (error) {

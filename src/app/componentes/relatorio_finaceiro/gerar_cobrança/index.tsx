@@ -2,6 +2,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   Flex,
   FormLabel,
   Input,
@@ -12,6 +13,7 @@ import SelectConstrutora from "../../selectConstrutora";
 import { PrismaClient } from "@prisma/client";
 import { useState } from "react";
 import { createForm } from "@/lib/pdf";
+import { GetIncioFimSituacaoConstrutora } from "@/actions/relatorio_financeiro/service/getIncioFimSituacaoConstrutora";
 
 const prisma = new PrismaClient();
 
@@ -35,7 +37,11 @@ export default function GerarCobranca() {
   const [Inicio, setInicio] = useState("");
   const [Fim, setFim] = useState("");
   const [Construtora, setConstrutora] = useState(0);
+  const [Situacao, setSituacao] = useState(0);
   const [TotalArray, setTotalArray] = useState<any>([]);
+  const [Personalizado, setPersonalizado] = useState<boolean>(false);
+  const [Protocolo, setProtocolo] = useState<boolean>(false);
+  const [ProtocoloNumber, setProtocoloNumber] = useState<string>("");
   const toast = useToast();
   async function handlePesquisa() {
     if (Construtora === 0) {
@@ -59,16 +65,35 @@ export default function GerarCobranca() {
     const dados = await Requeste(Inicio, Fim, Construtora);
     setTotalArray(dados);
   }
-  console.log(TotalArray);
+  async function handlePesquisaProtocolo() {
+    if (Construtora === 0) {
+      toast({
+        title: "Erro",
+        description: "Selecione uma construtora",
+        status: "error",
+        duration: 3000,
+        isClosable: true
+      });
+    }
+    if (!Inicio || !Fim) {
+      toast({
+        title: "Erro",
+        description: "Preencha todos os campos",
+        status: "error",
+        duration: 3000,
+        isClosable: true
+      });
+    }
+    const dados = await GetIncioFimSituacaoConstrutora(Inicio, Fim, Situacao, Construtora);
+    setTotalArray(dados);
+  }
+
 
   async function handleDownload() {
     // Função para separar os objetos por id do empreendimento
     const separarPorEmpreendimentoId = () => {
       return TotalArray.reduce(
-        (
-          acc: Record<number, { nome: string; itens: any[] }>,
-          Total: any
-        ) => {
+        (acc: Record<number, { nome: string; itens: any[] }>, Total: any) => {
           const empreendimentoId = Total.empreedimento.id;
 
           if (!acc[empreendimentoId]) {
@@ -92,7 +117,9 @@ export default function GerarCobranca() {
     let csvContent = "";
 
     // Percorrer os dados por empreendimento e criar as linhas do CSV
-    for (const [empreendimentoId, dados] of Object.entries(dadosSeparados) as any) {
+    for (const [empreendimentoId, dados] of Object.entries(
+      dadosSeparados
+    ) as any) {
       // Adicionar o cabeçalho do empreendimento
       csvContent += `${dados.nome};;;\n;;;\n`;
 
@@ -131,17 +158,17 @@ export default function GerarCobranca() {
 
   const handleDownloadPDF = async () => {
     const pdf = await createForm(); // Supondo que 'createForm' retorna os dados em formato PDF
-  
+
     // Criar um Blob do conteúdo PDF
     const blob = new Blob([pdf], { type: "application/pdf" });
-  
+
     // Criar um link para o download
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
     link.setAttribute("download", `relatorio.pdf`);
     link.style.visibility = "hidden";
-  
+
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -172,31 +199,73 @@ export default function GerarCobranca() {
           justifyContent={"space-around"}
           alignItems={"end"}
         >
-          <Box>
-            <FormLabel>Data Inicio</FormLabel>
-            <Input
-              type="date"
-              name="inicio"
-              onChange={(e) => setInicio(e.target.value)}
-            />
-          </Box>
-
-          <Box>
-            <FormLabel>Data Fim</FormLabel>
-            <Input
-              type="date"
-              name="fim"
-              onChange={(e) => setFim(e.target.value)}
-            />
-          </Box>
-          <Box>
-            <FormLabel>construtora</FormLabel>
-            <SelectConstrutora
-              onChange={(e) => setConstrutora(Number(e.target.value))}
-            />
-          </Box>
-          <Button onClick={handlePesquisa}>Pesquisar</Button>
+          <Box>Tipo de Relatório</Box>
+          <Flex gap={2} w={"80%"}>
+            <Checkbox onChange={(e)=> setProtocolo(e.target.checked)}>Protocolo</Checkbox>
+            <Checkbox onChange={(e)=> setPersonalizado(e.target.checked)}>Personalizado</Checkbox>
+          </Flex>
+          <Box />
         </Flex>
+
+        {Personalizado ? (
+          <>
+            <Flex
+              w={"100%"}
+              gap={2}
+              justifyContent={"space-around"}
+              alignItems={"end"}
+            >
+              <Box>
+                <FormLabel>Data Inicio</FormLabel>
+                <Input
+                  type="date"
+                  name="inicio"
+                  onChange={(e) => setInicio(e.target.value)}
+                />
+              </Box>
+
+              <Box>
+                <FormLabel>Data Fim</FormLabel>
+                <Input
+                  type="date"
+                  name="fim"
+                  onChange={(e) => setFim(e.target.value)}
+                />
+              </Box>
+              <Box>
+                <FormLabel>construtora</FormLabel>
+                <SelectConstrutora
+                  onChange={(e) => setConstrutora(Number(e.target.value))}
+                />
+              </Box>
+              <Button onClick={handlePesquisa}>Pesquisar</Button>
+            </Flex>
+          </>
+        ) : Protocolo ? (
+          <>
+            <Flex
+              w={"100%"}
+              gap={2}
+              justifyContent={"space-between"}
+              alignItems={"end"}
+            >
+              <Box>
+                <FormLabel>Numero do Protocolo</FormLabel>
+                <Input
+                  type="date"
+                  name="inicio"
+                  onChange={(e) => setProtocoloNumber(e.target.value)}
+                />
+              </Box>
+
+              <Button onClick={handlePesquisa}>Pesquisar</Button>
+            </Flex>
+          </>
+        ) : (
+          <>
+            <Box w={"100%"} h={"10%"} />
+          </>
+        )}
         <Box w={"100%"} h={"70%"} bg={"gray.100"} overflowX={"auto"} my={2}>
           <table style={{ width: "100%" }}>
             <tr style={{ position: "sticky", top: 0, background: "#f2f2f2" }}>
