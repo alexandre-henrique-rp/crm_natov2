@@ -12,13 +12,13 @@ export async function CardHeader({ SetDados }: CardHeaderProps) {
   const user = session?.user;
   const input = user?.hierarquia;
 
-  const dataCreated = SetDados.createdAt
+  const dataCreated = SetDados.createdAt && SetDados.createdAt
     .split("T")[0]
     .split("-")
     .reverse()
     .join("/");
   
-    const horaCreated = SetDados.createdAt
+    const horaCreated = SetDados.createdAt && SetDados.createdAt
     .split("T")[1]
     .split(".")[0]
     .split(":")
@@ -30,7 +30,7 @@ export async function CardHeader({ SetDados }: CardHeaderProps) {
     .reverse()
     .join("/");
 
-  const horaAprovacao = SetDados.hr_aprovacao
+  const horaAprovacao = SetDados.hr_aprovacao &&SetDados.hr_aprovacao
     .split("T")[1]
     .split(".")[0]
     .split(":")

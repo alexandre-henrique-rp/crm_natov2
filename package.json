@@ -24,6 +24,7 @@
     "next-auth": "^4.24.3",
     "nodemailer": "^6.9.14",
     "nookies": "^2.5.2",
+    "pdf-lib": "^1.17.1",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
@@ -33,6 +34,7 @@
     "remask": "^1.2.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/node": "^22.4.1",
     "@types/nodemailer": "^6.4.15",
     "@types/react": "^18",

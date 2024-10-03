@@ -46,11 +46,11 @@ export default function BotaoJuncao() {
             {but === "ADM" && (
               <>
                 <BotaoPainelAdm />
-                <BotaoPainelFinanceiro />
+                {/* <BotaoPainelFinanceiro /> */}
               </>
             )}
-            {but === "CCA" && <BotaoPainelFinanceiro />}
-            {but === "CONT" && <BotaoPainelFinanceiro />}
+            {/* {but === "CCA" && <BotaoPainelFinanceiro />}
+            {but === "CONT" && <BotaoPainelFinanceiro />} */}
           </>
         ) : (
           <Menu>

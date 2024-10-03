@@ -1,11 +1,11 @@
-import { ConstrutoraType } from "@/app/(private_routers)/construtora/page";
-import { Box, Flex, IconButton, Text, useToast } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { FaCopy } from "react-icons/fa6";
 import { mask } from "remask";
 import BtmExcluirConstrutora from "../btm_excluir_construtora";
 import { BtmCopy } from "../btm_copy";
 import { PrismaClient } from "@prisma/client";
 import { BtmConstrutoraListUser } from "../btm_construtora_list_user";
+import { ConstrutoraType } from "@/app/(private_routers)/construtoras/page";
 
 const prisma = new PrismaClient();
 
