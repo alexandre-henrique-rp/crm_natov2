@@ -24,10 +24,9 @@ export default async function UserCreate(_: any, data: FormData) {
   const username = data.get("usuario") as string;
   const telefone = data.get("telefone") as string;
   const email = data.get("email") as string;
-  const construtora = data.get("construtora") as string;
-
-  const empreendimento = data.get("empreendimento") as string;
-  const Financeira = data.get("financeira") as string;
+  const construtora = data.get("construtora") as any;
+  const empreendimento = data.get("empreendimento") as any;
+  const Financeira = data.get("financeira") as any;
   const Cargo = data.get("cargo") as string;
   const hierarquia = data.get("hierarquia") as string;
   const password = data.get("senha") as string;

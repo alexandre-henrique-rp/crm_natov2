@@ -25,16 +25,17 @@ export async function UpdateUser( _ : any, data : FormData){
     const username = data.get("usuario") as string;
     const telefone = data.get("telefone") as string;
     const email = data.get("email") as string;
-    const construtora = data.get("construtora") as string;
-    const empreendimento = data.get("empreendimento") as string;
-    const financeira = data.get("financeira") as string;
+    const construtora = data.get("construtora") as any;
+    const empreendimento = data.get("empreendimento") as any;
+    const financeira = data.get("financeira") as any;
     const cargo = data.get("cargo") as string;
     const hierarquia = data.get("hierarquia") as string;
     
     
-    const construtoraArray = construtora.split(',').map(Number);
-    const empreendimentoArray = empreendimento.split(',').map(Number);
-    const FinanceiraArray = financeira.split(',').map(Number);
+    const construtoraArray = construtora ? construtora.split(',').map(Number) : [];
+    const empreendimentoArray = empreendimento ? empreendimento.split(',').map(Number) : [];
+    const FinanceiraArray = financeira ? financeira.split(',').map(Number): [];
+
 
     const user = await prisma.nato_user.update({
         where: {
@@ -47,7 +48,7 @@ export async function UpdateUser( _ : any, data : FormData){
             telefone: telefone && telefone.replace(/\D/gm, ""),
             email: email,
             construtora: JSON.stringify(construtoraArray),
-            empreendimento: JSON.stringify(empreendimentoArray),
+            ...(empreendimento && {empreendimento: JSON.stringify(empreendimentoArray)}),
             Financeira: JSON.stringify(FinanceiraArray),
             hierarquia: hierarquia,
             cargo: cargo,

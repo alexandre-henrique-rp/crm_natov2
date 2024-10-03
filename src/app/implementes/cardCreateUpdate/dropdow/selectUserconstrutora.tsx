@@ -41,17 +41,21 @@ export function SelectUserConstrutora({
 
     if(setValue){
       const dataValue = JSON.parse(setValue);
-      (async () => {
-        const data = await Promise.all(
-          dataValue.map(async (e: any) => {
-            const response = await fetch(`/api/construtora/get/${e}`);
-            return await response.json();
-          })
-        );
-        setConstrutoraArrayTotal(data);
-      })();
-      setConstrutoraArray(dataValue);
+      if(dataValue.length > 0){
+        (async () => {
+          const data = await Promise.all(
+            dataValue.map(async (e: any) => {
+              const response = await fetch(`/api/construtora/get/${e}`);
+              return await response.json();
+            })
+          );
+          console.log("🚀 ~ data:", data)
+          setConstrutoraArrayTotal(data);
+        })();
+        setConstrutoraArray(dataValue);
+      }
     }
+    console.log("🚀 ~ useEffect ~ dataValue:", setValue)
     }, [setValue]);
 
   // const GetConstrutora = async (e: React.ChangeEvent<HTMLSelectElement>) => {
