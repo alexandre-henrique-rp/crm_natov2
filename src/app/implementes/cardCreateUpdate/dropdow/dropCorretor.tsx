@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import React from "react";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { BeatLoader } from "react-spinners";

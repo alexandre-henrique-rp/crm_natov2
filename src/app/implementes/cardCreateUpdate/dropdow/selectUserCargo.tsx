@@ -7,7 +7,7 @@ import {
   Select,
   SelectProps,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 
 interface SelectUserCargoProps extends SelectProps {
     setValue: any;
@@ -18,6 +18,13 @@ export function SelectUserCargo({
     ...props
 }: SelectUserCargoProps) {
     const [Cargo, setCargo] = useState<string | undefined>();
+
+    useEffect(() => {
+        if (setValue) {
+            setCargo(setValue);
+        }
+    }, [setValue]);
+
 
     return(
         <>

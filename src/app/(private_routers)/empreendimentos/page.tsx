@@ -8,48 +8,11 @@ import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import React from "react";
 
-async function GetUser() {
-  try {
-    const session = await getServerSession(auth);
-
-    if (!session) {
-      const data = { status: 401, message: "Unauthorized", data: null };
-      return data;
-    }
-
-    const reqest = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.token}`,
-        },
-      }
-    );
-
-    if (!reqest.ok) {
-      const data = { status: 400, message: "Invalid credentials", data: null };
-      return data;
-    }
-    const data = await reqest.json();
-    const users = data.filter((user: any) => user.hierarquia !== "ADM");
-
-    return {
-      status: 200,
-      message: "Success",
-      data: users,
-    };
-  } catch (error: any) {
-    return { status: 500, message: "error", data: error };
-  }
-}
 
 export const metadata: Metadata = {
-  title: "USUÁRIOS",
+  title: "EMPREENDIMENTOS",
 };
 export default async function UsuariosPage() {
-  const Dados = await GetUser();
 
   return (
     <>
@@ -62,9 +25,9 @@ export default async function UsuariosPage() {
         flexDir={"column"}
       >
         <Flex w={"100%"} justifyContent={"space-around"}>
-          <Heading>Usuários</Heading>
+          <Heading>Empreendimentos</Heading>
           <Link
-            href={"/usuarios/cadastrar"}
+            href={"/empreendimento/cadastrar"}
             _hover={{ textDecoration: "none" }}
           >
             <Box
@@ -78,26 +41,20 @@ export default async function UsuariosPage() {
               boxShadow={"lg"}
               cursor={"pointer"}
             >
-              Criar Usuário
+              Criar Empreendimento
             </Box>
           </Link>
         </Flex>
         <Divider my={5} />
         <Box ml={4}>
           <Text fontSize="25px" fontWeight="bold" color="#333333">
-            USUARIOS CADASTRADOS
+            EMPREENDIMENTOS CADASTRADOS
           </Text>
         </Box>
         <Box w={"100%"}>
-          <UserProvider>
-          <Flex w={"100%"} mb={8} justifyContent="center" alignItems="center">
-          <FiltroUser />
-          </Flex>
-          <Box>{Dados?.status === 200 ? <Usuarios data={Dados?.data} /> : <></>}</Box>
-
-          </UserProvider>
         </Box>
       </Flex>
     </>
   );
 }
+

@@ -3,9 +3,15 @@
 import { BtnExcluirUser } from "@/app/componentes/btm_exluir_user";
 import { BtnResetSenha } from "@/app/componentes/btn_reset_senha";
 import { Box, Flex, IconButton, Stack, Text, useToast } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { FaCopy } from "react-icons/fa6";
 import { mask } from "remask";
+import { BtnEditarUser } from "../btn_editar_user";
+import { FiltroContext } from "@/context/UserFiltroContext";
+import UserProvider from "@/provider/UserProvider";
+import UserFiltroContext from "@/hook/userFilterContext";
+import React from "react";
+import Loading from "@/app/loading";
 
 interface UsuariosType {
   data: any;
@@ -15,17 +21,49 @@ export default function Usuarios({ data }: UsuariosType) {
   const [Usuarios, setUsuarios] = useState<any[]>([]);
   const toast = useToast();
 
+  const { id, nome, construtora, financeira } = useContext(FiltroContext);
+
   useEffect(() => {
-   if(data){
-    setUsuarios(data);
-   }
-  }, [data]);
+    const filtrarUsuarios = () => {
+      let usuariosFiltrados = data;
+
+      if (id) {
+        usuariosFiltrados = usuariosFiltrados.filter((user: any) =>
+          user.id.toString().startsWith(id.toString())
+        );
+      }
+
+      if (nome) {
+        usuariosFiltrados = usuariosFiltrados.filter((user: any) =>
+          user.nome.toLowerCase().startsWith(nome.toLowerCase())
+        );
+      }
+      if (construtora) {
+        usuariosFiltrados = usuariosFiltrados.filter((user: any) =>
+          user.construtora.map((i: any) => i.id).includes(construtora)
+        );
+      }
+      if (financeira) {
+        console.log("🚀 ~ filtrarUsuarios ~ financeira:", financeira);
+        usuariosFiltrados = usuariosFiltrados.filter((user: any) =>
+          user.Financeira.map((i: any) => i.id).includes(financeira)
+        );
+      }
+
+      setUsuarios(usuariosFiltrados);
+    };
+
+    filtrarUsuarios();
+  }, [id, nome, construtora, financeira, data]);
 
   return (
     <>
-      <Flex w={"100%"} mb={8} justifyContent="center" alignItems="center">
-       
-      </Flex>
+      <Flex
+        w={"100%"}
+        mb={8}
+        justifyContent="center"
+        alignItems="center"
+      ></Flex>
       <Flex gap={4} flexWrap={"wrap"}>
         {Usuarios.map((solicitacao: UsuariosType.GetAllUsers) => {
           return (
@@ -40,7 +78,7 @@ export default function Usuarios({ data }: UsuariosType) {
             >
               <Flex w="100%" flexDir={"column"} gap={4}>
                 <Flex gap={2}>
-                  <Text  fontWeight="bold" fontSize="sm">
+                  <Text fontWeight="bold" fontSize="sm">
                     ID:
                   </Text>
                   {solicitacao.id}
@@ -84,13 +122,13 @@ export default function Usuarios({ data }: UsuariosType) {
                         status: "info",
                         duration: 2000,
                         position: "top-right",
-                      })
+                      });
                     }}
                   />
                 </Flex>
               </Flex>
               <Flex w="100%" flexWrap={"wrap"} gap={4} mt={2}>
-                <Flex gap={2} >
+                <Flex gap={2}>
                   <Text fontWeight="bold" fontSize="sm">
                     Construtora:
                   </Text>
@@ -99,25 +137,9 @@ export default function Usuarios({ data }: UsuariosType) {
                     ?.map((item: any) => item.fantasia)
                     .join(", ")}
                 </Flex>
-
-                {/* <Flex flexDir={"column"} gap={2} >
-                  <Text fontWeight="bold" fontSize="sm" textAlign={"left"}>
-                    Empreendimento:
-                  </Text>
-                  {solicitacao.empreendimento
-                    ?.map((item: any) => item.nome)
-                    .join(", ")}
-                </Flex>
-                <Flex gap={2}>
-                  <Text fontWeight="bold" fontSize="sm">
-                    Financeiro:
-                  </Text>
-                  {solicitacao.Financeira?.map(
-                    (item: any) => item.fantasia
-                  ).join(", ")}
-                </Flex> */}
               </Flex>
               <Flex mt={3} gap={2} w="100%" justifyContent="end">
+                <BtnEditarUser id={solicitacao.id} />
                 <BtnResetSenha ID={solicitacao.id} />
                 <BtnExcluirUser id={solicitacao.id} />
               </Flex>

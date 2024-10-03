@@ -7,7 +7,7 @@ import {
   Select,
   SelectProps,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 interface SelectUserHierarquiaProps extends SelectProps {
     setValue: any;
 }
@@ -17,6 +17,12 @@ export function SelectUserHierarquia({
     ...props
 }: SelectUserHierarquiaProps) {
     const [Hierarquia, setHierarquia] = useState<number | undefined>();
+    
+    useEffect(() => {
+        if (setValue) {
+          setHierarquia(setValue);
+        }
+      }, [setValue]);
 
     return(
         <>
