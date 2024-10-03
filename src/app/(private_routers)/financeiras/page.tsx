@@ -2,6 +2,7 @@ import { BotaoRetorno } from "@/app/componentes/btm_retorno";
 import { Box, Flex } from "@chakra-ui/react";
 
 import CreateAlertGeral from "@/app/componentes/bt_creat_Alert_geral";
+import React from "react";
 
 export default function PainelFinanceiro() {
   return (
