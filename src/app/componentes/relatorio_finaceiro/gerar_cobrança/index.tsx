@@ -11,6 +11,7 @@ import {
 import SelectConstrutora from "../../selectConstrutora";
 import { PrismaClient } from "@prisma/client";
 import { useState } from "react";
+import { createForm } from "@/lib/pdf";
 
 const prisma = new PrismaClient();
 
@@ -93,7 +94,7 @@ export default function GerarCobranca() {
     // Percorrer os dados por empreendimento e criar as linhas do CSV
     for (const [empreendimentoId, dados] of Object.entries(dadosSeparados) as any) {
       // Adicionar o cabeçalho do empreendimento
-      csvContent += `Empreendimento ${dados.nome};;;\n;;;\n`;
+      csvContent += `${dados.nome};;;\n;;;\n`;
 
       // Adicionar cabeçalho da tabela para cada empreendimento
       csvContent += `x;id;nome;cpf\n`;
@@ -127,6 +128,24 @@ export default function GerarCobranca() {
     link.click();
     document.body.removeChild(link);
   }
+
+  const handleDownloadPDF = async () => {
+    const pdf = await createForm(); // Supondo que 'createForm' retorna os dados em formato PDF
+  
+    // Criar um Blob do conteúdo PDF
+    const blob = new Blob([pdf], { type: "application/pdf" });
+  
+    // Criar um link para o download
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "relatorio.pdf");
+    link.style.visibility = "hidden";
+  
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <>
@@ -226,7 +245,7 @@ export default function GerarCobranca() {
           <Button colorScheme="teal" onClick={handleDownload}>
             Gerar Previa
           </Button>
-          <Button>Gerar cobrança</Button>
+          <Button onClick={handleDownloadPDF}>Gerar cobrança</Button>
         </Flex>
       </Box>
     </>
