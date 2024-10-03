@@ -2,16 +2,13 @@
 
 import { BtnExcluirUser } from "@/app/componentes/btm_exluir_user";
 import { BtnResetSenha } from "@/app/componentes/btn_reset_senha";
-import { Box, Flex, IconButton, Stack, Text, useToast } from "@chakra-ui/react";
+import { Box, Flex, IconButton, Text, useToast } from "@chakra-ui/react";
 import { useEffect, useState, useContext } from "react";
 import { FaCopy } from "react-icons/fa6";
 import { mask } from "remask";
 import { BtnEditarUser } from "../btn_editar_user";
 import { FiltroContext } from "@/context/UserFiltroContext";
-import UserProvider from "@/provider/UserProvider";
-import UserFiltroContext from "@/hook/userFilterContext";
 import React from "react";
-import Loading from "@/app/loading";
 
 interface UsuariosType {
   data: any;
@@ -133,8 +130,7 @@ export default function Usuarios({ data }: UsuariosType) {
                     Construtora:
                   </Text>
 
-                  {solicitacao.construtora
-                    ?.map((item: any) => item.fantasia)
+                  {solicitacao.construtora.length > 0 && solicitacao.construtora.map((item: any) => item.fantasia)
                     .join(", ")}
                 </Flex>
               </Flex>

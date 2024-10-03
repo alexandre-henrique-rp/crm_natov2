@@ -139,7 +139,7 @@ export default function GerarCobranca() {
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", "relatorio.pdf");
+    link.setAttribute("download", `relatorio.pdf`);
     link.style.visibility = "hidden";
   
     document.body.appendChild(link);
