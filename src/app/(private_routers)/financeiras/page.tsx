@@ -1,31 +1,75 @@
 import { BotaoRetorno } from "@/app/componentes/btm_retorno";
-import { Box, Flex } from "@chakra-ui/react";
-
+import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import CreateAlertGeral from "@/app/componentes/bt_creat_Alert_geral";
-import React from "react";
 
-export default function PainelFinanceiro() {
+import { Metadata } from "next";
+import Financeiras from "@/app/componentes/financeirasCard";
+import React from "react";
+import { GetAllFinanceiras } from "@/actions/financeira/service/getAllFinanceiras";
+
+
+
+export const metadata: Metadata = {
+  title: "FINANCEIRAS",
+};
+
+
+export default async function PainelFinanceiro() {
+  const dados = await GetAllFinanceiras();
+
   return (
     <>
-      <Box
-        w={{ base: "90%", md: "80%", lg: "70%" }}
-        h={"90.9dvh"}
-        m={"auto"}
-        overflowY={"auto"}
+      <Flex
+        w={"100%"}
+        minH={"90.9dvh"}
+        px={{ base: 2, md: "10rem" }}
+        py={5}
+        flexDir={"column"}
       >
-        {/* botoes */}
-        <Flex py={5} gap={5}>
-          <Box zIndex={1} position="initial">
+          
+        <Flex w={"100%"} justifyContent={"space-around"}>
+          <Flex gap={2}>
+        <Box zIndex={1} alignSelf="baseline" position="initial">
             <BotaoRetorno rota="/" />
           </Box>
-          <Flex>
+          <Heading>Financeiras</Heading>
+          </Flex>
+          <Flex gap={5}>
             <CreateAlertGeral />
+            <Link
+            href={"/financeiras/cadastrar"}
+            _hover={{ textDecoration: "none" }}
+          >
+            <Box 
+              py={2}
+              px={7}
+              border="3px solid green.600"
+              borderRadius="8px"
+              bg={"green.600"}
+              color={"white"}
+              _hover={{ bg: "green.500" }}
+              boxShadow={"lg"}
+              cursor={"pointer"}
+            >
+              Criar Financeira
+            </Box>
+          </Link>
           </Flex>
         </Flex>
-      </Box>
+        <Divider my={5} />
+        <Box ml={4}>
+          <Text fontSize="25px" fontWeight="bold" color="#333333">
+            FINANCEIRAS CADASTRADAS
+          </Text>
+        </Box>
+        <Box w={"100%"}>
+          <Flex w={"100%"} mb={8} justifyContent="center" alignItems="center">
+          </Flex>
+          <Box>{dados?.status === 200 ? <Financeiras data={dados?.data} /> : <></>}</Box>
+        </Box>
+      </Flex>
 
-      {/* dashboard */}
-      <Box></Box>
+  
     </>
   );
 }

@@ -1,9 +1,8 @@
-import FiltroId from "@/app/componentes/filter_id";
 import FiltroUser from "@/app/componentes/filtroUser";
 import Usuarios from "@/app/componentes/usuarios_component";
 import { auth } from "@/lib/auth_confg";
 import UserProvider from "@/provider/UserProvider";
-import { Box, Button, Divider, Flex, Heading, Input, InputGroup, InputLeftAddon, Link, Text } from "@chakra-ui/react";
+import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import React from "react";
