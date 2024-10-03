@@ -466,6 +466,7 @@ model nato_solicitacoes_certificado {
   hr_aprovacao     DateTime?     @db.Time(0)
   estatos_pgto     String?       @db.VarChar(100)
   valorcd          Float?        @db.Float
+  situacao_pg      Int?          @db.TinyInt
   nato_alerta      nato_alerta[]
 
   @@index([id_fcw], map: "nato_solicitacoes_certificado_fcweb_FK")
@@ -762,4 +763,14 @@ model voucher {
   estatos    String @db.VarChar(150)
   dt_resgate Int
   id_fcw     String @db.VarChar(150)
+}
+
+model nato_relatorio_financeiro {
+  id          Int      @id @default(autoincrement())
+  protocolo   BigInt?  @unique(map: "nato_relatorio_financeiro_unique")
+  createdAt   DateTime @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime @default(now()) @db.Timestamp(0)
+  situacao_pg Int?     @default(0) @db.TinyInt
+  nota_fiscal String?  @db.VarChar(100)
+  solicitacao String?  @default("[]") @db.VarChar(256)
 }
