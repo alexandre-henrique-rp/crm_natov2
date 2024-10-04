@@ -46,6 +46,16 @@ export function CardFormComponent(props: CardFormProps) {
       setIsSuccess(false); // Reset state after showing toast
     }
     if (isError) {
+      if(state?.message){
+        toast({
+          title: "Erro",
+          description: state?.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
+      }
       toast({
         title: "Erro",
         description: "Erro ao salvar as informações",

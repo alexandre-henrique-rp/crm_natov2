@@ -772,5 +772,5 @@ model nato_relatorio_financeiro {
   updatedAt   DateTime @default(now()) @db.Timestamp(0)
   situacao_pg Int?     @default(0) @db.TinyInt
   nota_fiscal String?  @db.VarChar(100)
-  solicitacao String?  @default("[]") @db.VarChar(256)
+  solicitacao String?  @db.Text
 }

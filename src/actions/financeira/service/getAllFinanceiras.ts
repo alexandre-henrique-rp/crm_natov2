@@ -32,5 +32,7 @@ export async function GetAllFinanceiras(): Promise<{ status: number; message: st
         return { status: 200, message: "success", data: request };
     } catch (error: any) {
         return { status: 500, message: "error", data: error };
+    }finally{
+        await prisma.$disconnect();
     }
 }

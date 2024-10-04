@@ -29,7 +29,7 @@ export default function BotaoCancelar({
       variant={variant}
       size={size}
     >
-      Calcelar
+      Cancelar
     </Button>
   );
 }

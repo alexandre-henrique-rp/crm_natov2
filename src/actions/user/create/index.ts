@@ -2,6 +2,7 @@
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from 'bcrypt';
 import { redirect } from "next/navigation";
+import { CreateUsuariosDto } from "../dto/createUsuarios.dto";
 
 
 const prisma = new PrismaClient();
@@ -33,45 +34,50 @@ export default async function UserCreate(_: any, data: FormData) {
   const passwordConfir = data.get("confirsenha") as string;
   const Password_key = generateHash(password);
 
+  const dto = new CreateUsuariosDto(cpf, nome, username, telefone, email, construtora, empreendimento, Financeira, Cargo, hierarquia, password, passwordConfir);
+  
+  const erroValidacao = dto.validar();
+  if(erroValidacao){
+    return { error: true, message: erroValidacao, data: null
+  }
+}
   const verificaCpf = await prisma.nato_user.findFirst({
     where: {
       cpf: cpf
     }
   });
-
   if (verificaCpf) {
-    console.log("CPF já cadastrado");
-  } else if (password !== passwordConfir) {
-    console.log(data.get("Senhas não conferem"));
-  } else {
+    return { error: true, message: "CPF já cadastrado", data: null };
+  }else {
 
     const construtoraArray = parseArrayString(construtora);
     const empreendimentoArray = parseArrayString(empreendimento);
     const FinanceiraArray = parseArrayString(Financeira);
-    
-    const user = await prisma.nato_user.create({
-      data: {
-        cpf: cpf,
-        nome: nome.toUpperCase(),
-        username: username.toUpperCase(),
-        telefone: telefone,
-        email: email,
-        construtora: JSON.stringify(construtoraArray),
-        empreendimento: JSON.stringify(empreendimentoArray),
-        Financeira: JSON.stringify(FinanceiraArray),
-        hierarquia: hierarquia,
-        password: password,
-        status: false,
-        cargo: Cargo,
-        password_key: Password_key,
-        reset_password: true,
-      }
-    });
-    redirect('/usuarios');
-    return {
-      error: false,
-      message: "Usuário cadastrado com sucesso"
-    };
-
+    try{
+      const user = await prisma.nato_user.create({
+        data: {
+          cpf: cpf,
+          nome: nome.toUpperCase(),
+          username: username.toUpperCase(),
+          telefone: telefone,
+          email: email,
+          construtora: JSON.stringify(construtoraArray),
+          empreendimento: JSON.stringify(empreendimentoArray),
+          Financeira: JSON.stringify(FinanceiraArray),
+          hierarquia: hierarquia,
+          password: password,
+          status: false,
+          cargo: Cargo,
+          password_key: Password_key,
+          reset_password: true,
+        }
+      });
+      redirect('/usuarios');
+      return { error: false, message: "Usuario Criado com sucesso", data: user };
+    } catch (error: any) {
+      return { error: true, message: "Erro ao criar a Usuario", data: error };
+  }finally{
+      await prisma.$disconnect();
   }
+}
 }

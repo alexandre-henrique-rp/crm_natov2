@@ -1,10 +1,11 @@
 
 import { BotaoRetorno } from "@/app/componentes/btm_retorno";
-import { Box, Button, Divider, Flex, Heading, Spacer } from "@chakra-ui/react";
+import { Box, Divider, Flex, Heading, } from "@chakra-ui/react";
 import React from "react";
 import { Metadata } from "next";
-import { CardUpdateUsuario } from "@/app/componentes/card_update_usuario";
-import { GetUser, UpdateUser } from "@/actions/user/service";
+import { GetFinanceiraById } from "@/actions/financeira/service/getFinanceiraById";
+import { CardUpdateFinanceira } from "@/app/componentes/card_EditarFinanceira";
+
 
 type Props = {
   params: { id: string };
@@ -12,10 +13,11 @@ type Props = {
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
   const id = params.id;
-  const data = await GetUser(Number(id))
+  const req = await GetFinanceiraById(Number(id))
+  const data = req.data
 
   return {
-    title: `Editar Usuário: ${data?.nome || 'Usuário'}`,
+    title: `Editar Financeira: ${data.fantasia || 'Usuário'}`,
   }
 }
 
@@ -23,7 +25,8 @@ export default async function EditarUsuario({params}: Props) {
 
   const id = Number(params.id);
 
-  const data = await GetUser(id)
+  const req = await GetFinanceiraById(id)
+  const data = req.data
 
   return (
     <>
@@ -44,11 +47,11 @@ export default async function EditarUsuario({params}: Props) {
             <Box>
               <BotaoRetorno rota="/usuarios" />
             </Box>
-            <Heading>Editar Usuário</Heading>
+            <Heading>Editar Financeira</Heading>
             <Box> </Box>
           </Flex>
           <Divider my={4} borderColor="gray.300" />
-          <CardUpdateUsuario id={id} setUsuarioCard={data} />
+          <CardUpdateFinanceira id={id} setFinanceiraCard={data} />
         </Box>
       </Flex>
     </>

@@ -9,6 +9,7 @@ import { mask } from "remask";
 import { BtnEditarUser } from "../btn_editar_user";
 import { FiltroContext } from "@/context/UserFiltroContext";
 import React from "react";
+import { BtnEditarFinanceira } from "../btn_editar_financeiras";
 
 interface FinanceirasType {
   data: any;
@@ -97,8 +98,7 @@ export default function Financeiras({ data }: FinanceirasType) {
                 </Flex>
               </Flex>
               <Flex mt={3} gap={2} w="100%" justifyContent="end">
-                <BtnEditarUser id={solicitacao.id} />
-                <BtnResetSenha ID={solicitacao.id} />
+                <BtnEditarFinanceira id={solicitacao.id} />
                 <BtnExcluirUser id={solicitacao.id} />
               </Flex>
             </Box>

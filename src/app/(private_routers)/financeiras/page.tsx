@@ -16,7 +16,6 @@ export const metadata: Metadata = {
 
 export default async function PainelFinanceiro() {
   const dados = await GetAllFinanceiras();
-
   return (
     <>
       <Flex
@@ -35,7 +34,6 @@ export default async function PainelFinanceiro() {
           <Heading>Financeiras</Heading>
           </Flex>
           <Flex gap={5}>
-            <CreateAlertGeral />
             <Link
             href={"/financeiras/cadastrar"}
             _hover={{ textDecoration: "none" }}

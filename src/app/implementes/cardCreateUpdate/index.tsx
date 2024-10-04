@@ -29,6 +29,12 @@ import { CardGridUserCargo } from "./Grid/CardGridUserCargo";
 import { CardGridUserHierarquia } from "./Grid/CardGridUserHierarquia";
 import { CardGridUserSenha } from "./Grid/CardUserSenha";
 import { CardGridUserConfirSenha } from "./Grid/CardGridUserConfirSenha";
+import CardGridCnpj from "./Grid/CardGridCnpj";
+import CardGridRazaoSocial from "./Grid/CardGridRazaoSocial";
+import CardGridRazaoSocialTel from "./Grid/CardGridTelRazaoSocial";
+import CardGridEmailRazaoSocial from "./Grid/CardGridEmailRasaoSocial";
+import CardGridResponsavel from "./Grid/CardGridResponsavelRazaoSocial";
+import CardGridFantasia from "./Grid/CardGridFantasia";
 
 
 
@@ -94,4 +100,12 @@ export const CardCreateUpdate = {
   GridUserHierarquia: CardGridUserHierarquia,
   GridUserSenha : CardGridUserSenha,
   GridUserConfirSenha : CardGridUserConfirSenha,
+  // Financeira Cadastro 
+  GridCnpj: CardGridCnpj,
+  GridRazaoSocial: CardGridRazaoSocial,
+  GridRazaoSocialTel: CardGridRazaoSocialTel,
+  GridRazaoSocialEmail: CardGridEmailRazaoSocial,
+  GridResponsavel: CardGridResponsavel,
+  GridFantasia: CardGridFantasia,
+
 };

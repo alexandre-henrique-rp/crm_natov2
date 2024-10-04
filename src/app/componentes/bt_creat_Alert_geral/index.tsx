@@ -18,6 +18,7 @@ import {
   useDisclosure
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
+import React from "react";
 import { useEffect, useState } from "react";
 
 export default function CreateAlertGeral() {
