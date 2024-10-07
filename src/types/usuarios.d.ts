@@ -75,6 +75,9 @@ type Construtora = {
     email: string,
 }
 
+
+declare module FinanceiraType {
+
 /**
  * @type {Financeira}
  * @param {number} id
@@ -87,4 +90,16 @@ type Financeira = {
     fantasia: string,
     tel: string,
     email: string,
+}
+
+interface GetAllFinanceiras {
+    id: number;
+    cnpj: string,
+    razaosocial: string,
+    tel: string,
+    email: string,
+    responsavel: string,
+    fantasia: string,
+}
+
 }

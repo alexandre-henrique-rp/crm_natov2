@@ -14,8 +14,6 @@ import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { BeatLoader } from "react-spinners";
-import { setEnvironmentData } from "worker_threads";
-
 interface SelectUserFinanceiraProps extends SelectProps {
   setValue: any;
 }

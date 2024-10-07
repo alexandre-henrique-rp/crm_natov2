@@ -1,0 +1,40 @@
+"use client";
+
+import { Input, InputProps } from "@chakra-ui/react";
+import { useContext, useEffect, useState } from "react";
+import { FinanceiraContext } from "@/context/FinanceiraContext";
+import React from "react";
+
+export interface InputEmailProps extends InputProps {
+  setValueEmail?: string;
+}
+
+export default function InputEmailRazaoSocial({ setValueEmail, ...props }: InputEmailProps) {
+    const { email, setEmail } = useContext(FinanceiraContext)
+
+  useEffect(() => {
+    if(!setValueEmail) return;
+    const isValidEmail = validateEmail(setValueEmail);
+    if (isValidEmail) {
+      setEmail(setValueEmail);
+    }
+  }, [setValueEmail]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const valor = e.target.value;
+    setEmail(valor);
+    props.onChange && props.onChange(e); // Mantém o evento original se passado
+  };
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  return (
+  <>
+  <Input {...props} value={email ?? ''} type="email" onChange={handleChange} />
+  </>
+  );
+}
+

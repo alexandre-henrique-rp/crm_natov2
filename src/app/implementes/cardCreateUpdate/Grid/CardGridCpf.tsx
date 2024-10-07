@@ -1,5 +1,6 @@
 import { Box, BoxProps, FormLabel, Input, Text } from "@chakra-ui/react";
 import InputCpf from "../imputs/inputCpf";
+import React from "react";
 
 interface CardGridCpfProps extends BoxProps {
   CPF?: string;
@@ -23,7 +24,9 @@ export default async function CardGridCpf({idUser, CPF, ...props }: CardGridCpfP
               setValueCpf={CPF}
               px={1}
               bg={"gray.100"}
-              borderColor={"gray.400"} /></>
+              borderColor={"gray.400"}
+              maxLength={14}
+               /></>
         )}
         {!CPF && (
           <InputCpf
@@ -32,6 +35,7 @@ export default async function CardGridCpf({idUser, CPF, ...props }: CardGridCpfP
             px={1}
             bg={"gray.100"}
             borderColor={"gray.400"}
+            maxLength={14}
           />
         )}
       </Box>
