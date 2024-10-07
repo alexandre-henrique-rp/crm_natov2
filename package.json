@@ -19,7 +19,7 @@
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
-    "consultar-cnpj": "^1.0.19",
+    "consultar-cnpj": "^1.0.20",
     "cpf-cnpj-validator": "^1.0.3",
     "framer-motion": "^11.3.28",
     "next": "14.2.5",

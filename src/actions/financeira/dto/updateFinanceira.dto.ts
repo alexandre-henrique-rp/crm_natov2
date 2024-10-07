@@ -1,6 +1,8 @@
+// /src/dto/CreateFinanceiraDto.ts
+
 import { cnpj } from "cpf-cnpj-validator";
 
-export class CreateFinanceiraDto {
+export class UpdateFinanceiraDto {
   cnpj: string;
   razaosocial: string;
   telefone: string;

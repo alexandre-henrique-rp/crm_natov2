@@ -1,24 +1,23 @@
 "use client";
 
+import ApiCpnj from "@/actions/financeira/api/cnpj";
 import { FinanceiraContext } from "@/context/FinanceiraContext";
-import { Box, Input, InputProps } from "@chakra-ui/react";
-import React, { useContext } from "react";
-import { createContext, useEffect, useState } from "react";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Input,
+  InputProps,
+  Text,
+} from "@chakra-ui/react";
+import React, { useContext, useEffect, useState } from "react";
 import { mask, unMask } from "remask";
+import { FaSearch } from "react-icons/fa";
+import { PulseLoader } from "react-spinners";
 
 export interface InputCnpjProps extends InputProps {
   setValueCnpj?: string;
 }
-
-type InputCnpjType = {
-  CnpjContex: string;
-  setCnpjContex: React.Dispatch<React.SetStateAction<string>>;
-};
-
-export const InputCnpjContext = createContext<InputCnpjType>({
-  CnpjContex: "",
-  setCnpjContex: () => {},
-});
 
 /**
  * Input que aceita CNPJ, aplica a máscara automaticamente e retorna o valor sem máscara.
@@ -30,17 +29,18 @@ export const InputCnpjContext = createContext<InputCnpjType>({
  *
  */
 export default function InputCnpj({ setValueCnpj, ...props }: InputCnpjProps) {
-  const { cnpj, setCnpj } = useContext(FinanceiraContext);
-
-  //   const [cnpj, setCnpj] = useState<string>("");
+  const { setData } = useContext(FinanceiraContext);
+  const [cnpjLocal, setCnpjLocal] = useState<string>("");
   const [Mask, setMask] = useState<string>("");
+  const [Loading, setLoading] = useState<boolean>(false);
+  const [Error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     if (!setValueCnpj) return;
     const valorLimpo = unMask(setValueCnpj);
     const maskCpf = mask(valorLimpo, ["99.999.999/9999-99"]);
     setMask(maskCpf);
-    setCnpj(valorLimpo);
+    setCnpjLocal(valorLimpo);
   }, [setValueCnpj]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,13 +48,46 @@ export default function InputCnpj({ setValueCnpj, ...props }: InputCnpjProps) {
     const valorLimpo = unMask(valor);
     const maskCpf = mask(valorLimpo, ["99.999.999/9999-99"]);
     setMask(maskCpf);
-    setCnpj(valorLimpo);
+    setCnpjLocal(valorLimpo);
     props.onChange && props.onChange(e); // Mantém o evento original se passado
   };
 
+
+  const handleOnClick = async () => {
+    const valorLimpo = unMask(cnpjLocal);
+    if (valorLimpo) {
+      setLoading(true);
+      try {
+        const req = await ApiCpnj(valorLimpo);
+        setData(req);  
+        setLoading(false);
+        setError(false);
+      } catch (error) {
+        setData({
+          error: true,
+          message: "Erro ao buscar informações do CNPJ.",
+        });
+        setLoading(false);
+        setError(true);
+      }
+    }
+};
+
   return (
     <>
-      {setValueCnpj && (
+      <Flex direction={"row"}>
+      {Loading && (
+        <Box
+          w={"100%"}
+          pt={5}
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
+        >
+          <PulseLoader color="#68D391" />
+        </Box>
+      )}
+      {!Loading && (
         <Input
           {...props}
           value={Mask}
@@ -63,14 +96,29 @@ export default function InputCnpj({ setValueCnpj, ...props }: InputCnpjProps) {
           _hover={{ color: "teal.500" }}
           _focus={{ color: "teal.500", borderColor: "teal.500" }}
           maxLength={18}
+          onChange={handleChange}
         />
       )}
-      {!setValueCnpj && (
-        <Input {...props} value={Mask} type="text" onChange={handleChange}  maxLength={18}/>
+      {Error && (
+        <Text color={"red"} fontSize="xs">
+          CNPJ não encontrado
+        </Text>
       )}
-      <Box hidden>
-        <Input value={cnpj} type="text" name="cnpj" hidden />
-      </Box>
+      {!setValueCnpj && (
+        <IconButton
+        alignSelf={"center"}
+        size={"sm"}
+        colorScheme="green"
+        aria-label="Search database"
+        icon={<FaSearch />}
+        onClick={handleOnClick}
+      />
+      )}
+        
+        <Box hidden>
+          <Input value={cnpjLocal} type="text" name="cnpj" hidden />
+        </Box>
+      </Flex>
     </>
   );
 }

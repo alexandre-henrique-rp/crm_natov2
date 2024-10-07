@@ -1,15 +1,11 @@
 'use client'
-
-import { BtnExcluirUser } from "@/app/componentes/btm_exluir_user";
-import { BtnResetSenha } from "@/app/componentes/btn_reset_senha";
 import { Box, Flex, IconButton, Text, useToast } from "@chakra-ui/react";
 import { useEffect, useState, useContext } from "react";
 import { FaCopy } from "react-icons/fa6";
 import { mask } from "remask";
-import { BtnEditarUser } from "../btn_editar_user";
-import { FiltroContext } from "@/context/UserFiltroContext";
 import React from "react";
 import { BtnEditarFinanceira } from "../btn_editar_financeiras";
+import { BtnExcluirFinanceira } from "../btn_excluir_financeira";
 
 interface FinanceirasType {
   data: any;
@@ -99,7 +95,7 @@ export default function Financeiras({ data }: FinanceirasType) {
               </Flex>
               <Flex mt={3} gap={2} w="100%" justifyContent="end">
                 <BtnEditarFinanceira id={solicitacao.id} />
-                <BtnExcluirUser id={solicitacao.id} />
+                <BtnExcluirFinanceira id={solicitacao.id} />
               </Flex>
             </Box>
           );

@@ -11,7 +11,6 @@ type Props = {
   };
 
 export async function CardUpdateFinanceira({id, setFinanceiraCard}: Props) {
-console.log("🚀 ~ CardUpdateFinanceira ~ setFinanceiraCard:", setFinanceiraCard)
 
     
     return (

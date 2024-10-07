@@ -12,6 +12,8 @@ export default async function CardGridCnpj({
   CNPJ,
   ...props
 }: CardGridCnpfProps) {
+
+
   return (
     <>
       <Box {...props}>

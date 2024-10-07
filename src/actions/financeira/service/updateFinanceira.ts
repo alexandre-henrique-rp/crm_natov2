@@ -1,60 +1,61 @@
-'use server'
+"use server";
 import { PrismaClient } from "@prisma/client";
 import { redirect } from "next/navigation";
-
-
+import { UpdateFinanceiraDto } from "../dto/updateFinanceira.dto";
 
 const prisma = new PrismaClient();
 
-export async function GetUser(id: number){
-    const user = await prisma.nato_user.findUnique({
-        where: {
+export async function UpdateFinanceira(_: any, data: FormData) {
+  const id = Number(data.get("id"));
+  const razaoSocial = data.get("razaosocial") as string;
+  const cnpj = data.get("cnpj") as string;
+  const email = data.get("email") as string;
+  const telefone = data.get("telefoneSemMask") as string;
+  const responsavel = data.get("responsavel") as string;
+  const fantasia = data.get("fantasia") as string;
+
+  const dto = new UpdateFinanceiraDto(
+    cnpj,
+    razaoSocial,
+    telefone,
+    email,
+    responsavel,
+    fantasia
+  );
+  const error = dto.validar();
+  if (error) {
+    return { error: true, message: error, data: null };
+  }
+  const newData = {
+    cnpj: cnpj,
+    razaosocial: razaoSocial,
+    tel: telefone,
+    email: email,
+    responsavel: responsavel,
+    fantasia: fantasia,
+  }
+  console.log("🚀 ~ UpdateFinanceira ~ newData:", newData)
+  
+
+  try {
+    const request = await prisma.nato_financeiro.update({
+      where: {
         id: id,
-        },
+      },
+      data: {
+        cnpj: cnpj,
+        razaosocial: razaoSocial,
+        tel: telefone,
+        email: email,
+        responsavel: responsavel,
+        fantasia: fantasia,
+      },
     });
-    
-    return user;
+    redirect("/financeira");
+    return { error: false, message: "success", data: request };
+  } catch (error: any) {
+    return { error: true, message: "Erro ao editar Financeira.", data: error };
+  } finally {
+    await prisma.$disconnect();
+  }
 }
-
-
-
-export async function UpdateFinanceira( _ : any, data : FormData){
-    const id = data.get("id") as string;
-    const cpf = data.get("cpf") as string;
-    const nome = data.get("nome") as string;
-    const username = data.get("usuario") as string;
-    const telefone = data.get("telefone") as string;
-    const email = data.get("email") as string;
-    const construtora = data.get("construtora") as any;
-    const empreendimento = data.get("empreendimento") as any;
-    const financeira = data.get("financeira") as any;
-    const cargo = data.get("cargo") as string;
-    const hierarquia = data.get("hierarquia") as string;
-    
-    
-    const construtoraArray = construtora ? construtora.split(',').map(Number) : [];
-    const empreendimentoArray = empreendimento ? empreendimento.split(',').map(Number) : [];
-    const FinanceiraArray = financeira ? financeira.split(',').map(Number): [];
-
-
-    // const user = await prisma.nato_user.update({
-    //     where: {
-    //         id: Number(id)
-    //     },
-    //     data: {
-    //         cpf: cpf,
-    //         nome: nome,
-    //         username: username,
-    //         ...(telefone && {telefone: telefone.replace(/\D/gm, "")}),
-    //         email: email,
-    //         ...(construtora && {construtora: JSON.stringify(construtoraArray)}),
-    //         ...(empreendimento && {empreendimento: JSON.stringify(empreendimentoArray)}),
-    //         ...(financeira && {Financeira: JSON.stringify(FinanceiraArray)}),
-    //         hierarquia: hierarquia,
-    //         cargo: cargo,
-    //     }
-    // });
-    // redirect('/usuarios');
-    // return user;
-}
-

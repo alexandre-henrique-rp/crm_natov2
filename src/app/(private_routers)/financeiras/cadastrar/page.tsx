@@ -14,12 +14,12 @@ import { Metadata } from "next";
 import FinanceiraProvider from "@/provider/FinanceiraProvider";
 import FinanceiraCreate from "@/actions/financeira/service/createFinanceira";
 
+
 export const metadata: Metadata = {
   title: "CADASTRO DE FINANCEIRA",
 };
 
-export default function CadastrarFinanceira() {
-
+export default async function CadastrarFinanceira() {
 
 
   return (
@@ -45,7 +45,8 @@ export default function CadastrarFinanceira() {
             <Box> </Box>
           </Flex>
           <Divider my={4} borderColor="gray.300" />
-          <CardCreateUpdate.Form action={FinanceiraCreate}>
+          <CardCreateUpdate.Form action={FinanceiraCreate}
+          method="POST">
             <Flex w={"full"} flexWrap={"wrap"} gap={5}>
               <FinanceiraProvider>
                 <CardCreateUpdate.GridCnpj w={"15rem"} />
