@@ -1,7 +1,18 @@
+"use server";
 import { PrismaClient } from "@prisma/client";
 import { ProtocoloDto } from "../dto/protocolo.dto";
 
 const prisma = new PrismaClient();
+
+type ProtocoloRequestType = {
+  id: number;
+  protocolo: number;
+  createdAt: Date;
+  updatedAt: Date;
+  situacao_pg: number;
+  nota_fiscal: string;
+  solicitacao: any;
+};
 
 export async function GetProtocolo(protocolo: number) {
   const dto = new ProtocoloDto(protocolo);
@@ -30,18 +41,57 @@ export async function GetProtocolo(protocolo: number) {
       };
     }
 
+    let solicitacaoIds = [];
+
+    // Validação do campo solicitacao como JSON válido
+    try {
+      solicitacaoIds = JSON.parse(request.solicitacao);
+    } catch (parseError) {
+      console.error("Erro ao fazer parse do campo solicitacao:", parseError);
+      return {
+        error: true,
+        message: "Erro ao processar a solicitação.",
+        data: null,
+      };
+    }
+
+    // Trazer informações da solicitação
+    const solicitacao = await prisma.nato_solicitacoes_certificado.findMany({
+      where: {
+        id_fcw: {
+          in: solicitacaoIds,
+        },
+      },
+      select: {
+        id: true,
+        nome: true,
+        cpf: true,
+        estatos_pgto: true,
+        valorcd: true,
+        dt_aprovacao: true,
+        createdAt: true,
+        empreedimento: true,
+      },
+    });
+    
+
     return {
       error: false,
       message: "Success",
-      data: request,
+      data: {
+        ...request,
+        ...(solicitacao.length > 0 && { solicitacao: solicitacao.map((s: any) =>{ return { ...s, createdAt: new Date(s.createdAt).toISOString(), dt_aprovacao: new Date(s.dt_aprovacao).toISOString() }}) }),
+      },
     };
   } catch (error: any) {
     // Tratamento genérico de erro
     console.error("Erro ao buscar protocolo:", error.message);
     return {
       error: true,
-      message: "Erro interno no servidor.",
+      message: "Erro interno no servidor. " + error.message,
       data: null,
     };
+  } finally {
+    await prisma.$disconnect();
   }
 }

@@ -6,33 +6,18 @@ import {
   Flex,
   FormLabel,
   Input,
-  chakra,
+  Select,
   useToast
 } from "@chakra-ui/react";
 import SelectConstrutora from "../../selectConstrutora";
-import { PrismaClient } from "@prisma/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createForm } from "@/lib/pdf";
 import { GetIncioFimSituacaoConstrutora } from "@/actions/relatorio_financeiro/service/getIncioFimSituacaoConstrutora";
+import { GetProtocolo } from "@/actions/relatorio_financeiro/service/getProtocolo";
+import { PostRelatorio } from "@/actions/relatorio_financeiro/service/postRelatorio";
+import { useSession } from "next-auth/react";
+import { GetConstrutoraById } from "@/actions/getInfo/service/getConstrutoraById";
 
-const prisma = new PrismaClient();
-
-const Requeste = async (inicio: any, fim: any, construtora: any) => {
-  const request = await fetch(`/api/get_relatorio`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      inicio,
-      fim,
-      construtora
-    }),
-    cache: "no-store"
-  });
-  const data = await request.json();
-  return data;
-};
 export default function GerarCobranca() {
   const [Inicio, setInicio] = useState("");
   const [Fim, setFim] = useState("");
@@ -41,53 +26,52 @@ export default function GerarCobranca() {
   const [TotalArray, setTotalArray] = useState<any>([]);
   const [Personalizado, setPersonalizado] = useState<boolean>(false);
   const [Protocolo, setProtocolo] = useState<boolean>(false);
-  const [ProtocoloNumber, setProtocoloNumber] = useState<string>("");
+  const [ProtocoloNumber, setProtocoloNumber] = useState<number>(0);
+  const [N_NotaFiscal, setN_NotaFiscal] = useState<string>("");
   const toast = useToast();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+   if(session?.user.hierarquia === 'CONST') {
+    setConstrutora(session?.user.construtora[0].id);
+   }
+  }, [session?.user.hierarquia]);
+
   async function handlePesquisa() {
-    if (Construtora === 0) {
+    const dados = await GetIncioFimSituacaoConstrutora(
+      Inicio,
+      Fim,
+      Situacao,
+      Construtora
+    );
+    if (dados.error) {
       toast({
         title: "Erro",
-        description: "Selecione uma construtora",
+        description: dados.message,
         status: "error",
         duration: 3000,
         isClosable: true
       });
     }
-    if (!Inicio || !Fim) {
-      toast({
-        title: "Erro",
-        description: "Preencha todos os campos",
-        status: "error",
-        duration: 3000,
-        isClosable: true
-      });
-    }
-    const dados = await Requeste(Inicio, Fim, Construtora);
-    setTotalArray(dados);
-  }
-  async function handlePesquisaProtocolo() {
-    if (Construtora === 0) {
-      toast({
-        title: "Erro",
-        description: "Selecione uma construtora",
-        status: "error",
-        duration: 3000,
-        isClosable: true
-      });
-    }
-    if (!Inicio || !Fim) {
-      toast({
-        title: "Erro",
-        description: "Preencha todos os campos",
-        status: "error",
-        duration: 3000,
-        isClosable: true
-      });
-    }
-    const dados = await GetIncioFimSituacaoConstrutora(Inicio, Fim, Situacao, Construtora);
-    setTotalArray(dados);
+    console.log("🚀 ~ handlePesquisa ~ dados.data:", dados.data);
+    if (!dados.error) setTotalArray(dados.data);
   }
 
+  async function handlePesquisaProtocolo() {
+    console.log(ProtocoloNumber);
+    const dados = await GetProtocolo(ProtocoloNumber);
+    if (dados.error) {
+      toast({
+        title: "Erro",
+        description: dados.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true
+      });
+    }
+    console.log(dados.data?.solicitacao);
+    setTotalArray(dados.data?.solicitacao);
+  }
 
   async function handleDownload() {
     // Função para separar os objetos por id do empreendimento
@@ -156,7 +140,28 @@ export default function GerarCobranca() {
     document.body.removeChild(link);
   }
 
+  console.log(session?.user);
   const handleDownloadPDF = async () => {
+    // separar id_fcw do array
+    // const ids = TotalArray.map((item: any) => item.id_fcw);
+    // console.log("ids:", ids);
+
+    // const DataPost = {
+    //   solicitacao: ids,
+    //   ...(N_NotaFiscal !== "" && { nota_fiscal: N_NotaFiscal }),
+    //   situacao_pg: 1,
+    //   construtora:Number(Construtora)
+    // };
+
+    //  const response = await PostRelatorio(DataPost);
+    //  console.log("🚀 ~ handleDownloadPDF ~ response:", response)
+
+    const construtoraInfo =
+    session?.user.hierarquia === "ADM"
+    ? await GetConstrutoraById(Number(Construtora))
+    : await GetConstrutoraById(session?.user.construtora[0].id);
+    console.log("🚀 ~ handleDownloadPDF ~ construtoraInfo:", construtoraInfo)
+
     const pdf = await createForm(); // Supondo que 'createForm' retorna os dados em formato PDF
 
     // Criar um Blob do conteúdo PDF
@@ -165,13 +170,14 @@ export default function GerarCobranca() {
     // Criar um link para o download
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
-    link.setAttribute("download", `relatorio.pdf`);
-    link.style.visibility = "hidden";
+    window.open(url, "_blank");
+    // link.setAttribute("href", url);
+    // link.setAttribute("download", `relatorio.pdf`);
+    // link.style.visibility = "hidden";
 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
   };
 
   return (
@@ -189,7 +195,7 @@ export default function GerarCobranca() {
 
         `}
       </style>
-      <Box w={"65%"} h={"40vh"} p={5} rounded="lg" boxShadow="2xl">
+      <Box w={"65%"} h={"47vh"} p={5} rounded="lg" boxShadow="2xl">
         <Box w={"100%"} textAlign={"center"}>
           Relatório Financeiro
         </Box>
@@ -201,8 +207,24 @@ export default function GerarCobranca() {
         >
           <Box>Tipo de Relatório</Box>
           <Flex gap={2} w={"80%"}>
-            <Checkbox onChange={(e)=> setProtocolo(e.target.checked)}>Protocolo</Checkbox>
-            <Checkbox onChange={(e)=> setPersonalizado(e.target.checked)}>Personalizado</Checkbox>
+            <Checkbox
+              onChange={(e) => {
+                setProtocolo(e.target.checked);
+                setPersonalizado(false);
+              }}
+              checked={Protocolo}
+            >
+              Protocolo
+            </Checkbox>
+            <Checkbox
+              onChange={(e) => {
+                setPersonalizado(e.target.checked);
+                setProtocolo(false);
+              }}
+              checked={Personalizado}
+            >
+              Personalizado
+            </Checkbox>
           </Flex>
           <Box />
         </Flex>
@@ -220,6 +242,8 @@ export default function GerarCobranca() {
                 <Input
                   type="date"
                   name="inicio"
+                  size={"sm"}
+                  borderRadius={"md"}
                   onChange={(e) => setInicio(e.target.value)}
                 />
               </Box>
@@ -229,15 +253,33 @@ export default function GerarCobranca() {
                 <Input
                   type="date"
                   name="fim"
+                  size={"sm"}
+                  borderRadius={"md"}
                   onChange={(e) => setFim(e.target.value)}
                 />
               </Box>
               <Box>
-                <FormLabel>construtora</FormLabel>
-                <SelectConstrutora
-                  onChange={(e) => setConstrutora(Number(e.target.value))}
-                />
+                <FormLabel>Tipo de situação</FormLabel>
+                <Select
+                  size={"sm"}
+                  borderRadius={"md"}
+                  onChange={(e) => setSituacao(Number(e.target.value))}
+                >
+                  <option value={0}>Pendente</option>
+                  <option value={1}>Agradando Pagamento</option>
+                  <option value={2}>Pago</option>
+                </Select>
               </Box>
+              {session?.user.hierarquia === "ADM" && (
+                <Box>
+                  <FormLabel>construtora</FormLabel>
+                  <SelectConstrutora
+                    size={"sm"}
+                    borderRadius={"md"}
+                    onChange={(e) => setConstrutora(Number(e.target.value))}
+                  />
+                </Box>
+              )}
               <Button onClick={handlePesquisa}>Pesquisar</Button>
             </Flex>
           </>
@@ -252,13 +294,14 @@ export default function GerarCobranca() {
               <Box>
                 <FormLabel>Numero do Protocolo</FormLabel>
                 <Input
-                  type="date"
-                  name="inicio"
-                  onChange={(e) => setProtocoloNumber(e.target.value)}
+                  type="number"
+                  name="protocolo"
+                  size={"sm"}
+                  onChange={(e) => setProtocoloNumber(Number(e.target.value))}
                 />
               </Box>
 
-              <Button onClick={handlePesquisa}>Pesquisar</Button>
+              <Button onClick={handlePesquisaProtocolo}>Pesquisar</Button>
             </Flex>
           </>
         ) : (
@@ -310,11 +353,37 @@ export default function GerarCobranca() {
               })}
           </table>
         </Box>
-        <Flex w={"100%"} justifyContent={"end"} gap={2}>
-          <Button colorScheme="teal" onClick={handleDownload}>
-            Gerar Previa
-          </Button>
-          <Button onClick={handleDownloadPDF}>Gerar cobrança</Button>
+        <Flex w={"100%"} justifyContent={"space-between"}>
+          {Personalizado ? (
+            <>
+              <Flex>
+                <FormLabel>Nº nota fiscal</FormLabel>
+                <Input
+                  size={"sm"}
+                  borderRadius={"md"}
+                  w={"7rem"}
+                  onChange={(e) => setN_NotaFiscal(e.target.value)}
+                />
+              </Flex>
+            </>
+          ) : (
+            <>
+              <Box />
+            </>
+          )}
+          <Flex gap={2}>
+            <Button colorScheme="teal" onClick={handleDownload}>
+              Gerar Previa
+            </Button>
+            <Button
+              isDisabled={
+                !Personalizado && !Protocolo ? true : !!Protocolo ? true : false
+              }
+              onClick={handleDownloadPDF}
+            >
+              Gerar cobrança
+            </Button>
+          </Flex>
         </Flex>
       </Box>
     </>
