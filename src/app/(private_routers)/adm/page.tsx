@@ -1,5 +1,5 @@
 import CreateAlertGeral from "@/app/componentes/bt_creat_Alert_geral";
-import GerarCobranca from "@/app/componentes/relatorio_finaceiro/gerar_cobrança";
+import GerarCobranca from "@/app/componentes/relatorio_finaceiro/gerar_cobranca";
 import { auth } from "@/lib/auth_confg";
 import {
   Box,

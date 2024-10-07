@@ -1,19 +1,19 @@
+"use server";
 import { PrismaClient } from "@prisma/client";
 import { DetIncioFimSituacaoConstrutoraDto } from "../dto/getIncioFimSituacaoConstrutora.dto";
-
 
 const prisma = new PrismaClient();
 
 type dataType = {
   id: number;
-    nome: string;
-    cpf: string;
-    empreedimento: number | null;
-    createdAt: Date;
-    dt_aprovacao: Date | null;
-    estatos_pgto: string | null;
-    valorcd: number | null;
-}
+  nome: string;
+  cpf: string;
+  empreedimento: number | null;
+  createdAt: Date;
+  dt_aprovacao: Date | null;
+  estatos_pgto: string | null;
+  valorcd: number | null;
+};
 
 /**
  * Busca as solicitações no banco de dados, considerando o construtora,
@@ -27,8 +27,18 @@ type dataType = {
  *
  * @returns {Promise<{ error: boolean, message: string, data: dataType[] | null }>}
  */
-export async function GetIncioFimSituacaoConstrutora(inicio: string, fim: string, situacao: number, construtora: number): Promise<{ error: boolean; message: string; data: dataType[] | null; }> {
-  const dto = new DetIncioFimSituacaoConstrutoraDto(construtora, inicio, fim, situacao);
+export async function GetIncioFimSituacaoConstrutora(
+  inicio: string,
+  fim: string,
+  situacao: number,
+  construtora: number
+): Promise<{ error: boolean; message: string; data: dataType[] | null }> {
+  const dto = new DetIncioFimSituacaoConstrutoraDto(
+    construtora,
+    inicio,
+    fim,
+    situacao
+  );
 
   // Validação usando o DTO
   const erroValidacao = dto.validar();
@@ -36,7 +46,7 @@ export async function GetIncioFimSituacaoConstrutora(inicio: string, fim: string
     return {
       error: true,
       message: erroValidacao,
-      data: null,
+      data: null
     };
   }
 
@@ -47,39 +57,48 @@ export async function GetIncioFimSituacaoConstrutora(inicio: string, fim: string
         construtora: dto.construtora,
         createdAt: {
           gte: new Date(dto.inicio),
-          lte: new Date(dto.fim),
+          lte: new Date(dto.fim)
         },
         Andamento: {
-          in: ["APROVADO", "EMITIDO"],
+          in: ["APROVADO", "EMITIDO"]
         },
         situacao_pg: {
-          equals: dto.situacao,
-        },
+          equals: dto.situacao
+        }
       },
       select: {
         id: true,
         nome: true,
         cpf: true,
+        id_fcw: true,
         estatos_pgto: true,
         valorcd: true,
         dt_aprovacao: true,
         createdAt: true,
-        empreedimento: true,
-      },
+        empreedimento: true
+      }
     });
-
+    
     return {
       error: false,
       message: "Success",
-      data: dados,
+      data: dados.map((item: any) => ({
+        ...item,
+        createdAt: new Date(item.createdAt).toISOString(),
+        dt_aprovacao: item.dt_aprovacao
+          ? new Date(item.dt_aprovacao).toISOString()
+          : null
+      }))
     };
   } catch (error: any) {
     // Tratamento genérico de erro
-    console.error("Erro ao buscar solicitações:", error);
+    console.error("Erro ao buscar solicitações:", error.message);
     return {
       error: true,
-      message: "Erro interno no servidor.",
-      data: null,
+      message: "Erro interno no servidor. " + error.message,
+      data: null
     };
+  } finally {
+    await prisma.$disconnect();
   }
 }

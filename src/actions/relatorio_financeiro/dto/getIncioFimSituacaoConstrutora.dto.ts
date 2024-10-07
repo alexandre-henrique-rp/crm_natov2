@@ -22,10 +22,10 @@ export class DetIncioFimSituacaoConstrutoraDto {
   validar(): string | null {
     // Valida se construtora e situacao são números
     if (!Number.isInteger(this.construtora) || this.construtora <= 0) {
-      return "A construtora deve ser um número inteiro maior que zero.";
+      return "A construtora deve ser definido.";
     }
     if (!Number.isInteger(this.situacao) || this.situacao < 0) {
-      return "A situação deve ser um número inteiro válido.";
+      return "A situação deve ser definido.";
     }
 
     // Valida se as datas inicio e fim são válidas
