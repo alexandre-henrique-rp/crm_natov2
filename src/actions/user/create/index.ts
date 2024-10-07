@@ -12,7 +12,9 @@ const prisma = new PrismaClient();
   }
 
   function parseArrayString(str: string): string {
-    if (str.trim() === '') {
+    if(str === null) {
+      return ''
+    }else if (str.trim() === '') {
       return JSON.stringify([]); 
     }
     return JSON.stringify(str.split(',').map(Number));
