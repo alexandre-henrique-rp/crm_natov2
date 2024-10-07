@@ -43,7 +43,7 @@ export default function BotaoJuncao() {
           <>
             <BotaoHome />
             <BotaoNovaSolicita />
-            {but === "ADM" && (
+            {but === "ADM" || but === "CONST" &&(
               <>
                 <BotaoPainelAdm />
                 {/* <BotaoPainelFinanceiro /> */}

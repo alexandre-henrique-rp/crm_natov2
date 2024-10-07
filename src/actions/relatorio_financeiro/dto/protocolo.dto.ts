@@ -8,7 +8,7 @@ export class ProtocoloDto {
   // Validação simples diretamente no DTO
   validar(): string | null {
     if (!Number.isInteger(this.protocolo) || this.protocolo <= 0) {
-      return "O protocolo deve ser um número inteiro maior que zero.";
+      return "O protocolo deve ser informado.";
     }
     return null;
   }
