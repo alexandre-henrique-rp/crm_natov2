@@ -23,6 +23,7 @@ export function CardFormComponent(props: CardFormProps) {
 
   const [state, formAction] = useFormState(props.action, { error: null });
 
+
   useEffect(() => {
     if (state?.error) {
       setIsError(true);

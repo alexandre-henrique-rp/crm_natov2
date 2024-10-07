@@ -1156,7 +1156,7 @@ console-control-strings@^1.0.0, console-control-strings@^1.1.0:
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
   integrity sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==
 
-consultar-cnpj@^1.0.19:
+consultar-cnpj@^1.0.20:
   version "1.0.20"
   resolved "https://registry.yarnpkg.com/consultar-cnpj/-/consultar-cnpj-1.0.20.tgz#3745a3c3e361eb740075b0a61295f158aef4ad97"
   integrity sha512-9IWZpVOFIB77XvCPtHTDbiyNshuLUZXm3ie1KvCdih2h5UXbqMQJtq9HOiryZ4wc+5kCjWVPd7SbGWkITIMvNg==

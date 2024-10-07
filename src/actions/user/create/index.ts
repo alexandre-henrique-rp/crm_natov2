@@ -12,7 +12,9 @@ const prisma = new PrismaClient();
   }
 
   function parseArrayString(str: string): string {
-    if (str.trim() === '') {
+    if(str === null) {
+      return ''
+    }else if (str.trim() === '') {
       return JSON.stringify([]); 
     }
     return JSON.stringify(str.split(',').map(Number));
@@ -73,7 +75,6 @@ export default async function UserCreate(_: any, data: FormData) {
         }
       });
       redirect('/usuarios');
-      return { error: false, message: "Usuario Criado com sucesso", data: user };
     } catch (error: any) {
       return { error: true, message: "Erro ao criar a Usuario", data: error };
   }finally{

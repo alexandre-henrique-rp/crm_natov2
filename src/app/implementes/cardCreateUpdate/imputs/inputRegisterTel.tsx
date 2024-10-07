@@ -94,7 +94,7 @@ export const InputRegisterTel = ({ Index,tell, ...props }: InputTel1Props) => {
           placeholder="(__) _____-____"
           name={Index > 0 ?`telefone ${Index}`: "telefone"}
           variant="flushed"
-          {...props} // Spread dos props adicionais do Chakra UI
+          {...props} 
         />
       )}
       {Error && (

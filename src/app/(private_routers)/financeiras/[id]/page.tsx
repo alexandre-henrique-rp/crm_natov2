@@ -1,10 +1,11 @@
 
 import { BotaoRetorno } from "@/app/componentes/btm_retorno";
 import { Box, Divider, Flex, Heading, } from "@chakra-ui/react";
-import React from "react";
+import React, { useContext } from "react";
 import { Metadata } from "next";
 import { GetFinanceiraById } from "@/actions/financeira/service/getFinanceiraById";
 import { CardUpdateFinanceira } from "@/app/componentes/card_EditarFinanceira";
+import { FinanceiraContext } from "@/context/FinanceiraContext";
 
 
 type Props = {

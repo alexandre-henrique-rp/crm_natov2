@@ -77,7 +77,7 @@ export default async function ConstrutoraPage() {
         <Flex w={"100%"} justifyContent={"space-around"}>
           <Heading>Construtora</Heading>
           <Link
-            href={"/construtora/cadastrar"}
+            href={"/construtoras/cadastrar"}
             _hover={{ textDecoration: "none" }}
           >
             <Box

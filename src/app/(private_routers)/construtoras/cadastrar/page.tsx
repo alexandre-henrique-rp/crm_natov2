@@ -1,5 +1,9 @@
+import UserCreate from "@/actions/user/create";
 import { BotaoRetorno } from "@/app/componentes/btm_retorno";
-import { Box, Divider, Flex, Heading } from "@chakra-ui/react";
+import BotaoCancelar from "@/app/componentes/btn_cancelar";
+import { CardCreateUpdate } from "@/app/implementes/cardCreateUpdate";
+import { Box, Button, Divider, Flex, Heading, Spacer } from "@chakra-ui/react";
+import React from "react";
 
 export default function Create() {
   return (
@@ -24,7 +28,14 @@ export default function Create() {
             <Heading>Criar Construtora</Heading>
           </Flex>
           <Divider my={4} borderColor="gray.300" />
-          {/* compoment */}
+          <CardCreateUpdate.Form action={{}}>
+            <Flex w={"full"} flexWrap={"wrap"} gap={5}>
+              <CardCreateUpdate.GridRazaoConstrutora w={"15rem"} />
+
+            </Flex>
+            <Divider my={4} borderColor="gray.300" />
+            <Flex w={"full"} justifyContent={"end"}></Flex>
+          </CardCreateUpdate.Form>
         </Box>
       </Flex>
     </>

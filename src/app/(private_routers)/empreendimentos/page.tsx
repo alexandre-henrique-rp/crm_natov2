@@ -1,8 +1,7 @@
-import FiltroId from "@/app/componentes/filter_id";
-import FiltroUser from "@/app/componentes/filtroUser";
-import Usuarios from "@/app/componentes/usuarios_component";
-import { auth } from "@/lib/auth_confg";
-import UserProvider from "@/provider/UserProvider";
+
+
+
+
 import { Box, Button, Divider, Flex, Heading, Input, InputGroup, InputLeftAddon, Link, Text } from "@chakra-ui/react";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
@@ -12,11 +11,10 @@ import React from "react";
 export const metadata: Metadata = {
   title: "EMPREENDIMENTOS",
 };
-export default async function UsuariosPage() {
+export default async function EmpreendimentoPage() {
 
   return (
     <>
-
       <Flex
         w={"100%"}
         minH={"90.9dvh"}

@@ -29,12 +29,16 @@ import { CardGridUserCargo } from "./Grid/CardGridUserCargo";
 import { CardGridUserHierarquia } from "./Grid/CardGridUserHierarquia";
 import { CardGridUserSenha } from "./Grid/CardUserSenha";
 import { CardGridUserConfirSenha } from "./Grid/CardGridUserConfirSenha";
+<<<<<<< Updated upstream
 import CardGridCnpj from "./Grid/CardGridCnpj";
 import CardGridRazaoSocial from "./Grid/CardGridRazaoSocial";
 import CardGridRazaoSocialTel from "./Grid/CardGridTelRazaoSocial";
-import CardGridEmailRazaoSocial from "./Grid/CardGridEmailRasaoSocial";
+import CardGridEmailRazaoSocial from "./Grid/CardGridEmailRazaoSocial";
 import CardGridResponsavel from "./Grid/CardGridResponsavelRazaoSocial";
 import CardGridFantasia from "./Grid/CardGridFantasia";
+=======
+import { CardGridRsConstrutora } from "./Grid/CardGridRsConstrutora";
+>>>>>>> Stashed changes
 
 
 
@@ -100,6 +104,7 @@ export const CardCreateUpdate = {
   GridUserHierarquia: CardGridUserHierarquia,
   GridUserSenha : CardGridUserSenha,
   GridUserConfirSenha : CardGridUserConfirSenha,
+<<<<<<< Updated upstream
   // Financeira Cadastro 
   GridCnpj: CardGridCnpj,
   GridRazaoSocial: CardGridRazaoSocial,
@@ -108,4 +113,8 @@ export const CardCreateUpdate = {
   GridResponsavel: CardGridResponsavel,
   GridFantasia: CardGridFantasia,
 
+=======
+  GridRazaoConstrutora : CardGridRsConstrutora,
+  
+>>>>>>> Stashed changes
 };
