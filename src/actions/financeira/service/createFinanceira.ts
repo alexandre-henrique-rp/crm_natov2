@@ -39,29 +39,28 @@ export default async function FinanceiraCreate(_: any, data: FormData) {
             data: null 
         };
     }
-    
 
-    // try {
-    //     // Cria uma nova entrada de financeira no banco
-    //     // await prisma.nato_financeiro.create({
-    //     //     data: {
-    //     //         cnpj,
-    //     //         razaosocial,
-    //     //         tel: telefone,
-    //     //         email,
-    //     //         responsavel,
-    //     //         fantasia,
-    //     //     }
-    //     // });
+    try {
+        // Cria uma nova entrada de financeira no banco
+        // await prisma.nato_financeiro.create({
+        //     data: {
+        //         cnpj,
+        //         razaosocial,
+        //         tel: telefone,
+        //         email,
+        //         responsavel,
+        //         fantasia,
+        //     }
+        // });
 
-    // } catch (error: any) {
-    //     return {
-    //         error: true, 
-    //         message: "Erro ao criar a financeira", 
-    //         data: error 
-    //     };
-    // } finally {
-    //     // Desconecta o Prisma após a operação
-    //     await prisma.$disconnect();
-    // }
+    } catch (error: any) {
+        return {
+            error: true, 
+            message: "Erro ao criar a financeira", 
+            data: error 
+        };
+    } finally {
+        // Desconecta o Prisma após a operação
+        await prisma.$disconnect();
+    }
 }
