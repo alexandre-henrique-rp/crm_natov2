@@ -1,6 +1,5 @@
 "use client";
 
-import { DeleteFinanceira } from "@/actions/financeira/service/deleteFinanceira";
 import {
   Button,
   IconButton,
@@ -29,12 +28,20 @@ export function BtnExcluirFinanceira({ id }: BtnExcluirFinanceiraProps) {
 
   const handleExcluir = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const response = await DeleteFinanceira(id);
-    
+    const response = await fetch(`/api/financeira/delete/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: true,
+      }),
+    });
+
     if (response.ok) {
       toast({
         title: "Sucesso!",
-        description: "Financeira excluída com sucesso!",
+        description: "Financeira excluído com sucesso!",
         status: "success",
         duration: 9000,
         isClosable: true,
@@ -73,7 +80,7 @@ export function BtnExcluirFinanceira({ id }: BtnExcluirFinanceiraProps) {
         <ModalContent>
           <ModalBody p={10}>
             <Text fontWeight={"bold"} fontSize={"20px"} textAlign={"center"}>
-              Você tem certeza de que deseja deletar Esta Financeira?
+              Você tem certeza de que deseja deletar esta Financeira?
             </Text>
           </ModalBody>
 
@@ -84,7 +91,7 @@ export function BtnExcluirFinanceira({ id }: BtnExcluirFinanceiraProps) {
 
             <Button
               leftIcon={<BsFillTrashFill />}
-              onClick={handleExcluir}
+              onClick={() => handleExcluir}
               colorScheme="red"
             >
               Confirmar Exclusão
