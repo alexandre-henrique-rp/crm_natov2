@@ -17,6 +17,7 @@ import { GetProtocolo } from "@/actions/relatorio_financeiro/service/getProtocol
 import { PostRelatorio } from "@/actions/relatorio_financeiro/service/postRelatorio";
 import { useSession } from "next-auth/react";
 import { GetConstrutoraById } from "@/actions/getInfo/service/getConstrutoraById";
+import ApiCpnjJson from "@/actions/getInfo/api/apicnpj";
 
 export default function GerarCobranca() {
   const [Inicio, setInicio] = useState("");
@@ -32,9 +33,9 @@ export default function GerarCobranca() {
   const { data: session } = useSession();
 
   useEffect(() => {
-   if(session?.user.hierarquia === 'CONST') {
-    setConstrutora(session?.user.construtora[0].id);
-   }
+    if (session?.user.hierarquia === "CONST") {
+      setConstrutora(session?.user.construtora[0].id);
+    }
   }, [session?.user.hierarquia]);
 
   async function handlePesquisa() {
@@ -157,12 +158,46 @@ export default function GerarCobranca() {
     //  console.log("🚀 ~ handleDownloadPDF ~ response:", response)
 
     const construtoraInfo =
-    session?.user.hierarquia === "ADM"
-    ? await GetConstrutoraById(Number(Construtora))
-    : await GetConstrutoraById(session?.user.construtora[0].id);
-    console.log("🚀 ~ handleDownloadPDF ~ construtoraInfo:", construtoraInfo)
+      session?.user.hierarquia === "ADM"
+        ? await GetConstrutoraById(Number(Construtora))
+        : await GetConstrutoraById(session?.user.construtora[0].id);
+    const complementoCnpj: any =
+      construtoraInfo && (await ApiCpnjJson(construtoraInfo.cnpj));
 
-    const pdf = await createForm(); // Supondo que 'createForm' retorna os dados em formato PDF
+      if (complementoCnpj.error) {
+        toast({
+          title: "Erro",
+          description: complementoCnpj.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true
+        });
+      }
+    const DadosConst = {
+      nome: complementoCnpj.data.razao_social,
+      telefone: construtoraInfo?.tel?.replace(/[^0-9]/g, '').replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2 $3-$4"),
+      email: construtoraInfo?.email,
+      cnpj: construtoraInfo?.cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5"),
+      // end: "R. Américo Brasiliense, 284 - 3° Andar Sala 32 - Centro, Ribeirão Preto - SP, 14015-050"
+      end: `${complementoCnpj.data.estabelecimento.tipo_logradouro} ${complementoCnpj.data.estabelecimento.logradouro}, ${complementoCnpj.data.estabelecimento.numero}, ${complementoCnpj.data.estabelecimento.complemento}, ${complementoCnpj.data.estabelecimento.bairro}, ${complementoCnpj.data.estabelecimento.cidade} - ${complementoCnpj.data.estabelecimento.uf}, ${complementoCnpj.data.estabelecimento.cep?.replace(/(\d{5})(\d{3})/, "$1-$2")}`
+    };
+
+    const ValorCert = construtoraInfo?.valor_cert? construtoraInfo?.valor_cert : 0
+
+    const valorTotal = ValorCert ? TotalArray.length * ValorCert : 0;
+    const valorUnicoFormatado = ValorCert.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    })
+    const valorTotalFormatado = valorTotal.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    });
+
+    const msg = `Certificados emitidos pelo "AR Interface certificador" no período de ${Inicio.split("-").reverse().join("/")} a ${Fim.split("-").reverse().join("/")}, com o valor total de ${valorUnicoFormatado} cada certificado, com validade de 1 ano.`;
+
+
+    const pdf = await createForm(DadosConst,valorTotalFormatado, TotalArray.length, msg); // Supondo que 'createForm' retorna os dados em formato PDF
 
     // Criar um Blob do conteúdo PDF
     const blob = new Blob([pdf], { type: "application/pdf" });

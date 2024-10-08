@@ -1,6 +1,6 @@
 import { PDFDocument, rgb } from "pdf-lib";
 
-export async function createForm() {
+export async function createForm(construrora: any, totalValor: string, qtCert: number, msg: string) {
   const pdfDoc = await PDFDocument.create();
 
   const page = pdfDoc.addPage([550, 750]);
@@ -13,14 +13,7 @@ export async function createForm() {
     .split("-")
     .reverse()
     .join("/");
-  const DataConstrutora = {
-    nome: "AR Interface certificador",
-    telefone: "(16) 33252-4134",
-    email: "atendimento@arinterfacecertificador.com.br",
-    site: "https://arinterfacecertificador.com.br",
-    cnpj: "14.000.930/0001-50",
-    end: "R. Américo Brasiliense, 284 - 3° Andar Sala 32 - Centro, Ribeirão Preto - SP, 14015-050"
-  };
+  const DataConstrutora = construrora;
   const DataArInterface = {
     nome: "AR Interface certificador",
     telefone: "(16) 33252-4134",
@@ -32,10 +25,9 @@ export async function createForm() {
 
   const Produto = "BirdI500";
 
-  const DescricaoTxt =
-    'certificados emitidos pelo "AR Interface certificador" no período de 01/01/2022 a 31/12/2022, com o valor total de R$ 0,00 cada certificado, com validade de 1 ano.';
+  const DescricaoTxt = msg;
 
-  const QTD = 5000;
+  const QTD = qtCert;
 
   function quebrarStringPorEspacos(
     string: string | any[],
@@ -170,7 +162,7 @@ export async function createForm() {
   });
 
   page.drawText(`Valor total`, { x: 365, y: 300, size: 9, opacity: 0.75 });
-  page.drawText(`${QTD}`, { x: 430, y: 300, size: 9, opacity: 0.75 });
+  page.drawText(`${totalValor}`, { x: 430, y: 300, size: 9, opacity: 0.75 });
 
 
   // Salva o documento como bytes
