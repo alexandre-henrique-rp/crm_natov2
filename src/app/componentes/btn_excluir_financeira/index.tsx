@@ -1,5 +1,6 @@
 "use client";
 
+import { DeleteFinanceira } from "@/actions/financeira/service/deleteFinanceira";
 import {
   Button,
   IconButton,
@@ -18,37 +19,28 @@ import { BsFillTrashFill } from "react-icons/bs";
 import { MdOutlineCancel } from "react-icons/md";
 
 interface BtnExcluirFinanceiraProps {
-  id: number;
+  id: string;
 }
 
 export function BtnExcluirFinanceira({ id }: BtnExcluirFinanceiraProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-  const route = useRouter();
+  const router = useRouter();
 
-  const handleExcluir = async (e: React.FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const response = await fetch(`/api/financeira/delete/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        status: true,
-      }),
-    });
+  const handleExcluir = async () => {
+    
+    const data = await DeleteFinanceira(id);
 
-    if (response.ok) {
+    if (data.error === false) {
       toast({
         title: "Sucesso!",
-        description: "Financeira excluído com sucesso!",
+        description: "Financeira excluída com sucesso!",
         status: "success",
         duration: 9000,
         isClosable: true,
       });
-
       onClose();
-      route.refresh();
+      router.refresh();
     } else {
       toast({
         title: "Erro!",
@@ -57,7 +49,6 @@ export function BtnExcluirFinanceira({ id }: BtnExcluirFinanceiraProps) {
         duration: 9000,
         isClosable: true,
       });
-
       onClose();
     }
   };
@@ -76,7 +67,6 @@ export function BtnExcluirFinanceira({ id }: BtnExcluirFinanceiraProps) {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-
         <ModalContent>
           <ModalBody p={10}>
             <Text fontWeight={"bold"} fontSize={"20px"} textAlign={"center"}>
@@ -91,7 +81,7 @@ export function BtnExcluirFinanceira({ id }: BtnExcluirFinanceiraProps) {
 
             <Button
               leftIcon={<BsFillTrashFill />}
-              onClick={() => handleExcluir}
+              onClick={handleExcluir}
               colorScheme="red"
             >
               Confirmar Exclusão
