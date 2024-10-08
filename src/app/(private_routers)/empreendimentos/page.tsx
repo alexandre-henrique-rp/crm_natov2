@@ -1,17 +1,16 @@
-
-
-
-
-import { Box, Button, Divider, Flex, Heading, Input, InputGroup, InputLeftAddon, Link, Text } from "@chakra-ui/react";
+import GetAllEmpreendimento from "@/actions/empreendimento/service/getAllEmpreendimentos";
+import Empreendimentos from "@/app/componentes/empreendimentoCard";
+import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
-import React from "react";
 
+import React from "react";
 
 export const metadata: Metadata = {
   title: "EMPREENDIMENTOS",
 };
 export default async function EmpreendimentoPage() {
+
+  const dados = await GetAllEmpreendimento();
 
   return (
     <>
@@ -25,7 +24,7 @@ export default async function EmpreendimentoPage() {
         <Flex w={"100%"} justifyContent={"space-around"}>
           <Heading>Empreendimentos</Heading>
           <Link
-            href={"/empreendimento/cadastrar"}
+            href={"/empreendimentos/cadastrar"}
             _hover={{ textDecoration: "none" }}
           >
             <Box
@@ -50,9 +49,15 @@ export default async function EmpreendimentoPage() {
           </Text>
         </Box>
         <Box w={"100%"}>
+          <Flex
+            w={"100%"}
+            mb={8}
+            justifyContent="center"
+            alignItems="center"
+          ></Flex>
+          <Box>{dados?.status === 200 ? <Empreendimentos data={dados?.data} /> : <></>}</Box>
         </Box>
       </Flex>
     </>
   );
 }
-
