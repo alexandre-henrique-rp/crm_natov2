@@ -1,5 +1,6 @@
 import CreateAlertGeral from "@/app/componentes/bt_creat_Alert_geral";
 import GerarCobranca from "@/app/componentes/relatorio_finaceiro/gerar_cobranca";
+import ListCobranca from "@/app/componentes/relatorio_finaceiro/list_cobranca";
 import { auth } from "@/lib/auth_confg";
 import {
   Box,
@@ -58,7 +59,7 @@ export default function PainelAdministrativo() {
               _hover={{ bg: "green.500", textDecoration: "none" }}
               boxShadow={"lg"}
               cursor={"pointer"}
-              href={"/construtora"}
+              href={"/construtoras"}
               fontSize={"0.8rem"}
             >
               construtora
@@ -98,12 +99,13 @@ export default function PainelAdministrativo() {
         <Divider my={5} />
         <Flex
           w={"100%"}
-          justifyContent={"space-around"}
+          // justifyContent={"space-between"}
           flexWrap={"wrap"}
           gap={2}
         >
           {/* componente relatório financeiro  */}
           <GerarCobranca />
+          <ListCobranca />
           
         </Flex>
       </Flex>

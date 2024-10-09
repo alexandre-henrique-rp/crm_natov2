@@ -54,12 +54,10 @@ export default function GerarCobranca() {
         isClosable: true
       });
     }
-    console.log("🚀 ~ handlePesquisa ~ dados.data:", dados.data);
     if (!dados.error) setTotalArray(dados.data);
   }
 
   async function handlePesquisaProtocolo() {
-    console.log(ProtocoloNumber);
     const dados = await GetProtocolo(ProtocoloNumber);
     if (dados.error) {
       toast({
@@ -133,7 +131,7 @@ export default function GerarCobranca() {
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", "relatorio.csv");
+    link.setAttribute("download", "Previa_relatorio.csv");
     link.style.visibility = "hidden";
 
     document.body.appendChild(link);
@@ -141,29 +139,27 @@ export default function GerarCobranca() {
     document.body.removeChild(link);
   }
 
-  console.log(session?.user);
   const handleDownloadPDF = async () => {
     // separar id_fcw do array
-    // const ids = TotalArray.map((item: any) => item.id_fcw);
-    // console.log("ids:", ids);
+    const ids = TotalArray.map((item: any) => item.id_fcw);
+    console.log("ids:", ids);
 
-    // const DataPost = {
-    //   solicitacao: ids,
-    //   ...(N_NotaFiscal !== "" && { nota_fiscal: N_NotaFiscal }),
-    //   situacao_pg: 1,
-    //   construtora:Number(Construtora)
-    // };
+    const DataPost = {
+      solicitacao: ids,
+      ...(N_NotaFiscal !== "" && { nota_fiscal: N_NotaFiscal }),
+      situacao_pg: 1,
+      construtora:Number(Construtora)
+    };
 
-    //  const response = await PostRelatorio(DataPost);
-    //  console.log("🚀 ~ handleDownloadPDF ~ response:", response)
+     const response = await PostRelatorio(DataPost);
 
     const construtoraInfo =
       session?.user.hierarquia === "ADM"
         ? await GetConstrutoraById(Number(Construtora))
         : await GetConstrutoraById(session?.user.construtora[0].id);
     const complementoCnpj: any =
-      construtoraInfo && (await ApiCpnjJson(construtoraInfo.cnpj));
-
+    construtoraInfo && (await ApiCpnjJson(construtoraInfo.cnpj));
+    
       if (complementoCnpj.error) {
         toast({
           title: "Erro",
@@ -178,8 +174,7 @@ export default function GerarCobranca() {
       telefone: construtoraInfo?.tel?.replace(/[^0-9]/g, '').replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2 $3-$4"),
       email: construtoraInfo?.email,
       cnpj: construtoraInfo?.cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5"),
-      // end: "R. Américo Brasiliense, 284 - 3° Andar Sala 32 - Centro, Ribeirão Preto - SP, 14015-050"
-      end: `${complementoCnpj.data.estabelecimento.tipo_logradouro} ${complementoCnpj.data.estabelecimento.logradouro}, ${complementoCnpj.data.estabelecimento.numero}, ${complementoCnpj.data.estabelecimento.complemento}, ${complementoCnpj.data.estabelecimento.bairro}, ${complementoCnpj.data.estabelecimento.cidade} - ${complementoCnpj.data.estabelecimento.uf}, ${complementoCnpj.data.estabelecimento.cep?.replace(/(\d{5})(\d{3})/, "$1-$2")}`
+      end: `${complementoCnpj.data.descricao_tipo_de_logradouro} ${complementoCnpj.data.logradouro}, ${complementoCnpj.data.numero}, ${complementoCnpj.data.complemento}, ${complementoCnpj.data.bairro}, ${complementoCnpj.data.municipio} - ${complementoCnpj.data.uf}, ${complementoCnpj.data.cep?.replace(/(\d{5})(\d{3})/, "$1-$2")}`
     };
 
     const ValorCert = construtoraInfo?.valor_cert? construtoraInfo?.valor_cert : 0
@@ -197,7 +192,7 @@ export default function GerarCobranca() {
     const msg = `Certificados emitidos pelo "AR Interface certificador" no período de ${Inicio.split("-").reverse().join("/")} a ${Fim.split("-").reverse().join("/")}, com o valor total de ${valorUnicoFormatado} cada certificado, com validade de 1 ano.`;
 
 
-    const pdf = await createForm(DadosConst,valorTotalFormatado, TotalArray.length, msg); // Supondo que 'createForm' retorna os dados em formato PDF
+    const pdf = await createForm(DadosConst,valorTotalFormatado, TotalArray.length, msg, response.data.protocolo); // Supondo que 'createForm' retorna os dados em formato PDF
 
     // Criar um Blob do conteúdo PDF
     const blob = new Blob([pdf], { type: "application/pdf" });
@@ -205,14 +200,80 @@ export default function GerarCobranca() {
     // Criar um link para o download
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
-    window.open(url, "_blank");
-    // link.setAttribute("href", url);
-    // link.setAttribute("download", `relatorio.pdf`);
-    // link.style.visibility = "hidden";
+    // window.open(url, "_blank");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `Resumo_fechamento.pdf`);
+    link.style.visibility = "hidden";
 
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Função para separar os objetos por id do empreendimento
+    const separarPorEmpreendimentoId = () => {
+      return TotalArray.reduce(
+        (acc: Record<number, { nome: string; itens: any[] }>, Total: any) => {
+          const empreendimentoId = Total.empreedimento.id;
+
+          if (!acc[empreendimentoId]) {
+            acc[empreendimentoId] = {
+              nome: Total.empreedimento.nome,
+              itens: []
+            };
+          }
+
+          acc[empreendimentoId].itens.push(Total);
+
+          return acc;
+        },
+        {}
+      );
+    };
+
+    const dadosSeparados = separarPorEmpreendimentoId();
+
+    // Criar cabeçalho do CSV no formato personalizado
+    let csvContent = "";
+
+    // Percorrer os dados por empreendimento e criar as linhas do CSV
+    for (const [empreendimentoId, dados] of Object.entries(
+      dadosSeparados
+    ) as any) {
+      // Adicionar o cabeçalho do empreendimento
+      csvContent += `${dados.nome};;;\n;;;\n`;
+
+      // Adicionar cabeçalho da tabela para cada empreendimento
+      csvContent += `x;id;nome;cpf\n`;
+
+      // Adicionar as linhas com os dados de cada item
+      dados.itens.forEach((item: any, index: number) => {
+        const linha = [
+          index + 1, // Contador (x)
+          item.id, // ID do item
+          item.nome, // Nome do cliente
+          item.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") // Formatar CPF
+        ].join(";"); // Junta todos os campos com ponto e vírgula
+        csvContent += linha + "\n"; // Adiciona a linha ao conteúdo CSV
+      });
+
+      // Adicionar separadores entre empreendimentos
+      csvContent += `;;;\n;;;\n`;
+    }
+
+    // Criar um Blob do conteúdo CSV
+    const blobCsv = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+
+    // Criar um link para o download
+    const linkCsv = document.createElement("a");
+    const urlCsv = URL.createObjectURL(blobCsv);
+    linkCsv.setAttribute("href", urlCsv);
+    linkCsv.setAttribute("download", "lista_fechamento.csv");
+    linkCsv.style.visibility = "hidden";
+
+    document.body.appendChild(linkCsv);
+    linkCsv.click();
+    document.body.removeChild(linkCsv);
+    
   };
 
   return (

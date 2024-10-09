@@ -82,13 +82,14 @@ export async function GetIncioFimSituacaoConstrutora(
     return {
       error: false,
       message: "Success",
-      data: dados.map((item: any) => ({
+      data: await Promise.all(dados.map(async(item: any) => ({
         ...item,
+        empreedimento: await getEmpreedimento(item.empreedimento),
         createdAt: new Date(item.createdAt).toISOString(),
         dt_aprovacao: item.dt_aprovacao
           ? new Date(item.dt_aprovacao).toISOString()
           : null
-      }))
+      })))
     };
   } catch (error: any) {
     // Tratamento genérico de erro
@@ -101,4 +102,18 @@ export async function GetIncioFimSituacaoConstrutora(
   } finally {
     await prisma.$disconnect();
   }
+}
+
+
+const getEmpreedimento = async (id: number) => {
+  const empreedimento = await prisma.nato_empreendimento.findUnique({
+    where: {
+      id
+    },
+    select: {
+      id: true,
+      nome: true
+    }
+  })
+  return empreedimento
 }
