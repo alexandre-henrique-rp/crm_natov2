@@ -1,31 +1,19 @@
-import { auth } from "@/lib/auth_confg";
-import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+'use server'
 import { PrismaClient } from "@prisma/client";
 
+const prisma = new PrismaClient();  
 
-export async function DeleteFinanceira(id : number) {
-  
-    const prisma = new PrismaClient();
-    
-    try {
-    const idFinanceira = Number(id);
-    const session = await getServerSession(auth);
-
-    if (!session) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-    const reqest = await prisma.nato_financeiro.delete({
-        where: {
-            id: idFinanceira,
-        }
-    })
-
-    if (!reqest) {
-      return new NextResponse("Invalid credentials", { status: 401 });
-    }
-    return NextResponse.json(reqest, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error }, { status: 500 });
+export async function DeleteFinanceira(id: string) {
+  try {
+    const request = await prisma.nato_financeiro.delete({
+      where: {
+        id: parseInt(id),
+      },
+    });
+    return { error: false, message: "Financeira deletada", data: request };
+  } catch (error) {
+    return { error: true, message: "Erro ao deletar Financeira", data: error };
+  } finally {
+    await prisma.$disconnect();
   }
 }
