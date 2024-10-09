@@ -58,7 +58,6 @@ export class CreateEmpreendimentoDto{
         if(this.financeiro.length < 1){
             return "Acrecente ao menos um financeiro";
         }
-
+        return null;
     }
-    
 }
