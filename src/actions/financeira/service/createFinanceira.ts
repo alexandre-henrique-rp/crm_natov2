@@ -51,7 +51,7 @@ export default async function FinanceiraCreate(_: any, data: FormData) {
             fantasia: fantasia,
         }
     });
-
+    prisma.$disconnect();
     redirect('/financeiras');
 
 }

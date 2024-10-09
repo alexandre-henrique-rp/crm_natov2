@@ -39,7 +39,7 @@ export default async function CadastrarEmpreendimento() {
         >
           <Flex justifyContent={"space-between"}>
             <Box>
-              <BotaoRetorno rota="/financeiras" />
+              <BotaoRetorno rota="/empreendimentos" />
             </Box>
             <Heading>Criar Empreendimento</Heading>
             <Box> </Box>

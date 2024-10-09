@@ -1,94 +1,67 @@
 "use client";
-import {
-  Button,
-  IconButton,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
-  Text,
-  Tooltip,
-  useDisclosure,
-  useToast,
-} from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
-import { BsFillTrashFill } from "react-icons/bs";
-import { MdOutlineCancel } from "react-icons/md";
+import { DesativarEmpreendimento } from "@/actions/empreendimento/service/desativarEmpreendimento";
+import { Button, Tooltip, useToast, Icon } from "@chakra-ui/react";
+import { useRouter } from "next/navigation"; 
 
-interface BtnExcluirEmpreendimentoProps {
+import { useState } from "react";
+import { GrStatusCritical, GrStatusGood } from "react-icons/gr"; 
+
+
+interface BtnDesativarEmpreendimentoProps {
   id: string;
+  ativo: boolean;
 }
 
-export function BtnExcluirEmpreendimento({
-  id,
-}: BtnExcluirEmpreendimentoProps) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+export default function BtnDesativarEmpreendimento({ id, ativo }: BtnDesativarEmpreendimentoProps) {
   const toast = useToast();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  //   const handleExcluir = async () => {
+  const handleToggleStatus = async () => {
+    setIsLoading(true);
+      const data = await DesativarEmpreendimento(id); 
 
-  //     const data = await DeleteEmpreendimento(id);
-
-  //     if (data.error === false) {
-  //       toast({
-  //         title: "Sucesso!",
-  //         description: "Financeira excluída com sucesso!",
-  //         status: "success",
-  //         duration: 9000,
-  //         isClosable: true,
-  //       });
-  //       onClose();
-  //       router.refresh();
-  //     } else {
-  //       toast({
-  //         title: "Erro!",
-  //         description: "Ocorreu um erro ao excluir a Financeira!",
-  //         status: "error",
-  //         duration: 9000,
-  //         isClosable: true,
-  //       });
-  //       onClose();
-  //     }
-  //   };
+      if (data && data.error === false) {
+        toast({
+          title: "Sucesso!",
+          description: ativo
+            ? "Empreendimento Desativado com sucesso!"
+            : "Empreendimento Ativado com sucesso!",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+        window.location.reload();
+      } else {
+        toast({
+          title: "Erro!",
+          description: "Ocorreu um erro ao alterar o status do Empreendimento",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+        window.location.reload();
+      }
+    
+      setIsLoading(false);
+    
+  };
+  
 
   return (
-    <>
-      <Tooltip label="Excluir Empreendimento">
-        <IconButton
-          colorScheme="red"
-          variant="outline"
-          icon={<BsFillTrashFill />}
-          aria-label="Delete"
-          onClick={onOpen}
-        />
-      </Tooltip>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalBody p={10}>
-            <Text fontWeight={"bold"} fontSize={"20px"} textAlign={"center"}>
-              Você tem certeza de que deseja deletar este Empreendimento?
-            </Text>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button leftIcon={<MdOutlineCancel />} onClick={onClose}>
-              Cancelar
-            </Button>
-
-            <Button
-              leftIcon={<BsFillTrashFill />}
-              //   onClick={handleExcluir}
-              colorScheme="red"
-            >
-              Confirmar Exclusão
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+    <Tooltip
+      label={ativo ? "Desativar Empreendimento" : "Ativar Empreendimento"}
+    >
+      <Button
+        variant="outline"
+        colorScheme={ativo ? "green" : "red"}
+        onClick={handleToggleStatus}
+        isLoading={isLoading}
+        isDisabled={isLoading}
+      >
+        <Icon as={ativo ? GrStatusGood : GrStatusCritical} color={ativo ? "green.500" : "red.500"} mr={2} />
+        {ativo ? "Ativado" : "Desativado"} 
+      </Button>
+    </Tooltip>
   );
 }

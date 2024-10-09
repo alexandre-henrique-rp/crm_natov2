@@ -10,6 +10,7 @@ export default async function GetAllEmpreendimento(){
                 nome: true,
                 uf: true,
                 cidade: true,
+                ativo: true,
             }
         });
         return { status: 200, message: "success", data: request };

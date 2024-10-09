@@ -1,13 +1,15 @@
-import { Box, BoxProps, FormLabel } from "@chakra-ui/react";
+import { Box, BoxProps, FormLabel, Input } from "@chakra-ui/react";
 import React from "react";
 import InputEmpreendimentoUf from "../imputs/inputEmpreendimentoUf";
 
 interface CardGridEmpreendimentoUfProps extends BoxProps {
-  uf?: string;
+  uf?: string
+  id?: number | any;
 }
 
 export default function CardGridEmpreendimentoUf({
   uf,
+  id,
   ...props
 }: CardGridEmpreendimentoUfProps) {
   return (
@@ -24,6 +26,7 @@ export default function CardGridEmpreendimentoUf({
           px={1}
           bg={"gray.100"}
         />
+        <Input hidden name="id" value={id}></Input>
       </Box>
     </>
   );
