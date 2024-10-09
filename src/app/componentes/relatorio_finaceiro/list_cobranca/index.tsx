@@ -11,21 +11,14 @@ import {
   Text,
   useToast
 } from "@chakra-ui/react";
-import SelectConstrutora from "../../selectConstrutora";
-import { use, useEffect, useState } from "react";
+import { use} from "react";
 import { useSession } from "next-auth/react";
 import { GetPgEmAberto } from "@/actions/relatorio_financeiro/service/GetPgAberto";
 
 export default function ListCobranca() {
   const { data: session } = useSession();
-  const [Data, setData] = useState<any>([]);
-  console.log("🚀 ~ ListCobranca ~ Data:", Data.data)
-  useEffect(() => {
-    (async () => {
-      const res = await GetPgEmAberto();
-      setData(res);
-    })();
-  },[]);
+  const Data = use(GetPgEmAberto())
+
   const lista = Data.data && Data.data.map((item: any) => {
     return (
       <>
@@ -35,6 +28,8 @@ export default function ListCobranca() {
       </>
     );
   });
+
+  
   return (
     <>
       {session?.user?.hierarquia === "ADM" ? (
