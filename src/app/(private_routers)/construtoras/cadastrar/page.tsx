@@ -28,14 +28,14 @@ export default function Create() {
             <Heading>Criar Construtora</Heading>
           </Flex>
           <Divider my={4} borderColor="gray.300" />
-          <CardCreateUpdate.Form action={{}}>
+          {/* <CardCreateUpdate.Form action={{}}> */}
             <Flex w={"full"} flexWrap={"wrap"} gap={5}>
-              <CardCreateUpdate.GridRazaoConstrutora w={"15rem"} />
+              {/* <CardCreateUpdate.GridRazaoConstrutora w={"15rem"} /> */}
 
             </Flex>
             <Divider my={4} borderColor="gray.300" />
             <Flex w={"full"} justifyContent={"end"}></Flex>
-          </CardCreateUpdate.Form>
+          {/* </CardCreateUpdate.Form> */}
         </Box>
       </Flex>
     </>

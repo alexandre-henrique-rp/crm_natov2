@@ -1,26 +1,25 @@
 "use client";
 import { DesativarEmpreendimento } from "@/actions/empreendimento/service/desativarEmpreendimento";
 import { Button, Tooltip, useToast, Icon } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; 
+
 import { useState } from "react";
 import { GrStatusCritical, GrStatusGood } from "react-icons/gr"; 
+
 
 interface BtnDesativarEmpreendimentoProps {
   id: string;
   ativo: boolean;
 }
 
-export function BtnDesativarEmpreendimento({ id, ativo }: BtnDesativarEmpreendimentoProps) {
-  console.log("🚀 ~ BtnExcluirEmpreendimento ~ ativo:", ativo)
+export default function BtnDesativarEmpreendimento({ id, ativo }: BtnDesativarEmpreendimentoProps) {
   const toast = useToast();
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const handleToggleStatus = async () => {
     setIsLoading(true);
-    try {
       const data = await DesativarEmpreendimento(id); 
-  
 
       if (data && data.error === false) {
         toast({
@@ -32,7 +31,7 @@ export function BtnDesativarEmpreendimento({ id, ativo }: BtnDesativarEmpreendim
           duration: 9000,
           isClosable: true,
         });
-        router.refresh();
+        window.location.reload();
       } else {
         toast({
           title: "Erro!",
@@ -41,19 +40,11 @@ export function BtnDesativarEmpreendimento({ id, ativo }: BtnDesativarEmpreendim
           duration: 9000,
           isClosable: true,
         });
+        window.location.reload();
       }
-    } catch (error) {
-      console.error("Erro na operação de desativação:", error);
-      toast({
-        title: "Erro!",
-        description: "Ocorreu um erro inesperado. Tente novamente mais tarde.",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-    } finally {
+    
       setIsLoading(false);
-    }
+    
   };
   
 
@@ -62,8 +53,8 @@ export function BtnDesativarEmpreendimento({ id, ativo }: BtnDesativarEmpreendim
       label={ativo ? "Desativar Empreendimento" : "Ativar Empreendimento"}
     >
       <Button
-        colorScheme={ativo ? "green" : "red"}
         variant="outline"
+        colorScheme={ativo ? "green" : "red"}
         onClick={handleToggleStatus}
         isLoading={isLoading}
         isDisabled={isLoading}

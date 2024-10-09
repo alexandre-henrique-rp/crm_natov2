@@ -1,10 +1,10 @@
 'use client';
-import { Box, Flex, Text} from "@chakra-ui/react";
+import { Box, Flex, Icon, Text} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import React from "react";
 import { BtnEditarEmpreendimento } from "../btn_editarEmpreendimento";
-import { BtnDesativarEmpreendimento } from "../btn_excluir_empreendimento";
-import { BtnDesativarEmpreendimento2 } from "../btnDesativarEmpreendimento";
+import  BtnDesativarEmpreendimento  from "../btn_excluir_empreendimento";
+import { GrStatusCritical, GrStatusGood } from "react-icons/gr";
 
 interface EmpreendimentosType {
   data: any;
@@ -68,12 +68,12 @@ export default function Empreendimentos({ data }: EmpreendimentosType) {
                   <Text fontWeight="bold" fontSize="sm">
                     STATUS:
                   </Text>
-                  {solicitacao.ativo}
+                  <Icon as={solicitacao.ativo ? GrStatusGood : GrStatusCritical} color={solicitacao.ativo ? "green.500" : "red.500"} mr={2} />
                 </Flex>
 
               </Flex>
               <Flex mt={3} gap={2} w="100%" justifyContent="end">
-                <BtnDesativarEmpreendimento id={solicitacao.id} ativo={solicitacao.ativo}  />
+                <BtnDesativarEmpreendimento id={solicitacao.id} ativo={solicitacao.ativo} />
                 <BtnEditarEmpreendimento id={solicitacao.id} />
               </Flex>
             </Box>

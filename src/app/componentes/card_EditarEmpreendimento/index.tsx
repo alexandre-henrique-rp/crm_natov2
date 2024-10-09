@@ -10,8 +10,7 @@ type Props = {
     id?: number
   };
 
-export async function CardUpdateEmpreendimento({id, setEmpreendimentoCard}: Props) {
-
+export function CardUpdateEmpreendimento({id, setEmpreendimentoCard}: Props) {
     
     return (
         <>

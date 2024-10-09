@@ -1,5 +1,7 @@
 "use server";
 import { PrismaClient } from "@prisma/client";
+import { redirect } from "next/navigation";
+
 const prisma = new PrismaClient();
 
 export async function DesativarEmpreendimento(id: string) {
@@ -11,7 +13,6 @@ export async function DesativarEmpreendimento(id: string) {
       ativo: true,
     }
   })
-
   if (request?.ativo === true){
     const update = await prisma.nato_empreendimento.update({
       where: {
