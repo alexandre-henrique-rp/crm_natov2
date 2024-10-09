@@ -1,12 +1,12 @@
 import { PDFDocument, rgb } from "pdf-lib";
 
-export async function createForm(construrora: any, totalValor: string, qtCert: number, msg: string) {
+export async function createForm(construrora: any, totalValor: string, qtCert: number, msg: string, NProtocolo: any) {
   const pdfDoc = await PDFDocument.create();
 
   const page = pdfDoc.addPage([550, 750]);
 
   const form = pdfDoc.getForm();
-  const protocolo = 20241007120958;
+  const protocolo = NProtocolo;
   const DateAtual = new Date()
     .toISOString()
     .split("T")[0]
@@ -54,7 +54,7 @@ export async function createForm(construrora: any, totalValor: string, qtCert: n
 
   page.drawText("AR Interface certificador", { x: 50, y: 700, size: 10 });
 
-  page.drawText(`Relatorio de Emissão #${protocolo}`, {
+  page.drawText(`Relatorio de Emissão # ${protocolo}`, {
     x: 50,
     y: 675,
     size: 15
@@ -82,10 +82,9 @@ export async function createForm(construrora: any, totalValor: string, qtCert: n
     `${DataConstrutora.nome}\n` +
       `${DataConstrutora.telefone}\n` +
       `${DataConstrutora.email}\n` +
-      `${DataConstrutora.site}\n` +
       `${DataConstrutora.cnpj}\n` +
       `${DataConstrutora.end.split(",").join("\n")}`,
-    { x: 350, y: 625, size: 7, lineHeight: 9, opacity: 0.75 }
+    { x: 350, y: 625, size: 7, lineHeight: 8, opacity: 0.75 }
   );
 
   page.drawLine({
@@ -162,7 +161,7 @@ export async function createForm(construrora: any, totalValor: string, qtCert: n
   });
 
   page.drawText(`Valor total`, { x: 365, y: 300, size: 9, opacity: 0.75 });
-  page.drawText(`${totalValor}`, { x: 430, y: 300, size: 9, opacity: 0.75 });
+  page.drawText(`${totalValor}`, { x: 430, y: 300, size: 12 });
 
 
   // Salva o documento como bytes

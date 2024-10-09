@@ -767,7 +767,7 @@ model voucher {
 
 model nato_relatorio_financeiro {
   id          Int      @id @default(autoincrement())
-  protocolo   BigInt?  @unique(map: "nato_relatorio_financeiro_unique")
+  protocolo   String?  @unique(map: "nato_relatorio_financeiro_unique") @db.VarChar(20)
   createdAt   DateTime @default(now()) @db.Timestamp(0)
   updatedAt   DateTime @default(now()) @db.Timestamp(0)
   situacao_pg Int      @default(0) @db.TinyInt

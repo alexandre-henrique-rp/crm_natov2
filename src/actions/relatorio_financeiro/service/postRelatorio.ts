@@ -38,7 +38,7 @@ export async function PostRelatorio(data: any): Promise<{ error: boolean; messag
         situacao_pg: dto.situacao_pg,
         nota_fiscal: dto.nota_fiscal,
         solicitacao: JSON.stringify(dto.solicitacao),
-        // construtora: dto.construtora
+        construtora: dto.construtora
       }
     });
 

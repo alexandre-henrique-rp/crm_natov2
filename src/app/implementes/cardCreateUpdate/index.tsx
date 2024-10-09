@@ -43,6 +43,7 @@ import { CardGridEmpreendimentoFinanceiro } from "./Grid/CardGridEmpreendimentoF
 
 
 
+
 /**
  * @name CardCreateUpdate
  * @description Componente que renderiza o card de criação e atualização de um registro
@@ -118,5 +119,4 @@ export const CardCreateUpdate = {
   GridEmpreendimentoCidade: CardGridEmpreendimentoCidade,
   GridEmpreendimentoConstrutora: CardGridEmpreendimentoConstrutora,
   GridEmpreendimentoFinanceiro: CardGridEmpreendimentoFinanceiro
-  
 };
