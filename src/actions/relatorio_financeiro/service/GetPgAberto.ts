@@ -18,6 +18,15 @@ export async function GetPgEmAberto() {
             )
           }
         })
+      },
+      select: {
+        id: true,
+        protocolo: true,
+        createdAt: true,
+        situacao_pg: true,
+        nota_fiscal: true,
+        construtora: true,
+        solicitacao: true
       }
     });
 
@@ -40,7 +49,7 @@ export async function GetPgEmAberto() {
     return {
       error: true,
       message: "Erro interno no servidor. " + error.message,
-      data: null
+      data: []
     };
   } finally {
     await prisma.$disconnect();
@@ -48,7 +57,7 @@ export async function GetPgEmAberto() {
 }
 
 async function GetConstrutora(id: number) {
-  const reqest = await prisma.nato_empresas.findMany({
+  const reqest = await prisma.nato_empresas.findUnique({
     where: {
       id: id
     },

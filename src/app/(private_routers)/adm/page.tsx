@@ -1,4 +1,5 @@
 import CreateAlertGeral from "@/app/componentes/bt_creat_Alert_geral";
+import ConfirPg from "@/app/componentes/relatorio_finaceiro/confir_pg";
 import GerarCobranca from "@/app/componentes/relatorio_finaceiro/gerar_cobranca";
 import ListCobranca from "@/app/componentes/relatorio_finaceiro/list_cobranca";
 import { auth } from "@/lib/auth_confg";
@@ -99,13 +100,15 @@ export default function PainelAdministrativo() {
         <Divider my={5} />
         <Flex
           w={"100%"}
-          // justifyContent={"space-between"}
           flexWrap={"wrap"}
           gap={2}
         >
           {/* componente relatório financeiro  */}
           <GerarCobranca />
+          <Flex w={{base:"100%", md:"34%"}} gap={3} flexDir={"column"}>
           <ListCobranca />
+          <ConfirPg />
+          </Flex>
           
         </Flex>
       </Flex>

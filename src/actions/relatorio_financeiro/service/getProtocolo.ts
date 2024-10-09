@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 type ProtocoloRequestType = {
   id: number;
-  protocolo: number;
+  protocolo: string;
   createdAt: Date;
   updatedAt: Date;
   situacao_pg: number;
@@ -14,33 +14,29 @@ type ProtocoloRequestType = {
   solicitacao: any;
 };
 
-export async function GetProtocolo(protocolo: number) {
+export async function GetProtocolo(protocolo: string) {
   const dto = new ProtocoloDto(protocolo);
-
   // Validação usando o DTO
   const erroValidacao = dto.validar();
   if (erroValidacao) {
     return {
       error: true,
       message: erroValidacao,
-      data: null,
+      data: null
     };
   }
-
   try {
     // Busca o protocolo no banco de dados
     const request = await prisma.nato_relatorio_financeiro.findFirst({
-      where: { protocolo: dto.protocolo },
+      where: { protocolo: dto.protocolo }
     });
-
     if (!request) {
       return {
         error: true,
         message: "Protocolo não encontrado.",
-        data: null,
+        data: null
       };
     }
-
     let solicitacaoIds = [];
 
     // Validação do campo solicitacao como JSON válido
@@ -51,16 +47,15 @@ export async function GetProtocolo(protocolo: number) {
       return {
         error: true,
         message: "Erro ao processar a solicitação.",
-        data: null,
+        data: null
       };
     }
-
     // Trazer informações da solicitação
-    const solicitacao = await prisma.nato_solicitacoes_certificado.findMany({
+    const solicitacao: any = await prisma.nato_solicitacoes_certificado.findMany({
       where: {
         id_fcw: {
-          in: solicitacaoIds,
-        },
+          in: solicitacaoIds
+        }
       },
       select: {
         id: true,
@@ -70,18 +65,28 @@ export async function GetProtocolo(protocolo: number) {
         valorcd: true,
         dt_aprovacao: true,
         createdAt: true,
-        empreedimento: true,
-      },
+        empreedimento: true
+      }
     });
-    
-
     return {
       error: false,
       message: "Success",
       data: {
         ...request,
-        ...(solicitacao.length > 0 && { solicitacao: solicitacao.map((s: any) =>{ return { ...s, createdAt: new Date(s.createdAt).toISOString(), dt_aprovacao: new Date(s.dt_aprovacao).toISOString() }}) }),
-      },
+        ...(solicitacao.length > 0
+          ? {
+              solicitacao: solicitacao.map((s: any) => {
+                return {
+                  ...s,
+                  createdAt: new Date(s.createdAt).toISOString(),
+                  dt_aprovacao: new Date(s.dt_aprovacao).toISOString()
+                };
+              })
+            }
+          : {
+              solicitacao: []
+            })
+      }
     };
   } catch (error: any) {
     // Tratamento genérico de erro
@@ -89,7 +94,7 @@ export async function GetProtocolo(protocolo: number) {
     return {
       error: true,
       message: "Erro interno no servidor. " + error.message,
-      data: null,
+      data: null
     };
   } finally {
     await prisma.$disconnect();
