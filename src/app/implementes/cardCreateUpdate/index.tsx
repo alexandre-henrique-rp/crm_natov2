@@ -40,6 +40,7 @@ import CardGridEmpreendimentoUf from "./Grid/CardGridEmpreendimentoUf";
 import CardGridEmpreendimentoCidade from "./Grid/CardGridEmpreendimentoCidade";
 import { CardGridEmpreendimentoConstrutora } from "./Grid/CardGridEmpreendimentoConstrutora";
 import { CardGridEmpreendimentoFinanceiro } from "./Grid/CardGridEmpreendimentoFinanceiro";
+import CardGridEmpreendimentoTag from "./Grid/CardGridEmpreendimentoTag";
 
 
 
@@ -117,6 +118,8 @@ export const CardCreateUpdate = {
   GridEmpreendimentoUf: CardGridEmpreendimentoUf,
   GridEmpreendimentoCidade: CardGridEmpreendimentoCidade,
   GridEmpreendimentoConstrutora: CardGridEmpreendimentoConstrutora,
-  GridEmpreendimentoFinanceiro: CardGridEmpreendimentoFinanceiro
+  GridEmpreendimentoFinanceiro: CardGridEmpreendimentoFinanceiro,
+  GridEmpreendimentoTag: CardGridEmpreendimentoTag,
+  
   
 };

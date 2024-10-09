@@ -1,94 +1,76 @@
 "use client";
-import {
-  Button,
-  IconButton,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
-  Text,
-  Tooltip,
-  useDisclosure,
-  useToast,
-} from "@chakra-ui/react";
+import { DesativarEmpreendimento } from "@/actions/empreendimento/service/desativarEmpreendimento";
+import { Button, Tooltip, useToast, Icon } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { BsFillTrashFill } from "react-icons/bs";
-import { MdOutlineCancel } from "react-icons/md";
+import { useState } from "react";
+import { GrStatusCritical, GrStatusGood } from "react-icons/gr"; 
 
-interface BtnExcluirEmpreendimentoProps {
+interface BtnDesativarEmpreendimentoProps {
   id: string;
+  ativo: boolean;
 }
 
-export function BtnExcluirEmpreendimento({
-  id,
-}: BtnExcluirEmpreendimentoProps) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+export function BtnDesativarEmpreendimento({ id, ativo }: BtnDesativarEmpreendimentoProps) {
+  console.log("🚀 ~ BtnExcluirEmpreendimento ~ ativo:", ativo)
   const toast = useToast();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  //   const handleExcluir = async () => {
+  const handleToggleStatus = async () => {
+    setIsLoading(true);
+    try {
+      const data = await DesativarEmpreendimento(id); 
+  
 
-  //     const data = await DeleteEmpreendimento(id);
-
-  //     if (data.error === false) {
-  //       toast({
-  //         title: "Sucesso!",
-  //         description: "Financeira excluída com sucesso!",
-  //         status: "success",
-  //         duration: 9000,
-  //         isClosable: true,
-  //       });
-  //       onClose();
-  //       router.refresh();
-  //     } else {
-  //       toast({
-  //         title: "Erro!",
-  //         description: "Ocorreu um erro ao excluir a Financeira!",
-  //         status: "error",
-  //         duration: 9000,
-  //         isClosable: true,
-  //       });
-  //       onClose();
-  //     }
-  //   };
+      if (data && data.error === false) {
+        toast({
+          title: "Sucesso!",
+          description: ativo
+            ? "Empreendimento Desativado com sucesso!"
+            : "Empreendimento Ativado com sucesso!",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+        router.refresh();
+      } else {
+        toast({
+          title: "Erro!",
+          description: "Ocorreu um erro ao alterar o status do Empreendimento",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      console.error("Erro na operação de desativação:", error);
+      toast({
+        title: "Erro!",
+        description: "Ocorreu um erro inesperado. Tente novamente mais tarde.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
 
   return (
-    <>
-      <Tooltip label="Excluir Empreendimento">
-        <IconButton
-          colorScheme="red"
-          variant="outline"
-          icon={<BsFillTrashFill />}
-          aria-label="Delete"
-          onClick={onOpen}
-        />
-      </Tooltip>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalBody p={10}>
-            <Text fontWeight={"bold"} fontSize={"20px"} textAlign={"center"}>
-              Você tem certeza de que deseja deletar este Empreendimento?
-            </Text>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button leftIcon={<MdOutlineCancel />} onClick={onClose}>
-              Cancelar
-            </Button>
-
-            <Button
-              leftIcon={<BsFillTrashFill />}
-              //   onClick={handleExcluir}
-              colorScheme="red"
-            >
-              Confirmar Exclusão
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+    <Tooltip
+      label={ativo ? "Desativar Empreendimento" : "Ativar Empreendimento"}
+    >
+      <Button
+        colorScheme={ativo ? "green" : "red"}
+        variant="outline"
+        onClick={handleToggleStatus}
+        isLoading={isLoading}
+        isDisabled={isLoading}
+      >
+        <Icon as={ativo ? GrStatusGood : GrStatusCritical} color={ativo ? "green.500" : "red.500"} mr={2} />
+        {ativo ? "Ativado" : "Desativado"} 
+      </Button>
+    </Tooltip>
   );
 }

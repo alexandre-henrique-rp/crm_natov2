@@ -1,5 +1,6 @@
 "use client";
 
+import { DeleteUser } from "@/actions/user/service/deleteUser";
 import {
   Button,
   IconButton,
@@ -28,17 +29,9 @@ export function BtnExcluirUser({ id }: BtnExcluirUserProps) {
 
   const handleExcluir = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const response = await fetch(`/api/usuario/delete/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        status: true,
-      }),
-    });
+    const response = await DeleteUser(id);
 
-    if (response.ok) {
+    if (response.error === false) {
       toast({
         title: "Sucesso!",
         description: "Usuario excluído com sucesso!",
@@ -91,7 +84,7 @@ export function BtnExcluirUser({ id }: BtnExcluirUserProps) {
 
             <Button
               leftIcon={<BsFillTrashFill />}
-              onClick={() => handleExcluir}
+              onClick={handleExcluir}
               colorScheme="red"
             >
               Confirmar Exclusão
