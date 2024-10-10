@@ -106,7 +106,7 @@ export default async function ConstrutoraPage() {
             {Dados?.status === 200 ? <Construtora data={Dados?.data} /> : <></>}
           </Box>
         </Box>
-      </Flex>
+      </Flex> 
     </>
   );
 }

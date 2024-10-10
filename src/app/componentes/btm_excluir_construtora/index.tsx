@@ -1,5 +1,6 @@
 "use client";
 
+import DeleteConstrutora from "@/actions/construtora/service/deleteConstrutora";
 import {
   Button,
   IconButton,
@@ -25,20 +26,14 @@ export default function BtmExcluirConstrutora({ id, status }: BtnExcluirUserProp
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const route = useRouter();
-
+  
   const handleExcluir = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const response = await fetch(`/api/construtora/delete/[id]${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        status: false
-      })
-    });
+    console.log("🚀 ~ BtmExcluirConstrutora ~ id:", id)
+    
+    const response = await DeleteConstrutora(Number(id));
 
-    if (response.ok) {
+    if (response.error === false) {
       toast({
         title: "Sucesso!",
         description: "Construtora excluído com sucesso!",
@@ -97,7 +92,7 @@ export default function BtmExcluirConstrutora({ id, status }: BtnExcluirUserProp
 
                 <Button
                   leftIcon={<BsFillTrashFill />}
-                  onClick={() => handleExcluir}
+                  onClick={handleExcluir}
                   colorScheme="red"
                 >
                   Confirmar Exclusão

@@ -55,7 +55,7 @@ export default async function UserCreate(_: any, data: FormData) {
     const construtoraArray = parseArrayString(construtora);
     const empreendimentoArray = parseArrayString(empreendimento);
     const FinanceiraArray = parseArrayString(Financeira);
-    try{
+
       const user = await prisma.nato_user.create({
         data: {
           cpf: cpf,
@@ -74,11 +74,7 @@ export default async function UserCreate(_: any, data: FormData) {
           reset_password: true,
         }
       });
-      redirect('/usuarios');
-    } catch (error: any) {
-      return { error: true, message: "Erro ao criar a Usuario", data: error };
-  }finally{
       await prisma.$disconnect();
-  }
+      redirect('/usuarios');
 }
 }

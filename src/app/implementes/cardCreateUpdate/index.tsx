@@ -41,6 +41,11 @@ import CardGridEmpreendimentoCidade from "./Grid/CardGridEmpreendimentoCidade";
 import { CardGridEmpreendimentoConstrutora } from "./Grid/CardGridEmpreendimentoConstrutora";
 import { CardGridEmpreendimentoFinanceiro } from "./Grid/CardGridEmpreendimentoFinanceiro";
 import CardGridEmpreendimentoTag from "./Grid/CardGridEmpreendimentoTag";
+import CardGridConstrutoraCnpj from "./Grid/CardGridConstrutoraCnpj";
+import CardGridConstrutoraRazaoSocial from "./Grid/CardGridConstrutoraRazaoSocial";
+import CardGridConstrutoraTel from "./Grid/CardGridConstrutoraTel";
+import CardGridConstrutoraEmail from "./Grid/CardGridConstrutoraEmail";
+import CardGridConstrutoraFantasia from "./Grid/CardGridConstrutoraFantasia";
 
 
 
@@ -121,6 +126,13 @@ export const CardCreateUpdate = {
   GridEmpreendimentoConstrutora: CardGridEmpreendimentoConstrutora,
   GridEmpreendimentoFinanceiro: CardGridEmpreendimentoFinanceiro,
   GridEmpreendimentoTag: CardGridEmpreendimentoTag,
+  // Construtora Cadastro
+  GridConstrutoraCnpj: CardGridConstrutoraCnpj,
+  GridConstrutoraRazaoSocial: CardGridConstrutoraRazaoSocial,
+  GridConstrutoraTel: CardGridConstrutoraTel,
+  GridConstrutoraEmail: CardGridConstrutoraEmail,
+  GridConstrutoraFantasia: CardGridConstrutoraFantasia,
+  
   
   
 };
