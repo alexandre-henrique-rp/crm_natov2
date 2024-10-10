@@ -43,7 +43,7 @@ export default function CadastrarFinanceira() {
         >
           <Flex justifyContent={"space-between"}>
             <Box>
-              <BotaoRetorno rota="/financeiras" />
+              <BotaoRetorno rota="/construtoras" />
             </Box>
             <Heading>Criar Construtora</Heading>
             <Box> </Box>

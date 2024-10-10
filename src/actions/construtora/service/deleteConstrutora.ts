@@ -12,5 +12,5 @@ export default async function DeleteConstrutora(id: number){
     });
     await prisma.$disconnect();
 
-    return { error: false, message: "Construtora deletada com sucesso", data: construtora };
+    return { error: false };
 }
