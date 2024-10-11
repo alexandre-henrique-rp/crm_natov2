@@ -1,26 +1,20 @@
 'use server'
-
 import { PrismaClient } from "@prisma/client";
-import { CreateEmpreendimentoDto } from "../dto/createEmpreendimento.dto";
-import { redirect } from "next/navigation";
+import { EditEmpreendimentoDto } from "../dto/editEmpreendimento.dto";
 
 const prisma = new PrismaClient();
 
-export async function CreateEmpreendimento(_: any, data: FormData) {
+export async function EditEmpreendimento(_:any, data: FormData) {
 
+    const id = Number(data.get("id") as string);
     const construtora = Number(data.get("empreendimentoConstrutora") as string);
     const nome = data.get("nomeEmpreendimento") as string;
     const cidade = data.get("nomeCidade") as string;
     const uf = data.get("empreendimentoUf") as string;
     const financeiro = data.get("financeira") as string;
     const financeiroFormatado = `[${financeiro}]`;
-    const tag = 'NATO_'
-    
-    const dataAtual = new Date();
     const ativo = true;
-    const vendedores = '[]'
-
-    const dto = new CreateEmpreendimentoDto(nome, construtora, uf, cidade, ativo, financeiro, tag);
+    const dto = new EditEmpreendimentoDto(nome, construtora, uf, cidade, ativo, financeiro);
     const erroValidacao = dto.validar();
 
     if (erroValidacao) {
@@ -31,20 +25,21 @@ export async function CreateEmpreendimento(_: any, data: FormData) {
         };
     }
 
-    const request = await prisma.nato_empreendimento.create({
+    const request = await prisma.nato_empreendimento.update({
+        where: {
+            id: id
+        },
         data: {
             nome: nome,
             construtora: construtora,
-            dt_inicio: dataAtual.toISOString(),
             cidade: cidade,
             uf: uf,
-            ativo: ativo,
-            financeiro: financeiroFormatado,
-            vendedores: vendedores,
-            tag: tag
+            financeiro: financeiroFormatado
         }
     });
+
+
      
     prisma.$disconnect();
-    redirect('/empreendimentos');
+    // redirect('/empreendimentos');
 }

@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 export default async function EmpreendimentoPage() {
 
   const dados = await GetAllEmpreendimento();
+  
 
   return (
     <>
