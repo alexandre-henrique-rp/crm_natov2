@@ -141,8 +141,8 @@ export default function Usuarios({ data }: UsuariosType) {
                 </Flex>
               </Flex>
               <Flex mt={3} gap={2} w="100%" justifyContent="end">
-                {solicitacao.status ? null : (<BtnAtivarUser id={solicitacao.id}/>)}
                 
+                {solicitacao.status ? null : (<BtnAtivarUser id={solicitacao.id}/>)}
                 <BtnEditarUser id={solicitacao.id} />
                 <BtnResetSenha ID={solicitacao.id} />
                 <BtnExcluirUser id={solicitacao.id} />
