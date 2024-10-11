@@ -12,7 +12,9 @@ export type FinanceiraType = {
     responsavel: string | null;
   }
 
-export async function GetConstrutoraById(id: number): Promise<{ error: boolean; message: string; data: any }> {
+export async function GetConstrutoraById(id: number): Promise<{
+  cnpj(cnpj: any): any; error: boolean; message: string; data: any 
+}> {
 
     const dto = new GetConstrutoraDto(id);
     const erroValidacao = dto.validar();

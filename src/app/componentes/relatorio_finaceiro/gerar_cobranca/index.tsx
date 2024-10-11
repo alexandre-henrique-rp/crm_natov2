@@ -16,7 +16,7 @@ import { GetIncioFimSituacaoConstrutora } from "@/actions/relatorio_financeiro/s
 import { GetProtocolo } from "@/actions/relatorio_financeiro/service/getProtocolo";
 import { PostRelatorio } from "@/actions/relatorio_financeiro/service/postRelatorio";
 import { useSession } from "next-auth/react";
-import { GetConstrutoraById } from "@/actions/construtora/service/getConstrutoraById";
+import { GetConstrutoraById } from "@/actions/getInfo/service/getConstrutoraById";
 import ApiCpnjJson from "@/actions/getInfo/api/apicnpj";
 import { useRouter } from "next/navigation";
 
