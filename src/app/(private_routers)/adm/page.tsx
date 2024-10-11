@@ -63,7 +63,7 @@ export default function PainelAdministrativo() {
               href={"/construtoras"}
               fontSize={"0.8rem"}
             >
-              construtora
+              Construtora
             </Link>
             <Link
               py={1}
@@ -93,7 +93,7 @@ export default function PainelAdministrativo() {
               href={"/financeiras"}
               fontSize={"0.8rem"}
             >
-              financeiras
+              Financeiras
             </Link>
           </Flex>
         </Flex>

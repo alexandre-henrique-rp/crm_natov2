@@ -5,11 +5,11 @@ import InputCostrutoraCnpj from "../imputs/inputConstrutoraCnpj";
 
 interface CardGridCnpfProps extends BoxProps {
   CNPJ?: string;
-//   idConstrutora?: number;
+  idConstrutora?: number;
 }
 
 export default async function CardGridConstrutoraCnpj({
-//   idConstrutora,
+  idConstrutora,
   CNPJ,
   ...props
 }: CardGridCnpfProps) {
@@ -52,9 +52,9 @@ export default async function CardGridConstrutoraCnpj({
           />
         )}
       </Box>
-      {/* <Box hidden>
+      <Box hidden>
         <Input name="id" value={idConstrutora} />
-      </Box> */}
+      </Box>
     </>
   );
 }

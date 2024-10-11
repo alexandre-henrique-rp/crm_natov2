@@ -28,7 +28,7 @@ export async function GetProtocolo(protocolo: string) {
   try {
     // Busca o protocolo no banco de dados
     const request = await prisma.nato_relatorio_financeiro.findFirst({
-      where: { protocolo: dto.protocolo }
+      where: { protocolo: Number(dto.protocolo) }
     });
     if (!request) {
       return {
