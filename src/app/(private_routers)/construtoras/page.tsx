@@ -1,3 +1,4 @@
+import { BotaoRetorno } from "@/app/componentes/btm_retorno";
 import Construtora from "@/app/componentes/construtora_compoment";
 import { auth } from "@/lib/auth_confg";
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
@@ -75,7 +76,12 @@ export default async function ConstrutoraPage() {
         flexDir={"column"}
       >
         <Flex w={"100%"} justifyContent={"space-around"}>
+        <Flex gap={2}>
+        <Box zIndex={1} alignSelf="baseline" position="initial">
+            <BotaoRetorno rota="/" />
+          </Box>
           <Heading>Construtora</Heading>
+          </Flex>
           <Link
             href={"/construtoras/cadastrar"}
             _hover={{ textDecoration: "none" }}

@@ -1,6 +1,7 @@
 'use server'
 import { PrismaClient } from "@prisma/client";
 import { EditEmpreendimentoDto } from "../dto/editEmpreendimento.dto";
+import { redirect } from "next/navigation";
 
 const prisma = new PrismaClient();
 
@@ -41,5 +42,5 @@ export async function EditEmpreendimento(_:any, data: FormData) {
 
      
     prisma.$disconnect();
-    // redirect('/empreendimentos');
+    redirect('/empreendimentos');
 }

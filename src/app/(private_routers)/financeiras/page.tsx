@@ -31,7 +31,7 @@ export default async function PainelFinanceiro() {
         <Box zIndex={1} alignSelf="baseline" position="initial">
             <BotaoRetorno rota="/" />
           </Box>
-          <Heading>Financeiras</Heading>
+          <Heading> </Heading>
           </Flex>
           <Flex gap={5}>
             <Link

@@ -15,7 +15,9 @@ export default function InputEmpreendimentoNome({ setNomeValue, ...props }: Inpu
 
   useEffect(() => {
     if(construtoraTag){
+        console.log("🚀 ~ useEffect ~ construtoraTag:", construtoraTag)
         setNomeLocal(`${construtoraTag} - `)
+        return 
     }
     if (!setNomeValue) return;
     const removeCaracteresEspeciais = setNomeValue.replace(/[^a-zA-Z\s\.,\/\\:;!?'"()-]/g, "");

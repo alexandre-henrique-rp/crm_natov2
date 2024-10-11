@@ -12,6 +12,7 @@ export default async function FinanceiraCreate(_: any, data: FormData) {
     const email = data.get("email") as string;
     const responsavel = data.get("responsavel") as string;
     const fantasia = data.get("fantasia") as string;
+    const colaboradores = '[]'
 
     const telefone = tel.replace(/[^0-9]/g, '');
 
@@ -47,11 +48,11 @@ export default async function FinanceiraCreate(_: any, data: FormData) {
             razaosocial: razaosocial,
             tel: telefone,
             email: email,
+            colaboradores: colaboradores,
             responsavel: responsavel,
             fantasia: fantasia,
         }
     });
     prisma.$disconnect();
     redirect('/financeiras');
-
 }
