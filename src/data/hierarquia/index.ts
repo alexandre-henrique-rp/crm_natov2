@@ -25,5 +25,10 @@ export const HierarquiaOptions: Hierarquia[] = [
         id: 4,
         Label: 'Administrador',
         param: 'ADMIN'
+    },
+    {
+        id: 5,
+        Label: 'GRT',
+        param: 'GRT'
     }
 ]
