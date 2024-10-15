@@ -11,16 +11,7 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data: session } = useSession();
-  const router = useRouter();
-
-  const expiration = session ? session.expiration : 0;
-  const expired = Date.now() > expiration * 1000;
-
-  if (expired) {
-    signOut({ redirect: false });
-    return router.push("/login");
-  }
+ 
 
   return (
     <Box overflowY={"auto"} h={"100dvh"} w={"100vw"}>
