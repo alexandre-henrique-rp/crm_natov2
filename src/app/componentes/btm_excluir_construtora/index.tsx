@@ -29,7 +29,7 @@ export default function BtmExcluirConstrutora({ id, status }: BtnExcluirUserProp
   
   const handleExcluir = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log("🚀 ~ BtmExcluirConstrutora ~ id:", id)
+
     
     const response = await DeleteConstrutora(Number(id));
 
@@ -47,7 +47,7 @@ export default function BtmExcluirConstrutora({ id, status }: BtnExcluirUserProp
     } else {
       toast({
         title: "Erro!",
-        description: "Ocorreu um erro ao excluir Construtora!",
+        description: response.message,
         status: "error",
         duration: 9000,
         isClosable: true
