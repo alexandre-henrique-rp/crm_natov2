@@ -1,16 +1,30 @@
-'use server'
+'use server';
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export default async function DeleteConstrutora(id: number){
+export default async function DeleteConstrutora(id: number) {
+
+
     
-    const construtora = await prisma.nato_empresas.delete({
+    const referencias = await prisma.nato_empreendimento.findMany({
         where: {
-            id: id
+            construtora: id 
         }
     });
-    await prisma.$disconnect();
 
-    return { error: false };
+    if (referencias.length > 0) {
+
+        return { error: true, message: "Existem Empreendimentos cadastrados para essa empresa referências na tabela ", data: referencias };
+    }else{
+        const req = await prisma.nato_empresas.delete({
+            where: {
+                id: id
+            }
+        });
+        await prisma.$disconnect();
+        return { error: false };
+    }
+    
+
 }
