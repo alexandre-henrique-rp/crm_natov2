@@ -28,7 +28,7 @@ export async function GetProtocolo(protocolo: string) {
   try {
     // Busca o protocolo no banco de dados
     const request = await prisma.nato_relatorio_financeiro.findFirst({
-      where: { protocolo: Number(dto.protocolo) }
+      where: { protocolo: dto.protocolo }
     });
     if (!request) {
       return {
@@ -65,7 +65,8 @@ export async function GetProtocolo(protocolo: string) {
         valorcd: true,
         dt_aprovacao: true,
         createdAt: true,
-        empreedimento: true
+        empreedimento: true,
+        id_fcw: true
       }
     });
     return {
@@ -73,6 +74,8 @@ export async function GetProtocolo(protocolo: string) {
       message: "Success",
       data: {
         ...request,
+        ...(request.createdAt && { createdAt: new Date(request.createdAt).toISOString() }),
+        ...(request.construtora && { construtora: await GetConstrutora(request.construtora) }),
         ...(solicitacao.length > 0
           ? {
               solicitacao: solicitacao.map((s: any) => {
@@ -99,4 +102,17 @@ export async function GetProtocolo(protocolo: string) {
   } finally {
     await prisma.$disconnect();
   }
+}
+
+async function GetConstrutora( id: number) {
+  const reqest = await prisma.nato_empresas.findUnique({
+    where: {
+      id: id
+    },
+    select: {
+      id: true,
+      fantasia: true
+    }
+  });
+  return reqest;
 }

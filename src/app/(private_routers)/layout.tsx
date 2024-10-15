@@ -12,19 +12,10 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const { data: session } = useSession();
-  const { user } = session ?? {};
   const router = useRouter();
 
   const expiration = session ? session.expiration : 0;
   const expired = Date.now() > expiration * 1000;
-
-  if (!user) {
-    return (
-      <>
-        <Loading />
-      </>
-    );
-  }
 
   if (expired) {
     signOut({ redirect: false });

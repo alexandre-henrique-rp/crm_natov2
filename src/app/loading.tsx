@@ -9,7 +9,6 @@ export default function Loading() {
       <Center>
         <CircularProgress color="green.500" isIndeterminate size="250px" />
       </Center>
-
       <Center mt="30px">
         <Heading color="green.500" variant="H1">
           CARREGANDO ....

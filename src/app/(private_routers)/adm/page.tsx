@@ -114,17 +114,4 @@ export default function PainelAdministrativo() {
       </Flex>
     </>
   );
-  //     <Box
-  //       border="3px solid #E8E8E8"
-  //       borderRadius="8px"
-  //       p={8}
-  //       w={useBreakpointValue({ base: "100%", md: "80%", lg: "60em" })}
-  //       textAlign="center"
-  //       display={{ base: "block", md: "flex" }} // Mudança de 'none' para 'block' para garantir que o componente seja exibido em telas menores
-  //       flexDir="column"
-  //       alignItems="center"
-  //       mt={8}
-  //     >
-  //       <Aprovacao />
-  //     </Box>
 }
