@@ -26,6 +26,7 @@ export default async function UserCreate(_: any, data: FormData) {
   const nome = data.get("nome") as string;
   const username = data.get("usuario") as string;
   const telefone = data.get("telefone") as string;
+  const telefoneFormat = telefone.replace(/\D/g, '');
   const email = data.get("email") as string;
   const construtora = data.get("construtora") as any;
   const empreendimento = data.get("empreendimento") as any;
@@ -61,11 +62,11 @@ export default async function UserCreate(_: any, data: FormData) {
           cpf: cpf,
           nome: nome.toUpperCase(),
           username: username.toUpperCase(),
-          telefone: telefone,
+          telefone: telefoneFormat,
           email: email,
-          construtora: JSON.stringify(construtoraArray),
-          empreendimento: JSON.stringify(empreendimentoArray),
-          Financeira: JSON.stringify(FinanceiraArray),
+          construtora: construtoraArray,
+          empreendimento: empreendimentoArray,
+          Financeira: FinanceiraArray,
           hierarquia: hierarquia,
           password: password,
           status: false,
@@ -74,7 +75,8 @@ export default async function UserCreate(_: any, data: FormData) {
           reset_password: true,
         }
       });
-      await prisma.$disconnect();
-      redirect('/usuarios');
+      
 }
+await prisma.$disconnect();
+redirect('/usuarios');
 }

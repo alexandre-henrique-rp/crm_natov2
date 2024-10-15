@@ -39,6 +39,7 @@ async function GetUser() {
       message: "Success",
       data: users,
     };
+      
   } catch (error: any) {
     return { status: 500, message: "error", data: error };
   }

@@ -19,6 +19,7 @@ export async function GetUser(id: number){
 
 
 export async function UpdateUser( _ : any, data : FormData){
+    console.log("🚀 ~ UpdateUser ~ data:", data)
     const id = data.get("id") as string;
     const cpf = data.get("cpf") as string;
     const nome = data.get("nome") as string;
@@ -33,8 +34,11 @@ export async function UpdateUser( _ : any, data : FormData){
     
     
     const construtoraArray = construtora ? construtora.split(',').map(Number) : [];
+    console.log("🚀 ~ UpdateUser ~ construtoraArray:", construtoraArray)
     const empreendimentoArray = empreendimento ? empreendimento.split(',').map(Number) : [];
+    console.log("🚀 ~ UpdateUser ~ empreendimentoArray:", empreendimentoArray)
     const FinanceiraArray = financeira ? financeira.split(',').map(Number): [];
+    console.log("🚀 ~ UpdateUser ~ FinanceiraArray:", FinanceiraArray)
 
 
     const user = await prisma.nato_user.update({
@@ -54,7 +58,7 @@ export async function UpdateUser( _ : any, data : FormData){
             cargo: cargo,
         }
     });
-    redirect('/usuarios');
-    return user;
+    redirect('/usuarios');  
+    
 }
 

@@ -1,4 +1,5 @@
 import GetAllEmpreendimento from "@/actions/empreendimento/service/getAllEmpreendimentos";
+import { BotaoRetorno } from "@/app/componentes/btm_retorno";
 import Empreendimentos from "@/app/componentes/empreendimentoCard";
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { Metadata } from "next";
@@ -23,7 +24,12 @@ export default async function EmpreendimentoPage() {
         flexDir={"column"}
       >
         <Flex w={"100%"} justifyContent={"space-around"}>
+        <Flex gap={2}>
+        <Box zIndex={1} alignSelf="baseline" position="initial">
+            <BotaoRetorno rota="/" />
+          </Box>
           <Heading>Empreendimentos</Heading>
+          </Flex>
           <Link
             href={"/empreendimentos/cadastrar"}
             _hover={{ textDecoration: "none" }}

@@ -1,7 +1,32 @@
+
+import { GetConstrutoraById } from "@/actions/construtora/service/getConstrutoraById";
 import { BotaoRetorno } from "@/app/componentes/btm_retorno";
+import { CardUpdateConstrutora } from "@/app/componentes/card_UpdateConstrutora";
 import { Box, Divider, Flex, Heading } from "@chakra-ui/react";
 
-export default function ConstrutoraById() {
+import { Metadata } from "next";
+
+type Props = {
+  params: { id: string };
+};
+
+export async function generateMetadata({params}: Props): Promise<Metadata> {
+  const id = params.id;
+  const req = await GetConstrutoraById(Number(id))
+  const data = req.data
+
+
+  return {
+    title: `Editar Construtora: ${data.fantasia || 'Construtora'}`,
+  }
+}
+
+export default async function ConstrutoraById({params}: Props) {
+  const id = Number(params.id);
+  const req = await GetConstrutoraById(id)
+  const data = req.data
+
+
   return (
     <>
       <Flex
@@ -19,12 +44,12 @@ export default function ConstrutoraById() {
         >
           <Flex justifyContent={"space-between"}>
             <Box>
-              <BotaoRetorno rota="/construtora" />
+              <BotaoRetorno rota="/construtoras" />
             </Box>
             <Heading>Construtora</Heading>
           </Flex>
           <Divider my={4} borderColor="gray.300" />
-          {/* compoment */}
+          <CardUpdateConstrutora id={id} setConstrutoraCard={data} />
         </Box>
       </Flex>
     </>

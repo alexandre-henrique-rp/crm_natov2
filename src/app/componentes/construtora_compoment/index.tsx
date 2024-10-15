@@ -6,6 +6,7 @@ import { BtmCopy } from "../btm_copy";
 import { PrismaClient } from "@prisma/client";
 import { BtmConstrutoraListUser } from "../btm_construtora_list_user";
 import { ConstrutoraType } from "@/app/(private_routers)/construtoras/page";
+import { BtnEditarConstrutora } from "../btn_editar_construtoras";
 
 const prisma = new PrismaClient();
 
@@ -91,6 +92,7 @@ export default function Construtora({ data }: TypeConstrutora) {
               </Flex>
               <Flex mt={3} gap={2} w="100%" justifyContent="space-between">
                 <BtmConstrutoraListUser data={corretores}/>
+                <BtnEditarConstrutora id={c.id} />
                 <BtmExcluirConstrutora id={c.id} status={c.status} />
               </Flex>
             </Box>

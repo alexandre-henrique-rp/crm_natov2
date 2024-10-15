@@ -41,7 +41,7 @@ export function BtnExcluirUser({ id }: BtnExcluirUserProps) {
       });
 
       onClose();
-      route.refresh();
+      window.location.reload();
     } else {
       toast({
         title: "Erro!",

@@ -2,13 +2,14 @@
 
 import { BtnExcluirUser } from "@/app/componentes/btm_exluir_user";
 import { BtnResetSenha } from "@/app/componentes/btn_reset_senha";
-import { Box, Flex, IconButton, Text, useToast } from "@chakra-ui/react";
+import { Box, Flex, IconButton, Spacer, Text, useToast } from "@chakra-ui/react";
 import { useEffect, useState, useContext } from "react";
-import { FaCopy } from "react-icons/fa6";
+import { FaCircle, FaCopy } from "react-icons/fa6";
 import { mask } from "remask";
 import { BtnEditarUser } from "../btn_editar_user";
 import { FiltroContext } from "@/context/UserFiltroContext";
 import React from "react";
+import { BtnAtivarUser } from "../btn_ativarUser";
 
 interface UsuariosType {
   data: any;
@@ -17,6 +18,7 @@ interface UsuariosType {
 export default function Usuarios({ data }: UsuariosType) {
   const [Usuarios, setUsuarios] = useState<any[]>([]);
   const toast = useToast();
+
 
   const { id, nome, construtora, financeira } = useContext(FiltroContext);
 
@@ -41,7 +43,6 @@ export default function Usuarios({ data }: UsuariosType) {
         );
       }
       if (financeira) {
-        console.log("🚀 ~ filtrarUsuarios ~ financeira:", financeira);
         usuariosFiltrados = usuariosFiltrados.filter((user: any) =>
           user.Financeira.map((i: any) => i.id).includes(financeira)
         );
@@ -72,9 +73,11 @@ export default function Usuarios({ data }: UsuariosType) {
               flexDir="column"
               w={{ base: "100%", md: "30%", lg: "20em" }}
               fontSize={"0.8rem"}
+              bg={solicitacao.status ? "white" : "green.50"} 
+              
             >
               <Flex w="100%" flexDir={"column"} gap={4}>
-                <Flex gap={2}>
+                <Flex  gap={2} align="center">
                   <Text fontWeight="bold" fontSize="sm">
                     ID:
                   </Text>
@@ -102,10 +105,11 @@ export default function Usuarios({ data }: UsuariosType) {
                   <Text fontWeight="bold" fontSize="sm">
                     Telefone:
                   </Text>
-                  {solicitacao.telefone && mask(solicitacao.telefone, [
-                    "(99) 9 9999-9999",
-                    "(99) 9999-9999",
-                  ])}
+                  {solicitacao.telefone &&
+                    mask(solicitacao.telefone, [
+                      "(99) 9 9999-9999",
+                      "(99) 9999-9999",
+                    ])}
                   <IconButton
                     icon={<FaCopy />}
                     aria-label="copy"
@@ -130,11 +134,15 @@ export default function Usuarios({ data }: UsuariosType) {
                     Construtora:
                   </Text>
 
-                  {solicitacao.construtora.length > 0 && solicitacao.construtora.map((item: any) => item.fantasia)
-                    .join(", ")}
+                  {solicitacao.construtora.length > 0 &&
+                    solicitacao.construtora
+                      .map((item: any) => item.fantasia)
+                      .join(", ")}
                 </Flex>
               </Flex>
               <Flex mt={3} gap={2} w="100%" justifyContent="end">
+                
+                {solicitacao.status ? null : (<BtnAtivarUser id={solicitacao.id}/>)}
                 <BtnEditarUser id={solicitacao.id} />
                 <BtnResetSenha ID={solicitacao.id} />
                 <BtnExcluirUser id={solicitacao.id} />
