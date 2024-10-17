@@ -41,4 +41,16 @@ export const TagsOptions: TagsProps = [
         id: 8,
         label: 'Cliente confuso',
     },
+    {
+        id: 9,
+        label: 'Endereço de email incorreto'
+    },
+    {
+        id:10,
+        label: 'Telefone incorreto'
+    },
+    {
+        id:11,
+        label: 'Anexado RG, porem possui CNH'
+    }
 ]
