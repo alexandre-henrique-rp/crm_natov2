@@ -55,14 +55,8 @@ export default async function EmpreendimentoPage() {
             EMPREENDIMENTOS CADASTRADOS
           </Text>
         </Box>
-        <Box w={"100%"}>
-          <Flex
-            w={"100%"}
-            mb={8}
-            justifyContent="center"
-            alignItems="center"
-          ></Flex>
-          <Box>{dados?.status === 200 ? <Empreendimentos data={dados?.data} /> : <></>}</Box>
+        <Box w={"100%"} overflow={"auto"}>
+          <Box >{dados?.status === 200 ? <Empreendimentos data={dados?.data} /> : <></>}</Box>
         </Box>
       </Flex>
     </>

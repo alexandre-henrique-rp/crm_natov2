@@ -7,15 +7,14 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "HOME",
-  description: "sistema de gestão de vendas de imóveis",
+  description: "sistema de gestão de vendas de imóveis"
 };
 export default async function HomePage() {
-
   return (
     <Flex
       minH="100vh"
       w="100%"
-      overflowY="auto"
+      // overflowY="auto"
       justifyContent="center"
       alignItems="center"
       bg="#F8F8F8"
