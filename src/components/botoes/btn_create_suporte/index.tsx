@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { createSuportAlert } from "@/actions/solicitacoes/service/createUpdateService";
 import DeleteSuporte from "@/actions/solicitacoes/service/deleteSuporte";

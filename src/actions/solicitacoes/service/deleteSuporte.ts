@@ -13,6 +13,7 @@ export default async function DeleteSuporte(id: number) {
     })
     return {error: false, message: "Suporte deletado com sucesso!", data: suporte};
   }catch(err){
+    console.log(err)
     return {error: true, message: "Erro ao deletar suporte!"};
   }finally{
     await prisma.$disconnect();
