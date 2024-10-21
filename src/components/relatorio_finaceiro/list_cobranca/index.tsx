@@ -62,7 +62,7 @@ export default function ListCobranca() {
 
         `}
           </style>
-          <Box w={"full"} h={"25vh"} p={5} rounded="lg" boxShadow="2xl">
+          <Box w={"full"} minH={'fit-content'} minW={'fit-content'} p={5} rounded="lg" boxShadow={'2xl'}           >
             <Box w={"100%"} textAlign={"center"}>
               <Heading size="md">Lista de Cobranças em Aberto</Heading>
             </Box>
