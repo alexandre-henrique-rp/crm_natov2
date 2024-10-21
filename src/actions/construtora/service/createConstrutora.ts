@@ -2,7 +2,8 @@
 import { PrismaClient } from "@prisma/client";
 import { CreateConstrutoraDto } from "../dto/createconstrutora.dto";
 import { redirect } from "next/navigation";
-import { requestFormReset } from "react-dom";
+
+
 
 const prisma = new PrismaClient();
 
@@ -23,10 +24,11 @@ export default async function CreateConstrutora(_: any, data: FormData) {
     }
 
     if (await prisma.nato_empresas.findFirst({ where: { cnpj } })) {
+        redirect("/construtoras");
         return { error: true, message: "CNPJ já cadastrado", data: null };
     }
 
-    const request = await prisma.nato_empresas.create({
+   await prisma.nato_empresas.create({
         data:{
             cnpj: cnpj,
             razaosocial: razaoSocial,

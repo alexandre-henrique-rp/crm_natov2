@@ -1,4 +1,4 @@
-declare module solictacao {
+declare namespace solictacao {
   /**
    * SolicitacaoGetType
    * @param {number} id

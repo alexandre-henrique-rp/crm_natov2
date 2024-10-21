@@ -75,6 +75,8 @@ export default async function UserCreate(_: any, data: FormData) {
           reset_password: true,
         }
       });
+
+      return { error: false, message: "Usuario criado com sucesso", data: user };
       
 }
 await prisma.$disconnect();

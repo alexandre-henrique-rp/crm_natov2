@@ -421,6 +421,17 @@ model nato_financeiro {
   fantasia      String?   @db.VarChar(100)
 }
 
+model nato_relatorio_financeiro {
+  id          Int      @id @default(autoincrement())
+  protocolo   String?  @unique(map: "nato_relatorio_financeiro_unique") @db.VarChar(20)
+  createdAt   DateTime @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime @default(now()) @db.Timestamp(0)
+  situacao_pg Int      @default(0) @db.TinyInt
+  nota_fiscal String?  @db.VarChar(100)
+  solicitacao String   @db.Text
+  construtora Int?
+}
+
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model nato_solicitacoes_certificado {
   id               Int           @id @default(autoincrement())
@@ -763,15 +774,4 @@ model voucher {
   estatos    String @db.VarChar(150)
   dt_resgate Int
   id_fcw     String @db.VarChar(150)
-}
-
-model nato_relatorio_financeiro {
-  id          Int      @id @default(autoincrement())
-  protocolo   String?  @unique(map: "nato_relatorio_financeiro_unique") @db.VarChar(20)
-  createdAt   DateTime @default(now()) @db.Timestamp(0)
-  updatedAt   DateTime @default(now()) @db.Timestamp(0)
-  situacao_pg Int      @default(0) @db.TinyInt
-  nota_fiscal String?  @db.VarChar(100)
-  solicitacao String   @db.Text
-  construtora Int?
 }

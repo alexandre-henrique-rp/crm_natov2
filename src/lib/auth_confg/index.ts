@@ -2,33 +2,39 @@ import { NextAuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-
 export const auth: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "123 de olivera 4" },
+        username: {
+          label: "Username",
+          type: "text",
+          placeholder: "123 de olivera 4"
+        },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials: any, req) {
+      async authorize(credentials: any) {
         try {
           const dados = {
             username: credentials.email,
             password: credentials.password
           };
-          console.log("🚀 ~ authorize ~ dados:", dados)
-          const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/auth`,{
-            method: "POST",
-            body: JSON.stringify(dados),
-            headers: {
-              "Content-Type": "application/json"
-            },
-          });
+          console.log("🚀 ~ authorize ~ dados:", dados);
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/auth`,
+            {
+              method: "POST",
+              body: JSON.stringify(dados),
+              headers: {
+                "Content-Type": "application/json"
+              }
+            }
+          );
 
           const retorno = await res.json();
-          console.log("🚀 ~ authorize ~ retorno:", retorno)
-          
+          console.log("🚀 ~ authorize ~ retorno:", retorno);
+
           const { token, user } = retorno;
 
           const {
@@ -53,7 +59,7 @@ export const auth: NextAuthOptions = {
             hierarquia: hierarquia,
             cargo: cargo,
             reset_password: reset_password,
-            Financeira: Financeira 
+            Financeira: Financeira
           };
           console.log(response);
 
@@ -62,7 +68,8 @@ export const auth: NextAuthOptions = {
             return null;
           }
           return response;
-        } catch (e: any) {
+        } catch (error) {
+          console.log(error);
           return null;
         }
       }
@@ -76,7 +83,7 @@ export const auth: NextAuthOptions = {
     // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
   },
   jwt: {
-    secret: process.env.JWT_SIGNING_PRIVATE_KEY,
+    secret: process.env.JWT_SIGNING_PRIVATE_KEY
   },
   secret: process.env.NEXTAUTH_SECRET,
   session: {
@@ -95,7 +102,8 @@ export const auth: NextAuthOptions = {
 
       const actualDateInSeconds = Math.floor(Date.now() / 1000);
       const tokenExpirationInSeconds = 3 * 60 * 60; // 4 hours
-      const dateExpirationInSeconds = actualDateInSeconds + tokenExpirationInSeconds;
+      const dateExpirationInSeconds =
+        actualDateInSeconds + tokenExpirationInSeconds;
 
       if (isSignIn) {
         if (!user?.jwt || !user?.id || !user?.name) {
@@ -129,12 +137,7 @@ export const auth: NextAuthOptions = {
       session: any;
       token: JWT;
     }): Promise<any | null> => {
-      if (
-        !token?.jwt ||
-        !token?.id ||
-        !token?.name ||
-        !token?.expiration
-      ) {
+      if (!token?.jwt || !token?.id || !token?.name || !token?.expiration) {
         return null;
       }
 
@@ -155,4 +158,4 @@ export const auth: NextAuthOptions = {
       return session;
     }
   }
-}
+};

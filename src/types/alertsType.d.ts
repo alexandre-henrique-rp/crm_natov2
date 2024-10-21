@@ -1,4 +1,4 @@
-declare module AlertsType {
+declare namespace AlertsType {
 
   /**
    * AlertsProps

@@ -31,7 +31,7 @@ export async function CreateEmpreendimento(_: any, data: FormData) {
         };
     }
 
-    const request = await prisma.nato_empreendimento.create({
+    await prisma.nato_empreendimento.create({
         data: {
             nome: nome,
             construtora: construtora,
@@ -44,7 +44,10 @@ export async function CreateEmpreendimento(_: any, data: FormData) {
             tag: tag
         }
     });
+
      
     prisma.$disconnect();
     redirect('/empreendimentos');
+
+
 }

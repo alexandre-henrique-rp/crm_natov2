@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export async function ativarUsuario(id: number) {
  
    if(id > 0) {
-    const usuario = await prisma.nato_user.update({
+    await prisma.nato_user.update({
       where: {
         id: id,
       },

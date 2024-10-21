@@ -19,6 +19,7 @@ export async function AtualizarStatus(id: number) {
       data: relatorioFinanceiro
     }
   } catch (error) {
+    console.log(error)
     return {
       error: true,
       message: "Erro ao registrar pagamento.",

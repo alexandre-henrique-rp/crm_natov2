@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth_confg";
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-    console.log;
+
     const session = await getServerSession(auth);
     if (!session) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -16,9 +16,9 @@ export async function POST(request: Request) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.token}`,
+          Authorization: `Bearer ${session?.token}`
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data)
       }
     );
 
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         message: "Registro criado com sucesso",
-        data: { response: retorno.data },
+        data: { response: retorno.data }
       },
       { status: 200 }
     );
