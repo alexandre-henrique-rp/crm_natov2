@@ -14,8 +14,8 @@ const Requestes = async (id: string) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.token}`,
-      },
+        Authorization: `Bearer ${session?.token}`
+      }
     });
     if (!request.ok) {
       throw new Error("Erro");
@@ -36,12 +36,12 @@ const RequestAlert = async (id: string) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.token}`,
+        Authorization: `Bearer ${session?.token}`
       },
       cache: "no-store",
       next: {
-        tags: ["get_Alert"],
-      },
+        tags: ["get_Alert"]
+      }
     });
     if (!request.ok) {
       throw new Error("Erro");
@@ -63,37 +63,55 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const id = params.id;
   const request = await Requestes(id);
   return {
-    title: `Cliente - ${request.nome}`,
+    title: `Cliente - ${request.nome}`
   };
 }
 
 export default async function perfilPage({
-  params,
+  params
 }: {
   params: { id: string };
 }) {
   const { id } = params;
+  const session = await getServerSession(auth);
+  const user = session?.user;
 
   const data = await Requestes(id);
   const dataAlert = await RequestAlert(id);
 
   return (
-    <Flex
-      alignItems={{ base: "center", md: "start" }}
-      justifyContent={{ base: "center", md: "space-evenly" }}
-      pt={{ base: 5, md: 10 }}
-      pb={{ base: 5, md: 10 }}
-      borderWidth={{ base: 0, md: 1 }}
-      overflowX="auto"
-      flexDir={"column"}
-      gap={{ base: 5, md: 10 }}
-    >
-      <Flex w={"100%"} alignItems="center" flexDir="column" minH="100vh" p={4}>
-        <AlertProvider>
-          <CardUpdateSolicitacao setDadosCard={data} />
-          <CardListAlertCliente Id={Number(id)} DataAlert={dataAlert} />
-        </AlertProvider>
-      </Flex>
-    </Flex>
+    <>
+      {user && (
+        <>
+          <Flex
+            alignItems={{ base: "center", md: "start" }}
+            justifyContent={{ base: "center", md: "space-evenly" }}
+            pt={{ base: 5, md: 10 }}
+            pb={{ base: 5, md: 10 }}
+            borderWidth={{ base: 0, md: 1 }}
+            overflowX="auto"
+            flexDir={"column"}
+            gap={{ base: 5, md: 10 }}
+          >
+            <Flex
+              w={"100%"}
+              alignItems="center"
+              flexDir="column"
+              minH="100vh"
+              p={4}
+            >
+              <AlertProvider>
+                <CardUpdateSolicitacao setDadosCard={data} user={user} />
+                <CardListAlertCliente
+                  Id={Number(id)}
+                  DataAlert={dataAlert}
+                  user={user}
+                />
+              </AlertProvider>
+            </Flex>
+          </Flex>
+        </>
+      )}
+    </>
   );
 }
