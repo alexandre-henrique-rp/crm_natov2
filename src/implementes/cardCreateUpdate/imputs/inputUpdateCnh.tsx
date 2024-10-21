@@ -41,8 +41,8 @@ export default function InputUpdateCnh({
           }
         })
         .then((response) => {
-          console.log("🚀 ~ .then ~ response:", response);
-          setData(response.data.data);
+          console.log("🚀 ~ .then ~ response:", response.data.data);
+          setData(response.data.data.url);
           if (response.status === 200) {
             toast({
               title: "Arquivo salvo",
@@ -64,7 +64,6 @@ export default function InputUpdateCnh({
         });
     }
   };
-
   return (
     <>
       <DataContext.Provider value={{ Data, setData }}>
@@ -75,11 +74,10 @@ export default function InputUpdateCnh({
           accept=".jpg, .png, .pdf"
           onChange={handleFileChange}
         />
-        <Box hidden>
+        <Box hidden >
           <Input
             value={Data ? Data : Url}
             name={`update_${tag}`}
-            hidden
             readOnly
           />
         </Box>

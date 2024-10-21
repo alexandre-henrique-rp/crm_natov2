@@ -1,133 +1,35 @@
-import { Alert, AlertIcon, Box, Divider, Flex } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Divider, Flex, Input } from "@chakra-ui/react";
 import { getServerSession } from "next-auth";
 import { auth } from "@/lib/auth_confg";
 import UserCompraProvider from "@/provider/UserCompra";
-import { PrismaClient } from "@prisma/client";
-import { Tag, TagsProps } from "@/data/tags";
+
 import { ResendSms } from "@/implementes/cardCreateUpdate/butons/resendSms";
 import { CriarFcweb } from "../botoes/criarFcweb";
 import { BtCreateAlertCliente } from "../botoes/bt_create_alert_cliente";
 import { SaveBtm } from "@/implementes/cardCreateUpdate/butons/saveBtm";
 import DistratoAlertPrint from "../Distrato_alert_print";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
+import { UpdateSolicitacao } from "@/actions/solicitacao/service/update";
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 type Props = {
   setDadosCard: solictacao.SolicitacaoGetType;
 };
 export async function CardUpdateSolicitacao({ setDadosCard }: Props) {
   const session = await getServerSession(auth);
-  async function handleSubmit(_: any, data: FormData) {
-    "use server";
-
-    try {
-      const tags: TagsProps = JSON.parse(data.get("Tags") as any);
-      for (let i = 0; i < tags.length; i++) {
-        const tag: Tag = tags[i];
-        if (tag.label && session?.user.hierarquia === "ADM") {
-          const verifique = await prisma.nato_tags.findFirst({
-            where: {
-              descricao: tag.label,
-              solicitacao: Number(setDadosCard.id)
-            }
-          });
-          const filtro = verifique ? false : true;
-          if (filtro) {
-            await prisma.nato_tags.create({
-              data: {
-                descricao: tag.label,
-                solicitacao: Number(setDadosCard.id)
-              }
-            });
-          }
-        }
-      }
-      const DateNascimento = data.get("DataNascimento")?.toString() || "";
-      const Dados = {
-        ...(!setDadosCard.ativo && { ativo: true }),
-        ...(!setDadosCard.ativo &&
-          session?.user.hierarquia !== "ADM" && {
-            corretor: Number(session?.user?.id)
-          }),
-        ...(!setDadosCard.ativo &&
-          session?.user.hierarquia === "ADM" && {
-            corretor: Number(data.get("corretor"))
-          }),
-        ...(data.get("cpf") && { cpf: data.get("cpf") }),
-        ...(data.get("nome") && { nome: data.get("nome") }),
-        ...(data.get("telefones1") && { telefone: data.get("telefones1") }),
-        ...(data.get("telefones2") && { telefone2: data.get("telefones2") }),
-        ...(data.get("email") && { email: data.get("email") }),
-        ...(data.get("update_RG") && { uploadRg: data.get("update_RG") }),
-        ...(data.get("update_CNH") && { uploadCnh: data.get("update_CNH") }),
-        ...(data.get("DataNascimento") && {
-          dt_nascimento: DateNascimento
-        }),
-        ...(data.get("Obs") && { obs: data.get("Obs") }),
-        ...(data.get("empreendimento") && {
-          empreedimento: Number(data.get("empreendimento"))
-        }),
-        ...(data.get("construtora") && {
-          construtora: Number(data.get("construtora"))
-        }),
-        ...(data.get("financeiro") && {
-          financeiro: Number(data.get("financeiro"))
-        }),
-        ...(data.get("links") && {
-          mult_link: data.get("links")
-            ? data.get("links")?.toString().split(", ")
-            : []
-        }),
-        ...(data.get("Relacionamento") && {
-          relacionamento: data.get("Relacionamento")
-            ? JSON.parse(data.get("Relacionamento")?.toString() || "")
-            : []
-        }),
-        ...(data.get("Relacionamento") && { rela_quest: true })
-      };
-
-      console.log(Dados);
-
-      const request = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/solicitacao/update/${setDadosCard.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.token}`
-          },
-          body: JSON.stringify(Dados)
-        }
-      );
-
-      if (request.ok) {
-        const response = await request.json();
-
-        if (response.name === "PrismaClientValidationError") {
-          return {
-            name: "PrismaClientValidationError",
-            message: "Erro ao atualizar o registro",
-            error: response
-          };
-        }
-
-        console.log("Atualização bem-sucedida:", response);
-        return response;
-      } else {
-        console.error("Erro ao atualizar:", request.statusText);
-      }
-    } catch (error) {
-      console.error("Erro no envio do formulário:", error);
-      return error;
-    }
-  }
+  const user = session?.user;
+  const HierarquiaUser = user?.hierarquia;
   return (
     <>
       <CardCreateUpdate.Root>
         <CardCreateUpdate.Headers SetDados={setDadosCard} />
         <Divider borderColor="#00713D" my={4} />
-        <CardCreateUpdate.Form action={handleSubmit}>
+        <CardCreateUpdate.Form action={UpdateSolicitacao}>
           <UserCompraProvider>
+            <Box hidden>
+              <Input value={setDadosCard.id} name="id_cliente" readOnly />
+              <Input value={setDadosCard.ativo.toString()} name="ativo" readOnly />
+            </Box>
             <Flex flexDir={"column"} gap={6} w={"100%"} h={"100%"} py={10}>
               <Flex
                 flexDir={{ base: "column", md: "row" }}
@@ -234,11 +136,13 @@ export async function CardUpdateSolicitacao({ setDadosCard }: Props) {
                   tag="CNH"
                   Url={setDadosCard.uploadCnh}
                   w={{ base: "100%", md: "19rem" }}
+                  Hierarquia={!HierarquiaUser ? 'USER' : HierarquiaUser}
                 />
                 <CardCreateUpdate.GridUpdateDocument
                   tag="RG"
                   Url={setDadosCard.uploadRg}
                   w={{ base: "100%", md: "19rem" }}
+                  Hierarquia={!HierarquiaUser ? 'USER' : HierarquiaUser}
                 />
               </Flex>
               <Flex

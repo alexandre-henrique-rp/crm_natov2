@@ -7,22 +7,20 @@ import {
 } from "@chakra-ui/react";
 import InputUpdateCnh from "../imputs/inputUpdateCnh";
 import { ButtonsDownloadsCnh } from "../butons/butonsDowloadsCnh";
-import { getServerSession } from "next-auth";
-import { auth } from "@/lib/auth_confg";
 
 interface CardGridUpdateCnhProps extends BoxProps {
   Url: string;
   tag: string;
+  Hierarquia: string;
 }
 
 export default async function CardGridUpdateDocument({
   Url,
   tag,
+  Hierarquia,
   ...props
 }: CardGridUpdateCnhProps) {
-  const session = await getServerSession(auth);
-  const user = session?.user;
-  const Hierarquia = user?.hierarquia;
+
   return (
     <>
       <Box {...props}>

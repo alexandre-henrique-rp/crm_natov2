@@ -47,6 +47,7 @@ export default function DropCorretor({ value, Id }: DropCorretorProps) {
       }
     }
     if (value) {
+      console.log("🚀 ~ value:", value);
       setCorretor(value);
     }
   }, [ContrutoraCX, EmpreedimentoCX, hierarquia, value]);

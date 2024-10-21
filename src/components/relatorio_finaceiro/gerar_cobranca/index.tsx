@@ -77,45 +77,43 @@ export default function GerarCobranca() {
   async function handleDownload() {
     // Função para separar os objetos por id do empreendimento
     const separarPorEmpreendimentoId = () => {
-      return TotalArray.reduce(
-        (acc: Record<number, { nome: string; itens: any[] }>, Total: any) => {
-          const empreendimentoId = Total.empreedimento.id;
-          if (!acc[empreendimentoId]) {
-            acc[empreendimentoId] = {
-              nome: Total.empreedimento.nome,
-              itens: []
-            };
-          }
-          acc[empreendimentoId].itens.push(Total);
-          return acc;
-        },
-        {}
-      );
+        return TotalArray.reduce(
+            (acc: Record<number, { nome: string; itens: any[] }>, Total: any) => {
+                const empreendimentoId = Total.empreedimento.id;
+                if (!acc[empreendimentoId]) {
+                    acc[empreendimentoId] = {
+                        nome: Total.empreedimento.nome,
+                        itens: []
+                    };
+                }
+                acc[empreendimentoId].itens.push(Total);
+                return acc;
+            },
+            {}
+        );
     };
 
     const dadosSeparados = separarPorEmpreendimentoId();
     // Criar cabeçalho do CSV no formato personalizado
-    let csvContent = "";
+    let csvContent = "\uFEFF"; // Adiciona o BOM para garantir a codificação UTF-8
     // Percorrer os dados por empreendimento e criar as linhas do CSV
-    for (const [ dados] of Object.entries(
-      dadosSeparados
-    ) as any) {
-      // Adicionar o cabeçalho do empreendimento
-      csvContent += `${dados.nome};;;\n;;;\n`;
-      // Adicionar cabeçalho da tabela para cada empreendimento
-      csvContent += `x;id;nome;cpf\n`;
-      // Adicionar as linhas com os dados de cada item
-      dados.itens.forEach((item: any, index: number) => {
-        const linha = [
-          index + 1, // Contador (x)
-          item.id, // ID do item
-          item.nome, // Nome do cliente
-          item.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") // Formatar CPF
-        ].join(";"); // Junta todos os campos com ponto e vírgula
-        csvContent += linha + "\n"; // Adiciona a linha ao conteúdo CSV
-      });
-      // Adicionar separadores entre empreendimentos
-      csvContent += `;;;\n;;;\n`;
+    for (const [dados] of Object.entries(dadosSeparados) as any) {
+        // Adicionar o cabeçalho do empreendimento
+        csvContent += `${dados.nome};;;\n;;;\n`;
+        // Adicionar cabeçalho da tabela para cada empreendimento
+        csvContent += `x;id;nome;cpf\n`;
+        // Adicionar as linhas com os dados de cada item
+        dados.itens.forEach((item: any, index: number) => {
+            const linha = [
+                index + 1, // Contador (x)
+                item.id, // ID do item
+                item.nome, // Nome do cliente
+                item.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") // Formatar CPF
+            ].join(";"); // Junta todos os campos com ponto e vírgula
+            csvContent += linha + "\n"; // Adiciona a linha ao conteúdo CSV
+        });
+        // Adicionar separadores entre empreendimentos
+        csvContent += `;;;\n;;;\n`;
     }
 
     // Criar um Blob do conteúdo CSV
@@ -129,7 +127,8 @@ export default function GerarCobranca() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }
+}
+
 
   const handleDownloadPDF = async () => {
     // separar id_fcw do array
@@ -235,7 +234,7 @@ export default function GerarCobranca() {
     };
     const dadosSeparados = separarPorEmpreendimentoId();
     // Criar cabeçalho do CSV no formato personalizado
-    let csvContent = "";
+    let csvContent = "\uFEFF";
     // Percorrer os dados por empreendimento e criar as linhas do CSV
     for (const [ dados] of Object.entries(
       dadosSeparados
