@@ -36,7 +36,6 @@ export default function CreateSuportAlert({ id }: CreateSuportAlertProps) {
   const [descricao, setDescricao] = useState<string>("");
   const [TagUni, setTagUni] = useState<number>(0);
   const [update, setUpdate] = useState<boolean>(false);
-  console.log("🚀 ~ CreateSuportAlert ~ update:", update);
   const [IdUpdate, setIdUpdate] = useState<number>(0);
   const [TagsId, setTagsId] = useState<number>(0);
   const [Tags, setTags] = useState<any>([]);

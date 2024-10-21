@@ -289,7 +289,7 @@ export default function GerarCobranca() {
       </style>
       <Box
         w={{ base: "100%", md: "65%" }}
-        h={"47vh"}
+        h={"70vh"}
         p={5}
         rounded="lg"
         boxShadow="2xl"
