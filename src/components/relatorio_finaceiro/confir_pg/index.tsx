@@ -84,7 +84,7 @@ export default function ConfirPg() {
 
       `}
           </style>
-          <Box w={"full"} h={"21vh"} p={5} rounded="lg" boxShadow="2xl">
+          <Box  w={"full"} minH={'fit-content'} minW={'fit-content'} p={5} rounded="lg" boxShadow="2xl">
             <Box w={"100%"} textAlign={"center"}>
               <Heading size="md">Registrar Pagamento</Heading>
             </Box>
@@ -157,7 +157,7 @@ export default function ConfirPg() {
                     />
                   </Flex>
                 </Box>
-                <Button onClick={ConfirmePg}>Confirmar Pagamento</Button>
+                <Button minW={'fit-content'} onClick={ConfirmePg}>Confirmar Pagamento</Button>
               </Flex>
             </Flex>
           </Box>

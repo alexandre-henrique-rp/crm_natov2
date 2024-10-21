@@ -14,7 +14,6 @@ export default function PainelAdministrativo() {
     <>
       <Flex
         w={"100%"}
-        minH={"90.9dvh"}
         px={{ base: 2, md: "10rem" }}
         py={5}
         flexDir={"column"}
@@ -86,11 +85,12 @@ export default function PainelAdministrativo() {
           </Flex>
         </Flex>
         <Divider my={5} />
-        <Flex w={"100%"} flexWrap={"wrap"} gap={2}>
+        <Flex h={'80vh'} flexWrap={"wrap"} gap={2}>
           {/* componente relatório financeiro  */}
           <GerarCobranca />
-          <Flex w={{ base: "100%", md: "34%" }} gap={3} flexDir={"column"}>
+          <Flex w={{md: "34%"}} h={'100%'} gap={3} flexDir={"column"}>
             <ListCobranca />
+            <Divider my={5} />
             <ConfirPg />
           </Flex>
         </Flex>
