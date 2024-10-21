@@ -42,7 +42,7 @@ export default async function FinanceiraCreate(_: any, data: FormData) {
     }
 
 
-    const financeira = await prisma.nato_financeiro.create({
+    await prisma.nato_financeiro.create({
         data: {
             cnpj: cnpj,
             razaosocial: razaosocial,

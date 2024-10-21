@@ -5,7 +5,6 @@ export async function createForm(construrora: any, totalValor: string, qtCert: n
 
   const page = pdfDoc.addPage([550, 750]);
 
-  const form = pdfDoc.getForm();
   const protocolo = NProtocolo;
   const DateAtual = new Date()
     .toISOString()
@@ -15,7 +14,7 @@ export async function createForm(construrora: any, totalValor: string, qtCert: n
     .join("/");
   const DataConstrutora = construrora;
   const DataArInterface = {
-    nome: "AR Interface certificador",
+    nome: "AR INTERFACE CERTIFICADORA",
     telefone: "(16) 33252-4134",
     email: "atendimento@arinterfacecertificador.com.br",
     site: "https://arinterfacecertificador.com.br",

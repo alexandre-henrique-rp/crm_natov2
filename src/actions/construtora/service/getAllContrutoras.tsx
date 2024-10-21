@@ -20,7 +20,8 @@ export default async function GetAllConstrutoras(){
             }
         });
         return { status: 200, message: "success", data: request };
-    } catch (error) {
+    } catch (error: any) {
+        console.log(error);
         return { status: 500, message: "error", data: null };
     } finally {
         await prisma.$disconnect();

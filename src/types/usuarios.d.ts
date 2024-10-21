@@ -1,4 +1,4 @@
-declare module UsuariosType {
+declare namespace UsuariosType {
 
     /**
      * @type {GetAllUsers}
@@ -76,7 +76,7 @@ type Construtora = {
 }
 
 
-declare module FinanceiraType {
+declare namespace FinanceiraType {
 
 /**
  * @type {Financeira}

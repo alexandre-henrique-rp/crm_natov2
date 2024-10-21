@@ -14,6 +14,7 @@ export async function POST(request: Request) {
             cache: 'no-store'
         });
         const retornoArquivo = await Envio.json();
+        console.log("🚀 ~ POST ~ retornoArquivo:", retornoArquivo)
         if (retornoArquivo.error) throw retornoArquivo.error;
 
         return NextResponse.json({ data: retornoArquivo, message: "Arquivo enviado com sucesso" }, { status: 200 });

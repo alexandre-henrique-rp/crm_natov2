@@ -17,6 +17,7 @@ console.log(data)
 
         return NextResponse.json({message: "Tag excluída com sucesso"}, { status: 200 });
     } catch (error: any) {
+        console.log(error)
         return NextResponse.json({message: "Erro ao excluir a tag"}, { status: 500 });
     }
 }

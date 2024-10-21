@@ -4,16 +4,6 @@ import { ProtocoloDto } from "../dto/protocolo.dto";
 
 const prisma = new PrismaClient();
 
-type ProtocoloRequestType = {
-  id: number;
-  protocolo: string;
-  createdAt: Date;
-  updatedAt: Date;
-  situacao_pg: number;
-  nota_fiscal: string;
-  solicitacao: any;
-};
-
 export async function GetProtocolo(protocolo: string) {
   const dto = new ProtocoloDto(protocolo);
   // Validação usando o DTO
@@ -51,31 +41,36 @@ export async function GetProtocolo(protocolo: string) {
       };
     }
     // Trazer informações da solicitação
-    const solicitacao: any = await prisma.nato_solicitacoes_certificado.findMany({
-      where: {
-        id_fcw: {
-          in: solicitacaoIds
+    const solicitacao: any =
+      await prisma.nato_solicitacoes_certificado.findMany({
+        where: {
+          id_fcw: {
+            in: solicitacaoIds
+          }
+        },
+        select: {
+          id: true,
+          nome: true,
+          cpf: true,
+          estatos_pgto: true,
+          valorcd: true,
+          dt_aprovacao: true,
+          createdAt: true,
+          empreedimento: true,
+          id_fcw: true
         }
-      },
-      select: {
-        id: true,
-        nome: true,
-        cpf: true,
-        estatos_pgto: true,
-        valorcd: true,
-        dt_aprovacao: true,
-        createdAt: true,
-        empreedimento: true,
-        id_fcw: true
-      }
-    });
+      });
     return {
       error: false,
       message: "Success",
       data: {
         ...request,
-        ...(request.createdAt && { createdAt: new Date(request.createdAt).toISOString() }),
-        ...(request.construtora && { construtora: await GetConstrutora(request.construtora) }),
+        ...(request.createdAt && {
+          createdAt: new Date(request.createdAt).toISOString()
+        }),
+        ...(request.construtora && {
+          construtora: await GetConstrutora(request.construtora)
+        }),
         ...(solicitacao.length > 0
           ? {
               solicitacao: solicitacao.map((s: any) => {
@@ -104,7 +99,7 @@ export async function GetProtocolo(protocolo: string) {
   }
 }
 
-async function GetConstrutora( id: number) {
+async function GetConstrutora(id: number) {
   const reqest = await prisma.nato_empresas.findUnique({
     where: {
       id: id

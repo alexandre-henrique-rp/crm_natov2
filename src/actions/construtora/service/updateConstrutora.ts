@@ -20,7 +20,7 @@ export default async function UpdateConstrutora(_: any, data: FormData) {
         return { error: true, message: erroValidacao, data: null }
     }
 
-    const request = await prisma.nato_empresas.update({
+    await prisma.nato_empresas.update({
         where: {
             id: Number(id),
         },
