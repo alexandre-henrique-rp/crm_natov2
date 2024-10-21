@@ -8,7 +8,9 @@ type UserCompraType = {
     CorretorCx: number,
     setCorretorCx: (value: number) => void,
     FinanceiraCX: number,
-    setFinanceiraCX: (value: number) => void
+    setFinanceiraCX: (value: number) => void,
+    ServiceTags: any,
+    setServiceTags: (value: any) => void
 }
 
 export const UserCompraContext = createContext<UserCompraType>({
@@ -19,5 +21,7 @@ export const UserCompraContext = createContext<UserCompraType>({
     CorretorCx: 0,
     setCorretorCx: () => { },
     FinanceiraCX: 0,
-    setFinanceiraCX: () => { }
+    setFinanceiraCX: () => { },
+    ServiceTags: [],
+    setServiceTags: () => { }
 });

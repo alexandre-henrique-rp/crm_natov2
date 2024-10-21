@@ -11,6 +11,7 @@ export default function UserCompraProvider({ children }: UserCompraProps) {
   const [CorretorCx, setCorretorCx] = useState<number>(0);
   const [FinanceiraCX, setFinanceiraCX] = useState<number>(0);
   const [EmpreedimentoCX, setEmpreedimentoCX] = useState<number>(0);
+  const [ServiceTags, setServiceTags] = useState<any>([]);
 
   return (
     <UserCompraContext.Provider
@@ -23,6 +24,8 @@ export default function UserCompraProvider({ children }: UserCompraProps) {
         setFinanceiraCX,
         EmpreedimentoCX,
         setEmpreedimentoCX,
+        ServiceTags,
+        setServiceTags,
       }}
     >
       {children}
