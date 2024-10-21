@@ -775,3 +775,11 @@ model voucher {
   dt_resgate Int
   id_fcw     String @db.VarChar(150)
 }
+
+model nato_suporte {
+  id          Int      @id @default(autoincrement())
+  tag         String   @db.VarChar(100)
+  deescricao  String?  @db.VarChar(256)
+  solicitacao Int?
+  createAt    DateTime @default(now()) @db.DateTime(0)
+}

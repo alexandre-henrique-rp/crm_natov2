@@ -45,6 +45,7 @@ import CardGridConstrutoraRazaoSocial from "./Grid/CardGridConstrutoraRazaoSocia
 import CardGridConstrutoraTel from "./Grid/CardGridConstrutoraTel";
 import CardGridConstrutoraEmail from "./Grid/CardGridConstrutoraEmail";
 import CardGridConstrutoraFantasia from "./Grid/CardGridConstrutoraFantasia";
+import { CardGridSuport } from "./Grid/CardGridSuport";
 
 
 
@@ -131,6 +132,7 @@ export const CardCreateUpdate = {
   GridConstrutoraTel: CardGridConstrutoraTel,
   GridConstrutoraEmail: CardGridConstrutoraEmail,
   GridConstrutoraFantasia: CardGridConstrutoraFantasia,
+  GridSuporte: CardGridSuport,
   
   
   
