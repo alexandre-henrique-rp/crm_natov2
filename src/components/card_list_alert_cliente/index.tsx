@@ -2,20 +2,17 @@
 import { useEffect, useState } from "react";
 import { AlertComponent } from "../alerts";
 import { Box, Divider, Stack, Text } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import useAlertContext from "@/hook/useAlertContext";
 
 interface SetDataProps {
   Id: number;
   DataAlert: any;
+  user?: any;
 }
 
-export default function CardListAlertCliente({ Id, DataAlert }: SetDataProps) {
+export default function CardListAlertCliente({ Id, DataAlert, user}: SetDataProps) {
   const [Data, setData] = useState<any>([]);
-  const { data: session } = useSession();
-  const user = session?.user;
   const hierarquia = user?.hierarquia;
-
   const { Alert } = useAlertContext();
 
   useEffect(() => {

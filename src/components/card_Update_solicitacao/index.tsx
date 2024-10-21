@@ -1,6 +1,4 @@
 import { Alert, AlertIcon, Box, Divider, Flex, Input } from "@chakra-ui/react";
-import { getServerSession } from "next-auth";
-import { auth } from "@/lib/auth_confg";
 import UserCompraProvider from "@/provider/UserCompra";
 
 import { ResendSms } from "@/implementes/cardCreateUpdate/butons/resendSms";
@@ -14,10 +12,9 @@ import { UpdateSolicitacao } from "@/actions/solicitacao/service/update";
 // const prisma = new PrismaClient();
 type Props = {
   setDadosCard: solictacao.SolicitacaoGetType;
+  user?: any;
 };
-export async function CardUpdateSolicitacao({ setDadosCard }: Props) {
-  const session = await getServerSession(auth);
-  const user = session?.user;
+export async function CardUpdateSolicitacao({ setDadosCard , user }: Props) {
   const HierarquiaUser = user?.hierarquia;
   return (
     <>
