@@ -17,7 +17,7 @@ export async function CardGridSuport({
       {session?.user?.hierarquia === "ADM" && (
         <Box>
           <FormLabel fontSize="sm" fontWeight="md" m={0}>
-            Suporte 
+          Anexar ou Editar Suporte 
           </FormLabel>
           <CreateSuportAlert id={ID ?? 0}/>
         </Box>
