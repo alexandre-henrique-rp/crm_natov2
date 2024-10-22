@@ -1,5 +1,6 @@
 "use client";
 import useUserCompraContext from "@/hook/useUserCompraContext";
+import { SessionUserType } from "@/types/next-auth";
 import {
   Box,
   Button,
@@ -14,7 +15,6 @@ import {
   Select,
   useToast,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useEffect, useState } from "react";
@@ -24,12 +24,11 @@ import { BeatLoader } from "react-spinners";
 interface DropConstrutoraProps {
   value: number;
   Id: number;
+  user: SessionUserType.User;
 }
 
-export default function DropConstrutora({ value, Id }: DropConstrutoraProps) {
-  const { data: session } = useSession();
-  const user = session?.user;
-  const hierarquia = user?.hierarquia;
+export default function DropConstrutora({ value, Id, user }: DropConstrutoraProps) {
+  const hierarquia = user.hierarquia;
   const [Data, setData] = useState<any>([]);
   const [Construtora, setConstrutora] = useState<number>(0);
   const [Loading, setLoading] = useState<boolean>(false);

@@ -1,30 +1,28 @@
-'use client';
-
+"use client";
 
 import BtRemoverDistrato from "@/components/botoes/bt_Remover_Distrato";
-import { useSession } from "next-auth/react";
+import { SessionUserType } from "@/types/next-auth";
 
 interface CardGridDistratoProps {
-   Id: any
+  Id: any;
+  User: SessionUserType.User;
 }
 
-export default function CardGridDistrato({ Id }: CardGridDistratoProps) {
-    const { data: session } = useSession();
-    const User = session?.user;
-    const Hierarquia = User?.hierarquia;
+export default function CardGridDistrato({ Id, User }: CardGridDistratoProps) {
+  const Hierarquia = User?.hierarquia;
 
-    return (
-      <>
-        {Hierarquia === "ADM" && (
-          <>
-            <BtRemoverDistrato id={Id} />
-          </>
-        )}
-        {Hierarquia === "CCA" && (
-            <>
-              <BtRemoverDistrato id={Id} />
-            </>
-          )}
-      </>
-    );
+  return (
+    <>
+      {Hierarquia === "ADM" && (
+        <>
+          <BtRemoverDistrato id={Id} />
+        </>
+      )}
+      {Hierarquia === "CCA" && (
+        <>
+          <BtRemoverDistrato id={Id} />
+        </>
+      )}
+    </>
+  );
 }

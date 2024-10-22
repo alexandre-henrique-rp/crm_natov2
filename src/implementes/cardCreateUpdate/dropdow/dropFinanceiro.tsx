@@ -1,4 +1,5 @@
 "use client";
+import { SessionUserType } from "@/types/next-auth";
 import {
   Box,
   Button,
@@ -13,7 +14,6 @@ import {
   Select,
   useToast,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
@@ -22,11 +22,10 @@ import { BeatLoader } from "react-spinners";
 interface DropFinanceiroProps {
   value: number;
   Id: number;
+  user: SessionUserType.User;
 }
-export default function DropFinanceiro({ value, Id }: DropFinanceiroProps) {
-  const { data: session } = useSession();
-  const user = session?.user;
-  const hierarquia = user?.hierarquia;
+export default function DropFinanceiro({ value, Id, user }: DropFinanceiroProps) {
+  const hierarquia = user.hierarquia;
   const [Data, setData] = useState<any>([]);
   const [Financeiro, setFinanceiro] = useState<number>(0);
   const [Loading, setLoading] = useState<boolean>(false);

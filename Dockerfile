@@ -1,5 +1,5 @@
 # Use the latest Node.js image as the base image
-FROM node:22.6.0
+FROM node:20.17.0
 
 # Set the working directory
 WORKDIR /app

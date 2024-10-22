@@ -1,20 +1,19 @@
 import { Box, BoxProps, FormLabel, Text } from "@chakra-ui/react";
 import SelectCorretor from "../dropdow/selectCorretor";
 import DropCorretor from "../dropdow/dropCorretor";
-import { getServerSession } from "next-auth";
-import { auth } from "@/lib/auth_confg";
+import { SessionUserType } from "@/types/next-auth";
 
 interface CardGridCorretorProps extends BoxProps {
   DataSolicitacao: solictacao.SolicitacaoGetType;
+  user: SessionUserType.User;
 }
 
 export default async function CardGridCorretor({
   DataSolicitacao,
+  user,
   ...props
 }: CardGridCorretorProps) {
-  const session = await getServerSession(auth);
-  const user = session?.user;
-  const Hierarquia = user?.hierarquia;
+  const Hierarquia = user.hierarquia;
   return (
     <>{
       Hierarquia === "ADM" && (
@@ -27,6 +26,7 @@ export default async function CardGridCorretor({
           )}
           {DataSolicitacao.corretor?.id && (
             <DropCorretor
+              user={user}
               value={DataSolicitacao.corretor.id}
               Id={DataSolicitacao.id}
             />
