@@ -119,6 +119,11 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                   ID={setDadosCard.id}
                   w={{ base: "100%", md: "18rem" }}
                 />
+                <CardCreateUpdate.GridSuporte
+                  user={user}
+                  ID={setDadosCard.id}
+                  w={{ base: "100%", md: "16rem" }}
+                />
                 <CardCreateUpdate.GridLink
                   DataSolicitacao={setDadosCard}
                   w={{ base: "100%", md: "16rem" }}

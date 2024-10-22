@@ -43,7 +43,7 @@ export const Whatsapp = ({ onValue, setValue }: WhatsAppProps) => {
     if (Dados.length > 0) {
       return true;
     } else {
-      const request = await fetch("/api/verificador/whatsapp", {
+      const request = await fetch("/api/consulta/whatsapp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,8 @@ export const Whatsapp = ({ onValue, setValue }: WhatsAppProps) => {
         }),
       });
       const data = await request.json();
-      if (!data.exists) {
+      console.log("🚀 ~ checkwhatsapp ~ data:", data.data.exists)
+      if (!data.data.exists) {
         return false;
       }
       return true;

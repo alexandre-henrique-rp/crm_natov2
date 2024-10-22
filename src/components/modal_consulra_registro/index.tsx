@@ -94,20 +94,20 @@ export const ModalConsultaRegistro = ({
         if (request.ok) {
           const response = await request.json();
 
-          if (response.exists) {
+          if (response.cpf) {
             setSolicitacoes(response.solicitacoes);
             toast({
               title: "CPF já cadastrado!",
-              description: "O CPF informado já está registrado.",
+              description: response.message,
               status: "warning",
               duration: 3000,
               isClosable: true
             });
           } else {
-            setSolicitacoes([]);
+            setSolicitacoes(response.solicitacoes);
             toast({
               title: "CPF disponível.",
-              description: "Você pode prosseguir com o cadastro.",
+              description: response.message,
               status: "success",
               duration: 3000,
               isClosable: true

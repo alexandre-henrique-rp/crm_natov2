@@ -6,9 +6,6 @@ import { CreateSuportDto } from "../dto/createService.dto";
 const prisma = new PrismaClient();
 
 export default async function UpdateService(id: number, tagId: number, descricao: string) {
-  console.log("🚀 ~ UpdateService ~ tagId:", tagId)
-  console.log("🚀 ~ UpdateService ~ descricao:", descricao)
-  console.log("🚀 ~ UpdateService ~ id:", id)
   
   const tagObj = SuporteTagsOptions.find((tag) => tag.id === tagId)
   const tag = tagObj ? tagObj.label : ''

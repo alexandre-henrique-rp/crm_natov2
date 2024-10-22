@@ -24,7 +24,6 @@ export const SelectCorretor = ({
     if (setCorretor) {
       setId(setCorretor);
     }
-    
     (async () => {
       const resq = await fetch(`/api/usuario/getall`);
       const data = await resq.json();
