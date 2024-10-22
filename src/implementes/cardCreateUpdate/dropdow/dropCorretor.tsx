@@ -1,5 +1,6 @@
 "use client";
 import useUserCompraContext from "@/hook/useUserCompraContext";
+import { SessionUserType } from "@/types/next-auth";
 import {
   Box,
   Button,
@@ -14,7 +15,6 @@ import {
   Select,
   useToast,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useEffect, useState } from "react";
@@ -23,12 +23,11 @@ import { FaPlus } from "react-icons/fa6";
 interface DropCorretorProps {
   value: number;
   Id: number;
+  user: SessionUserType.User;
 }
 
-export default function DropCorretor({ value, Id }: DropCorretorProps) {
-  const { data: session } = useSession();
-  const user = session?.user;
-  const hierarquia = user?.hierarquia;
+export default function DropCorretor({ value, Id, user }: DropCorretorProps) {
+  const hierarquia = user.hierarquia;
   const [Data, setData] = useState<any>([]);
   const [Corretor, setCorretor] = useState<number>(0);
   const toast = useToast();
@@ -47,7 +46,6 @@ export default function DropCorretor({ value, Id }: DropCorretorProps) {
       }
     }
     if (value) {
-      console.log("🚀 ~ value:", value);
       setCorretor(value);
     }
   }, [ContrutoraCX, EmpreedimentoCX, hierarquia, value]);

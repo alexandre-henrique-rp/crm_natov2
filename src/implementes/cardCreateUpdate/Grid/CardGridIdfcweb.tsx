@@ -1,17 +1,16 @@
 import { Box, BoxProps, FormLabel, Link, Text } from "@chakra-ui/react";
-import { getServerSession } from "next-auth";
-import { auth } from "@/lib/auth_confg";
+import { SessionUserType } from "@/types/next-auth";
 
 interface CardGridUpdateCnhProps extends BoxProps {
   DataSolicitacao: solictacao.SolicitacaoGetType;
+  user: SessionUserType.User;
 }
 
 export default async function CardGridIdfcweb({
   DataSolicitacao,
+  user,
   ...props
 }: CardGridUpdateCnhProps) {
-  const session = await getServerSession(auth);
-  const user = session?.user;
   const Hierarquia = user?.hierarquia;
   return (
     <>

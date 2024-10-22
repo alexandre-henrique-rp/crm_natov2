@@ -1,20 +1,19 @@
 import { Box, BoxProps, FormLabel } from "@chakra-ui/react";
 import { SelectTagsAlerta } from "../dropdow/selectTagsAlerta";
-import { getServerSession } from "next-auth";
-import { auth } from "@/lib/auth_confg";
-
+import { SessionUserType } from "@/types/next-auth";
 interface CardGridTagsAlertProps extends BoxProps {
   ID: number;
+  user: SessionUserType.User;
 }
 
 export async function CardGridTagsAlert({
   ID,
+  user,
   ...props
 }: CardGridTagsAlertProps) {
-  const session = await getServerSession(auth);
   return (
     <>
-      {session?.user?.hierarquia === "ADM" && (
+      {user?.hierarquia === "ADM" && (
         <Box {...props}>
           <FormLabel fontSize="sm" fontWeight="md" m={0}>
             Tags Alertas

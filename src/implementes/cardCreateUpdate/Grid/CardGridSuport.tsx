@@ -1,25 +1,25 @@
 import { Box, BoxProps, FormLabel } from "@chakra-ui/react";
-import { getServerSession } from "next-auth";
-import { auth } from "@/lib/auth_confg";
 import CreateSuportAlert from "@/components/botoes/btn_create_suporte";
-
+import { SessionUserType } from "@/types/next-auth";
 
 interface CardGridSuportProps extends BoxProps {
-  ID?: number;
+  ID: number;
+  user: SessionUserType.User;
 }
 
-export async function CardGridSuport({
-  ID,
-}: CardGridSuportProps) {
-  const session = await getServerSession(auth);
+export async function CardGridSuport({ ID, user }: CardGridSuportProps) {
   return (
     <>
-      {session?.user?.hierarquia === "ADM" && (
+      {user?.hierarquia === "ADM" && (
         <Box>
           <FormLabel fontSize="sm" fontWeight="md" m={0}>
-            Suporte 
+            Suporte
           </FormLabel>
-          <CreateSuportAlert id={ID ?? 0}/>
+          {ID && (
+            <>
+              <CreateSuportAlert id={ID} />
+            </>
+          )}
         </Box>
       )}
     </>
