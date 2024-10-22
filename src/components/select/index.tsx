@@ -29,8 +29,7 @@ export const SelectComponent = ({
       setData(SetValue);
       onValue(Number(SetValue));
     }
-
-    if (hierarquia === "ADM") {
+    if (hierarquia === "ADM" && Data.length < 1) {
       (async () => {
         if (tag === "empreendimento") {
           const req = await fetch("/api/empreendimento/getall");
@@ -51,7 +50,7 @@ export const SelectComponent = ({
         }
       })();
     }
-  }, [Data, Data.length, DefaultValue, SetValue, hierarquia, onValue, tag]);
+  }, [Data, DefaultValue, SetValue, hierarquia, onValue, tag]);
 
 
   return (

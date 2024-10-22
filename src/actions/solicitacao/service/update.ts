@@ -4,7 +4,6 @@ import { Tag } from "@/data/tags";
 import { auth } from "@/lib/auth_confg";
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 
 const prisma = new PrismaClient();
 
@@ -85,8 +84,7 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
       };
     }
 
-    console.log("Atualização bem-sucedida:", response);
-    redirect("/");
+    // console.log("Atualização bem-sucedida:", response);
     return response;
   } else {
     console.error("Erro ao atualizar:", request.statusText);
