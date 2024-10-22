@@ -13,7 +13,7 @@ export async function CardGridSuport({ ID, user }: CardGridSuportProps) {
       {user?.hierarquia === "ADM" && (
         <Box>
           <FormLabel fontSize="sm" fontWeight="md" m={0}>
-            Suporte
+          Anexar ou Editar Suporte 
           </FormLabel>
           {ID && (
             <>
