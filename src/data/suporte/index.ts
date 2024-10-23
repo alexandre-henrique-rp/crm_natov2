@@ -28,5 +28,9 @@ export const SuporteTagsOptions: SuporteTagsProps = [
     {
         id: 5,
         label: 'Assinatura de Contrato',
+    },
+    {
+        id: 6,
+        label: 'Email do cliente, foi registrado incorretamente',
     }
 ]
