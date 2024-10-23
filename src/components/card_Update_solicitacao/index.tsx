@@ -8,13 +8,14 @@ import { SaveBtm } from "@/implementes/cardCreateUpdate/butons/saveBtm";
 import DistratoAlertPrint from "../Distrato_alert_print";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import { UpdateSolicitacao } from "@/actions/solicitacao/service/update";
+import { SessionUserType } from "@/types/next-auth";
 
 // const prisma = new PrismaClient();
 type Props = {
   setDadosCard: solictacao.SolicitacaoGetType;
-  user?: any;
+  user: SessionUserType.User;
 };
-export async function CardUpdateSolicitacao({ setDadosCard , user }: Props) {
+export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
   const HierarquiaUser = user?.hierarquia;
   return (
     <>
@@ -25,7 +26,11 @@ export async function CardUpdateSolicitacao({ setDadosCard , user }: Props) {
           <UserCompraProvider>
             <Box hidden>
               <Input value={setDadosCard.id} name="id_cliente" readOnly />
-              <Input value={setDadosCard.ativo.toString()} name="ativo" readOnly />
+              <Input
+                value={setDadosCard.ativo.toString()}
+                name="ativo"
+                readOnly
+              />
             </Box>
             <Flex flexDir={"column"} gap={6} w={"100%"} h={"100%"} py={10}>
               <Flex
@@ -73,6 +78,7 @@ export async function CardUpdateSolicitacao({ setDadosCard , user }: Props) {
                   w={{ base: "100%", md: "10rem" }}
                 />
                 <CardCreateUpdate.GridConstrutora
+                  user={user}
                   DataSolicitacao={setDadosCard}
                   w={{ base: "100%", md: "12rem" }}
                 />
@@ -85,18 +91,22 @@ export async function CardUpdateSolicitacao({ setDadosCard , user }: Props) {
                 justifyContent={{ base: "center", md: "space-between" }}
               >
                 <CardCreateUpdate.GridEmpreedimentoCL
+                  user={user}
                   DataSolicitacao={setDadosCard}
                   w={{ base: "100%", md: "16rem" }}
                 />
                 <CardCreateUpdate.GridFinanceiraCl
+                  user={user}
                   DataSolicitacao={setDadosCard}
                   w={{ base: "100%", md: "16rem" }}
                 />
                 <CardCreateUpdate.GridCorretor
+                  user={user}
                   DataSolicitacao={setDadosCard}
                   w={{ base: "100%", md: "16rem" }}
                 />
                 <CardCreateUpdate.GridProtocolo
+                  user={user}
                   DataSolicitacao={setDadosCard}
                   w={{ base: "100%", md: "10rem" }}
                 />
@@ -105,16 +115,24 @@ export async function CardUpdateSolicitacao({ setDadosCard , user }: Props) {
                   w={{ base: "100%", md: "10rem" }}
                 />
                 <CardCreateUpdate.GridTagsAlert
+                  user={user}
                   ID={setDadosCard.id}
                   w={{ base: "100%", md: "18rem" }}
                 />
-                <CardCreateUpdate.GridSuporte ID={setDadosCard.id}
-                w={{ base: "100%", md: "16rem" }}
-                 />
+                <CardCreateUpdate.GridSuporte
+                  user={user}
+                  ID={setDadosCard.id}
+                  w={{ base: "100%", md: "16rem" }}
+                />
                 <CardCreateUpdate.GridLink
                   DataSolicitacao={setDadosCard}
                   w={{ base: "100%", md: "16rem" }}
-                />
+                  />
+                  <CardCreateUpdate.GridSuporte
+                    user={user}
+                    ID={setDadosCard.id}
+                    w={{ base: "100%", md: "16rem" }}
+                  />
               </Flex>
 
               <Box>
@@ -133,13 +151,13 @@ export async function CardUpdateSolicitacao({ setDadosCard , user }: Props) {
                   tag="CNH"
                   Url={setDadosCard.uploadCnh}
                   w={{ base: "100%", md: "19rem" }}
-                  Hierarquia={!HierarquiaUser ? 'USER' : HierarquiaUser}
+                  Hierarquia={!HierarquiaUser ? "USER" : HierarquiaUser}
                 />
                 <CardCreateUpdate.GridUpdateDocument
                   tag="RG"
                   Url={setDadosCard.uploadRg}
                   w={{ base: "100%", md: "19rem" }}
-                  Hierarquia={!HierarquiaUser ? 'USER' : HierarquiaUser}
+                  Hierarquia={!HierarquiaUser ? "USER" : HierarquiaUser}
                 />
               </Flex>
               <Flex
@@ -170,6 +188,7 @@ export async function CardUpdateSolicitacao({ setDadosCard , user }: Props) {
               <Flex>
                 {setDadosCard.logDelete && (
                   <CardCreateUpdate.GridHistorico
+                    user={user}
                     DataSolicitacao={setDadosCard}
                     w={"100%"}
                   />
@@ -185,13 +204,13 @@ export async function CardUpdateSolicitacao({ setDadosCard , user }: Props) {
             px={4}
           >
             {setDadosCard.distrato && setDadosCard.ativo && (
-              <CardCreateUpdate.GridDistrato Id={setDadosCard.id} />
+              <CardCreateUpdate.GridDistrato Id={setDadosCard.id} User={user} />
             )}
             {!setDadosCard.id_fcw && setDadosCard.ativo && (
-              <CriarFcweb Id={setDadosCard.id} />
+              <CriarFcweb Id={setDadosCard.id} user={user} />
             )}
             {setDadosCard.ativo && (
-              <BtCreateAlertCliente DataSolicitacao={setDadosCard} />
+              <BtCreateAlertCliente DataSolicitacao={setDadosCard} user={user} />
             )}
             {setDadosCard.ativo && <ResendSms id={setDadosCard.id} />}
             <SaveBtm colorScheme="green" type="submit">

@@ -16,7 +16,6 @@ export default function CardGridRelacionamento({
           Relacionamento
         </FormLabel>
         <InputRelacionamento
-          //   name="relacionamento"
           px={1}
           bg={"gray.100"}
           borderColor={"gray.400"}

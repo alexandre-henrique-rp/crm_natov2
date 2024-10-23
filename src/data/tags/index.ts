@@ -52,5 +52,9 @@ export const TagsOptions: TagsProps = [
     {
         id:11,
         label: 'Anexado RG, porem possui CNH'
+    },
+    {
+        id:12,
+        label: 'Nenhum documento foi anexado.'
     }
 ]

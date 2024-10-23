@@ -1,6 +1,7 @@
 "use client";
 
 import useAlertContext from "@/hook/useAlertContext";
+import { SessionUserType } from "@/types/next-auth";
 import {
   Button,
   FormControl,
@@ -17,22 +18,20 @@ import {
   useDisclosure,
   useToast
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 
 interface BtCreateAlertClienteProps {
   DataSolicitacao: solictacao.SolicitacaoGetType;
+  user: SessionUserType.User;
 }
 
 export function BtCreateAlertCliente({
-  DataSolicitacao
+  DataSolicitacao,
+  user,
 }: BtCreateAlertClienteProps) {
-  const { data: session } = useSession();
-  const user = session?.user;
   const hierarquia = user?.hierarquia;
   const [Data, setData] = useState<any>();
-  // const [Alert, setAlert] = useState<boolean>(false); // Tipado corretamente
   const [Loading, setLoading] = useState(false);
   const [Titulo, setTitulo] = useState("");
   const [Descricao, setDescricao] = useState("");

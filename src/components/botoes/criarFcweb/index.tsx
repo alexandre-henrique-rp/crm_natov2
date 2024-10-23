@@ -1,5 +1,6 @@
 "use client";
 
+import { SessionUserType } from "@/types/next-auth";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -11,21 +12,19 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { FormEventHandler, useState, useRef } from "react";
 
 interface CriarFcwebProps {
   Id: number;
+  user: SessionUserType.User;
 }
 
-export function CriarFcweb({ Id }: CriarFcwebProps) {
+export function CriarFcweb({ Id, user }: CriarFcwebProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [Loading, setLoading] = useState(false);
   const toast = useToast();
-  const { data: session } = useSession();
-  const user = session?.user;
   const hierarquia = user?.hierarquia;
   const route = useRouter();
 

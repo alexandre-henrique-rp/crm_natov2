@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import {
   Box,
@@ -7,7 +8,7 @@ import {
   FormLabel,
   Input,
   Select,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { createForm } from "@/lib/pdf";
@@ -53,7 +54,7 @@ export default function GerarCobranca() {
         description: dados.message,
         status: "error",
         duration: 3000,
-        isClosable: true
+        isClosable: true,
       });
     }
     if (!dados.error) setTotalArray(dados.data);
@@ -67,55 +68,57 @@ export default function GerarCobranca() {
         description: dados.message,
         status: "error",
         duration: 3000,
-        isClosable: true
+        isClosable: true,
       });
     }
-    console.log(dados.data?.solicitacao);
     setTotalArray(dados.data?.solicitacao);
   }
 
   async function handleDownload() {
     // Função para separar os objetos por id do empreendimento
     const separarPorEmpreendimentoId = () => {
-        return TotalArray.reduce(
-            (acc: Record<number, { nome: string; itens: any[] }>, Total: any) => {
-                const empreendimentoId = Total.empreedimento.id;
-                if (!acc[empreendimentoId]) {
-                    acc[empreendimentoId] = {
-                        nome: Total.empreedimento.nome,
-                        itens: []
-                    };
-                }
-                acc[empreendimentoId].itens.push(Total);
-                return acc;
-            },
-            {}
-        );
+      return TotalArray.reduce(
+        (acc: Record<number, { nome: string; itens: any[] }>, Total: any) => {
+          const empreendimentoId = Total.empreedimento.id;
+          if (!acc[empreendimentoId]) {
+            acc[empreendimentoId] = {
+              nome: Total.empreedimento.nome,
+              itens: [],
+            };
+          }
+          acc[empreendimentoId].itens.push(Total);
+          return acc;
+        },
+        {}
+      );
     };
 
     const dadosSeparados = separarPorEmpreendimentoId();
     // Criar cabeçalho do CSV no formato personalizado
-    let csvContent = "\uFEFF"; // Adiciona o BOM para garantir a codificação UTF-8
+    let csvContent = "\uFEFF";
     // Percorrer os dados por empreendimento e criar as linhas do CSV
-    for (const [dados] of Object.entries(dadosSeparados) as any) {
-        // Adicionar o cabeçalho do empreendimento
-        csvContent += `${dados.nome};;;\n;;;\n`;
-        // Adicionar cabeçalho da tabela para cada empreendimento
-        csvContent += `x;id;nome;cpf\n`;
-        // Adicionar as linhas com os dados de cada item
-        dados.itens.forEach((item: any, index: number) => {
-            const linha = [
-                index + 1, // Contador (x)
-                item.id, // ID do item
-                item.nome, // Nome do cliente
-                item.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") // Formatar CPF
-            ].join(";"); // Junta todos os campos com ponto e vírgula
-            csvContent += linha + "\n"; // Adiciona a linha ao conteúdo CSV
-        });
-        // Adicionar separadores entre empreendimentos
-        csvContent += `;;;\n;;;\n`;
+    for (const [empreendimentoId, dados] of Object.entries(
+      dadosSeparados
+    ) as any) {
+      // Adicionar o cabeçalho do empreendimento
+      csvContent += `${dados.nome};;;\n;;;\n`;
+      // Adicionar cabeçalho da tabela para cada empreendimento
+      csvContent += `x;id;nome;cpf;dtAprovacao;dtCadastro\n`;
+      // Adicionar as linhas com os dados de cada item
+      dados.itens.forEach((item: any, index: number) => {
+        const linha = [
+          index + 1, // Contador (x)
+          item.id, // ID do item
+          item.nome, // Nome do cliente
+          item.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4"),
+          item.dt_aprovacao.split("T")[0].split("-").reverse().join("/"),
+          item.createdAt.split("T")[0].split("-").reverse().join("/"),
+        ].join(";"); // Junta todos os campos com ponto e vírgula
+        csvContent += linha + "\n"; // Adiciona a linha ao conteúdo CSV
+      });
+      // Adicionar separadores entre empreendimentos
+      csvContent += `;;;\n;;;\n`;
     }
-
     // Criar um Blob do conteúdo CSV
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     // Criar um link para o download
@@ -127,8 +130,7 @@ export default function GerarCobranca() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-}
-
+  }
 
   const handleDownloadPDF = async () => {
     // separar id_fcw do array
@@ -137,7 +139,7 @@ export default function GerarCobranca() {
       solicitacao: ids,
       ...(N_NotaFiscal !== "" && { nota_fiscal: N_NotaFiscal }),
       situacao_pg: 1,
-      construtora: Number(Construtora)
+      construtora: Number(Construtora),
     };
     const response = await PostRelatorio(DataPost);
     const construtoraInfo =
@@ -152,7 +154,7 @@ export default function GerarCobranca() {
         description: complementoCnpj.message,
         status: "error",
         duration: 3000,
-        isClosable: true
+        isClosable: true,
       });
     }
     const DadosConst = {
@@ -171,7 +173,7 @@ export default function GerarCobranca() {
         complementoCnpj.data.bairro
       }, ${complementoCnpj.data.municipio} - ${
         complementoCnpj.data.uf
-      }, ${complementoCnpj.data.cep?.replace(/(\d{5})(\d{3})/, "$1-$2")}`
+      }, ${complementoCnpj.data.cep?.replace(/(\d{5})(\d{3})/, "$1-$2")}`,
     };
 
     const ValorCert = construtoraInfo?.valor_cert
@@ -181,11 +183,11 @@ export default function GerarCobranca() {
     const valorTotal = ValorCert ? TotalArray.length * ValorCert : 0;
     const valorUnicoFormatado = ValorCert.toLocaleString("pt-BR", {
       style: "currency",
-      currency: "BRL"
+      currency: "BRL",
     });
     const valorTotalFormatado = valorTotal.toLocaleString("pt-BR", {
       style: "currency",
-      currency: "BRL"
+      currency: "BRL",
     });
     const msg = `Certificados emitidos pelo "AR Interface certificador" no período de ${Inicio.split(
       "-"
@@ -223,7 +225,7 @@ export default function GerarCobranca() {
           if (!acc[empreendimentoId]) {
             acc[empreendimentoId] = {
               nome: Total.empreedimento.nome,
-              itens: []
+              itens: [],
             };
           }
           acc[empreendimentoId].itens.push(Total);
@@ -236,20 +238,22 @@ export default function GerarCobranca() {
     // Criar cabeçalho do CSV no formato personalizado
     let csvContent = "\uFEFF";
     // Percorrer os dados por empreendimento e criar as linhas do CSV
-    for (const [ dados] of Object.entries(
+    for (const [empreendimentoId, dados] of Object.entries(
       dadosSeparados
     ) as any) {
       // Adicionar o cabeçalho do empreendimento
       csvContent += `${dados.nome};;;\n;;;\n`;
       // Adicionar cabeçalho da tabela para cada empreendimento
-      csvContent += `x;id;nome;cpf\n`;
+      csvContent += `x;id;nome;cpf;dtAprovacao;dtCadastro\n`;
       // Adicionar as linhas com os dados de cada item
       dados.itens.forEach((item: any, index: number) => {
         const linha = [
           index + 1, // Contador (x)
           item.id, // ID do item
           item.nome, // Nome do cliente
-          item.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") // Formatar CPF
+          item.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4"),
+          item.dt_aprovacao.split("T")[0].split("-").reverse().join("/"),
+          item.createdAt.split("T")[0].split("-").reverse().join("/"),
         ].join(";"); // Junta todos os campos com ponto e vírgula
         csvContent += linha + "\n"; // Adiciona a linha ao conteúdo CSV
       });
@@ -433,10 +437,12 @@ export default function GerarCobranca() {
                     <td>{item.estatos_pgto}</td>
                     <td style={{ textAlign: "center" }}>
                       {item.dt_aprovacao
-                        .split("T")[0]
-                        .split("-")
-                        .reverse()
-                        .join("-")}
+                        ? item.dt_aprovacao
+                            .split("T")[0]
+                            .split("-")
+                            .reverse()
+                            .join("-")
+                        : ""}
                     </td>
                     <td style={{ textAlign: "center" }}>
                       {item.createdAt
@@ -477,7 +483,7 @@ export default function GerarCobranca() {
                 !Personalizado && !Protocolo ? true : !!Protocolo ? true : false
               }
               onClick={handleDownloadPDF}
-            >
+            >Tô
               Gerar cobrança
             </Button>
           </Flex>

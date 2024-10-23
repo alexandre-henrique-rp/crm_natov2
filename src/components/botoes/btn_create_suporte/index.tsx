@@ -141,6 +141,8 @@ export default function CreateSuportAlert({ id }: CreateSuportAlertProps) {
     };
 
     return (
+      <>
+      <Flex>
       <Flex
         key={item.id}
         gap={1}
@@ -149,10 +151,11 @@ export default function CreateSuportAlert({ id }: CreateSuportAlertProps) {
         alignItems={"center"}
         borderRadius={9}
         bg={"blue.200"}
+        cursor={"pointer"}
+        _hover={{ bg: "blue.300" }}
       >
         <Text
-          fontSize={"0.8rem"}
-          cursor={"pointer"}
+          fontSize={"0.8rem"}  
           onClick={() => HandleOnClick(item.id)}
         >
           {item.tag}
@@ -162,8 +165,12 @@ export default function CreateSuportAlert({ id }: CreateSuportAlertProps) {
           fontSize={"0.8rem"}
           onClick={DeleteTag}
           cursor={"pointer"}
+          borderRadius={3}
+          _hover={{ bg: "red.500" }}
         />
       </Flex>
+      </Flex>
+      </>
     );
   });
 
@@ -188,8 +195,9 @@ export default function CreateSuportAlert({ id }: CreateSuportAlertProps) {
       >
         Suporte
       </Button>
-
+      <Flex flexDir={"column"} gap={1} mt={1}>
       {RendBoard}
+      </Flex>
 
       <Modal isOpen={isOpen} size={"xl"} onClose={onClose}>
         <ModalOverlay />

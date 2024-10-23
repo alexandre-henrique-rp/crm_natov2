@@ -1,5 +1,6 @@
 "use client";
 import useUserCompraContext from "@/hook/useUserCompraContext";
+import { SessionUserType } from "@/types/next-auth";
 import {
   Box,
   Button,
@@ -14,7 +15,6 @@ import {
   Select,
   useToast,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
@@ -23,17 +23,17 @@ import { BeatLoader } from "react-spinners";
 interface DropEmpreendimentoProps {
   value: number;
   id: number;
+  user: SessionUserType.User;
 }
 export default function DropEmpreendimento({
   value,
+  user,
   id,
 }: DropEmpreendimentoProps) {
   const [Empreedimento, setEmpreedimento] = useState<number>(0);
   const [Loading, setLoading] = useState<boolean>(false);
   const [Load, setLoad] = useState<boolean>(false);
-  const { data: session } = useSession();
-  const user = session?.user;
-  const hierarquia = user?.hierarquia;
+  const hierarquia = user.hierarquia;
   const [Data, setData] = useState<any>([]);
   const toast = useToast();
   const route = useRouter();
