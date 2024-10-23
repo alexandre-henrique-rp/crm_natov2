@@ -483,7 +483,7 @@ export default function GerarCobranca() {
                 !Personalizado && !Protocolo ? true : !!Protocolo ? true : false
               }
               onClick={handleDownloadPDF}
-            >
+            >Tô
               Gerar cobrança
             </Button>
           </Flex>
