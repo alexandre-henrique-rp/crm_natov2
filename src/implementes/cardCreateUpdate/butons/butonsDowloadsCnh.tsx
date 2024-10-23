@@ -1,5 +1,5 @@
 "use client";
-import { Button, Flex } from "@chakra-ui/react";
+import { Flex, Link } from "@chakra-ui/react";
 import { DataContext } from "../imputs/inputUpdateCnh";
 import { useContext, useEffect, useState } from "react";
 import { DownloadDoc } from "@/components/DowloadDoc";
@@ -28,18 +28,30 @@ export function ButtonsDownloadsCnh({ url }: ButtonsDownloadsCnhProps) {
     if (Data) setUrlDownloads(Data);
   }, [url, Data]);
 
-  const HandleDownloads = async () => {
-    if (!url) return;
-    window.open(url, "_blank");
-  };
-
   return (
     <>
       <Flex gap={3} pt={1}>
         {UrlDownloads && (
-          <Button size={"sm"} colorScheme="green" onClick={HandleDownloads}>
-            Download file
-          </Button>
+          <>
+            <Link
+              href={UrlDownloads}
+              target="_blank"
+              rel="noopener noreferrer"
+              bg={"green.500"}
+              py={1}
+              px={2}
+              borderRadius={"8px"}
+              color={"white"}
+              fontSize={"sm"}
+              textDecoration={"none"}
+              fontWeight="bold"
+              _hover={{
+                bg: "green.500"
+              }}
+            >
+              Download Do Arquivo
+            </Link>
+          </>
         )}
         {UrlBase64 && <DownloadDoc base64={UrlBase64} />}
       </Flex>
