@@ -62,6 +62,9 @@ export async function GetIncioFimSituacaoConstrutora(
         Andamento: {
           in: ["APROVADO", "EMITIDO"]
         },
+        dt_aprovacao:{
+          not: null
+        },
         situacao_pg: {
           equals: dto.situacao
         }

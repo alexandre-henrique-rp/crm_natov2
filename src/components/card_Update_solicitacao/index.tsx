@@ -127,7 +127,12 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                 <CardCreateUpdate.GridLink
                   DataSolicitacao={setDadosCard}
                   w={{ base: "100%", md: "16rem" }}
-                />
+                  />
+                  <CardCreateUpdate.GridSuporte
+                    user={user}
+                    ID={setDadosCard.id}
+                    w={{ base: "100%", md: "16rem" }}
+                  />
               </Flex>
 
               <Box>
