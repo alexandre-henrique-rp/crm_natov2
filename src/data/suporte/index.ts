@@ -11,18 +11,22 @@ export type SuporteTagsProps = SuporteTags[];
 export const SuporteTagsOptions: SuporteTagsProps = [
     {
         id: 1,
-        label: 'Cliente optou por marcar outro dia ',
+        label: 'Esqueceu a senha',
     },
     {
         id: 2,
-        label: 'cadastro incorreto',
+        label: 'Instalação do BirdID',
     },
     {
         id: 3,
-        label: 'Cliente remarcou o horário',
+        label: 'Emissão Certificado',
     },
     {
         id: 4,
-        label: 'Cliente não compareceu',
+        label: 'Sincronização Certificado',
     },
+    {
+        id: 5,
+        label: 'Assinatura de Contrato',
+    }
 ]
