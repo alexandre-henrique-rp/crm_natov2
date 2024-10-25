@@ -32,5 +32,9 @@ export const SuporteTagsOptions: SuporteTagsProps = [
     {
         id: 6,
         label: 'Email do cliente, foi registrado incorretamente',
+    },
+    {
+        id: 7,
+        label: 'Credito zerado',
     }
 ]
