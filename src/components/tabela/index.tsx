@@ -23,7 +23,7 @@ import {
   ButtonGroup
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ImClock } from "react-icons/im";
 import { IoIosArrowForward } from "react-icons/io";
 import { FaFileSignature } from "react-icons/fa6";
@@ -117,7 +117,7 @@ export function Tabela({
       <Tr key={item.id} bg={colors} color={fontColor}>
         <Td>
           <Flex>
-            {item?.tag.length > 0 &&
+            {item.tag.length > 0 &&
             item.ativo &&
             !item.distrato &&
             item.Andamento !== "EMITIDO" ? (
@@ -164,7 +164,6 @@ export function Tabela({
         <Td>{item.nome}</Td>
         <Td>
           {!item.distrato && item.ativo ? (
-
             <>
               <Box>{dtAgenda}</Box>
               <Box>{horaAgenda}</Box>
