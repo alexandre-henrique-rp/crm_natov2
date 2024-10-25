@@ -96,23 +96,25 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
 async function PostTags(value: any, id: number) {
   const session = await getServerSession(auth);
   const tags = JSON.parse(value);
-  for (let i = 0; i < tags.length; i++) {
-    const tag: Tag = tags[i];
-    if (tag.label && session?.user.hierarquia === "ADM") {
-      const verifique = await prisma.nato_tags.findFirst({
-        where: {
-          descricao: tag.label,
-          solicitacao: id
-        }
-      });
-      const filtro = verifique ? false : true;
-      if (filtro) {
-        await prisma.nato_tags.create({
-          data: {
+  if(value) {
+    for (let i = 0; i < tags.length; i++) {
+      const tag: Tag = tags[i];
+      if (tag.label && session?.user.hierarquia === "ADM") {
+        const verifique = await prisma.nato_tags.findFirst({
+          where: {
             descricao: tag.label,
             solicitacao: id
           }
         });
+        const filtro = verifique ? false : true;
+        if (filtro) {
+          await prisma.nato_tags.create({
+            data: {
+              descricao: tag.label,
+              solicitacao: id
+            }
+          });
+        }
       }
     }
   }
