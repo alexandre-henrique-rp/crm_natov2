@@ -128,11 +128,11 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                   DataSolicitacao={setDadosCard}
                   w={{ base: "100%", md: "16rem" }}
                   />
-                  <CardCreateUpdate.GridSuporte
+                  {/* <CardCreateUpdate.GridSuporte
                     user={user}
                     ID={setDadosCard.id}
                     w={{ base: "100%", md: "16rem" }}
-                  />
+                  /> */}
               </Flex>
 
               <Box>

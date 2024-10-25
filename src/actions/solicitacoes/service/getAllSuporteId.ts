@@ -10,7 +10,12 @@ export default async function GetAllSuporteId(id: number) {
         solicitacao: id,
       },
     });    
-    return suporte;
+    return suporte.map((i) => {
+      return{
+        ...i,
+        ...(i.urlSuporte &&{urlSuporte : JSON.parse(i.urlSuporte)})
+    }
+    });
   } catch (error: any) {
     console.log("erro ao buscar tags",error.message);
     return [];
