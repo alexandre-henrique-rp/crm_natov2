@@ -17,7 +17,7 @@ export default function CardGridRegisterTel({
           Telefone {index && index > 0 && index}
         </FormLabel>
         <InputRegisterTel
-          maxLength={15}
+          maxLength={16}
           Index={index && index > 0 && index}
           tell={tell}
           px={1}
