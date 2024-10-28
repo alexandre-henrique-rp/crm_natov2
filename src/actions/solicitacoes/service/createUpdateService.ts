@@ -5,7 +5,7 @@ import { SuporteTagsOptions } from "@/data/suporte"
 
 const prisma = new PrismaClient()
 
-export async function createSuportAlert(id: number, descricao: string, tags: number) {
+export async function createSuportAlert(id: number, descricao: string, tags: number, urlFinal: any) {
     const tagObj = SuporteTagsOptions.find((tag) => tag.id === tags)
     const tag = tagObj ? tagObj.label : ''
 
@@ -21,6 +21,8 @@ export async function createSuportAlert(id: number, descricao: string, tags: num
                 solicitacao: id,
                 tag: tag,
                 deescricao: descricao,
+                urlSuporte: JSON.stringify(urlFinal)
+                
             }
         })
         return { error: false, message: "Suporte criado com sucesso", data: req }
