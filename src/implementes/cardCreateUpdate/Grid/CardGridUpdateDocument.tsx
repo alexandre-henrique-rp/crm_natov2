@@ -12,12 +12,14 @@ interface CardGridUpdateCnhProps extends BoxProps {
   Url: string;
   tag: string;
   Hierarquia: string;
+  suspenso: string;
 }
 
 export default async function CardGridUpdateDocument({
   Url,
   tag,
   Hierarquia,
+  suspenso,
   ...props
 }: CardGridUpdateCnhProps) {
 
@@ -38,7 +40,7 @@ export default async function CardGridUpdateDocument({
           bg={"gray.100"}
           borderColor={"gray.400"}
         />
-        {Hierarquia !== "USER" && <ButtonsDownloadsCnh url={Url} />}
+        {Hierarquia !== "USER" && (suspenso ? <Text color={'red'}>{suspenso}</Text> : <ButtonsDownloadsCnh url={Url} />)}
       </Box>
     </>
   );

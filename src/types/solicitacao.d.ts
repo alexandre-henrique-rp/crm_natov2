@@ -102,7 +102,8 @@ declare namespace solictacao {
     tag: {
       id: number;
       descricao: string;
-    }[];
+    }[],
+    docSuspenso: string;
   }
 
   /**

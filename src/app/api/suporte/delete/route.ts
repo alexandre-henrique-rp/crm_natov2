@@ -6,7 +6,7 @@ export async function DELETE(request: Request) {
     try {
         const fileName = await request.json();
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/file/suporte/delete/${fileName.image}`, {
+        const response = await fetch(`${process.env.TESTE_PUBLIC_STRAPI_API_URL}/delete/suporte/${fileName.image}`, {
             method: 'DELETE',
         });
         
