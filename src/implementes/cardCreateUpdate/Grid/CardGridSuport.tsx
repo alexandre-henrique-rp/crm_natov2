@@ -1,4 +1,4 @@
-import CreateSuportAlert from "@/app/components/botoes/btn_create_suporte";
+import CreateSuportAlert from "@/components/botoes/btn_create_suporte";
 import { SessionUserType } from "@/types/next-auth";
 import { Box, BoxProps, FormLabel } from "@chakra-ui/react";
 

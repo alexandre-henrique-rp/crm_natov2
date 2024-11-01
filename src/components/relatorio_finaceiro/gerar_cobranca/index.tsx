@@ -98,9 +98,7 @@ export default function GerarCobranca() {
     let csvContent = "\uFEFF";
     const ifocontrutora = await GetConstrutoraById(Construtora);
     // Percorrer os dados por empreendimento e criar as linhas do CSV
-    csvContent += `${ifocontrutora?.fantasia}; ${new Date().toLocaleDateString(
-      "pt-BR"
-    )};;\n;;;\n`;
+    csvContent += `${ifocontrutora?.fantasia};${Inicio.split("-").reverse().join("-")} - ${Fim.split("-").reverse().join("-")};;\n;;;\n`;
     for (const [empreendimentoId, dados] of Object.entries(
       dadosSeparados
     ) as any) {
@@ -219,7 +217,7 @@ export default function GerarCobranca() {
     const url = URL.createObjectURL(blob);
     // window.open(url, "_blank");
     link.setAttribute("href", url);
-    link.setAttribute("download", `Resumo_fechamento.pdf`);
+    link.setAttribute("download", `Resumo_fechamento${DadosConst.nome}_${Inicio.split("-").reverse().join("-")}_${Fim.split("-").reverse().join("-")}.pdf`);
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
@@ -245,9 +243,7 @@ export default function GerarCobranca() {
     // Criar cabeçalho do CSV no formato personalizado
     let csvContent = "\uFEFF";
     const ifocontrutora = await GetConstrutoraById(Construtora);
-    csvContent += `${ifocontrutora?.fantasia}; ${new Date().toLocaleDateString(
-      "pt-BR"
-    )};;\n;;;\n`;
+    csvContent += `${ifocontrutora?.fantasia}; ${Inicio.split("-").reverse().join("-")} - ${Fim.split("-").reverse().join("-")};;\n;;;\n`;
     // Percorrer os dados por empreendimento e criar as linhas do CSV
     for (const [empreendimentoId, dados] of Object.entries(
       dadosSeparados
@@ -280,7 +276,7 @@ export default function GerarCobranca() {
     const linkCsv = document.createElement("a");
     const urlCsv = URL.createObjectURL(blobCsv);
     linkCsv.setAttribute("href", urlCsv);
-    linkCsv.setAttribute("download", `lista_fechamento_${ifocontrutora?.fantasia} - ${new Date().toLocaleDateString("pt-BR")}.csv`);
+    linkCsv.setAttribute("download", `lista_fechamento_${ifocontrutora?.fantasia}_${Inicio.split("-").reverse().join("-")}_${Fim.split("-").reverse().join("-")}.csv`);
     linkCsv.style.visibility = "hidden";
     document.body.appendChild(linkCsv);
     linkCsv.click();
