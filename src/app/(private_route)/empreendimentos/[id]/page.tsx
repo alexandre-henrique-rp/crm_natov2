@@ -1,6 +1,6 @@
 import GetEmpreendimentoById from "@/actions/empreendimento/service/getEmpreendimentoById";
-import { BotaoRetorno } from "@/app/components/botoes/btm_retorno";
-import { CardUpdateEmpreendimento } from "@/app/components/card_EditarEmpreendimento";
+import { BotaoRetorno } from "@/components/botoes/btm_retorno";
+import { CardUpdateEmpreendimento } from "@/components/card_EditarEmpreendimento";
 import { Box, Divider, Flex, Heading } from "@chakra-ui/react";
 import { Metadata } from "next";
 

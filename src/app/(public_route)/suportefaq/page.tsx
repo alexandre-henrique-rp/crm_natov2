@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import FooterComponent from "@/components/footer";
 import PublicHeader from "@/components/public_header";
 import {

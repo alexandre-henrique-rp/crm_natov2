@@ -2,10 +2,7 @@
 import {
   Box,
   Button,
-  Flex,
-  useMediaQuery,
-  Text
-} from "@chakra-ui/react";
+  Flex} from "@chakra-ui/react";
 
 
 export default function PublicHeader() {

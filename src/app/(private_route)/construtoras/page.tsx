@@ -1,6 +1,7 @@
-import { BotaoRetorno } from "@/app/components/botoes/btm_retorno";
-import Construtora from "@/app@/components/botoes/btm_retorno
-import { auth } from "@/l@/components/construtora_compoment
+import { BotaoRetorno } from "@/components/botoes/btm_retorno";
+import Construtora from "@/components/construtora_compoment";
+import { auth } from "@/lib/auth_confg";
+
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { PrismaClient } from "@prisma/client";
 import { Metadata } from "next";
