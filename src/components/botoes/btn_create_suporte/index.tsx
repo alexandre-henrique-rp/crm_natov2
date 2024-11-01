@@ -53,6 +53,7 @@ export default function CreateSuportAlert({ id }: CreateSuportAlertProps) {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [storedImages, setStoredImages] = useState<any[]>([]);
   const [urlFinal, setUrlFinal] = useState<{ urlDownload: string, urlView: string }[]>([]);
+  const [imgSuspensa, setImgSuspensa] = useState<string>('');
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -86,7 +87,7 @@ export default function CreateSuportAlert({ id }: CreateSuportAlertProps) {
               if (response.status === 200) {
                   const url = response.data.data.url;
                   const ulrView = response.data.data.viewUrl;
-                  const urlFileName = response.data.data.fileName;
+                  const urlFileName = response.data.data.filename;
                   const urlObj = { urlDownload: url, urlView: ulrView, urlFileName: urlFileName };
                   
                   setUrlFinal((prev) => [...prev, urlObj]);
@@ -198,6 +199,7 @@ export default function CreateSuportAlert({ id }: CreateSuportAlertProps) {
   const HandleOnClick = async (idTag: number) => {
     setUpdate(true);
     const req = await GetSuporteById(idTag);
+    console.log("🚀 ~ HandleOnClick ~ req:", req)
     if (req) {
       const selectedTag = SuporteTagsOptions.find(
         (item) => item.label === req.tag
@@ -207,13 +209,18 @@ export default function CreateSuportAlert({ id }: CreateSuportAlertProps) {
         setTagsId(selectedTag.id);
       }
       setDescricao(req?.deescricao || "");
-      setStoredImages(req.urlSuporte.map((url: any) => {
-        return {
-          urlDownload: url.urlDownload,
-          urlView: url.urlView,
-          urlFileName: url.urlFileName
-        }
-      }));
+      if(req.imgSuspensa){
+        setImgSuspensa(req.imgSuspensa)
+        
+      }else{
+        setStoredImages(req.urlSuporte.map((url: any) => {
+          return {
+            urlDownload: url.urlDownload,
+            urlView: url.urlView,
+            urlFileName: url.urlFileName
+          }
+        }));
+      }
       setIdUpdate(idTag);
       onOpen();
     }
@@ -285,7 +292,6 @@ export default function CreateSuportAlert({ id }: CreateSuportAlertProps) {
 
   async function fetchTags() {
     const req = await GetAllSuporteId(id);
-    console.log("🚀 ~ fetchTags ~ req:", req)
     setSuporteTags(req || []);
   }
 
@@ -446,7 +452,7 @@ export default function CreateSuportAlert({ id }: CreateSuportAlertProps) {
                 </Box>
                 
                 <Box display="flex" flexWrap="wrap" justifyContent="center" mt={4}>
-                  { imagePreviews.map((preview, index) => (
+                  {imagePreviews.map((preview, index) => (
                     <Box key={index} position="relative" mr={2} mb={2}>
                       <Tooltip label="Excluir" placement="top" hasArrow>
                         <Button
@@ -475,6 +481,7 @@ export default function CreateSuportAlert({ id }: CreateSuportAlertProps) {
                   ))}
                 </Box>
 
+                  {imgSuspensa && update ? <Text color={'red'}>Suspenso: {imgSuspensa}</Text> : 
                 <Box display="flex" flexWrap="wrap" justifyContent="center" mt={4}>
                   {update ? storedImages.map((image, index) => (
                     <Box key={index} position="relative" mr={2} mb={2}>
@@ -504,7 +511,7 @@ export default function CreateSuportAlert({ id }: CreateSuportAlertProps) {
                       
                     </Box>
                   )) : null} 
-                </Box>
+                </Box>}
               </Box>
             </Flex>
           </ModalBody>

@@ -29,8 +29,8 @@ export default function VerificadorFileComponent({
           },
         })
         .then((response) => {
-          console.log(response.data.data.data);
-          onFileUploaded(response.data.data.data);
+          console.log(response.data.data.url);
+          onFileUploaded(response.data.data.url);
           toast({
             title: "Arquivo salvo",
             description: response.data.message,
