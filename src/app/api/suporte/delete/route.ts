@@ -1,4 +1,5 @@
 // src/app/api/suporte/upload/route.ts
+'use server'
 import { NextResponse } from "next/server";
 
 export async function DELETE(request: Request) {
@@ -6,7 +7,7 @@ export async function DELETE(request: Request) {
     try {
         const fileName = await request.json();
 
-        const response = await fetch(`${process.env.TESTE_PUBLIC_STRAPI_API_URL}/delete/suporte/${fileName.image}`, {
+        const response = await fetch(`https://uploadsuporte.redebrasilrp.com.br/delete/suporte/${fileName.image}`, {
             method: 'DELETE',
         });
         

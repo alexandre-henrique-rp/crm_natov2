@@ -11,7 +11,7 @@ export async function POST(request: Request) {
             throw { message: "Arquivo não informado, por favor entre em contato com o Suporte" };
         }
 
-        const response = await fetch(`${process.env.TESTE_PUBLIC_STRAPI_API_URL}/upload/suporte`, {
+        const response = await fetch(`https://uploadsuporte.redebrasilrp.com.br/upload/suporte`, {
             method: 'POST',
             body: formData,
             cache: 'no-store'
