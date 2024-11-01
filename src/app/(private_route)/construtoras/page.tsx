@@ -1,7 +1,6 @@
-
-import { BotaoRetorno } from "@/components/botoes/btm_retorno";
-import Construtora from "@/components/construtora_compoment";
-import { auth } from "@/lib/auth_confg";
+import { BotaoRetorno } from "@/app/components/botoes/btm_retorno";
+import Construtora from "@/app@/components/botoes/btm_retorno
+import { auth } from "@/l@/components/construtora_compoment
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { PrismaClient } from "@prisma/client";
 import { Metadata } from "next";
@@ -63,7 +62,7 @@ async function GetConstrutora() {
 }
 
 export const metadata: Metadata = {
-  title: "Construtoras",
+  title: "Construtoras"
 };
 export default async function ConstrutoraPage() {
   const Dados = await GetConstrutora();
@@ -77,11 +76,11 @@ export default async function ConstrutoraPage() {
         flexDir={"column"}
       >
         <Flex w={"100%"} justifyContent={"space-around"}>
-        <Flex gap={2}>
-        <Box zIndex={1} alignSelf="baseline" position="initial">
-            <BotaoRetorno rota="/" />
-          </Box>
-          <Heading>Construtora</Heading>
+          <Flex gap={2}>
+            <Box zIndex={1} alignSelf="baseline" position="initial">
+              <BotaoRetorno rota="/" />
+            </Box>
+            <Heading>Construtora</Heading>
           </Flex>
           <Link
             href={"/construtoras/cadastrar"}
@@ -113,7 +112,7 @@ export default async function ConstrutoraPage() {
             {Dados?.status === 200 ? <Construtora data={Dados?.data} /> : <></>}
           </Box>
         </Box>
-      </Flex> 
+      </Flex>
     </>
   );
 }

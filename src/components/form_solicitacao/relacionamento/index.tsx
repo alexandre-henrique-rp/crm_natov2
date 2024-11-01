@@ -4,23 +4,23 @@ import CpfMask from "@/components/cpf_mask";
 import VerificadorFileComponent from "@/components/file";
 import { Whatsapp } from "@/components/whatsapp";
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
+  chakra,
+  Flex,
+  FormControl,
   FormLabel,
   GridItem,
   Icon,
   Input,
   InputGroup,
-  chakra,
   SimpleGrid,
   Stack,
   Switch,
   Tooltip,
-  useToast,
-  Alert,
-  AlertIcon,
-  FormControl,
-  Flex
+  useToast
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -302,7 +302,11 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
                 <Icon ml={1} color="black" cursor="pointer" boxSize={3} />
               </Tooltip>
             </FormLabel>
-            <Input type="text" onChange={(e) => setVoucher(e.target.value)} readOnly/>
+            <Input
+              type="text"
+              onChange={(e) => setVoucher(e.target.value)}
+              readOnly
+            />
           </Box>
         )}
         {user?.hierarquia === "ADM" && (

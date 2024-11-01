@@ -1,29 +1,28 @@
-import { Box, Divider, Flex, Heading, } from "@chakra-ui/react";
-import { Metadata } from "next";
 import { GetFinanceiraById } from "@/actions/financeira/service/getFinanceiraById";
-import { BotaoRetorno } from "@/components/botoes/btm_retorno";
-import { CardUpdateFinanceira } from "@/components/card_EditarFinanceira";
+import { BotaoRetorno } from "@/app/components/botoes/btm_retorno";
+import { CardUpdateFinanceira } from "@/app/components/card_EditarFinanceira";
+import { Box, Divider, Flex, Heading } from "@chakra-ui/react";
+import { Metadata } from "next";
 
 type Props = {
   params: { id: string };
 };
 
-export async function generateMetadata({params}: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const id = params.id;
-  const req = await GetFinanceiraById(Number(id))
-  const data = req.data
+  const req = await GetFinanceiraById(Number(id));
+  const data = req.data;
 
   return {
-    title: `Editar Financeira: ${data.fantasia || 'Usuário'}`,
-  }
+    title: `Editar Financeira: ${data.fantasia || "Usuário"}`
+  };
 }
 
-export default async function EditarUsuario({params}: Props) {
-
+export default async function EditarUsuario({ params }: Props) {
   const id = Number(params.id);
 
-  const req = await GetFinanceiraById(id)
-  const data = req.data
+  const req = await GetFinanceiraById(id);
+  const data = req.data;
 
   return (
     <>

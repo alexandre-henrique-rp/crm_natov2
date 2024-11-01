@@ -1,9 +1,9 @@
-import { Box, Flex } from "@chakra-ui/react";
-import { Metadata } from "next";
-import { ModalPrimeAsses } from "@/components/prime_asses";
-import PerfilHome from "@/components/perfil_home";
 import { BugReport } from "@/components/bug";
 import { FilterRoute } from "@/components/filter/filtro_route";
+import PerfilHome from "@/components/perfil_home";
+import { ModalPrimeAsses } from "@/components/prime_asses";
+import { Box, Flex } from "@chakra-ui/react";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "HOME",

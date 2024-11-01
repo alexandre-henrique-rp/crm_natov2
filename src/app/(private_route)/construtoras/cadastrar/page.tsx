@@ -1,13 +1,13 @@
-import { Box, Button, Divider, Flex, Heading, Spacer } from "@chakra-ui/react";
 import CreateConstrutora from "@/actions/construtora/service/createConstrutora";
-import ContrutoraProvider from "@/provider/ConstrutoraProvider";
-import { BotaoRetorno } from "@/components/botoes/btm_retorno";
+import { BotaoRetorno } from "@/app/components/botoes/btm_retorno";
+import BotaoCancelar from "@/app/components/botoes/btn_cancelar";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
-import BotaoCancelar from "@/components/botoes/btn_cancelar";
+import ContrutoraProvider from "@/provider/ConstrutoraProvider";
+import { Box, Button, Divider, Flex, Heading, Spacer } from "@chakra-ui/react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "CADASTRO DE CONSTRUTORA",
+  title: "CADASTRO DE CONSTRUTORA"
 };
 
 export default function CadastrarFinanceira() {

@@ -1,9 +1,8 @@
+import { GetAllFinanceiras } from "@/actions/financeira/service/getAllFinanceiras";
+import { BotaoRetorno } from "@/app/components/botoes/btm_retorno";
+import Financeiras from "@/app/components/financeirasCard";
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { Metadata } from "next";
-import React from "react";
-import { GetAllFinanceiras } from "@/actions/financeira/service/getAllFinanceiras";
-import { BotaoRetorno } from "@/components/botoes/btm_retorno";
-import Financeiras from "@/components/financeirasCard";
 
 export const metadata: Metadata = {
   title: "FINANCEIRAS"

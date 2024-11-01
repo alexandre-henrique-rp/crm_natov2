@@ -7,7 +7,6 @@ import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import BotaoCancelar from "@/components/botoes/btn_cancelar";
 
 export default function CadastrarUsuario() {
-
   return (
     <Flex
       w={"100%"}
