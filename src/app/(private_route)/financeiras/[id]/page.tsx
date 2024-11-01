@@ -1,6 +1,6 @@
 import { GetFinanceiraById } from "@/actions/financeira/service/getFinanceiraById";
-import { BotaoRetorno } from "@/app/components/botoes/btm_retorno";
-import { CardUpdateFinanceira } from "@/app/components/card_EditarFinanceira";
+import { BotaoRetorno } from "@/components/botoes/btm_retorno";
+import { CardUpdateFinanceira } from "@/components/card_EditarFinanceira";
 import { Box, Divider, Flex, Heading } from "@chakra-ui/react";
 import { Metadata } from "next";
 

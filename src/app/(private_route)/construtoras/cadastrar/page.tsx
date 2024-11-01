@@ -1,6 +1,7 @@
 import CreateConstrutora from "@/actions/construtora/service/createConstrutora";
-import { BotaoRetorno } from "@/app/components/botoes/btm_retorno";
-import BotaoCancelar from "@/app/components/botoes/btn_cancelar";
+import { BotaoRetorno } from "@/components/botoes/btm_retorno";
+import BotaoCancelar from "@/components/botoes/btn_cancelar";
+
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import ContrutoraProvider from "@/provider/ConstrutoraProvider";
 import { Box, Button, Divider, Flex, Heading, Spacer } from "@chakra-ui/react";
