@@ -11,5 +11,11 @@ export default async function GetSuporteById(id: number) {
     },
   });
   await prisma.$disconnect();
-  return suporte;
+  if (suporte) {
+    return {
+      ...suporte,
+      ...(suporte.urlSuporte && { urlSuporte: JSON.parse(suporte.urlSuporte) })
+    };
+  }
+  return null;
 }
