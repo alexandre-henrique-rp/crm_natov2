@@ -33,9 +33,10 @@ export async function POST(request: Request) {
     );
 
     const data = await user.json();
+    console.log("🚀 ~ POST ~ data:", data)
 
     if (!user.ok) {
-      return new Response("Invalid credentials", { status: 401 });
+      return NextResponse.json(data, { status: 400 });
     }
     return NextResponse.json(data, { status: 200 });
   } catch (error) {

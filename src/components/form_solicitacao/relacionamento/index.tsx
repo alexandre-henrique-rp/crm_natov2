@@ -1,26 +1,27 @@
 "use client";
+import { CheckCpf } from "@/actions/getInfo/service/check_cpf";
 import Loading from "@/app/loading";
 import CpfMask from "@/components/cpf_mask";
 import VerificadorFileComponent from "@/components/file";
 import { Whatsapp } from "@/components/whatsapp";
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
+  chakra,
+  Flex,
+  FormControl,
   FormLabel,
   GridItem,
   Icon,
   Input,
   InputGroup,
-  chakra,
   SimpleGrid,
   Stack,
   Switch,
   Tooltip,
-  useToast,
-  Alert,
-  AlertIcon,
-  FormControl,
-  Flex
+  useToast
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -121,39 +122,54 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
       const data = [dados, dadossuperior];
       setLoad(true);
       data.map(async (item: any, index: number) => {
-        const response = await fetch(
-          `/api/solicitacao?sms=${Sms}&vendedor=${SetValue.vendedorName}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(item)
-          }
-        );
-        if (response.ok) {
-          toast({
-            title: "Sucesso",
-            description: "Solicitações enviadas com sucesso",
-            status: "success",
-            duration: 3000,
-            isClosable: true
-          });
-
-          if (data.length === index + 1) {
-            router.push("/home");
-            setLoad(false);
-          }
-        } else {
+        const verificador = await CheckCpf(item.cpf);
+        if (verificador.error) {
           toast({
             title: "Erro",
-            description: "Erro ao enviar solicitacao",
+            description: verificador.message,
             status: "error",
             duration: 3000,
             isClosable: true
           });
           setLoad(false);
           return null;
+        } else {
+          const response = await fetch(
+            `/api/solicitacao?sms=${Sms}&vendedor=${SetValue.vendedorName}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(item)
+            }
+          );
+          if (response.ok) {
+            toast({
+              title: "Sucesso",
+              description: "Solicitações enviadas com sucesso",
+              status: "success",
+              duration: 3000,
+              isClosable: true
+            });
+
+            if (data.length === index + 1) {
+              router.push("/home");
+              setLoad(false);
+            }
+          } else {
+            const retorno = await response.json();
+            const msg = `cliente ${item.nome} - ${retorno.message}`;
+            toast({
+              title: "Erro",
+              description: msg,
+              status: "error",
+              duration: 3000,
+              isClosable: true
+            });
+            setLoad(false);
+            return null;
+          }
         }
       });
     }
@@ -231,7 +247,7 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
           <Input
             type="date"
             onChange={(e) => setDataNascimento(e.target.value)}
-            readOnly
+            value={DataNascimento}
           />
         </Box>
         <GridItem>
@@ -302,7 +318,11 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
                 <Icon ml={1} color="black" cursor="pointer" boxSize={3} />
               </Tooltip>
             </FormLabel>
-            <Input type="text" onChange={(e) => setVoucher(e.target.value)} readOnly/>
+            <Input
+              type="text"
+              onChange={(e) => setVoucher(e.target.value)}
+              readOnly
+            />
           </Box>
         )}
         {user?.hierarquia === "ADM" && (

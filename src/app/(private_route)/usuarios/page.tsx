@@ -22,8 +22,8 @@ async function GetUser() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.token}`,
-        },
+          Authorization: `Bearer ${session?.token}`
+        }
       }
     );
 
@@ -37,23 +37,21 @@ async function GetUser() {
     return {
       status: 200,
       message: "Success",
-      data: users,
+      data: users
     };
-      
   } catch (error: any) {
     return { status: 500, message: "error", data: error };
   }
 }
 
 export const metadata: Metadata = {
-  title: "USUÁRIOS",
+  title: "USUÁRIOS"
 };
 export default async function UsuariosPage() {
   const Dados = await GetUser();
 
   return (
     <>
-
       <Flex
         w={"100%"}
         minH={"90.9dvh"}
@@ -90,11 +88,12 @@ export default async function UsuariosPage() {
         </Box>
         <Box w={"100%"}>
           <UserProvider>
-          <Flex w={"100%"} mb={8} justifyContent="center" alignItems="center">
-          <FiltroUser />
-          </Flex>
-          <Box>{Dados?.status === 200 ? <Usuarios data={Dados?.data} /> : <></>}</Box>
-
+            <Flex w={"100%"} mb={8} justifyContent="center" alignItems="center">
+              <FiltroUser />
+            </Flex>
+            <Box>
+              {Dados?.status === 200 ? <Usuarios data={Dados?.data} /> : <></>}
+            </Box>
           </UserProvider>
         </Box>
       </Flex>

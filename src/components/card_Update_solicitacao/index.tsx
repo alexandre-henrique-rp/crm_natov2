@@ -128,11 +128,6 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                   DataSolicitacao={setDadosCard}
                   w={{ base: "100%", md: "16rem" }}
                   />
-                  <CardCreateUpdate.GridSuporte
-                    user={user}
-                    ID={setDadosCard.id}
-                    w={{ base: "100%", md: "16rem" }}
-                  />
               </Flex>
 
               <Box>
@@ -149,12 +144,14 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
               >
                 <CardCreateUpdate.GridUpdateDocument
                   tag="CNH"
+                  suspenso={setDadosCard.docSuspenso}
                   Url={setDadosCard.uploadCnh}
                   w={{ base: "100%", md: "19rem" }}
                   Hierarquia={!HierarquiaUser ? "USER" : HierarquiaUser}
                 />
                 <CardCreateUpdate.GridUpdateDocument
                   tag="RG"
+                  suspenso={setDadosCard.docSuspenso}
                   Url={setDadosCard.uploadRg}
                   w={{ base: "100%", md: "19rem" }}
                   Hierarquia={!HierarquiaUser ? "USER" : HierarquiaUser}

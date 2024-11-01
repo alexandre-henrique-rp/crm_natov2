@@ -56,5 +56,9 @@ export const TagsOptions: TagsProps = [
     {
         id:12,
         label: 'Nenhum documento foi anexado.'
-    }
+    },
+    {
+        id:13,
+        label: 'Cliente demora responder'
+    },
 ]

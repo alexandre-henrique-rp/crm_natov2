@@ -78,9 +78,12 @@ export async function GetIncioFimSituacaoConstrutora(
         valorcd: true,
         dt_aprovacao: true,
         createdAt: true,
-        empreedimento: true
+        empreedimento: true,
+        financeiro: true,
+        corretor: true
       }
     });
+    console.log("🚀 ~ dados:", dados)
     
     return {
       error: false,
@@ -88,6 +91,8 @@ export async function GetIncioFimSituacaoConstrutora(
       data: await Promise.all(dados.map(async(item: any) => ({
         ...item,
         empreedimento: await getEmpreedimento(item.empreedimento),
+        financeiro: await getFinaceiro(item.financeiro),
+        corretor: await getCorretor(item.corretor),
         createdAt: new Date(item.createdAt).toISOString(),
         dt_aprovacao: item.dt_aprovacao
           ? new Date(item.dt_aprovacao).toISOString()
@@ -109,14 +114,85 @@ export async function GetIncioFimSituacaoConstrutora(
 
 
 const getEmpreedimento = async (id: number) => {
-  const empreedimento = await prisma.nato_empreendimento.findUnique({
+  if (id === 0) {
+    return {
+      id: 0,
+      nome: "Não informado"
+    }
+  }
+  if(typeof id !== "number") {
+    return {
+      id: 0,
+      nome: id
+    }
+  }
+  if(!id) {
+    return {
+      id: 0,
+      nome: "Não informado"
+    }
+  }
+  const empreedimento = await prisma.nato_empreendimento.findFirst({
     where: {
       id
     },
     select: {
       id: true,
-      nome: true
+      nome: true,
+      cidade: true
     }
   })
   return empreedimento
+}
+
+const getFinaceiro = async (id: number) => {
+  const financeiro = await prisma.nato_financeiro.findFirst({
+    where: {
+      id
+    },
+    select: {
+      id: true,
+      fantasia: true
+    }
+  })
+  return financeiro
+}
+
+const getCorretor = async (id: number) => {
+  try {
+    if (id === 0) {
+      return {
+        id: 0,
+        nome: "Não informado"
+      }
+    }
+    if(typeof id !== "number") {
+      return {
+        id: 0,
+        nome: id
+      }
+    }
+    if(!id) {
+      return {
+        id: 0,
+        nome: "Não informado"
+      }
+    }
+    const corretor = await prisma.nato_user.findFirst({
+      where: {
+        id
+      },
+      select: {
+        id: true,
+        nome: true
+      }
+    })
+    return corretor
+  } catch (error) {
+    console.log("🚀 ~ getCorretor ~ error:", error)
+    return {
+      id: 0,
+      nome: id
+    }
+  }
 }

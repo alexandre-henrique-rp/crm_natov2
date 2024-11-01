@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+import ApiCpnjJson from "@/actions/getInfo/api/apicnpj";
+import { GetConstrutoraById } from "@/actions/getInfo/service/getConstrutoraById";
+import { GetIncioFimSituacaoConstrutora } from "@/actions/relatorio_financeiro/service/getIncioFimSituacaoConstrutora";
+import { GetProtocolo } from "@/actions/relatorio_financeiro/service/getProtocolo";
+import { PostRelatorio } from "@/actions/relatorio_financeiro/service/postRelatorio";
+import SelectConstrutora from "@/components/selectConstrutora";
+import { createForm } from "@/lib/pdf";
 import {
   Box,
   Button,
@@ -8,18 +15,11 @@ import {
   FormLabel,
   Input,
   Select,
-  useToast,
+  useToast
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { createForm } from "@/lib/pdf";
-import { GetIncioFimSituacaoConstrutora } from "@/actions/relatorio_financeiro/service/getIncioFimSituacaoConstrutora";
-import { GetProtocolo } from "@/actions/relatorio_financeiro/service/getProtocolo";
-import { PostRelatorio } from "@/actions/relatorio_financeiro/service/postRelatorio";
 import { useSession } from "next-auth/react";
-import { GetConstrutoraById } from "@/actions/getInfo/service/getConstrutoraById";
-import ApiCpnjJson from "@/actions/getInfo/api/apicnpj";
 import { useRouter } from "next/navigation";
-import SelectConstrutora from "@/components/selectConstrutora";
+import { useEffect, useState } from "react";
 
 export default function GerarCobranca() {
   const [Inicio, setInicio] = useState("");
@@ -54,7 +54,7 @@ export default function GerarCobranca() {
         description: dados.message,
         status: "error",
         duration: 3000,
-        isClosable: true,
+        isClosable: true
       });
     }
     if (!dados.error) setTotalArray(dados.data);
@@ -68,7 +68,7 @@ export default function GerarCobranca() {
         description: dados.message,
         status: "error",
         duration: 3000,
-        isClosable: true,
+        isClosable: true
       });
     }
     setTotalArray(dados.data?.solicitacao);
@@ -83,7 +83,7 @@ export default function GerarCobranca() {
           if (!acc[empreendimentoId]) {
             acc[empreendimentoId] = {
               nome: Total.empreedimento.nome,
-              itens: [],
+              itens: []
             };
           }
           acc[empreendimentoId].itens.push(Total);
@@ -96,15 +96,18 @@ export default function GerarCobranca() {
     const dadosSeparados = separarPorEmpreendimentoId();
     // Criar cabeçalho do CSV no formato personalizado
     let csvContent = "\uFEFF";
+    const ifocontrutora = await GetConstrutoraById(Construtora);
     // Percorrer os dados por empreendimento e criar as linhas do CSV
+    csvContent += `${ifocontrutora?.fantasia};${Inicio.split("-").reverse().join("-")} - ${Fim.split("-").reverse().join("-")};;\n;;;\n`;
     for (const [empreendimentoId, dados] of Object.entries(
       dadosSeparados
     ) as any) {
       // Adicionar o cabeçalho do empreendimento
       csvContent += `${dados.nome};;;\n;;;\n`;
       // Adicionar cabeçalho da tabela para cada empreendimento
-      csvContent += `x;id;nome;cpf;dtAprovacao;dtCadastro\n`;
+      csvContent += `x;id;nome;cpf;dtAprovacao;CCA;Cidade;solicitante\n`;
       // Adicionar as linhas com os dados de cada item
+      console.log(dados.itens);
       dados.itens.forEach((item: any, index: number) => {
         const linha = [
           index + 1, // Contador (x)
@@ -112,7 +115,9 @@ export default function GerarCobranca() {
           item.nome, // Nome do cliente
           item.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4"),
           item.dt_aprovacao.split("T")[0].split("-").reverse().join("/"),
-          item.createdAt.split("T")[0].split("-").reverse().join("/"),
+          item.financeiro?.fantasia,
+          item.empreedimento?.cidade,
+          item.corretor?.nome
         ].join(";"); // Junta todos os campos com ponto e vírgula
         csvContent += linha + "\n"; // Adiciona a linha ao conteúdo CSV
       });
@@ -125,7 +130,7 @@ export default function GerarCobranca() {
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", "Previa_relatorio.csv");
+    link.setAttribute("download", `Previa_relatorio_${ifocontrutora?.fantasia}_${Inicio.split("-").reverse().join("-")}_${Fim.split("-").reverse().join("-")}.csv`);
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
@@ -139,7 +144,7 @@ export default function GerarCobranca() {
       solicitacao: ids,
       ...(N_NotaFiscal !== "" && { nota_fiscal: N_NotaFiscal }),
       situacao_pg: 1,
-      construtora: Number(Construtora),
+      construtora: Number(Construtora)
     };
     const response = await PostRelatorio(DataPost);
     const construtoraInfo =
@@ -154,7 +159,7 @@ export default function GerarCobranca() {
         description: complementoCnpj.message,
         status: "error",
         duration: 3000,
-        isClosable: true,
+        isClosable: true
       });
     }
     const DadosConst = {
@@ -173,7 +178,7 @@ export default function GerarCobranca() {
         complementoCnpj.data.bairro
       }, ${complementoCnpj.data.municipio} - ${
         complementoCnpj.data.uf
-      }, ${complementoCnpj.data.cep?.replace(/(\d{5})(\d{3})/, "$1-$2")}`,
+      }, ${complementoCnpj.data.cep?.replace(/(\d{5})(\d{3})/, "$1-$2")}`
     };
 
     const ValorCert = construtoraInfo?.valor_cert
@@ -183,11 +188,11 @@ export default function GerarCobranca() {
     const valorTotal = ValorCert ? TotalArray.length * ValorCert : 0;
     const valorUnicoFormatado = ValorCert.toLocaleString("pt-BR", {
       style: "currency",
-      currency: "BRL",
+      currency: "BRL"
     });
     const valorTotalFormatado = valorTotal.toLocaleString("pt-BR", {
       style: "currency",
-      currency: "BRL",
+      currency: "BRL"
     });
     const msg = `Certificados emitidos pelo "AR Interface certificador" no período de ${Inicio.split(
       "-"
@@ -212,7 +217,7 @@ export default function GerarCobranca() {
     const url = URL.createObjectURL(blob);
     // window.open(url, "_blank");
     link.setAttribute("href", url);
-    link.setAttribute("download", `Resumo_fechamento.pdf`);
+    link.setAttribute("download", `Resumo_fechamento${DadosConst.nome}_${Inicio.split("-").reverse().join("-")}_${Fim.split("-").reverse().join("-")}.pdf`);
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
@@ -225,7 +230,7 @@ export default function GerarCobranca() {
           if (!acc[empreendimentoId]) {
             acc[empreendimentoId] = {
               nome: Total.empreedimento.nome,
-              itens: [],
+              itens: []
             };
           }
           acc[empreendimentoId].itens.push(Total);
@@ -237,6 +242,8 @@ export default function GerarCobranca() {
     const dadosSeparados = separarPorEmpreendimentoId();
     // Criar cabeçalho do CSV no formato personalizado
     let csvContent = "\uFEFF";
+    const ifocontrutora = await GetConstrutoraById(Construtora);
+    csvContent += `${ifocontrutora?.fantasia}; ${Inicio.split("-").reverse().join("-")} - ${Fim.split("-").reverse().join("-")};;\n;;;\n`;
     // Percorrer os dados por empreendimento e criar as linhas do CSV
     for (const [empreendimentoId, dados] of Object.entries(
       dadosSeparados
@@ -244,8 +251,9 @@ export default function GerarCobranca() {
       // Adicionar o cabeçalho do empreendimento
       csvContent += `${dados.nome};;;\n;;;\n`;
       // Adicionar cabeçalho da tabela para cada empreendimento
-      csvContent += `x;id;nome;cpf;dtAprovacao;dtCadastro\n`;
+      csvContent += `x;id;nome;cpf;dtAprovacao;CCA;Cidade;solicitante\n`;
       // Adicionar as linhas com os dados de cada item
+      console.log(dados.itens);
       dados.itens.forEach((item: any, index: number) => {
         const linha = [
           index + 1, // Contador (x)
@@ -253,7 +261,9 @@ export default function GerarCobranca() {
           item.nome, // Nome do cliente
           item.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4"),
           item.dt_aprovacao.split("T")[0].split("-").reverse().join("/"),
-          item.createdAt.split("T")[0].split("-").reverse().join("/"),
+          item.financeiro?.fantasia,
+          item.empreedimento?.cidade,
+          item.corretor?.nome
         ].join(";"); // Junta todos os campos com ponto e vírgula
         csvContent += linha + "\n"; // Adiciona a linha ao conteúdo CSV
       });
@@ -266,7 +276,7 @@ export default function GerarCobranca() {
     const linkCsv = document.createElement("a");
     const urlCsv = URL.createObjectURL(blobCsv);
     linkCsv.setAttribute("href", urlCsv);
-    linkCsv.setAttribute("download", "lista_fechamento.csv");
+    linkCsv.setAttribute("download", `lista_fechamento_${ifocontrutora?.fantasia}_${Inicio.split("-").reverse().join("-")}_${Fim.split("-").reverse().join("-")}.csv`);
     linkCsv.style.visibility = "hidden";
     document.body.appendChild(linkCsv);
     linkCsv.click();
@@ -483,8 +493,8 @@ export default function GerarCobranca() {
                 !Personalizado && !Protocolo ? true : !!Protocolo ? true : false
               }
               onClick={handleDownloadPDF}
-            >Tô
-              Gerar cobrança
+            >
+              Tô Gerar cobrança
             </Button>
           </Flex>
         </Flex>

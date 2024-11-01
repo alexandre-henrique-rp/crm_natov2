@@ -8,10 +8,15 @@ interface PrivateLayoutProps {
 
 export default function PrivateLayout({ children }: PrivateLayoutProps) {
   return (
-    <Flex minW={"100vw"} minH={"100vh"} justifyContent={'space-between'} flexDir={"column"} >
+    <Flex
+      minW={"100vw"}
+      minH={"100vh"}
+      justifyContent={"space-between"}
+      flexDir={"column"}
+    >
       <BotaoJuncao />
-      <Box h={"90vh"} overflowY={'auto'}>
-      {children}
+      <Box h={"90vh"} overflowY={"auto"}>
+        {children}
       </Box>
       <FooterComponent />
     </Flex>

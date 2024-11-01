@@ -113,7 +113,7 @@ export default function SolicitacaoForm({
         position: "top-right"
       });
     } else {
-      const data: solictacao.SolicitacaoPost = {
+      const data: any = {
         nome: nome.toUpperCase(),
         telefone: tel.replace(/\W+/g, ""),
         cpf: cpf.replace(/\W+/g, ""),
@@ -143,6 +143,7 @@ export default function SolicitacaoForm({
             body: JSON.stringify(data)
           }
         );
+        const retorno = await response.json();
         if (response.ok) {
           toast({
             title: "Sucesso",
@@ -154,9 +155,10 @@ export default function SolicitacaoForm({
           setLoad(false);
           router.push("/home");
         } else {
+          console.log("🚀 ~ handlesubmit ~ retorno:", retorno)
           toast({
             title: "Erro",
-            description: "Erro ao enviar solicitacao",
+            description: retorno.message[1],
             status: "error",
             duration: 3000,
             isClosable: true
@@ -164,6 +166,7 @@ export default function SolicitacaoForm({
           setLoad(false);
         }
       } catch (error) {
+        console.log("🚀 ~ handlesubmit ~ error:", error)
         toast({
           title: "Erro",
           description: "Erro ao enviar solicitacao",

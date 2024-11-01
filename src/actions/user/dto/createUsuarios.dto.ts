@@ -57,6 +57,30 @@ export class CreateUsuariosDto {
   }
 
   validar(): string | null {
+    if (this.hierarquia === 'ADM'){
+      if (this.cpf.length !== 11) {
+        return "O CPF deve ter 11 caracteres.";
+      }
+      if (this.nome.length < 3) {
+        return "O nome deve ter no mínimo 3 caracteres.";
+      }
+      if (this.usuario.length < 3) {
+        return "O usuário deve ter no mínimo 3 caracteres.";
+      }
+      if (this.telefone && this.telefone.length < 11 ) {
+        return "O telefone deve ter no mínimo 11 caracteres.";
+      }
+      if (this.email && this.email.length < 5) {
+        return "O e-mail deve ter no mínimo 5 caracteres.";
+      }
+      if (this.senha.length < 4) {
+        return "A senha deve ter no mínimo 4 caracteres.";
+      }
+      if (this.senha !== this.confirsenha) {
+        return "As senhas não conferem.";
+      }
+      return null;
+    }
     if (this.cpf.length !== 11) {
       return "O CPF deve ter 11 caracteres.";
     }

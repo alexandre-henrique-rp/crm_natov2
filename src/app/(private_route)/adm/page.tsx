@@ -12,12 +12,7 @@ export const metadata: Metadata = {
 export default function PainelAdministrativo() {
   return (
     <>
-      <Flex
-        w={"100%"}
-        px={{ base: 2, md: "10rem" }}
-        py={5}
-        flexDir={"column"}
-      >
+      <Flex w={"100%"} px={{ base: 2, md: "10rem" }} py={5} flexDir={"column"}>
         <Flex w={"100%"} justifyContent={"space-around"}>
           <Heading>Painel Administrativo</Heading>
           <Flex gap={2} alignItems="center">
@@ -85,10 +80,10 @@ export default function PainelAdministrativo() {
           </Flex>
         </Flex>
         <Divider my={5} />
-        <Flex h={'80vh'} flexWrap={"wrap"} gap={2}>
+        <Flex h={"80vh"} flexWrap={"wrap"} gap={2}>
           {/* componente relatório financeiro  */}
           <GerarCobranca />
-          <Flex w={{md: "34%"}} h={'100%'} gap={3} flexDir={"column"}>
+          <Flex w={{ md: "34%" }} h={"100%"} gap={3} flexDir={"column"}>
             <ListCobranca />
             <Divider my={5} />
             <ConfirPg />

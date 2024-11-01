@@ -1,24 +1,17 @@
 "use client";
 
-import {
-  Stack,
-  Text,
-  Box,
-  Flex,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { Stack, Text, Box, Flex, useBreakpointValue } from "@chakra-ui/react";
 
 import { useState } from "react";
 import SolicitacaoForm from "@/components/form_solicitacao";
 import RelacionadoForm from "@/components/form_solicitacao/relacionamento";
 import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 
-
 export default function Solicitacao() {
   const [onvalue, setOnvalue] = useState<any>();
   const [isHidden, setIsHidden] = useState<boolean>(true); // Inicialmente, defina como true
 
-  const handleIshiddenChange = (e: any) => {;
+  const handleIshiddenChange = (e: any) => {
     // Só atualize o estado se o valor de 'e' for diferente do estado atual
     if (e === "sim") {
       setIsHidden(false); // Atualize o estado conforme necessário
@@ -78,7 +71,7 @@ export default function Solicitacao() {
 
             <SolicitacaoForm
               onvalue={handleOnvalueChange}
-              ishidden={handleIshiddenChange} 
+              ishidden={handleIshiddenChange}
             />
           </Box>
         </Stack>

@@ -1,18 +1,14 @@
 import GetAllEmpreendimento from "@/actions/empreendimento/service/getAllEmpreendimentos";
-import { BotaoRetorno } from "@/components/botoes/btm_retorno";
-import Empreendimentos from "@/components/empreendimentoCard";
+import { BotaoRetorno } from "@/app/components/botoes/btm_retorno";
+import Empreendimentos from "@/app/components/empreendimentoCard";
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { Metadata } from "next";
 
-import React from "react";
-
 export const metadata: Metadata = {
-  title: "EMPREENDIMENTOS",
+  title: "EMPREENDIMENTOS"
 };
 export default async function EmpreendimentoPage() {
-
   const dados = await GetAllEmpreendimento();
-  
 
   return (
     <>
@@ -24,11 +20,11 @@ export default async function EmpreendimentoPage() {
         flexDir={"column"}
       >
         <Flex w={"100%"} justifyContent={"space-around"}>
-        <Flex gap={2}>
-        <Box zIndex={1} alignSelf="baseline" position="initial">
-            <BotaoRetorno rota="/" />
-          </Box>
-          <Heading>Empreendimentos</Heading>
+          <Flex gap={2}>
+            <Box zIndex={1} alignSelf="baseline" position="initial">
+              <BotaoRetorno rota="/" />
+            </Box>
+            <Heading>Empreendimentos</Heading>
           </Flex>
           <Link
             href={"/empreendimentos/cadastrar"}
@@ -56,7 +52,13 @@ export default async function EmpreendimentoPage() {
           </Text>
         </Box>
         <Box w={"100%"} overflow={"auto"}>
-          <Box >{dados?.status === 200 ? <Empreendimentos data={dados?.data} /> : <></>}</Box>
+          <Box>
+            {dados?.status === 200 ? (
+              <Empreendimentos data={dados?.data} />
+            ) : (
+              <></>
+            )}
+          </Box>
         </Box>
       </Flex>
     </>

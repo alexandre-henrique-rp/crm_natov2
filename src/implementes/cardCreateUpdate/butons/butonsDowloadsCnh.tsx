@@ -1,8 +1,9 @@
 "use client";
 import { Flex, Link } from "@chakra-ui/react";
-import { DataContext } from "../imputs/inputUpdateCnh";
 import { useContext, useEffect, useState } from "react";
+import { DataContext } from "../imputs/inputUpdateCnh";
 import { DownloadDoc } from "@/components/DowloadDoc";
+
 
 interface ButtonsDownloadsCnhProps {
   url?: string;

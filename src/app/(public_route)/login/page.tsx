@@ -3,7 +3,6 @@
 import { FormLogin } from "@/components/login_form";
 import { Stack, Text, Box, Button, Link, Image } from "@chakra-ui/react";
 
-
 export default function LoginPage() {
   const handleClick = () => {
     window.open(
