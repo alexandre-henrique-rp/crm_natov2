@@ -377,7 +377,7 @@ export default function GerarCobranca() {
                   onChange={(e) => setSituacao(Number(e.target.value))}
                 >
                   <option value={0}>Pendente</option>
-                  <option value={1}>Agradando Pagamento</option>
+                  <option value={1}>Aguardando Pagamento</option>
                   <option value={2}>Pago</option>
                 </Select>
               </Box>
@@ -494,7 +494,7 @@ export default function GerarCobranca() {
               }
               onClick={handleDownloadPDF}
             >
-              Tô Gerar cobrança
+              Gerar cobrança
             </Button>
           </Flex>
         </Flex>

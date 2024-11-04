@@ -26,6 +26,7 @@ export async function UpdateFinanceira(_: any, data: FormData) {
   const error = dto.validar();
   
   if (error) {
+    await prisma.$disconnect();
     return { error: true, message: error, data: null };
   }
 
@@ -40,7 +41,7 @@ export async function UpdateFinanceira(_: any, data: FormData) {
       fantasia: fantasia,
     },
   });
-
+  await prisma.$disconnect();
   redirect("/financeiras");
 
   return { error: false, message: "success", data: request };
