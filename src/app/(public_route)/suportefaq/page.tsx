@@ -85,14 +85,15 @@ export default function SuporteFaqHome() {
                   title: "Senha de emissão, como recuperar?",
                   content: (
                     <Text fontSize="lg" color="gray.700" mb={4}>
-                      Caso você tenha sido atendido por videoconferência e tenha se
-                      esquecido da senha de emissão, não há como recuperá-la. Neste
-                      caso será necessário entrar em contato com nossa central de
-                      atendimento e solicitar a revogação do certificado para a
-                      emissão de um novo. Já se você tiver sido atendido presencialmente,
-                      então você poderá solicitar uma cópia do documento reservado onde
-                      constam os dados de emissão, comparecendo na loja onde fez o
-                      certificado acompanhado do seu documento de identificação com foto.
+                      Caso você tenha sido atendido por videoconferência e tenha
+                      se esquecido da senha de emissão, não há como recuperá-la.
+                      Neste caso será necessário entrar em contato com nossa
+                      central de atendimento e solicitar a revogação do
+                      certificado para a emissão de um novo. Já se você tiver
+                      sido atendido presencialmente, então você poderá solicitar
+                      uma cópia do documento reservado onde constam os dados de
+                      emissão, comparecendo na loja onde fez o certificado
+                      acompanhado do seu documento de identificação com foto.
                       Somente o titular pode solicitar este documento.
                     </Text>
                   ),
@@ -102,21 +103,34 @@ export default function SuporteFaqHome() {
                   content: (
                     <>
                       <Text fontSize="lg" color="gray.700" mb={4}>
-                        É possível sincronizar o novo celular com o Bird ID. Você deve:
+                        É possível sincronizar o novo celular com o Bird ID.
+                        Você deve:
                       </Text>
                       <Box pl={5} mb={4}>
-                        <UnorderedList spacing={3} fontSize="lg" color="gray.600">
-                          <ListItem>Baixar o app Bird ID no novo dispositivo;</ListItem>
+                        <UnorderedList
+                          spacing={3}
+                          fontSize="lg"
+                          color="gray.600"
+                        >
+                          <ListItem>
+                            Baixar o app Bird ID no novo dispositivo;
+                          </ListItem>
                           <ListItem>Abrir o aplicativo;</ListItem>
-                          <ListItem>Criar a senha de acesso ao aplicativo;</ListItem>
+                          <ListItem>
+                            Criar a senha de acesso ao aplicativo;
+                          </ListItem>
                           <ListItem>Acessar o menu lateral;</ListItem>
-                          <ListItem>Clique na opção “Sincronizar dispositivo”;</ListItem>
-                          <ListItem>Digite seu CPF e a senha do Portal Bird ID.</ListItem>
+                          <ListItem>
+                            Clique na opção “Sincronizar dispositivo”;
+                          </ListItem>
+                          <ListItem>
+                            Digite seu CPF e a senha do Portal Bird ID.
+                          </ListItem>
                         </UnorderedList>
                       </Box>
                       <Text fontSize="lg" color="teal.600" fontWeight="bold">
-                        E pronto! Seu Bird ID estará pronto para utilização em seu novo
-                        celular.
+                        E pronto! Seu Bird ID estará pronto para utilização em
+                        seu novo celular.
                       </Text>
                     </>
                   ),
@@ -126,15 +140,19 @@ export default function SuporteFaqHome() {
                   content: (
                     <Box>
                       <Box fontWeight="bold" mb={2}>
-                        Para instalar o aplicativo Bird ID no seu dispositivo, siga este
-                        passo a passo:
+                        Para instalar o aplicativo Bird ID no seu dispositivo,
+                        siga este passo a passo:
                       </Box>
                       <UnorderedList pl={10}>
                         <ListItem>
-                          <Text as="span" fontWeight="bold">Baixe o Aplicativo.</Text>
+                          <Text as="span" fontWeight="bold">
+                            Baixe o Aplicativo.
+                          </Text>
                           <UnorderedList pl={10}>
                             <ListItem>
-                              <Text as="span" fontWeight="bold">Para Android:</Text>
+                              <Text as="span" fontWeight="bold">
+                                Para Android:
+                              </Text>
                               <UnorderedList pl={10}>
                                 <ListItem>
                                   Abra o Google Play Store no seu dispositivo.
@@ -143,60 +161,98 @@ export default function SuporteFaqHome() {
                                   Pesquise por "Bird ID" na barra de pesquisa.
                                 </ListItem>
                                 <ListItem>
-                                  Quando encontrar o aplicativo, toque em "Instalar".
+                                  Quando encontrar o aplicativo, toque em
+                                  "Instalar".
                                 </ListItem>
                               </UnorderedList>
                             </ListItem>
                             <ListItem>
-                              <Text as="span" fontWeight="bold">Para iOS:</Text>
+                              <Text as="span" fontWeight="bold">
+                                Para iOS:
+                              </Text>
                               <UnorderedList pl={10}>
                                 <ListItem>
                                   Abra a App Store no seu dispositivo.
                                 </ListItem>
+                                <ListItem>Pesquise por "Bird ID".</ListItem>
                                 <ListItem>
-                                  Pesquise por "Bird ID".
-                                </ListItem>
-                                <ListItem>
-                                  Toque em "Obter" e siga as instruções para instalar.
+                                  Toque em "Obter" e siga as instruções para
+                                  instalar.
                                 </ListItem>
                               </UnorderedList>
                             </ListItem>
                           </UnorderedList>
                         </ListItem>
                         <ListItem>
-                          <Text as="span" fontWeight="bold">Abra o Bird ID:</Text>
+                          <Text as="span" fontWeight="bold">
+                            Abra o Bird ID:
+                          </Text>
                           Depois de instalado, abra o aplicativo Bird ID.
                         </ListItem>
                         <ListItem>
-                          <Text as="span" fontWeight="bold">Crie Sua Conta:</Text>
-                          Se você ainda não possui uma conta, escolha a opção para criar uma nova conta.
-                          Siga as instruções fornecidas para preencher informações pessoais e configurar uma senha segura.
+                          <Text as="span" fontWeight="bold">
+                            Crie Sua Conta:
+                          </Text>
+                          Se você ainda não possui uma conta, escolha a opção
+                          para criar uma nova conta. Siga as instruções
+                          fornecidas para preencher informações pessoais e
+                          configurar uma senha segura.
                         </ListItem>
                         <ListItem>
-                          <Text as="span" fontWeight="bold">Verifique Sua Conta:</Text>
-                          Alguns serviços podem exigir verificação, como o envio de um código de verificação por SMS ou e-mail.
-                          Siga as instruções para concluir a verificação.
+                          <Text as="span" fontWeight="bold">
+                            Verifique Sua Conta:
+                          </Text>
+                          Alguns serviços podem exigir verificação, como o envio
+                          de um código de verificação por SMS ou e-mail. Siga as
+                          instruções para concluir a verificação.
                         </ListItem>
                         <ListItem>
-                          <Text as="span" fontWeight="bold">Configure Seu Bird ID:</Text>
-                          Após a verificação, faça login com seu CPF e senha que você criou.
-                          Defina as preferências de segurança, como a criação de uma senha adicional ou identificação biométrica, se disponível.
+                          <Text as="span" fontWeight="bold">
+                            Configure Seu Bird ID:
+                          </Text>
+                          Após a verificação, faça login com seu CPF e senha que
+                          você criou. Defina as preferências de segurança, como
+                          a criação de uma senha adicional ou identificação
+                          biométrica, se disponível.
                         </ListItem>
                         <ListItem>
-                          <Text as="span" fontWeight="bold">Sincronize Seus Dispositivos (Opcional):</Text>
-                          Para utilizar o Bird ID em outro dispositivo, siga o seguinte procedimento:
+                          <Text as="span" fontWeight="bold">
+                            Sincronize Seus Dispositivos (Opcional):
+                          </Text>
+                          Para utilizar o Bird ID em outro dispositivo, siga o
+                          seguinte procedimento:
                           <UnorderedList pl={10}>
-                            <ListItem>Abra o menu lateral no aplicativo.</ListItem>
-                            <ListItem>Escolha a opção "Sincronizar Dispositivo".</ListItem>
-                            <ListItem>Informe seu CPF e a senha do Bird ID para permitir o acesso em um novo dispositivo.</ListItem>
+                            <ListItem>
+                              Abra o menu lateral no aplicativo.
+                            </ListItem>
+                            <ListItem>
+                              Escolha a opção "Sincronizar Dispositivo".
+                            </ListItem>
+                            <ListItem>
+                              Informe seu CPF e a senha do Bird ID para permitir
+                              o acesso em um novo dispositivo.
+                            </ListItem>
                           </UnorderedList>
                         </ListItem>
                         <ListItem>
-                          <Text as="span" fontWeight="bold">Conclua a Instalação:</Text>
-                          Pronto! O Bird ID está agora configurado e pronto para ser utilizado. Caso tenha dúvidas ou encontre problemas, entre em contato com o suporte do Bird ID para assistência detalhada.
+                          <Text as="span" fontWeight="bold">
+                            Conclua a Instalação:
+                          </Text>
+                          Pronto! O Bird ID está agora configurado e pronto para
+                          ser utilizado. Caso tenha dúvidas ou encontre
+                          problemas, entre em contato com o suporte do Bird ID
+                          para assistência detalhada.
                         </ListItem>
                       </UnorderedList>
                     </Box>
+                  ),
+                },
+                {
+                  title: "Como emiter um certificado digital?",
+                  content: (
+                    <>
+                      <Text>Video Exemplo:</Text>
+                    </>
                   ),
                 },
               ].map((faq, index) => (

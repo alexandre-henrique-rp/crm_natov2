@@ -25,5 +25,7 @@ export async function AtualizarStatus(id: number) {
       message: "Erro ao registrar pagamento.",
       data: null
     }
+  }finally{
+    await prisma.$disconnect();
   }
 }

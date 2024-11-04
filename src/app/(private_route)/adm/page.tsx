@@ -24,13 +24,13 @@ export default function PainelAdministrativo() {
               borderRadius="8px"
               bg={"green.600"}
               color={"white"}
-              _hover={{ bg: "green.500", textDecoration: "none" }}
+              _hover={{ bg: "green.500", textDecoration: "none"}}
               boxShadow={"lg"}
               cursor={"pointer"}
               href={"/usuarios"}
               fontSize={"0.8rem"}
             >
-              Usuario
+              Usuario 
             </Link>
             <Link
               py={1}
