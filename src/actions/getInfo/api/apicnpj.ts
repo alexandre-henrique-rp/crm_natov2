@@ -6,6 +6,7 @@ export default async function ApiCpnjJson(cnpj: string) {
       `https://brasilapi.com.br/api/cnpj/v1/${cnpj}`
     );
     const data = await response.json();
+    console.log("🚀 ~ ApiCpnjJson ~ data:", data)
 
     if (data && !data.error) {
       return {

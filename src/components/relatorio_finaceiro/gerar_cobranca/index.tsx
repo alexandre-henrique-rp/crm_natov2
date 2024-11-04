@@ -61,7 +61,7 @@ export default function GerarCobranca() {
   }
 
   async function handlePesquisaProtocolo() {
-    const dados = await GetProtocolo(ProtocoloNumber);
+    const dados: any = await GetProtocolo(ProtocoloNumber);
     if (dados.error) {
       toast({
         title: "Erro",
@@ -71,6 +71,9 @@ export default function GerarCobranca() {
         isClosable: true
       });
     }
+    setN_NotaFiscal(dados.data?.nota_fiscal);
+    setSituacao(dados.data?.situacao_pg);
+    setConstrutora(dados.data?.construtora?.id);
     setTotalArray(dados.data?.solicitacao);
   }
 
@@ -98,7 +101,9 @@ export default function GerarCobranca() {
     let csvContent = "\uFEFF";
     const ifocontrutora = await GetConstrutoraById(Construtora);
     // Percorrer os dados por empreendimento e criar as linhas do CSV
-    csvContent += `${ifocontrutora?.fantasia};${Inicio.split("-").reverse().join("-")} - ${Fim.split("-").reverse().join("-")};;\n;;;\n`;
+    csvContent += `${ifocontrutora?.fantasia};${Inicio.split("-")
+      .reverse()
+      .join("-")} - ${Fim.split("-").reverse().join("-")};;\n;;;\n`;
     for (const [empreendimentoId, dados] of Object.entries(
       dadosSeparados
     ) as any) {
@@ -130,7 +135,12 @@ export default function GerarCobranca() {
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", `Previa_relatorio_${ifocontrutora?.fantasia}_${Inicio.split("-").reverse().join("-")}_${Fim.split("-").reverse().join("-")}.csv`);
+    link.setAttribute(
+      "download",
+      `Previa_relatorio_${ifocontrutora?.fantasia}_${Inicio.split("-")
+        .reverse()
+        .join("-")}_${Fim.split("-").reverse().join("-")}.csv`
+    );
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
@@ -146,13 +156,15 @@ export default function GerarCobranca() {
       situacao_pg: 1,
       construtora: Number(Construtora)
     };
-    const response = await PostRelatorio(DataPost);
+    // const response = await PostRelatorio(DataPost);
     const construtoraInfo =
-      session?.user.hierarquia === "ADM"
-        ? await GetConstrutoraById(Number(Construtora))
-        : await GetConstrutoraById(session?.user.construtora[0].id);
+    session?.user.hierarquia === "ADM"
+    ? await GetConstrutoraById(Number(Construtora))
+    : await GetConstrutoraById(session?.user.construtora[0].id);
+    console.log("🚀 ~ handleDownloadPDF ~ construtoraInfo:", Construtora)
     const complementoCnpj: any =
-      construtoraInfo && (await ApiCpnjJson(construtoraInfo.cnpj));
+    construtoraInfo && (await ApiCpnjJson(construtoraInfo.cnpj));
+    console.log("🚀 ~ handleDownloadPDF ~ complementoCnpj:", complementoCnpj)
     if (complementoCnpj.error) {
       toast({
         title: "Erro",
@@ -217,7 +229,12 @@ export default function GerarCobranca() {
     const url = URL.createObjectURL(blob);
     // window.open(url, "_blank");
     link.setAttribute("href", url);
-    link.setAttribute("download", `Resumo_fechamento${DadosConst.nome}_${Inicio.split("-").reverse().join("-")}_${Fim.split("-").reverse().join("-")}.pdf`);
+    link.setAttribute(
+      "download",
+      `Resumo_fechamento${DadosConst.nome}_${Inicio.split("-")
+        .reverse()
+        .join("-")}_${Fim.split("-").reverse().join("-")}.pdf`
+    );
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
@@ -243,7 +260,9 @@ export default function GerarCobranca() {
     // Criar cabeçalho do CSV no formato personalizado
     let csvContent = "\uFEFF";
     const ifocontrutora = await GetConstrutoraById(Construtora);
-    csvContent += `${ifocontrutora?.fantasia}; ${Inicio.split("-").reverse().join("-")} - ${Fim.split("-").reverse().join("-")};;\n;;;\n`;
+    csvContent += `${ifocontrutora?.fantasia}; ${Inicio.split("-")
+      .reverse()
+      .join("-")} - ${Fim.split("-").reverse().join("-")};;\n;;;\n`;
     // Percorrer os dados por empreendimento e criar as linhas do CSV
     for (const [empreendimentoId, dados] of Object.entries(
       dadosSeparados
@@ -276,7 +295,12 @@ export default function GerarCobranca() {
     const linkCsv = document.createElement("a");
     const urlCsv = URL.createObjectURL(blobCsv);
     linkCsv.setAttribute("href", urlCsv);
-    linkCsv.setAttribute("download", `lista_fechamento_${ifocontrutora?.fantasia}_${Inicio.split("-").reverse().join("-")}_${Fim.split("-").reverse().join("-")}.csv`);
+    linkCsv.setAttribute(
+      "download",
+      `lista_fechamento_${ifocontrutora?.fantasia}_${Inicio.split("-")
+        .reverse()
+        .join("-")}_${Fim.split("-").reverse().join("-")}.csv`
+    );
     linkCsv.style.visibility = "hidden";
     document.body.appendChild(linkCsv);
     linkCsv.click();
@@ -485,16 +509,22 @@ export default function GerarCobranca() {
             </>
           )}
           <Flex gap={2}>
-            <Button colorScheme="teal" onClick={handleDownload}>
-              Gerar Previa
-            </Button>
             <Button
+              colorScheme="teal"
+              onClick={handleDownload}
               isDisabled={
                 !Personalizado && !Protocolo ? true : !!Protocolo ? true : false
               }
+            >
+              Gerar Previa
+            </Button>
+            <Button
+              // isDisabled={
+              //   !Personalizado && !Protocolo ? true : !!Protocolo ? true : false
+              // }
               onClick={handleDownloadPDF}
             >
-              Tô Gerar cobrança
+              Gerar cobrança
             </Button>
           </Flex>
         </Flex>
