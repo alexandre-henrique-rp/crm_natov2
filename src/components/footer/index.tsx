@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Link, Text } from "@chakra-ui/react";
 import { FaPhoneVolume } from "react-icons/fa";
 
 export default function FooterComponent() {
@@ -43,14 +43,18 @@ export default function FooterComponent() {
         mt={{ base: "10px", md: "0" }}
         flexDirection={{ base: "column", md: "row" }}
       >
-        <Button variant="link" color="white" size="sm">
+        <Button variant="link" color="white" size="sm" >
+          <Link href="/termos/uso">
           Termos de Uso
+          </Link>
         </Button>
         <Button variant="link" color="white" size="sm">
           Documentação
         </Button>
         <Button variant="link" color="white" size="sm">
+          <Link href="/termos/privacidade">
           Politica de Privacidade
+          </Link>
         </Button>
       </Flex>
 
