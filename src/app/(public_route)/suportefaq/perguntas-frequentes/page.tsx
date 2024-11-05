@@ -121,35 +121,3 @@ export default function SuporteFaqPerguntasFrequentes() {
     </Flex>
   );
 }
-
-{
-  /* <Card color={"blue.900"} bg={"blue.100"} minW={'fit-content'}>
-<CardHeader>
-  <Flex flexDir="row" gap={2} alignItems="center">
-    <Heading size="md">Suporte</Heading>
-    <FaPhone />
-  </Flex>
-</CardHeader>
-<CardBody>
-  <Stack divider={<StackDivider />} spacing="4">
-    <Box>
-      <Heading size="xs" textTransform="uppercase">
-        Suporte técnico:
-      </Heading>
-      <Text pt="2" fontSize="sm">
-        (16) 3325-4134
-      </Text>
-    </Box>
-    <Box>
-      <Heading size="xs" textTransform="uppercase">
-        Horário de atendimento:
-      </Heading>
-      <Text pt="2" fontSize="sm">
-        Segunda a sexta das 09h às 17h <br />
-        Sábado das 09h às 12h
-      </Text>
-    </Box>
-  </Stack>
-</CardBody>
-</Card> */
-}
