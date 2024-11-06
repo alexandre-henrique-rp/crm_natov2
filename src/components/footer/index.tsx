@@ -36,6 +36,11 @@ export default function FooterComponent() {
           (16) 3325-4134
         </Button>
       </Flex>
+      <Button variant="link" color="white" size="sm">
+          <Link href="/suportefaq" isExternal>
+          FAQ / Suporte
+          </Link>
+      </Button>
 
       <Flex
         gap="1rem"
@@ -47,10 +52,7 @@ export default function FooterComponent() {
           <Link href="/termos/uso">
           Termos de Uso
           </Link>
-        </Button>
-        <Button variant="link" color="white" size="sm">
-          Documentação
-        </Button>
+        </Button>   
         <Button variant="link" color="white" size="sm">
           <Link href="/termos/privacidade">
           Politica de Privacidade

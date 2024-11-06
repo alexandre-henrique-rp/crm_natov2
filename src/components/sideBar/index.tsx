@@ -234,7 +234,7 @@ export default function Sidebar() {
             _hover={{ bg: "green.100", cursor: "pointer" }}
             bg={expanded === 0 ? "green.100" : "transparent"}
             p={4}
-            onClick={() => {toggleExpand(0) ,handleGuiaUsuario("/suportefaq/perguntas-frequentes")}}
+            onClick={() => {toggleExpand(0); handleGuiaUsuario("/suportefaq/perguntas-frequentes")}}
           >
             <FcHighPriority size={20} />
             <Text ml={2} fontWeight="medium">

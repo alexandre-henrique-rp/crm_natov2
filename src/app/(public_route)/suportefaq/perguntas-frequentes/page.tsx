@@ -10,12 +10,6 @@ import {
   AccordionItem,
   AccordionPanel,
   Icon,
-  Card,
-  CardBody,
-  CardHeader,
-  Heading,
-  Stack,
-  StackDivider,
 } from "@chakra-ui/react";
 import { FaPhone } from "react-icons/fa6";
 import { TfiInfoAlt } from "react-icons/tfi";

@@ -46,7 +46,8 @@ export const auth: NextAuthOptions = {
             hierarquia,
             cargo,
             reset_password,
-            Financeira
+            Financeira,
+            termos
           } = await user;
 
           const response = {
@@ -59,7 +60,8 @@ export const auth: NextAuthOptions = {
             hierarquia: hierarquia,
             cargo: cargo,
             reset_password: reset_password,
-            Financeira: Financeira
+            Financeira: Financeira,
+            termos: termos
           };
           console.log(response);
 
@@ -120,6 +122,7 @@ export const auth: NextAuthOptions = {
         token.cargo = user.cargo;
         token.reset_password = user.reset_password;
         token.Financeira = user.Financeira;
+        token.termos = user.termos;
 
         token.expiration = dateExpirationInSeconds;
       } else {
@@ -150,7 +153,8 @@ export const auth: NextAuthOptions = {
         hierarquia: token.hierarquia as string,
         cargo: token.cargo as string,
         reset_password: token.reset_password as boolean,
-        Financeira: token.Financeira as any[]
+        Financeira: token.Financeira as any[],
+        termos: token.termos as boolean
       };
 
       session.token = token.jwt as string;
