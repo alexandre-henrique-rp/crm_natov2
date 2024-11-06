@@ -44,7 +44,7 @@ export default function Sidebar() {
     >
       <Flex
         alignSelf={"center"}
-        onClick={() => handleGuiaUsuario("/suportefaq")}
+        onClick={() => {setExpanded(0); handleGuiaUsuario("/suportefaq")}}
         _hover={{ cursor: "pointer" }}
       >
         <Text
@@ -186,6 +186,14 @@ export default function Sidebar() {
               >
                 Senha do Bird ID
               </Text>
+              <Text 
+              cursor={"pointer"}
+              p={2}
+              onClick={() => {
+                handleGuiaUsuario("/suportefaq/recuperacao-senhas");
+              }}
+              _hover={{ color: "teal.300" }}
+              >Recuperação de Senhas</Text>
             </VStack>
           </Collapse>
 
@@ -232,9 +240,9 @@ export default function Sidebar() {
           <Flex
             align="center"
             _hover={{ bg: "green.100", cursor: "pointer" }}
-            bg={expanded === 0 ? "green.100" : "transparent"}
+            bg={expanded === 4 ? "green.100" : "transparent"}
             p={4}
-            onClick={() => {toggleExpand(0); handleGuiaUsuario("/suportefaq/perguntas-frequentes")}}
+            onClick={() => {toggleExpand(4); handleGuiaUsuario("/suportefaq/perguntas-frequentes")}}
           >
             <FcHighPriority size={20} />
             <Text ml={2} fontWeight="medium">

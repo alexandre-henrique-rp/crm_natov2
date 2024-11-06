@@ -790,3 +790,10 @@ model nato_suporte {
   urlSuporte  String?  @db.LongText
   imgSuspensa String?  @db.VarChar(100)
 }
+
+model nato_termos {
+  id        Int      @id @default(autoincrement())
+  termo     String?  @db.LongText
+  politicas String?  @db.LongText
+  createdAt DateTime @default(now()) @db.DateTime(0)
+}
