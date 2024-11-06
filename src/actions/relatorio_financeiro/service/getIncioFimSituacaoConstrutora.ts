@@ -80,10 +80,11 @@ export async function GetIncioFimSituacaoConstrutora(
         createdAt: true,
         empreedimento: true,
         financeiro: true,
-        corretor: true
+        corretor: true,
+        type_validacao: true
       }
     });
-    console.log("🚀 ~ dados:", dados)
+
     
     return {
       error: false,

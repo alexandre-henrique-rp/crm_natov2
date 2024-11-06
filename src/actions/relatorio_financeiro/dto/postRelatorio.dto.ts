@@ -3,12 +3,17 @@ export class PostRelatorioDto {
   nota_fiscal?: string;  // Opcional
   solicitacao: number[];
   construtora: number;
+  Inicio: string;
+  Fim: string;
 
-  constructor(situacao_pg: number, nota_fiscal: string | undefined, solicitacao: number[], construtora: number) {
+  constructor(situacao_pg: number, nota_fiscal: string | undefined, solicitacao: number[], construtora: number, Inicio: string, Fim: string) {
     this.situacao_pg = situacao_pg;
     this.nota_fiscal = nota_fiscal;
     this.solicitacao = solicitacao;
     this.construtora = construtora;
+    this.Inicio = Inicio;
+    this.Fim = Fim;
+
   }
 
   // Validação
@@ -30,6 +35,29 @@ export class PostRelatorioDto {
     // Validação da solicitação (deve ser um array de números)
     if (!Array.isArray(this.solicitacao) || this.solicitacao.length === 0) {
       return "A solicitação deve ser um array de números e não pode estar vazio.";
+    }
+
+    // Validação do Inicio tem que ser uma string que possa ser convertida em uma data
+    if (typeof this.Inicio !== 'string') {
+      const dataInicio = new Date(this.Inicio);
+      if (isNaN(dataInicio.getTime())) {
+        return "A data de início deve ser uma string que possa ser convertida em uma data.";
+      }
+    }
+
+    // Validação do Fim tem que ser uma string que possa ser convertida em uma data
+    if (typeof this.Fim !== 'string') {
+      const dataFim = new Date(this.Fim);
+      if (isNaN(dataFim.getTime())) {
+        return "A data de fim deve ser uma string que possa ser convertida em uma data.";
+      }
+    }
+
+    //validar se Fim eh maior que Inicio
+    const dataInicio = new Date(this.Inicio);
+    const dataFim = new Date(this.Fim);
+    if (dataInicio > dataFim) {
+      return "A data de início nao pode ser maior que a data de fim.";
     }
 
     for (const item of this.solicitacao) {
