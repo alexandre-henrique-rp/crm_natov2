@@ -19,7 +19,9 @@ export async function PostRelatorio(data: any): Promise<{ error: boolean; messag
     data.situacao_pg,
     data.nota_fiscal,
     data.solicitacao,
-    data.construtora
+    data.construtora,
+    data.Inicio,
+    data.Fim
   );
 
   // Validação usando o DTO
@@ -38,7 +40,9 @@ export async function PostRelatorio(data: any): Promise<{ error: boolean; messag
         situacao_pg: dto.situacao_pg,
         nota_fiscal: dto.nota_fiscal,
         solicitacao: JSON.stringify(dto.solicitacao),
-        construtora: dto.construtora
+        construtora: dto.construtora,
+        start: new Date(dto.Inicio).toISOString(),
+        end: new Date(dto.Fim).toISOString()
       }
     });
 

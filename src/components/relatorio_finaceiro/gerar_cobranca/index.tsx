@@ -19,7 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
 export default function GerarCobranca() {
   const [Inicio, setInicio] = useState("");
@@ -61,7 +61,8 @@ export default function GerarCobranca() {
   }
 
   async function handlePesquisaProtocolo() {
-    const dados = await GetProtocolo(ProtocoloNumber);
+    const dados: any = await GetProtocolo(ProtocoloNumber);
+    console.log("🚀 ~ handlePesquisaProtocolo ~ dados:", dados);
     if (dados.error) {
       toast({
         title: "Erro",
@@ -71,6 +72,12 @@ export default function GerarCobranca() {
         isClosable: true
       });
     }
+    setInicio(dados.data?.start.split("T")[0]);
+    setFim(dados.data?.end.split("T")[0]);
+    setSituacao(dados.data?.situacao_pg);
+    setN_NotaFiscal(dados.data?.nota_fiscal);
+    setSituacao(dados.data?.situacao_pg);
+    setConstrutora(dados.data?.construtora?.id);
     setTotalArray(dados.data?.solicitacao);
   }
 
@@ -98,7 +105,9 @@ export default function GerarCobranca() {
     let csvContent = "\uFEFF";
     const ifocontrutora = await GetConstrutoraById(Construtora);
     // Percorrer os dados por empreendimento e criar as linhas do CSV
-    csvContent += `${ifocontrutora?.fantasia};${Inicio.split("-").reverse().join("-")} - ${Fim.split("-").reverse().join("-")};;\n;;;\n`;
+    csvContent += `${ifocontrutora?.fantasia};${Inicio.split("-")
+      .reverse()
+      .join("-")} - ${Fim.split("-").reverse().join("-")};;\n;;;\n`;
     for (const [empreendimentoId, dados] of Object.entries(
       dadosSeparados
     ) as any) {
@@ -130,159 +139,74 @@ export default function GerarCobranca() {
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", `Previa_relatorio_${ifocontrutora?.fantasia}_${Inicio.split("-").reverse().join("-")}_${Fim.split("-").reverse().join("-")}.csv`);
+    link.setAttribute(
+      "download",
+      `Previa_relatorio_${ifocontrutora?.fantasia}_${Inicio.split("-")
+        .reverse()
+        .join("-")}_${Fim.split("-").reverse().join("-")}.csv`
+    );
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   }
 
-  const handleDownloadPDF = async () => {
+  const handleDownloadPDF = async (e: any) => {
+    e.preventDefault();
     // separar id_fcw do array
-    const ids = TotalArray.map((item: any) => item.id_fcw);
     const DataPost = {
-      solicitacao: ids,
-      ...(N_NotaFiscal !== "" && { nota_fiscal: N_NotaFiscal }),
-      situacao_pg: 1,
-      construtora: Number(Construtora)
-    };
-    const response = await PostRelatorio(DataPost);
-    const construtoraInfo =
-      session?.user.hierarquia === "ADM"
-        ? await GetConstrutoraById(Number(Construtora))
-        : await GetConstrutoraById(session?.user.construtora[0].id);
-    const complementoCnpj: any =
-      construtoraInfo && (await ApiCpnjJson(construtoraInfo.cnpj));
-    if (complementoCnpj.error) {
-      toast({
-        title: "Erro",
-        description: complementoCnpj.message,
-        status: "error",
-        duration: 3000,
-        isClosable: true
-      });
-    }
-    const DadosConst = {
-      nome: complementoCnpj.data.razao_social,
-      telefone: construtoraInfo?.tel
-        ?.replace(/[^0-9]/g, "")
-        .replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2 $3-$4"),
-      email: construtoraInfo?.email,
-      cnpj: construtoraInfo?.cnpj.replace(
-        /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
-        "$1.$2.$3/$4-$5"
-      ),
-      end: `${complementoCnpj.data.descricao_tipo_de_logradouro} ${
-        complementoCnpj.data.logradouro
-      }, ${complementoCnpj.data.numero}, ${complementoCnpj.data.complemento}, ${
-        complementoCnpj.data.bairro
-      }, ${complementoCnpj.data.municipio} - ${
-        complementoCnpj.data.uf
-      }, ${complementoCnpj.data.cep?.replace(/(\d{5})(\d{3})/, "$1-$2")}`
+      solicitacao: TotalArray,
+      nota_fiscal: N_NotaFiscal,
+      situacao_pg: Situacao === 0 ? Situacao + 1 : Situacao,
+      construtora:
+        session?.user.hierarquia === "ADM"
+          ? Number(Construtora)
+          : session?.user.construtora[0].id,
+      protocolo: ProtocoloNumber,
+      Inicio: Inicio,
+      Fim: Fim
     };
 
-    const ValorCert = construtoraInfo?.valor_cert
-      ? construtoraInfo?.valor_cert
-      : 0;
-
-    const valorTotal = ValorCert ? TotalArray.length * ValorCert : 0;
-    const valorUnicoFormatado = ValorCert.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL"
-    });
-    const valorTotalFormatado = valorTotal.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL"
-    });
-    const msg = `Certificados emitidos pelo "AR Interface certificador" no período de ${Inicio.split(
-      "-"
-    )
-      .reverse()
-      .join("/")} a ${Fim.split("-")
-      .reverse()
-      .join(
-        "/"
-      )}, com o valor total de ${valorUnicoFormatado} cada certificado, com validade de 1 ano.`;
-    const pdf = await createForm(
-      DadosConst,
-      valorTotalFormatado,
-      TotalArray.length,
-      msg,
-      response.data.protocolo
-    ); // Supondo que 'createForm' retorna os dados em formato PDF
-    // Criar um Blob do conteúdo PDF
-    const blob = new Blob([pdf], { type: "application/pdf" });
-    // Criar um link para o download
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    // window.open(url, "_blank");
-    link.setAttribute("href", url);
-    link.setAttribute("download", `Resumo_fechamento${DadosConst.nome}_${Inicio.split("-").reverse().join("-")}_${Fim.split("-").reverse().join("-")}.pdf`);
-    link.style.visibility = "hidden";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    // Função para separar os objetos por id do empreendimento
-    const separarPorEmpreendimentoId = () => {
-      return TotalArray.reduce(
-        (acc: Record<number, { nome: string; itens: any[] }>, Total: any) => {
-          const empreendimentoId = Total.empreedimento.id;
-          if (!acc[empreendimentoId]) {
-            acc[empreendimentoId] = {
-              nome: Total.empreedimento.nome,
-              itens: []
-            };
-          }
-          acc[empreendimentoId].itens.push(Total);
-          return acc;
-        },
-        {}
-      );
-    };
-    const dadosSeparados = separarPorEmpreendimentoId();
-    // Criar cabeçalho do CSV no formato personalizado
-    let csvContent = "\uFEFF";
-    const ifocontrutora = await GetConstrutoraById(Construtora);
-    csvContent += `${ifocontrutora?.fantasia}; ${Inicio.split("-").reverse().join("-")} - ${Fim.split("-").reverse().join("-")};;\n;;;\n`;
-    // Percorrer os dados por empreendimento e criar as linhas do CSV
-    for (const [empreendimentoId, dados] of Object.entries(
-      dadosSeparados
-    ) as any) {
-      // Adicionar o cabeçalho do empreendimento
-      csvContent += `${dados.nome};;;\n;;;\n`;
-      // Adicionar cabeçalho da tabela para cada empreendimento
-      csvContent += `x;id;nome;cpf;dtAprovacao;CCA;Cidade;solicitante\n`;
-      // Adicionar as linhas com os dados de cada item
-      console.log(dados.itens);
-      dados.itens.forEach((item: any, index: number) => {
-        const linha = [
-          index + 1, // Contador (x)
-          item.id, // ID do item
-          item.nome, // Nome do cliente
-          item.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4"),
-          item.dt_aprovacao.split("T")[0].split("-").reverse().join("/"),
-          item.financeiro?.fantasia,
-          item.empreedimento?.cidade,
-          item.corretor?.nome
-        ].join(";"); // Junta todos os campos com ponto e vírgula
-        csvContent += linha + "\n"; // Adiciona a linha ao conteúdo CSV
-      });
-      // Adicionar separadores entre empreendimentos
-      csvContent += `;;;\n;;;\n`;
+    if (TotalArray.length === 0) {
     }
-    // Criar um Blob do conteúdo CSV
-    const blobCsv = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    // Criar um link para o download
-    const linkCsv = document.createElement("a");
-    const urlCsv = URL.createObjectURL(blobCsv);
-    linkCsv.setAttribute("href", urlCsv);
-    linkCsv.setAttribute("download", `lista_fechamento_${ifocontrutora?.fantasia}_${Inicio.split("-").reverse().join("-")}_${Fim.split("-").reverse().join("-")}.csv`);
-    linkCsv.style.visibility = "hidden";
-    document.body.appendChild(linkCsv);
-    linkCsv.click();
-    document.body.removeChild(linkCsv);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    route.refresh();
+    const api = await fetch("/api/doc/adm/cobranca", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(DataPost)
+    });
+    const retorno = await api.json();
+    console.log("🚀 ~ handleDownloadPDF ~ retorno:", retorno);
+
+    // const blob = new Blob([retorno.pdf], { type: "application/pdf" });
+    // // Criar um link para o download
+    // const link = document.createElement("a");
+    // const url = URL.createObjectURL(blob);
+    // // window.open(url, "_blank");
+    // link.setAttribute("href", url);
+    // link.setAttribute("download", retorno.pdfName);
+    // link.style.visibility = "hidden";
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
+
+    // //csv
+
+    // const blobCsv = new Blob([retorno.csvContent], {
+    //   type: "text/csv;charset=utf-8;"
+    // });
+    // // Criar um link para o download
+    // const linkCsv = document.createElement("a");
+    // const urlCsv = URL.createObjectURL(blobCsv);
+    // linkCsv.setAttribute("href", urlCsv);
+    // linkCsv.setAttribute("download", retorno.csvName);
+    // linkCsv.style.visibility = "hidden";
+    // document.body.appendChild(linkCsv);
+    // linkCsv.click();
+    // document.body.removeChild(linkCsv);
+    // await new Promise((resolve) => setTimeout(resolve, 2000));
+    // route.refresh();
   };
 
   return (
@@ -375,6 +299,7 @@ export default function GerarCobranca() {
                   size={"sm"}
                   borderRadius={"md"}
                   onChange={(e) => setSituacao(Number(e.target.value))}
+                  value={Situacao}
                 >
                   <option value={0}>Pendente</option>
                   <option value={1}>Aguardando Pagamento</option>
@@ -485,13 +410,19 @@ export default function GerarCobranca() {
             </>
           )}
           <Flex gap={2}>
-            <Button colorScheme="teal" onClick={handleDownload}>
-              Gerar Previa
-            </Button>
             <Button
+              colorScheme="teal"
+              onClick={handleDownload}
               isDisabled={
                 !Personalizado && !Protocolo ? true : !!Protocolo ? true : false
               }
+            >
+              Gerar Previa
+            </Button>
+            <Button
+              // isDisabled={
+              //   !Personalizado && !Protocolo ? true : !!Protocolo ? true : false
+              // }
               onClick={handleDownloadPDF}
             >
               Gerar cobrança

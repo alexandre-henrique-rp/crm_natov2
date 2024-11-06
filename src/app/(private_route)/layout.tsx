@@ -9,8 +9,8 @@ interface PrivateLayoutProps {
 export default function PrivateLayout({ children }: PrivateLayoutProps) {
   return (
     <Flex
-      minW={"100vw"}
-      minH={"100vh"}
+      w={"100vw"}
+      h={"100vh"}
       justifyContent={"space-between"}
       flexDir={"column"}
     >

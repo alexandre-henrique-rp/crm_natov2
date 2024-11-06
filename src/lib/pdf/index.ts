@@ -1,6 +1,13 @@
+"use client";
 import { PDFDocument, rgb } from "pdf-lib";
 
-export async function createForm(construrora: any, totalValor: string, qtCert: number, msg: string, NProtocolo: any) {
+export async function createForm(
+  construrora: any,
+  totalValor: string,
+  qtCert: number,
+  msg: string,
+  NProtocolo: any
+) {
   const pdfDoc = await PDFDocument.create();
 
   const page = pdfDoc.addPage([550, 750]);
@@ -161,7 +168,6 @@ export async function createForm(construrora: any, totalValor: string, qtCert: n
 
   page.drawText(`Valor total`, { x: 365, y: 300, size: 9, opacity: 0.75 });
   page.drawText(`${totalValor}`, { x: 430, y: 300, size: 12 });
-
 
   // Salva o documento como bytes
   const pdfBytes = await pdfDoc.save();

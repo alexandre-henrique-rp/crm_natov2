@@ -52,14 +52,18 @@ export async function GetProtocolo(protocolo: string) {
           id: true,
           nome: true,
           cpf: true,
+          id_fcw: true,
           estatos_pgto: true,
           valorcd: true,
           dt_aprovacao: true,
           createdAt: true,
           empreedimento: true,
-          id_fcw: true
+          financeiro: true,
+          corretor: true,
+          type_validacao: true
         }
       });
+
     return {
       error: false,
       message: "Success",
@@ -68,18 +72,26 @@ export async function GetProtocolo(protocolo: string) {
         ...(request.createdAt && {
           createdAt: new Date(request.createdAt).toISOString()
         }),
+        ...(request.updatedAt && {
+          updatedAt: new Date(request.updatedAt).toISOString()
+        }),
         ...(request.construtora && {
           construtora: await GetConstrutora(request.construtora)
         }),
+        ...(request.start && { start: new Date(request.start).toISOString() }),
+        ...(request.end && { end: new Date(request.end).toISOString() }),
         ...(solicitacao.length > 0
           ? {
-              solicitacao: solicitacao.map((s: any) => {
+              solicitacao: await Promise.all(solicitacao.map(async(s: any) => {
                 return {
                   ...s,
                   createdAt: new Date(s.createdAt).toISOString(),
-                  dt_aprovacao: new Date(s.dt_aprovacao).toISOString()
+                  dt_aprovacao: new Date(s.dt_aprovacao).toISOString(),
+                  empreedimento: await getEmpreedimento(s.empreedimento),
+                  financeiro: await getFinaceiro(s.financeiro),
+                  corretor: await getCorretor(s.corretor),
                 };
-              })
+              }))
             }
           : {
               solicitacao: []
@@ -110,4 +122,89 @@ async function GetConstrutora(id: number) {
     }
   });
   return reqest;
+}
+
+
+const getEmpreedimento = async (id: number) => {
+  if (id === 0) {
+    return {
+      id: 0,
+      nome: "Não informado"
+    }
+  }
+  if(typeof id !== "number") {
+    return {
+      id: 0,
+      nome: id
+    }
+  }
+  if(!id) {
+    return {
+      id: 0,
+      nome: "Não informado"
+    }
+  }
+  const empreedimento = await prisma.nato_empreendimento.findFirst({
+    where: {
+      id
+    },
+    select: {
+      id: true,
+      nome: true,
+      cidade: true
+    }
+  })
+  return empreedimento
+}
+
+const getFinaceiro = async (id: number) => {
+  const financeiro = await prisma.nato_financeiro.findFirst({
+    where: {
+      id
+    },
+    select: {
+      id: true,
+      fantasia: true
+    }
+  })
+  return financeiro
+}
+
+const getCorretor = async (id: number) => {
+  try {
+    if (id === 0) {
+      return {
+        id: 0,
+        nome: "Não informado"
+      }
+    }
+    if(typeof id !== "number") {
+      return {
+        id: 0,
+        nome: id
+      }
+    }
+    if(!id) {
+      return {
+        id: 0,
+        nome: "Não informado"
+      }
+    }
+    const corretor = await prisma.nato_user.findFirst({
+      where: {
+        id
+      },
+      select: {
+        id: true,
+        nome: true
+      }
+    })
+    return corretor
+  } catch (error) {
+    console.log("🚀 ~ getCorretor ~ error:", error)
+    return {
+      id: 0,
+      nome: id
+    }
+  }
 }
