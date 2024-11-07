@@ -21,6 +21,7 @@ export async function DesativarEmpreendimento(id: string) {
         ativo: false
       }
     });
+    prisma.$disconnect();
     return { error: false, message: "Empreendimento desativado", data: update };
   } else {
     const update = await prisma.nato_empreendimento.update({
@@ -31,6 +32,7 @@ export async function DesativarEmpreendimento(id: string) {
         ativo: true
       }
     });
+    prisma.$disconnect();
     return { error: false, message: "Empreendimento ativado", data: update };
   }
 }
