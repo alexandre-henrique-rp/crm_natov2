@@ -100,7 +100,8 @@ export function Tabela({
       ? "gray.600"
       : item.distrato && user?.hierarquia === "GRT"
       ? "gray.600"
-      : item.alertanow ? "green.200" : "transparent";
+      : item.alertanow && !["EMITIDO", "REVOGADO", "APROVADO"].includes(item.Andamento) ? "green.200"
+      : "transparent";
 
     const fontColor =
       colors === "red.400"

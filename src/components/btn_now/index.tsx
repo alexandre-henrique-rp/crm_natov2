@@ -16,7 +16,7 @@ import { BsFillClockFill } from "react-icons/bs";
 import CreateNow from "@/actions/alertaNow/services/createNow";
 import { useEffect, useState } from "react";
 import GetAlertaNow from "@/actions/alertaNow/services/getAlertaNow";
-import { useRouter } from "next/router";
+
 
 const rgbBlink = keyframes`
   0% { color: red; }
@@ -94,7 +94,7 @@ export default function BtnNow({
 
   return (
     <>
-      {alertaNowState ? (
+      {alertaNowState && !["EMITIDO", "REVOGADO", "APROVADO"].includes(andamento) && ativo ? (
         <Box
           alignSelf={"center"}
           w={"fit-content"}
