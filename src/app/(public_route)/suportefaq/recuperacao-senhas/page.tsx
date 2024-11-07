@@ -41,7 +41,7 @@ export default function SuporteFaqSenhaEmissao() {
                 {
                     title: 'Validação por  Videoconferência',
                     content:<span>
-                        Se a sua validação foi feita por videoconferência, será necessário enviar um e-mail solicitando a Revogação para o endereço:<Link color={"blue"}>videoconferencia@soluti.com.br</Link> , é necessário incluir no e-mail o Código de solicitação e o motivo da revogação.'
+                        Se a sua validação foi feita por videoconferência, será necessário enviar um e-mail solicitando a Revogação para o endereço:<Link color={"blue"}>videoconferencia@soluti.com.br</Link> , é necessário incluir no e-mail o Código de solicitação e o motivo da revogação.
                     </span>
                 },
                 {

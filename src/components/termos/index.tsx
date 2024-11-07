@@ -14,7 +14,6 @@ import {
   Flex,
   Link,
   Checkbox,
-  Toast,
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
