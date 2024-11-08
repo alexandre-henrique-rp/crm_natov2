@@ -11,7 +11,9 @@ export const CheckCpf = async (cpf: string) => {
     }
   });
   if (verificaCpf) {
+    await prisma.$disconnect();
     return { error: true, message: "CPF já cadastrado", data: null };
   }
+  await prisma.$disconnect();
   return { error: false, message: "", data: null };
 }

@@ -17,7 +17,6 @@ export async function POST(
       }),
     });
     const data = await api.json();
-    console.log("🚀 ~ data:", data)
     return NextResponse.json({ data: data }, { status: 200 });
     
   } catch (error: any) {

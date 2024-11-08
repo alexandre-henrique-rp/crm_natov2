@@ -11,6 +11,6 @@ export const GetConstrutoraById = async (id?: number) => {
       id: id,
     },
   });
-  prisma.$disconnect();
+  await prisma.$disconnect();
   return construtora;
 }

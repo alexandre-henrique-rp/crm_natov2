@@ -104,6 +104,7 @@ declare namespace solictacao {
       descricao: string;
     }[],
     docSuspenso: string;
+    alertanow: boolean;
   }
 
   /**

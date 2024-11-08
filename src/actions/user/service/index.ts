@@ -54,5 +54,6 @@ export async function UpdateUser(_: any, data: FormData) {
       cargo: cargo
     }
   });
+  await prisma.$disconnect();
   redirect("/usuarios");
 }

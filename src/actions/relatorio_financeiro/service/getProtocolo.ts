@@ -121,6 +121,7 @@ async function GetConstrutora(id: number) {
       fantasia: true
     }
   });
+  await prisma.$disconnect();
   return reqest;
 }
 
@@ -154,6 +155,7 @@ const getEmpreedimento = async (id: number) => {
       cidade: true
     }
   })
+  await prisma.$disconnect()
   return empreedimento
 }
 
@@ -167,6 +169,7 @@ const getFinaceiro = async (id: number) => {
       fantasia: true
     }
   })
+  await prisma.$disconnect()
   return financeiro
 }
 
@@ -206,5 +209,7 @@ const getCorretor = async (id: number) => {
       id: 0,
       nome: id
     }
+  }finally{
+    await prisma.$disconnect()
   }
 }

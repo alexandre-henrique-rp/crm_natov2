@@ -10,6 +10,7 @@ export async function DeleteUser(id: number){
             id: id
         }
     });
+    await prisma.$disconnect();
     return { error: false, message: "Usuário deletado com sucesso", data: user };
     
     

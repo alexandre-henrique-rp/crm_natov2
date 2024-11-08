@@ -16,4 +16,5 @@ export async function AtualizarFcw(data: any) {
       });
     })
   );
+  await prisma.$disconnect();
 }

@@ -20,7 +20,7 @@ import {
   PopoverBody,
   PopoverFooter,
   Portal,
-  ButtonGroup
+  ButtonGroup,
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -29,6 +29,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { FaFileSignature } from "react-icons/fa6";
 import { LuAlertTriangle } from "react-icons/lu";
 import { BotoesFunction } from "../botoes/bt_group_function";
+import BtnNow from "../btn_now";
 
 interface TabelaProps {
   ClientData: solictacao.SolicitacaoGetType[];
@@ -41,7 +42,7 @@ export function Tabela({
   ClientData,
   total,
   AtualPage,
-  SetVewPage
+  SetVewPage,
 }: TabelaProps) {
   const [SelectPage, setSelectPage] = useState(1);
   const { data: session } = useSession();
@@ -99,6 +100,7 @@ export function Tabela({
       ? "gray.600"
       : item.distrato && user?.hierarquia === "GRT"
       ? "gray.600"
+      : item.alertanow && !["EMITIDO", "REVOGADO", "APROVADO"].includes(item.Andamento) ? "green.200"
       : "transparent";
 
     const fontColor =
@@ -153,6 +155,14 @@ export function Tabela({
             ) : (
               <Box ms={10}></Box>
             )}
+            <BtnNow
+              id={item.id}
+              andamento={item.Andamento}
+              ativo={item.ativo}
+              distrato={item.distrato}
+              construtora={item.construtora}
+              alertaNow={item.alertanow}
+            />
             <BotoesFunction
               id={item.id}
               distrato={item.distrato ? true : false}
