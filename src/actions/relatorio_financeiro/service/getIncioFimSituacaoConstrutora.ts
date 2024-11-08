@@ -80,10 +80,11 @@ export async function GetIncioFimSituacaoConstrutora(
         createdAt: true,
         empreedimento: true,
         financeiro: true,
-        corretor: true
+        corretor: true,
+        type_validacao: true
       }
     });
-    console.log("🚀 ~ dados:", dados)
+
     
     return {
       error: false,
@@ -142,6 +143,7 @@ const getEmpreedimento = async (id: number) => {
       cidade: true
     }
   })
+  await prisma.$disconnect()
   return empreedimento
 }
 
@@ -155,6 +157,7 @@ const getFinaceiro = async (id: number) => {
       fantasia: true
     }
   })
+  await prisma.$disconnect()
   return financeiro
 }
 
@@ -194,5 +197,7 @@ const getCorretor = async (id: number) => {
       id: 0,
       nome: id
     }
+  }finally{
+    await prisma.$disconnect()
   }
 }

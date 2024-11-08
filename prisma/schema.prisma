@@ -422,14 +422,16 @@ model nato_financeiro {
 }
 
 model nato_relatorio_financeiro {
-  id          Int      @id @default(autoincrement())
-  protocolo   String?  @unique(map: "nato_relatorio_financeiro_unique") @db.VarChar(20)
-  createdAt   DateTime @default(now()) @db.Timestamp(0)
-  updatedAt   DateTime @default(now()) @db.Timestamp(0)
-  situacao_pg Int      @default(0) @db.TinyInt
-  nota_fiscal String?  @db.VarChar(100)
-  solicitacao String   @db.Text
+  id          Int       @id @default(autoincrement())
+  protocolo   String?   @unique(map: "nato_relatorio_financeiro_unique") @db.VarChar(20)
+  createdAt   DateTime  @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime  @default(now()) @db.Timestamp(0)
+  situacao_pg Int       @default(0) @db.TinyInt
+  nota_fiscal String?   @db.VarChar(100)
+  solicitacao String    @db.Text
   construtora Int?
+  start       DateTime? @db.Date
+  end         DateTime? @db.Date
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -480,6 +482,8 @@ model nato_solicitacoes_certificado {
   situacao_pg      Int?          @default(0) @db.TinyInt
   freqSms          Int?          @default(0)
   docSuspenso      String?       @db.VarChar(100)
+  alertanow        Boolean?      @default(false)
+  dt_criacao_now   DateTime?     @db.DateTime(0)
   nato_alerta      nato_alerta[]
 
   @@index([id_fcw], map: "nato_solicitacoes_certificado_fcweb_FK")
@@ -513,6 +517,7 @@ model nato_user {
   status         Boolean?      @default(false)
   Financeira     String?       @db.LongText
   sms_relat      Boolean?      @default(false)
+  termos         Boolean?      @default(false)
   nato_alerta    nato_alerta[]
 }
 
@@ -786,4 +791,11 @@ model nato_suporte {
   createAt    DateTime @default(now()) @db.DateTime(0)
   urlSuporte  String?  @db.LongText
   imgSuspensa String?  @db.VarChar(100)
+}
+
+model nato_termos {
+  id        Int      @id @default(autoincrement())
+  termo     String?  @db.LongText
+  politicas String?  @db.LongText
+  createdAt DateTime @default(now()) @db.DateTime(0)
 }

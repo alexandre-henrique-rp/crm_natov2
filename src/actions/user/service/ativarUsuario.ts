@@ -15,9 +15,10 @@ export async function ativarUsuario(id: number) {
         status: true,
       },
     });
-
+    await prisma.$disconnect();
     return {error: false, message: "Usuário ativado com sucesso"};
   } else {
+    await prisma.$disconnect();
     return {error: true, message: "Erro interno, Usuário não encontrado"};
   }
 }

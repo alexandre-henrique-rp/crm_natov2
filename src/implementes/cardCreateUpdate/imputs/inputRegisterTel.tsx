@@ -33,7 +33,7 @@ export const InputRegisterTel = ({ Index, tell, ...props }: InputTel1Props) => {
   };
 
   const CheckWhatsApp = async (numero: string) => {
-    const request = await fetch("/api/verificador/whatsapp", {
+    const request = await fetch("/api/consulta/whatsapp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -44,7 +44,7 @@ export const InputRegisterTel = ({ Index, tell, ...props }: InputTel1Props) => {
     });
     const data = await request.json();
 
-    if (data.exists) {
+    if (data.data.exists) {
       return true;
     }
     return false;
@@ -57,6 +57,7 @@ export const InputRegisterTel = ({ Index, tell, ...props }: InputTel1Props) => {
       if (valorLimpo.length > 9) {
         setLoading(true);
         const request = await CheckWhatsApp(valorLimpo);
+        console.log("🚀 ~ HandleChekTel ~ request:", request)
         if (request) {
           setTeste(1);
           setError(false);
