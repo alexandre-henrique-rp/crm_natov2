@@ -31,7 +31,8 @@ export async function GetConstrutoraById(id: number){
               razaosocial: true,
               tel: true,
               email: true,
-              fantasia: true
+              fantasia: true,
+              valor_cert: true,
             }
         });
         return { error: false, message: "success", data: request };

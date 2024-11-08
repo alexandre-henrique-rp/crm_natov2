@@ -60,7 +60,7 @@ export async function GetIncioFimSituacaoConstrutora(
           lte: new Date(dto.fim)
         },
         Andamento: {
-          in: ["APROVADO", "EMITIDO"]
+          in: ["APROVADO", "EMITIDO", "REVOGADO"]
         },
         dt_aprovacao:{
           not: null
@@ -97,7 +97,8 @@ export async function GetIncioFimSituacaoConstrutora(
         createdAt: new Date(item.createdAt).toISOString(),
         dt_aprovacao: item.dt_aprovacao
           ? new Date(item.dt_aprovacao).toISOString()
-          : null
+          : null,
+        certificado: await getCertificado(item.cpf,dto.inicio,dto.fim)
       })))
     };
   } catch (error: any) {
@@ -143,6 +144,7 @@ const getEmpreedimento = async (id: number) => {
       cidade: true
     }
   })
+  await prisma.$disconnect();
   return empreedimento
 }
 
@@ -156,6 +158,7 @@ const getFinaceiro = async (id: number) => {
       fantasia: true
     }
   })
+  await prisma.$disconnect();
   return financeiro
 }
 
@@ -195,5 +198,35 @@ const getCorretor = async (id: number) => {
       id: 0,
       nome: id
     }
+  }finally{
+    await prisma.$disconnect();
   }
+}
+
+const getCertificado = async (cpf: string, inicio: string, fim: string) => {
+  const  gepFim = new Date(fim)
+  gepFim.setMonth(gepFim.getMonth() + 3)
+  const certificado = await prisma.fcweb.count({
+    where: {
+      cpf: cpf,
+      andamento:{
+        in: ["APROVADO", "EMITIDO", "REVOGADO"]
+      },
+      dt_aprovacao:{
+        not: null
+      },
+      estatos_pgto: {
+        not: 'Pago'
+      },
+      createdAt: {
+        gte: new Date(inicio),
+        lte: gepFim 
+      },
+      tipocd:{
+        equals: "A3PF Bird5000"
+      }
+    },
+  })
+  await prisma.$disconnect();
+  return certificado
 }

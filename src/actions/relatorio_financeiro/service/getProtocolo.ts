@@ -29,6 +29,9 @@ export async function GetProtocolo(protocolo: string) {
     }
     let solicitacaoIds = [];
 
+    const start = request.start
+    const end = request.end
+
     // Validação do campo solicitacao como JSON válido
     try {
       solicitacaoIds = JSON.parse(request.solicitacao);
@@ -61,6 +64,7 @@ export async function GetProtocolo(protocolo: string) {
           financeiro: true,
           corretor: true,
           type_validacao: true
+
         }
       });
 
@@ -90,6 +94,7 @@ export async function GetProtocolo(protocolo: string) {
                   empreedimento: await getEmpreedimento(s.empreedimento),
                   financeiro: await getFinaceiro(s.financeiro),
                   corretor: await getCorretor(s.corretor),
+                  ...(start && end && {certificado: await getCertificado(s.cpf,start,end)})
                 };
               }))
             }
@@ -207,4 +212,32 @@ const getCorretor = async (id: number) => {
       nome: id
     }
   }
+}
+
+const getCertificado = async (cpf: string, inicio: Date, fim: Date) => {
+  const  gepFim = new Date(fim)
+  gepFim.setMonth(gepFim.getMonth() + 3)
+  const certificado = await prisma.fcweb.count({
+    where: {
+      cpf: cpf,
+      andamento:{
+        in: ["APROVADO", "EMITIDO", "REVOGADO"]
+      },
+      dt_aprovacao:{
+        not: null
+      },
+      estatos_pgto: {
+        not: 'Pago'
+      },
+      createdAt: {
+        gte: new Date(inicio),
+        lte: gepFim 
+      },
+      tipocd:{
+        equals: "A3PF Bird5000"
+      }
+    },
+  })
+  await prisma.$disconnect();
+  return certificado
 }

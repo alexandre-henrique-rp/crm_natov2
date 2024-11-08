@@ -515,6 +515,7 @@ model nato_user {
   status         Boolean?      @default(false)
   Financeira     String?       @db.LongText
   sms_relat      Boolean?      @default(false)
+  termos         Boolean?      @default(false)
   nato_alerta    nato_alerta[]
 }
 
