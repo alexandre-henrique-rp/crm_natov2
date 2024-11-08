@@ -344,7 +344,7 @@ export default function GerarCobranca() {
                   value={Situacao}
                 >
                   <option value={0}>Pendente</option>
-                  <option value={1}>Agradando Pagamento</option>
+                  <option value={1}>Aguardando Pagamento</option>
                   <option value={2}>Pago</option>
                 </Select>
               </Box>

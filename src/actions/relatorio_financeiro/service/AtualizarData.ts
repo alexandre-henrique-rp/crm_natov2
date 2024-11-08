@@ -17,4 +17,5 @@ export async function AtualizarData(data: any) {
       });
     })
   );
+  await prisma.$disconnect();
 }

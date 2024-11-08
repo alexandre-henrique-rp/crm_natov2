@@ -66,5 +66,6 @@ async function GetConstrutora(id: number) {
       fantasia: true
     }
   });
+  await prisma.$disconnect();
   return reqest;
 }

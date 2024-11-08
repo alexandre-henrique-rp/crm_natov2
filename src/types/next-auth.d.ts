@@ -14,6 +14,7 @@ declare module "next-auth" {
       hierarquia: string;
       cargo: string;
       reset_password: boolean;
+      termos: boolean;
     };
   }
 

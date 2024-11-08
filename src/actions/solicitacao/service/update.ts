@@ -117,5 +117,6 @@ async function PostTags(value: any, id: number) {
         }
       }
     }
+    await prisma.$disconnect();
   }
 }
