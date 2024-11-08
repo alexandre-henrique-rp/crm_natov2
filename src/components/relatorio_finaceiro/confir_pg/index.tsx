@@ -46,6 +46,7 @@ export default function ConfirPg() {
     await AtualizarFcw(totalArray?.solicitacao);
     await AtualizarData(totalArray?.solicitacao);
     const Atualizar = await AtualizarStatus(totalArray?.id);
+    console.log("🚀 ~ ConfirmePg ~ Atualizar:", Atualizar)
     if (Atualizar.error) {
       toast({
         title: "Erro",
