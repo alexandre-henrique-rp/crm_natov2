@@ -1,32 +1,32 @@
 "use client";
 import {
   Box,
+  ButtonGroup,
   Flex,
+  Icon,
+  IconButton,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverFooter,
+  PopoverHeader,
+  PopoverTrigger,
+  Portal,
+  Select,
   Table,
   Tbody,
   Td,
   Th,
   Thead,
-  Tr,
-  Select,
-  IconButton,
-  Icon,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverHeader,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverBody,
-  PopoverFooter,
-  Portal,
-  ButtonGroup,
+  Tr
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { FaFileSignature } from "react-icons/fa6";
 import { ImClock } from "react-icons/im";
 import { IoIosArrowForward } from "react-icons/io";
-import { FaFileSignature } from "react-icons/fa6";
 import { LuAlertTriangle } from "react-icons/lu";
 import { BotoesFunction } from "../botoes/bt_group_function";
 import BtnNow from "../btn_now";
@@ -42,7 +42,7 @@ export function Tabela({
   ClientData,
   total,
   AtualPage,
-  SetVewPage,
+  SetVewPage
 }: TabelaProps) {
   const [SelectPage, setSelectPage] = useState(1);
   const { data: session } = useSession();
@@ -91,7 +91,7 @@ export function Tabela({
 
     const horaAgenda = item.hr_agendamento?.split("T")[1].split(".")[0];
     const andamento = item.Andamento;
-    const statusPg = item.fcweb?.estatos_pgto;
+    // const statusPg = item.fcweb?.estatos_pgto;
     const colors = !item.ativo
       ? "red.400"
       : item.distrato && user?.hierarquia === "ADM"
@@ -100,7 +100,9 @@ export function Tabela({
       ? "gray.600"
       : item.distrato && user?.hierarquia === "GRT"
       ? "gray.600"
-      : item.alertanow && !["EMITIDO", "REVOGADO", "APROVADO"].includes(item.Andamento) ? "green.200"
+      : item.alertanow &&
+        !["EMITIDO", "REVOGADO", "APROVADO"].includes(item.Andamento)
+      ? "green.200"
       : "transparent";
 
     const fontColor =
@@ -210,7 +212,7 @@ export function Tabela({
               />
             )}
         </Td>
-        {user?.hierarquia === "ADM" && (
+        {/* {user?.hierarquia === "ADM" && (
           <>
             <Td>{statusPg}</Td>
             <Td>{item.fcweb?.valorcd}</Td>
@@ -221,7 +223,7 @@ export function Tabela({
             <Td>{statusPg}</Td>
             <Td>{item.fcweb?.valorcd}</Td>
           </>
-        )}
+        )} */}
       </Tr>
     );
   });
@@ -266,7 +268,7 @@ export function Tabela({
                   <ImClock />
                 </Th>
                 <Th>ASSINATURA</Th>
-                {user?.hierarquia === "CONT" && (
+                {/* {user?.hierarquia === "CONT" && (
                   <>
                     <Th>STATUS PG</Th>
                     <Th>VALOR</Th>
@@ -277,7 +279,7 @@ export function Tabela({
                     <Th>STATUS PG</Th>
                     <Th>VALOR</Th>
                   </>
-                )}
+                )} */}
               </Tr>
             </Thead>
             <Tbody>{tabela}</Tbody>

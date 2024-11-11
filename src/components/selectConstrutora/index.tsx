@@ -2,7 +2,7 @@
 import { Select, SelectProps } from "@chakra-ui/react";
 import {useEffect, useState } from "react";
 
-export default function SelectConstrutora({ ...props }: SelectProps) {
+export default function  SelectConstrutora({ ...props }: SelectProps) {
   const [Data, setData] = useState<any>([]);
   useEffect(() => {
     (async () => {

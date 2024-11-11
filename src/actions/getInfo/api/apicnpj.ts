@@ -4,28 +4,33 @@ export default async function ApiCpnjJson(cnpj: string) {
   // console.log("🚀 ~ ApiCpnjJson ~ cnpj:", cnpj)
   try {
     if (!cnpj) {
-      return { error: true, message: "CNPJ obrigatório", data: null };
+      throw new Error("CNPJ obrigatório");
     }
     const response = await fetch(
-      // `https://brasilapi.com.br/api/cnpj/v1/${cnpj}`
-      `https://brasilapi.com.br/api/cnpj/v1/34193637000163`
+      `https://brasilapi.com.br/api/cnpj/v1/${cnpj}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "User-Agent": "PostmanRuntime/7.30.0"
+        }
+      }
     );
-    const data = await response.json();
-    console.log("🚀 ~ ApiCpnjJson ~ data:", data)
 
-    if (data && !data.error) {
-      return {
-        error: false,
-        message: "CNPJ encontrado",
-        data: data
-      };
+    if (!response.ok) {
+      throw new Error("CNPJ não encontrado");
     }
 
-    return { error: true, message: "CNPJ não encontrado", data: null };
-  } catch (error) {
+    const data = await response.json();
+    return {
+      error: false,
+      message: "CNPJ encontrado",
+      data: data
+    };
+  } catch (error: any) {
     return {
       error: true,
-      message: "Erro ao buscar dados do CNPJ",
+      message: error.message,
       data: error
     };
   }
