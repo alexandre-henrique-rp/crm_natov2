@@ -191,10 +191,10 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
   }
 
   const handleFileUploadedRg = (result: any) => {
-    setUploadRgUrl(result.url);
+    setUploadRgUrl(result);
   };
   const handleFileUploadedCnh = (result: any) => {
-    setUploadCnhUrl(result.url);
+    setUploadCnhUrl(result);
   };
 
   const WhatsAppMask = (e: any) => {

@@ -8,7 +8,7 @@ type dataType = {
   id: number;
   nome: string;
   cpf: string;
-  empreedimento: number | null;
+  empreedimento: number;
   createdAt: Date;
   dt_aprovacao: Date | null;
   estatos_pgto: string | null;
@@ -22,19 +22,22 @@ type dataType = {
  * @param {string} inicio - Data de início no formato "yyyy-mm-dd".
  * @param {string} fim - Data de fim no formato "yyyy-mm-dd".
  * @param {number} situacao - Id da situação de pagamento.
+ * @param {number} empreedimento - Id do empreendimento.
  * @param {number} construtora - Id da construtora.
  * @type {dataType[]} - { id: number, nome: string, cpf: string, empreedimento: number | null, createdAt: Date, dt_aprovacao: Date | null, estatos_pgto: string | null, valorcd: number | null }
  *
  * @returns {Promise<{ error: boolean, message: string, data: dataType[] | null }>}
  */
 export async function GetIncioFimSituacaoConstrutora(
+  construtora: number,
+  empreedimento: number,
   inicio: string,
   fim: string,
   situacao: number,
-  construtora: number
 ): Promise<{ error: boolean; message: string; data: dataType[] | null }> {
   const dto = new DetIncioFimSituacaoConstrutoraDto(
     construtora,
+    empreedimento,
     inicio,
     fim,
     situacao

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { GetConstrutoraById } from "@/actions/getInfo/service/getConstrutoraById";
 import { GetIncioFimSituacaoConstrutora } from "@/actions/relatorio_financeiro/service/getIncioFimSituacaoConstrutora";
 import { GetProtocolo } from "@/actions/relatorio_financeiro/service/getProtocolo";
 import SelectConstrutora from "@/components/selectConstrutora";
@@ -24,6 +23,7 @@ export default function GerarCobranca() {
   const [Inicio, setInicio] = useState("");
   const [Fim, setFim] = useState("");
   const [Construtora, setConstrutora] = useState(0);
+  const [empreedimento, setEmpreedimento] = useState(0);
   const [Situacao, setSituacao] = useState(0);
   const [TotalArray, setTotalArray] = useState<any>([]);
   const [Personalizado, setPersonalizado] = useState<boolean>(false);
@@ -42,10 +42,11 @@ export default function GerarCobranca() {
 
   async function handlePesquisa() {
     const dados = await GetIncioFimSituacaoConstrutora(
+      Construtora,
+      empreedimento,
       Inicio,
       Fim,
       Situacao,
-      Construtora
     );
     if (dados.error) {
       toast({
@@ -249,8 +250,6 @@ export default function GerarCobranca() {
     }
   };
 
-  console.log(Protocolo);
-
   return (
     <>
       <style>
@@ -286,8 +285,8 @@ export default function GerarCobranca() {
           <Flex gap={2} w={"80%"}>
             <Checkbox
               onChange={(e) => {
-                setProtocolo(e.target.checked);
                 setPersonalizado(false);
+                setProtocolo(e.target.checked);
               }}
               checked={Protocolo}
             >
@@ -295,8 +294,8 @@ export default function GerarCobranca() {
             </Checkbox>
             <Checkbox
               onChange={(e) => {
-                setPersonalizado(e.target.checked);
                 setProtocolo(false);
+                setPersonalizado(e.target.checked);
               }}
               checked={Personalizado}
             >
@@ -351,6 +350,16 @@ export default function GerarCobranca() {
               {session?.user.hierarquia === "ADM" && (
                 <Box>
                   <FormLabel>construtora</FormLabel>
+                  <SelectConstrutora
+                    size={"sm"}
+                    borderRadius={"md"}
+                    onChange={(e) => setConstrutora(Number(e.target.value))}
+                  />
+                </Box>
+              )}
+              {session?.user.hierarquia === "ADM" && (
+                <Box>
+                  <FormLabel>Empreedimento</FormLabel>
                   <SelectConstrutora
                     size={"sm"}
                     borderRadius={"md"}
