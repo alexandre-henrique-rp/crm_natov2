@@ -20,7 +20,6 @@ export const auth: NextAuthOptions = {
             username: credentials.email,
             password: credentials.password
           };
-          console.log("🚀 ~ authorize ~ dados:", dados);
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/auth`,
             {
@@ -63,7 +62,7 @@ export const auth: NextAuthOptions = {
             Financeira: Financeira,
             termos: termos
           };
-          console.log(response);
+          // console.log(response);
 
           if (!token || !id || !nome) {
             throw new Error("Usuário e senha incorreto");
