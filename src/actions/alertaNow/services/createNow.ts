@@ -1,9 +1,20 @@
 'use server'
 import { PrismaClient } from "@prisma/client";
+import GetAlertDoc from "./getDocAlertNow";
+import { CreateAlertaNowDto } from "../dto/createAlertaNow.dto";
 
 const prisma = new PrismaClient();
 
 export default async function CreateNow(data: any){
+    const dataDocs = await GetAlertDoc(data.id);
+
+    
+    const dto = new CreateAlertaNowDto(dataDocs);
+    const erroValidacao = dto.validar();
+    if(erroValidacao){
+        return {error: true, message: erroValidacao, data: null}
+    }
+
     const dataAtual = new Date();
     const id = data.id;
 

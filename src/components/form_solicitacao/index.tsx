@@ -531,6 +531,26 @@ export default function SolicitacaoForm({
             <CpfMask setvalue={cpfdois} onvalue={setCpfdois} />
           </Box>
         )}
+
+        {/* {user?.hierarquia === "ADM" && (
+          <Box>
+            <FormLabel>
+              Voucher
+              <Tooltip
+                label="Voucher para Atendimento em qualquer unidade Soluti"
+                aria-label="A tooltip"
+              >
+                <Icon ml={1} color="black" cursor="pointer" boxSize={3} />
+              </Tooltip>
+            </FormLabel>
+            <Input
+              type="text"
+              onChange={(e) => setVoucher(e.target.value)}
+              value={Voucher}
+            />
+          </Box>
+        )} */}
+
         {user?.hierarquia === "ADM" && relacionamento !== "sim" && (
           <Box>
             <FormLabel>Envio de SMS</FormLabel>

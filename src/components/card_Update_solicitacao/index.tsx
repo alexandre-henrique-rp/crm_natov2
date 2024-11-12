@@ -9,6 +9,7 @@ import DistratoAlertPrint from "../Distrato_alert_print";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import { UpdateSolicitacao } from "@/actions/solicitacao/service/update";
 import { SessionUserType } from "@/types/next-auth";
+import BtnAlertNow from "../btn_alerta_now";
 
 // const prisma = new PrismaClient();
 type Props = {
@@ -127,7 +128,7 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                 <CardCreateUpdate.GridLink
                   DataSolicitacao={setDadosCard}
                   w={{ base: "100%", md: "16rem" }}
-                  />
+                />
               </Flex>
 
               <Box>
@@ -157,6 +158,24 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                   Hierarquia={!HierarquiaUser ? "USER" : HierarquiaUser}
                 />
               </Flex>
+              {setDadosCard.construtora.id === 5 ? (
+                <Box>
+                  <Alert justifyContent={'space-between'} status="warning" variant="left-accent">
+                    <AlertIcon />
+                    Apenas para clientes Presentes na Construtora.
+                  <BtnAlertNow
+                    id={setDadosCard.id}
+                    andamento={setDadosCard.Andamento}
+                    ativo={setDadosCard.ativo}
+                    distrato={setDadosCard.distrato}
+                    construtora={setDadosCard.construtora}
+                    alertanow={setDadosCard.alertanow}
+                  />
+                  </Alert>
+                </Box>
+              ) : (
+                <Box hidden></Box>
+              )}
               <Flex
                 flexDir={{ base: "column", md: "row" }}
                 gap={10}
@@ -207,7 +226,10 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
               <CriarFcweb Id={setDadosCard.id} user={user} />
             )}
             {setDadosCard.ativo && (
-              <BtCreateAlertCliente DataSolicitacao={setDadosCard} user={user} />
+              <BtCreateAlertCliente
+                DataSolicitacao={setDadosCard}
+                user={user}
+              />
             )}
             {setDadosCard.ativo && <ResendSms id={setDadosCard.id} />}
             <SaveBtm colorScheme="green" type="submit">
