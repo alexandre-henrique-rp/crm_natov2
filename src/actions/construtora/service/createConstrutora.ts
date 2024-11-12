@@ -28,6 +28,8 @@ export default async function CreateConstrutora(_: any, data: FormData) {
         return { error: true, message: "CNPJ já cadastrado", data: null };
     }
 
+    
+
    await prisma.nato_empresas.create({
         data:{
             cnpj: cnpj,

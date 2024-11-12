@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import ApiCpnjJson from "@/actions/getInfo/api/apicnpj";
-import { GetConstrutoraById } from "@/actions/getInfo/service/getConstrutoraById";
+
 import { GetIncioFimSituacaoConstrutora } from "@/actions/relatorio_financeiro/service/getIncioFimSituacaoConstrutora";
 import { GetProtocolo } from "@/actions/relatorio_financeiro/service/getProtocolo";
-import { PostRelatorio } from "@/actions/relatorio_financeiro/service/postRelatorio";
 import SelectConstrutora from "@/components/selectConstrutora";
-import { createForm } from "@/lib/pdf";
 import {
   Box,
   Button,
@@ -19,12 +16,14 @@ import {
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { ReactElement, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { jsPDF } from "jspdf";
 
 export default function GerarCobranca() {
   const [Inicio, setInicio] = useState("");
   const [Fim, setFim] = useState("");
   const [Construtora, setConstrutora] = useState(0);
+  const [empreedimento, setEmpreedimento] = useState(0);
   const [Situacao, setSituacao] = useState(0);
   const [TotalArray, setTotalArray] = useState<any>([]);
   const [Personalizado, setPersonalizado] = useState<boolean>(false);
@@ -43,10 +42,11 @@ export default function GerarCobranca() {
 
   async function handlePesquisa() {
     const dados = await GetIncioFimSituacaoConstrutora(
+      Construtora,
+      empreedimento,
       Inicio,
       Fim,
       Situacao,
-      Construtora
     );
     if (dados.error) {
       toast({
@@ -62,7 +62,6 @@ export default function GerarCobranca() {
 
   async function handlePesquisaProtocolo() {
     const dados: any = await GetProtocolo(ProtocoloNumber);
-    console.log("🚀 ~ handlePesquisaProtocolo ~ dados:", dados);
     if (dados.error) {
       toast({
         title: "Erro",
@@ -82,131 +81,173 @@ export default function GerarCobranca() {
   }
 
   async function handleDownload() {
-    // Função para separar os objetos por id do empreendimento
-    const separarPorEmpreendimentoId = () => {
-      return TotalArray.reduce(
-        (acc: Record<number, { nome: string; itens: any[] }>, Total: any) => {
-          const empreendimentoId = Total.empreedimento.id;
-          if (!acc[empreendimentoId]) {
-            acc[empreendimentoId] = {
-              nome: Total.empreedimento.nome,
-              itens: []
-            };
-          }
-          acc[empreendimentoId].itens.push(Total);
-          return acc;
-        },
-        {}
-      );
-    };
-
-    const dadosSeparados = separarPorEmpreendimentoId();
-    // Criar cabeçalho do CSV no formato personalizado
-    let csvContent = "\uFEFF";
-    const ifocontrutora = await GetConstrutoraById(Construtora);
-    // Percorrer os dados por empreendimento e criar as linhas do CSV
-    csvContent += `${ifocontrutora?.fantasia};${Inicio.split("-")
-      .reverse()
-      .join("-")} - ${Fim.split("-").reverse().join("-")};;\n;;;\n`;
-    for (const [empreendimentoId, dados] of Object.entries(
-      dadosSeparados
-    ) as any) {
-      // Adicionar o cabeçalho do empreendimento
-      csvContent += `${dados.nome};;;\n;;;\n`;
-      // Adicionar cabeçalho da tabela para cada empreendimento
-      csvContent += `x;id;nome;cpf;dtAprovacao;CCA;Cidade;solicitante\n`;
-      // Adicionar as linhas com os dados de cada item
-      console.log(dados.itens);
-      dados.itens.forEach((item: any, index: number) => {
-        const linha = [
-          index + 1, // Contador (x)
-          item.id, // ID do item
-          item.nome, // Nome do cliente
-          item.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4"),
-          item.dt_aprovacao.split("T")[0].split("-").reverse().join("/"),
-          item.financeiro?.fantasia,
-          item.empreedimento?.cidade,
-          item.corretor?.nome
-        ].join(";"); // Junta todos os campos com ponto e vírgula
-        csvContent += linha + "\n"; // Adiciona a linha ao conteúdo CSV
+    if (TotalArray.length === 0) {
+      toast({
+        title: "Erro",
+        description: "Preencha os dados e click em pesquisar",
+        status: "error",
+        duration: 9000,
+        isClosable: true
       });
-      // Adicionar separadores entre empreendimentos
-      csvContent += `;;;\n;;;\n`;
     }
-    // Criar um Blob do conteúdo CSV
+    const DataConst =
+      session?.user.hierarquia === "ADM"
+        ? Number(Construtora)
+        : session?.user.construtora[0].id;
+
+    const ConsultApiCsv = await fetch("/api/doc/adm/cobranca/csv", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        solicitacao: TotalArray,
+        type: "Previa_relatorio",
+        construtora: DataConst,
+        Inicio: Inicio,
+        Fim: Fim
+      })
+    });
+    const data = await ConsultApiCsv.json();
+
+    if (!ConsultApiCsv.ok) {
+      toast({
+        title: "Erro",
+        description: data.message,
+        status: "error",
+        duration: 9000,
+        isClosable: true
+      });
+    }
+
+    const { csvContent, csvName } = data.data;
+
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    // Criar um link para o download
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
-    link.setAttribute(
-      "download",
-      `Previa_relatorio_${ifocontrutora?.fantasia}_${Inicio.split("-")
-        .reverse()
-        .join("-")}_${Fim.split("-").reverse().join("-")}.csv`
-    );
-    link.style.visibility = "hidden";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const linkCsv = document.createElement("a");
+    const urlCsv = URL.createObjectURL(blob);
+    linkCsv.setAttribute("href", urlCsv);
+    linkCsv.setAttribute("download", csvName);
+    linkCsv.style.visibility = "hidden";
+    document.body.appendChild(linkCsv);
+    linkCsv.click();
+    document.body.removeChild(linkCsv);
   }
 
   const handleDownloadPDF = async (e: any) => {
     e.preventDefault();
     // separar id_fcw do array
-    const DataPost = {
-      solicitacao: TotalArray,
-      nota_fiscal: N_NotaFiscal,
-      situacao_pg: Situacao === 0 ? Situacao + 1 : Situacao,
-      construtora:
+    if (TotalArray.length === 0) {
+      toast({
+        title: "Erro",
+        description: "Preencha os dados e click em pesquisar",
+        status: "error",
+        duration: 9000,
+        isClosable: true
+      });
+      return;
+    } else {
+      const DataConst =
         session?.user.hierarquia === "ADM"
           ? Number(Construtora)
-          : session?.user.construtora[0].id,
-      protocolo: ProtocoloNumber,
-      Inicio: Inicio,
-      Fim: Fim
-    };
+          : session?.user.construtora[0].id;
 
-    if (TotalArray.length === 0) {
+      const DataPost = {
+        solicitacao: TotalArray,
+        nota_fiscal: N_NotaFiscal,
+        situacao_pg: Situacao === 0 ? Situacao + 1 : Situacao,
+        construtora: DataConst,
+        protocolo: ProtocoloNumber,
+        Inicio: Inicio,
+        Fim: Fim
+      };
+
+      const api = await fetch("/api/doc/adm/cobranca/pdf", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(DataPost)
+      });
+      const retorno = await api.json();
+
+      if (retorno.error) {
+        toast({
+          title: "Erro",
+          description: retorno.message,
+          status: "error",
+          duration: 9000,
+          isClosable: true
+        });
+      }
+
+      // Extrai o PDF e o nome do PDF da resposta
+      const { pdf: htmlContent, pdfName } = retorno.data;
+
+      // Crie um elemento temporário para inserir o HTML
+      const tempElement = document.createElement("div");
+      tempElement.innerHTML = htmlContent;
+      document.body.appendChild(tempElement);
+
+      // Usando jsPDF para gerar o PDF a partir do HTML
+      const pdf = new jsPDF({
+        orientation: "p", // orientação da página (retrato)
+        unit: "mm", // unidade de medida (milímetros)
+        format: "a4", // tamanho do papel A4
+        precision: 2 // precisação de arredondamento
+      });
+      pdf.html(tempElement, {
+        callback: (doc) => {
+          doc.save(pdfName); // Salve o PDF com o nome fornecido
+        },
+        x: 5, // Margem da esquerda
+        y: 5, // Margem superior
+        width: 200, // Largura disponível (A4 - 20mm de margem)
+        windowWidth: 690 // Largura da janela do conteúdo (ajuste conforme necessário)
+      });
+
+      // Remova o elemento temporário
+      document.body.removeChild(tempElement);
+
+      // //csv
+
+      const ConsultApiCsv = await fetch("/api/doc/adm/cobranca/csv", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          solicitacao: TotalArray,
+          type: "relatorio_cobranca",
+          construtora: DataConst,
+          Inicio: Inicio,
+          Fim: Fim
+        })
+      });
+      const data = await ConsultApiCsv.json();
+
+      if (!ConsultApiCsv.ok) {
+        toast({
+          title: "Erro",
+          description: data.message,
+          status: "error",
+          duration: 9000,
+          isClosable: true
+        });
+      }
+      const { csvContent, csvName } = data.data;
+
+      const blob2 = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const linkCsv = document.createElement("a");
+      const urlCsv = URL.createObjectURL(blob2);
+      linkCsv.setAttribute("href", urlCsv);
+      linkCsv.setAttribute("download", csvName);
+      linkCsv.style.visibility = "hidden";
+      document.body.appendChild(linkCsv);
+      linkCsv.click();
+      document.body.removeChild(linkCsv);
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      route.refresh();
     }
-    const api = await fetch("/api/doc/adm/cobranca", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(DataPost)
-    });
-    const retorno = await api.json();
-    console.log("🚀 ~ handleDownloadPDF ~ retorno:", retorno);
-
-    // const blob = new Blob([retorno.pdf], { type: "application/pdf" });
-    // // Criar um link para o download
-    // const link = document.createElement("a");
-    // const url = URL.createObjectURL(blob);
-    // // window.open(url, "_blank");
-    // link.setAttribute("href", url);
-    // link.setAttribute("download", retorno.pdfName);
-    // link.style.visibility = "hidden";
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
-
-    // //csv
-
-    // const blobCsv = new Blob([retorno.csvContent], {
-    //   type: "text/csv;charset=utf-8;"
-    // });
-    // // Criar um link para o download
-    // const linkCsv = document.createElement("a");
-    // const urlCsv = URL.createObjectURL(blobCsv);
-    // linkCsv.setAttribute("href", urlCsv);
-    // linkCsv.setAttribute("download", retorno.csvName);
-    // linkCsv.style.visibility = "hidden";
-    // document.body.appendChild(linkCsv);
-    // linkCsv.click();
-    // document.body.removeChild(linkCsv);
-    // await new Promise((resolve) => setTimeout(resolve, 2000));
-    // route.refresh();
   };
 
   return (
@@ -244,8 +285,8 @@ export default function GerarCobranca() {
           <Flex gap={2} w={"80%"}>
             <Checkbox
               onChange={(e) => {
-                setProtocolo(e.target.checked);
                 setPersonalizado(false);
+                setProtocolo(e.target.checked);
               }}
               checked={Protocolo}
             >
@@ -253,8 +294,8 @@ export default function GerarCobranca() {
             </Checkbox>
             <Checkbox
               onChange={(e) => {
-                setPersonalizado(e.target.checked);
                 setProtocolo(false);
+                setPersonalizado(e.target.checked);
               }}
               checked={Personalizado}
             >
@@ -309,6 +350,16 @@ export default function GerarCobranca() {
               {session?.user.hierarquia === "ADM" && (
                 <Box>
                   <FormLabel>construtora</FormLabel>
+                  <SelectConstrutora
+                    size={"sm"}
+                    borderRadius={"md"}
+                    onChange={(e) => setConstrutora(Number(e.target.value))}
+                  />
+                </Box>
+              )}
+              {session?.user.hierarquia === "ADM" && (
+                <Box>
+                  <FormLabel>Empreedimento</FormLabel>
                   <SelectConstrutora
                     size={"sm"}
                     borderRadius={"md"}
@@ -409,25 +460,49 @@ export default function GerarCobranca() {
               <Box />
             </>
           )}
-          <Flex gap={2}>
-            <Button
-              colorScheme="teal"
-              onClick={handleDownload}
-              isDisabled={
-                !Personalizado && !Protocolo ? true : !!Protocolo ? true : false
-              }
-            >
-              Gerar Previa
-            </Button>
-            <Button
-              // isDisabled={
-              //   !Personalizado && !Protocolo ? true : !!Protocolo ? true : false
-              // }
-              onClick={handleDownloadPDF}
-            >
-              Gerar cobrança
-            </Button>
-          </Flex>
+
+          {Personalizado && (
+            <>
+              <Flex gap={2}>
+                <Button colorScheme="teal" onClick={handleDownload}>
+                  Gerar Previa
+                </Button>
+                <Button
+                  isDisabled={
+                    !Personalizado && !Protocolo
+                      ? true
+                      : !!Protocolo
+                      ? true
+                      : false
+                  }
+                  onClick={handleDownloadPDF}
+                >
+                  Gerar cobrança
+                </Button>
+              </Flex>
+            </>
+          )}
+          {Protocolo && (
+            <>
+              <Flex gap={2}>
+                <Button colorScheme="teal" onClick={handleDownload}>
+                  Gerar Previa
+                </Button>
+                <Button
+                  isDisabled={
+                    !Personalizado && !Protocolo
+                      ? true
+                      : !!Protocolo
+                      ? true
+                      : false
+                  }
+                  onClick={handleDownloadPDF}
+                >
+                  Gerar cobrança
+                </Button>
+              </Flex>
+            </>
+          )}
         </Flex>
       </Box>
     </>

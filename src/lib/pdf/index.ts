@@ -1,176 +1,204 @@
-"use client";
-import { PDFDocument, rgb } from "pdf-lib";
-
 export async function createForm(
-  construrora: any,
+  construtora: {
+    nome: string;
+    telefone: string;
+    email: string;
+    cnpj: string;
+    end: string;
+  },
   totalValor: string,
   qtCert: number,
   msg: string,
-  NProtocolo: any
+  NProtocolo: string
 ) {
-  const pdfDoc = await PDFDocument.create();
-
-  const page = pdfDoc.addPage([550, 750]);
-
-  const protocolo = NProtocolo;
   const DateAtual = new Date()
     .toISOString()
     .split("T")[0]
     .split("-")
     .reverse()
     .join("/");
-  const DataConstrutora = construrora;
-  const DataArInterface = {
-    nome: "AR INTERFACE CERTIFICADORA",
-    telefone: "(16) 33252-4134",
-    email: "atendimento@arinterfacecertificador.com.br",
-    site: "https://arinterfacecertificador.com.br",
-    cnpj: "14.000.930/0001-50",
-    end: "R. Américo Brasiliense, 284 - 3° Andar Sala 32 - Centro, Ribeirão Preto - SP, 14015-050"
-  };
 
   const Produto = "BirdI500";
 
-  const DescricaoTxt = msg;
-
-  const QTD = qtCert;
-
-  function quebrarStringPorEspacos(
-    string: string | any[],
-    limiteEspacos: number
-  ) {
+  function quebrarStringPorEspacos(string: string, limiteEspacos: number) {
     let resultado = "";
     let espacosContador = 0;
 
     for (let i = 0; i < string.length; i++) {
       resultado += string[i];
-
-      if (string[i] === " ") {
-        espacosContador++;
-      }
-
+      if (string[i] === " ") espacosContador++;
       if (espacosContador === limiteEspacos) {
-        resultado += "\n"; // Adiciona uma quebra de linha após 7 espaços
+        resultado += "<br>";
         espacosContador = 0;
       }
     }
-
     return resultado;
   }
 
-  page.drawText("AR Interface certificador", { x: 50, y: 700, size: 10 });
+  const html = `
+  <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <style>
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        width: 210mm;
+        min-height: 297mm;
+        letter-spacing: 0.05em;
+        font-family: 'Cambria', Cochin, Georgia, Times, Times New Roman, serif;
+        font-size: 12px;
+        background: white;
+        margin: 0 auto;
+      }
+      .container {
+        width: 190mm;
+        margin: 10mm auto;
+        padding: 0 10mm;
+      }
+      .title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+      .header {
+        font-size: 13px;
+      }
+      .line {
+        border-top: 1px solid black;
+        margin: 10px 0;
+      }
+      .section {
+        margin: 20px 0;
+      }
+      .info-container {
+        display: flex;
+        gap: 60px;
+        width: 100%;
+        padding-inline: 10px;
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+      .table th,
+      .table td {
+        border: 1px solid black;
+        padding: 5px;
+        text-align: left;
+        font-size: 13px;
+      }
+      .total-box {
+        width: 100%;
+        border: 1px solid black;
+        padding: 10px;
+        min-height: 100px;
+        margin: 20px 0;
+      }
+      .footer {
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 20px;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+      }
+      @media print {
+        body {
+          width: 210mm;
+          height: 297mm;
+        }
+        .page-break {
+          page-break-before: always;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <div>
+          <img src="" alt="">
+        </div>
+        <div>
+          <div class="title">AR Interface certificador</div>
+          <div class="header">Relatório de Emissão nº.: <span style="font-weight: 700;">${NProtocolo}</span></div>
+          <div class="header">Data: ${DateAtual}</div>
+        </div>
+      </div>
 
-  page.drawText(`Relatorio de Emissão # ${protocolo}`, {
-    x: 50,
-    y: 675,
-    size: 15
-  });
+      <div class="line"></div>
 
-  page.drawText(`Data: ${DateAtual}`, { x: 50, y: 665, size: 11 });
+      <div class="info-container" style="padding-inline: 15px;">
+        <div class="section" style="width: 300px">
+          <div style="display: flex; flex-direction: column;">
+            <span>AR INTERFACE CERTIFICADORA</span>
+            <span>Tel: (16) 33252-4134</span>
+            <span>email: atendimento@arinterfacecertificador.com.br</span>
+            <span>site: https://arinterfacecertificador.com.br</span>
+            <span>cnpj: 14.000.930/0001-50</span>
+            <span>end: R. Américo Brasiliense, 284</span>
+            <span>complemento: 3° Andar Sala 32 - Centro</span>
+            <span>Cidade: Ribeirão Preto - SP</span>
+            <span>Cep: 14015-050</span>
+          </div>
+        </div>
+  
+        <div class="section" style="width: 300px">
+        
+            <div style="display: flex; flex-direction: column;">
+              <span>${construtora.nome}</span>
+              <span>email: ${construtora.email}</span>
+              <span>cnpj: ${construtora.cnpj}</span>
+              <span>${construtora.end.split(",").join("<br />")}</span>
+            </div>
+            
 
-  page.drawLine({
-    start: { x: 50, y: 650 },
-    end: { x: 500, y: 650 },
-    thickness: 0.5
-  });
+        </div>
+      </div>
 
-  page.drawText(
-    `${DataArInterface.nome}\n` +
-      `${DataArInterface.telefone}\n` +
-      `${DataArInterface.email}\n` +
-      `${DataArInterface.site}\n` +
-      `${DataArInterface.cnpj}\n` +
-      `${DataArInterface.end.split(",").join("\n")}`,
-    { x: 50, y: 625, size: 7, lineHeight: 9, opacity: 0.75 }
-  );
+      <div class="line"></div>
 
-  page.drawText(
-    `${DataConstrutora.nome}\n` +
-      `${DataConstrutora.telefone}\n` +
-      `${DataConstrutora.email}\n` +
-      `${DataConstrutora.cnpj}\n` +
-      `${DataConstrutora.end.split(",").join("\n")}`,
-    { x: 350, y: 625, size: 7, lineHeight: 8, opacity: 0.75 }
-  );
+      <div style="padding-inline: 15px;">
+        <div style="height: 200px;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Descrição</th>
+                <th>Qtd</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>${Produto}</td>
+                <td>${quebrarStringPorEspacos(msg, 7)}</td>
+                <td>${qtCert}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
+        <div class="total-box">
+          <div>Obs:</div>
+        </div>
+        <div class="footer">
+          <div>Valor total: ${totalValor}</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+  `;
 
-  page.drawLine({
-    start: { x: 50, y: 540 },
-    end: { x: 500, y: 540 },
-    thickness: 0.5
-  });
-
-  page.drawText(`Produto`, { x: 55, y: 510, size: 12 });
-  page.drawRectangle({
-    x: 50,
-    y: 508,
-    width: 100,
-    height: 12,
-    borderColor: rgb(0, 0, 0),
-    borderWidth: 0.5
-  });
-
-  page.drawText(`Descrição`, { x: 160, y: 510, size: 12 });
-  page.drawRectangle({
-    x: 150,
-    y: 508,
-    width: 270,
-    height: 12,
-    borderColor: rgb(0, 0, 0),
-    borderWidth: 0.5
-  });
-
-  page.drawText(`Qtd`, { x: 430, y: 510, size: 12 });
-  page.drawRectangle({
-    x: 420,
-    y: 508,
-    width: 50,
-    height: 12,
-    borderColor: rgb(0, 0, 0),
-    borderWidth: 0.5
-  });
-
-  // body table
-  page.drawText(`${Produto}`, { x: 55, y: 495, size: 9, opacity: 0.75 });
-  page.drawRectangle({
-    x: 50,
-    y: 358,
-    width: 100,
-    height: 150,
-    borderColor: rgb(0, 0, 0),
-    borderWidth: 0.5
-  });
-
-  page.drawText(`${quebrarStringPorEspacos(DescricaoTxt, 7)}`, {
-    x: 160,
-    y: 495,
-    size: 9,
-    opacity: 0.75,
-    lineHeight: 11
-  });
-  page.drawRectangle({
-    x: 150,
-    y: 358,
-    width: 270,
-    height: 150,
-    borderColor: rgb(0, 0, 0),
-    borderWidth: 0.5
-  });
-
-  page.drawText(`${QTD}`, { x: 428, y: 495, size: 9, opacity: 0.75 });
-  page.drawRectangle({
-    x: 420,
-    y: 358,
-    width: 50,
-    height: 150,
-    borderColor: rgb(0, 0, 0),
-    borderWidth: 0.5
-  });
-
-  page.drawText(`Valor total`, { x: 365, y: 300, size: 9, opacity: 0.75 });
-  page.drawText(`${totalValor}`, { x: 430, y: 300, size: 12 });
-
-  // Salva o documento como bytes
-  const pdfBytes = await pdfDoc.save();
-
-  return pdfBytes;
+  return html;
 }
