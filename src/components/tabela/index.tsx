@@ -29,7 +29,8 @@ import { IoIosArrowForward } from "react-icons/io";
 import { FaFileSignature } from "react-icons/fa6";
 import { LuAlertTriangle } from "react-icons/lu";
 import { BotoesFunction } from "../botoes/bt_group_function";
-import BtnNow from "../btn_now";
+import { keyframes } from "@emotion/react";
+import GetAllConstrutoras from "@/actions/construtora/service/getAllContrutoras";
 
 interface TabelaProps {
   ClientData: solictacao.SolicitacaoGetType[];
@@ -38,6 +39,14 @@ interface TabelaProps {
   SetVewPage: (page: number) => any;
 }
 
+const rgbBlink = keyframes`
+  0% { color: green; }
+  25% { color: white; }
+  50% { color: green; }
+  75% { color: white; }
+  100% { color: green; }
+`;
+
 export function Tabela({
   ClientData,
   total,
@@ -45,12 +54,19 @@ export function Tabela({
   SetVewPage,
 }: TabelaProps) {
   const [SelectPage, setSelectPage] = useState(1);
+  const [Construtoras, setConstrutoras] = useState<any>([]);
   const { data: session } = useSession();
   const user = session?.user;
-
+  
   useEffect(() => {
+    getConstrutoras();
     setSelectPage(AtualPage);
   }, [AtualPage]);
+  
+  const getConstrutoras = async () =>{
+    const construtoras = await GetAllConstrutoras();
+    setConstrutoras(construtoras.data);
+  }
 
   const downTimeInDays = (item: solictacao.SolicitacaoGetType) => {
     if (!item || !item.createdAt) return null;
@@ -82,6 +98,8 @@ export function Tabela({
   };
 
   const tabela = ClientData.map((item) => {
+    const fantasia = Construtoras.find((construtora: { id: number; }) => construtora.id === item.construtora)?.fantasia;
+
     const ano = item.dt_agendamento?.split("-")[0];
     const mes = item.dt_agendamento?.split("-")[1];
     const diaBruto = item.dt_agendamento?.split("-")[2];
@@ -91,7 +109,7 @@ export function Tabela({
 
     const horaAgenda = item.hr_agendamento?.split("T")[1].split(".")[0];
     const andamento = item.Andamento;
-    const statusPg = item.fcweb?.estatos_pgto;
+    // const statusPg = item.fcweb?.estatos_pgto;
     const colors = !item.ativo
       ? "red.400"
       : item.distrato && user?.hierarquia === "ADM"
@@ -100,7 +118,9 @@ export function Tabela({
       ? "gray.600"
       : item.distrato && user?.hierarquia === "GRT"
       ? "gray.600"
-      : item.alertanow && !["EMITIDO", "REVOGADO", "APROVADO"].includes(item.Andamento) ? "green.200"
+      : item.alertanow &&
+        !["EMITIDO", "REVOGADO", "APROVADO"].includes(item.Andamento)
+      ? "green.200"
       : "transparent";
 
     const fontColor =
@@ -155,14 +175,26 @@ export function Tabela({
             ) : (
               <Box ms={10}></Box>
             )}
-            <BtnNow
-              id={item.id}
-              andamento={item.Andamento}
-              ativo={item.ativo}
-              distrato={item.distrato}
-              construtora={item.construtora}
-              alertaNow={item.alertanow}
-            />
+            {item.alertanow &&
+            !["EMITIDO", "REVOGADO", "APROVADO"].includes(andamento) &&
+            item.ativo ? (
+              <Box
+                alignSelf={"center"}
+                w={'45px'}
+                h={"fit-content"}
+                as="span"
+                fontWeight="bold"
+                sx={{
+                  transform: "rotate(-90deg)",
+                  textOrientation: "upright",
+                  animation: `${rgbBlink} 2s infinite`,
+                }}
+              >
+                N O W
+              </Box>
+            ) : (
+              <Box ms={10}></Box>
+            )}
             <BotoesFunction
               id={item.id}
               distrato={item.distrato ? true : false}
@@ -210,7 +242,8 @@ export function Tabela({
               />
             )}
         </Td>
-        {user?.hierarquia === "ADM" && (
+        <Td>{fantasia}</Td>
+        {/* {user?.hierarquia === "ADM" && (
           <>
             <Td>{statusPg}</Td>
             <Td>{item.fcweb?.valorcd}</Td>
@@ -221,7 +254,7 @@ export function Tabela({
             <Td>{statusPg}</Td>
             <Td>{item.fcweb?.valorcd}</Td>
           </>
-        )}
+        )} */}
       </Tr>
     );
   });
@@ -272,12 +305,13 @@ export function Tabela({
                     <Th>VALOR</Th>
                   </>
                 )}
-                {user?.hierarquia === "ADM" && (
+                <Th>EMPRESA</Th>
+                {/* {user?.hierarquia === "ADM" && (
                   <>
                     <Th>STATUS PG</Th>
                     <Th>VALOR</Th>
                   </>
-                )}
+                )} */}
               </Tr>
             </Thead>
             <Tbody>{tabela}</Tbody>

@@ -531,7 +531,7 @@ export default function SolicitacaoForm({
           </Box>
         )}
 
-        {user?.hierarquia === "ADM" && (
+        {/* {user?.hierarquia === "ADM" && (
           <Box>
             <FormLabel>
               Voucher
@@ -548,7 +548,7 @@ export default function SolicitacaoForm({
               value={Voucher}
             />
           </Box>
-        )}
+        )} */}
 
         {user?.hierarquia === "ADM" && relacionamento !== "sim" && (
           <Box>
