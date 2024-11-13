@@ -23,12 +23,16 @@ export function CardFormComponent(props: CardFormProps) {
 
   const [state, formAction] = useFormState(props.action, { error: null });
 
+  console.log("🚀 ~ useEffect ~ state:", state);
 
   useEffect(() => {
     if (state?.error) {
       setIsError(true);
-    }
-    if (state?.id) {
+    } else if (state?.error == null) {
+      
+    } else if (state?.id) {
+      setIsSuccess(true);
+    }else {
       setIsSuccess(true);
     }
   }, [state]);
@@ -43,11 +47,13 @@ export function CardFormComponent(props: CardFormProps) {
         isClosable: true,
         position: "top-right",
       });
-      route.refresh();
+      setTimeout(() => {
+        route.back();
+      }, 2000);
       setIsSuccess(false); // Reset state after showing toast
     }
     if (isError) {
-      if(state?.message){
+      if (state?.message) {
         toast({
           title: "Erro",
           description: state?.message,

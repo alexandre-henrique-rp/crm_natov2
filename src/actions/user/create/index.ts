@@ -1,7 +1,6 @@
 "use server";
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from 'bcrypt';
-import { redirect } from "next/navigation";
 import { CreateUsuariosDto } from "../dto/createUsuarios.dto";
 
 
@@ -52,33 +51,35 @@ export default async function UserCreate(_: any, data: FormData) {
   if (verificaCpf) {
     return { error: true, message: "CPF já cadastrado", data: null };
   }else {
-
-    const construtoraArray = parseArrayString(construtora);
-    const empreendimentoArray = parseArrayString(empreendimento);
-    const FinanceiraArray = parseArrayString(Financeira);
-
+    try{
+      const construtoraArray = parseArrayString(construtora);
+      const empreendimentoArray = parseArrayString(empreendimento);
+      const FinanceiraArray = parseArrayString(Financeira);
+      
       const user = await prisma.nato_user.create({
         data: {
           cpf: cpf,
-          nome: nome.toUpperCase(),
-          username: username.toUpperCase(),
-          telefone: telefoneFormat,
-          email: email,
-          construtora: construtoraArray,
-          empreendimento: empreendimentoArray,
-          Financeira: FinanceiraArray,
-          hierarquia: hierarquia,
-          password: password,
-          status: false,
-          cargo: Cargo,
-          password_key: Password_key,
-          reset_password: true,
-        }
-      });
-      
+            nome: nome.toUpperCase(),
+            username: username.toUpperCase(),
+            telefone: telefoneFormat,
+            email: email,
+            construtora: construtoraArray,
+            empreendimento: empreendimentoArray,
+            Financeira: FinanceiraArray,
+            hierarquia: hierarquia,
+            password: password,
+            status: false,
+            cargo: Cargo,
+            password_key: Password_key,
+            reset_password: true,
+          }
+        });
+        
+        return { error: false, message: "Usuario criado com sucesso", data: user };
+    }catch(err){
+      return { error: true, message: "Erro ao criar usuario", data: err };
+    }finally{
       await prisma.$disconnect();
-      return { error: false, message: "Usuario criado com sucesso", data: user };
-      
+    }
 }
-redirect('/usuarios');
 }

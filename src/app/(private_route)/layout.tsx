@@ -1,12 +1,13 @@
 import BotaoJuncao from "@/components/botoes/bt_juncao";
 import FooterComponent from "@/components/footer";
-import { auth } from "@/lib/auth_confg";
+// import { auth } from "@/lib/auth_confg";
 import { Box, Flex } from "@chakra-ui/react";
-import { getServerSession } from "next-auth";
+// import { getServerSession } from "next-auth";
 
 interface PrivateLayoutProps {
   children: React.ReactNode;
 }
+
 
 export default async function PrivateLayout({ children }: PrivateLayoutProps) {
   const session = await getServerSession(auth);
