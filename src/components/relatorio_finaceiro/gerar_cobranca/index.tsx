@@ -18,6 +18,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
+import SelectEmpreedimento from "@/components/selectEmpreedimento";
 
 export default function GerarCobranca() {
   const [Inicio, setInicio] = useState("");
@@ -267,7 +268,7 @@ export default function GerarCobranca() {
       </style>
       <Box
         w={{ base: "100%", md: "65%" }}
-        h={"70vh"}
+        h={"full"}
         p={5}
         rounded="lg"
         boxShadow="2xl"
@@ -360,10 +361,11 @@ export default function GerarCobranca() {
               {session?.user.hierarquia === "ADM" && (
                 <Box>
                   <FormLabel>Empreedimento</FormLabel>
-                  <SelectConstrutora
+                  <SelectEmpreedimento
+                    constru={Construtora}
                     size={"sm"}
                     borderRadius={"md"}
-                    onChange={(e) => setConstrutora(Number(e.target.value))}
+                    onChange={(e) => setEmpreedimento(Number(e.target.value))}
                   />
                 </Box>
               )}
@@ -393,10 +395,10 @@ export default function GerarCobranca() {
           </>
         ) : (
           <>
-            <Box w={"100%"} h={"10%"} />
+            <Box w={"100%"} h={"6.5%"} />
           </>
         )}
-        <Box w={"100%"} h={"70%"} bg={"gray.100"} overflowX={"auto"} my={2}>
+        <Box w={"100%"} h={"80%"} bg={"gray.100"} overflowX={"auto"} my={2}>
           <table style={{ width: "100%" }}>
             <tr style={{ position: "sticky", top: 0, background: "#f2f2f2" }}>
               <th>x</th>
@@ -443,7 +445,7 @@ export default function GerarCobranca() {
           </table>
         </Box>
         <Flex w={"100%"} justifyContent={"space-between"}>
-          {Personalizado ? (
+          {/* {Personalizado ? (
             <>
               <Flex>
                 <FormLabel>Nº nota fiscal</FormLabel>
@@ -459,7 +461,7 @@ export default function GerarCobranca() {
             <>
               <Box />
             </>
-          )}
+          )} */}
 
           {Personalizado && (
             <>

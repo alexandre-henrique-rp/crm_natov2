@@ -1,8 +1,13 @@
 "use client";
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { GetPgEmAberto } from "@/actions/relatorio_financeiro/service/GetPgAberto";
+import { CardCobranca } from "@/components/card_cobranca";
 
 export default function ListCobranca() {
   const { data: session } = useSession();
@@ -15,12 +20,14 @@ export default function ListCobranca() {
     })();
   }, []);
 
+
   const lista =
     Data.data &&
     Data.data.map((item: any) => {
       return (
         <>
           <Flex
+            key={item.id}
             w={"100%"}
             flexWrap={"wrap"}
             py={3}
@@ -28,18 +35,9 @@ export default function ListCobranca() {
             px={2}
             border={"1px solid #000"}
             borderRadius={"8px"}
+            fontSize={"0.9rem"}
           >
-            {/* <Text> id: {item.id}</Text> */}
-            <Text>Protocolo: {item.protocolo}</Text>
-            <Text>
-              Expedido em:{" "}
-              {item.createdAt.split("T")[0].split("-").reverse().join("/")}
-            </Text>
-            {item.construtora?.fantasia && (
-              <>
-                <Text> Construtora: {item.construtora?.fantasia}</Text>
-              </>
-            )}
+            <CardCobranca data={item} />
           </Flex>
         </>
       );
@@ -62,7 +60,7 @@ export default function ListCobranca() {
 
         `}
           </style>
-          <Box w={"full"} minH={'fit-content'} minW={'fit-content'} p={5} rounded="lg" boxShadow={'2xl'}           >
+          <Box w={"full"} h={"full"} p={5} rounded="lg" boxShadow={"2xl"}>
             <Box w={"100%"} textAlign={"center"}>
               <Heading size="md">Lista de Cobranças em Aberto</Heading>
             </Box>
@@ -70,7 +68,8 @@ export default function ListCobranca() {
               w={"100%"}
               h={"100%"}
               overflowY={"auto"}
-              p={3}
+              py={3}
+              px={1}
               mt={2}
               gap={2}
               flexDir={"column"}

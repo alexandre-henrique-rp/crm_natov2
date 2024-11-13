@@ -8,20 +8,24 @@ interface PrivateLayoutProps {
   children: React.ReactNode;
 }
 
-export default  async function PrivateLayout({ children }: PrivateLayoutProps) {
- const session = await getServerSession(auth);
-
- if (session) {
-   const request = await fetch("http://localhost:5050/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token: session.token }),
-    });
-    const data = await request.json();
-    console.log("🚀 ~ data:", data);
-   };
+export default async function PrivateLayout({ children }: PrivateLayoutProps) {
+  const session = await getServerSession(auth);
+  if (session) {
+    try {
+      const request = await fetch(`${process.env.MONITOR_URL}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ token: session.token })
+      });
+      const data = await request.json();
+      console.log("🚀 ~ PrivateLayout ~ data:", data);
+      console.log("🚀 ~ data:", request);
+    } catch (error) {
+      console.log("🚀 ~ error:", error);
+    }
+  }
   return (
     <Flex
       w={"100vw"}
