@@ -2,11 +2,11 @@
 import { Button, Flex, Input, Spinner, Text, useToast } from "@chakra-ui/react";
 import { BotaoSaveNota } from "../botoes/btn_save_nota";
 import { useState } from "react";
-import { GetProtocolo } from "@/actions/relatorio_financeiro/service/getProtocolo";
 import { AtualizarFcw } from "@/actions/relatorio_financeiro/service/AtualizarFcw";
 import { AtualizarData } from "@/actions/relatorio_financeiro/service/AtualizarData";
 import { AtualizarStatus } from "@/actions/relatorio_financeiro/service/AtualizarStatus";
 import { useRouter } from "next/navigation";
+import { GetPgId } from "@/actions/relatorio_financeiro/service/getPgId";
 
 interface CardCobrancaProps {
   data: any;
@@ -37,7 +37,7 @@ export const CardCobranca = ({ data }: CardCobrancaProps) => {
 
   async function ConfirmePg(id: number) {
     setLoading(true);
-    const request = await GetProtocolo(id);
+    const request = await GetPgId(id); 
     const totalArray = request.data;
     await AtualizarFcw(totalArray?.solicitacao);
     await AtualizarData(totalArray?.solicitacao);

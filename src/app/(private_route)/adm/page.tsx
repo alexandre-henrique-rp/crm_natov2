@@ -80,12 +80,9 @@ export default function PainelAdministrativo() {
         </Flex>
         <Divider my={5} />
         <Flex h={"80vh"} flexWrap={"wrap"} gap={2}>
-          {/* componente relatório financeiro  */}
           <GerarCobranca />
           <Flex w={{ md: "34%" }} h={"100%"} gap={3} flexDir={"column"}>
             <ListCobranca />
-            {/* <Divider my={5} /> */}
-            {/* <ConfirPg /> */}
           </Flex>
         </Flex>
       </Flex>
