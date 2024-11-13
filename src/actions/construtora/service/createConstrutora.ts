@@ -1,7 +1,6 @@
 'use server'
 import { PrismaClient } from "@prisma/client";
 import { CreateConstrutoraDto } from "../dto/createconstrutora.dto";
-import { redirect } from "next/navigation";
 
 
 
@@ -23,26 +22,30 @@ export default async function CreateConstrutora(_: any, data: FormData) {
         return { error: true, message: erroValidacao, data: null }
     }
 
-    if (await prisma.nato_empresas.findFirst({ where: { cnpj } })) {
+
+    if (await prisma.nato_empresas.findFirst({ where: { cnpj , atividade: "CONST"} })) {
         redirect("/construtoras");
         return { error: true, message: "CNPJ já cadastrado", data: null };
     }
+try{
+    await prisma.nato_empresas.create({
+         data:{
+             cnpj: cnpj,
+             razaosocial: razaoSocial,
+             tel: tel,
+             email: email,
+             fantasia: fantasia,
+             financeiro: financeiro,
+             atividade: atividade,
+             status: true
+         }
+     });
 
-    
-
-   await prisma.nato_empresas.create({
-        data:{
-            cnpj: cnpj,
-            razaosocial: razaoSocial,
-            tel: tel,
-            email: email,
-            fantasia: fantasia,
-            financeiro: financeiro,
-            atividade: atividade,
-            status: true
-        }
-    });
-
-     await prisma.$disconnect();
      return { error: false, message: "Construtora cadastrada com sucesso", data: null };    
+}catch(err){
+    return { error: true, message: "Erro ao cadastrar construtora", data: err };
+}finally{
+    await prisma.$disconnect();
+}
+
 }

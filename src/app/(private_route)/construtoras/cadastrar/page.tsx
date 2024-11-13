@@ -6,6 +6,7 @@ import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import ContrutoraProvider from "@/provider/ConstrutoraProvider";
 import { Box, Button, Divider, Flex, Heading, Spacer } from "@chakra-ui/react";
 import { Metadata } from "next";
+// import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "CADASTRO DE CONSTRUTORA"

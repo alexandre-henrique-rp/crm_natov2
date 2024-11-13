@@ -70,7 +70,8 @@ export async function GetIncioFimSituacaoConstrutora(
         },
         situacao_pg: {
           equals: dto.situacao
-        }
+        },
+        ...(dto.empreedimento > 0 && {empreedimento: dto.empreedimento} )
       },
       select: {
         id: true,

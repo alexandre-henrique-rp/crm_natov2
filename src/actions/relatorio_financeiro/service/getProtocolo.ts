@@ -4,7 +4,7 @@ import { ProtocoloDto } from "../dto/protocolo.dto";
 
 const prisma = new PrismaClient();
 
-export async function GetProtocolo(protocolo: string) {
+export async function GetProtocolo(protocolo: number) {
   const dto = new ProtocoloDto(protocolo);
   // Validação usando o DTO
   const erroValidacao = dto.validar();
@@ -17,8 +17,8 @@ export async function GetProtocolo(protocolo: string) {
   }
   try {
     // Busca o protocolo no banco de dados
-    const request = await prisma.nato_relatorio_financeiro.findFirst({
-      where: { protocolo: dto.protocolo }
+    const request = await prisma.nato_relatorio_financeiro.findUnique({
+      where: { id: dto.protocolo }
     });
     if (!request) {
       return {

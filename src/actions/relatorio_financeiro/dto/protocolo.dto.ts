@@ -1,13 +1,13 @@
 export class ProtocoloDto {
-  protocolo: string;
+  protocolo: number;
 
-  constructor(protocolo: string) {
+  constructor(protocolo: number) {
     this.protocolo = protocolo;
   }
 
   // Validação simples diretamente no DTO
   validar(): string | null {
-    if (this.protocolo === undefined || typeof this.protocolo !== 'string') {
+    if (this.protocolo <= 0) {
       return "O protocolo deve ser informado.";
     }
     return null;
