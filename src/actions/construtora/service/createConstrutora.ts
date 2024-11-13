@@ -22,7 +22,9 @@ export default async function CreateConstrutora(_: any, data: FormData) {
         return { error: true, message: erroValidacao, data: null }
     }
 
-    if (await prisma.nato_empresas.findFirst({ where: { cnpj } })) {
+
+    if (await prisma.nato_empresas.findFirst({ where: { cnpj , atividade: "CONST"} })) {
+        redirect("/construtoras");
         return { error: true, message: "CNPJ já cadastrado", data: null };
     }
 try{
@@ -45,7 +47,5 @@ try{
 }finally{
     await prisma.$disconnect();
 }
-    
-
 
 }

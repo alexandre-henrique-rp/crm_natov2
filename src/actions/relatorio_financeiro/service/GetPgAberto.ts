@@ -19,15 +19,6 @@ export async function GetPgEmAberto() {
           }
         })
       },
-      select: {
-        id: true,
-        protocolo: true,
-        createdAt: true,
-        situacao_pg: true,
-        nota_fiscal: true,
-        construtora: true,
-        solicitacao: true
-      }
     });
 
     return {

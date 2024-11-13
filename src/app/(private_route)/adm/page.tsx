@@ -1,5 +1,4 @@
 import CreateAlertGeral from "@/components/botoes/btn_creat_Alert_geral";
-import ConfirPg from "@/components/relatorio_finaceiro/confir_pg";
 import GerarCobranca from "@/components/relatorio_finaceiro/gerar_cobranca";
 import ListCobranca from "@/components/relatorio_finaceiro/list_cobranca";
 import { Divider, Flex, Heading, Link } from "@chakra-ui/react";
@@ -85,8 +84,8 @@ export default function PainelAdministrativo() {
           <GerarCobranca />
           <Flex w={{ md: "34%" }} h={"100%"} gap={3} flexDir={"column"}>
             <ListCobranca />
-            <Divider my={5} />
-            <ConfirPg />
+            {/* <Divider my={5} /> */}
+            {/* <ConfirPg /> */}
           </Flex>
         </Flex>
       </Flex>
