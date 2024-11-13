@@ -1,11 +1,12 @@
 "use server";
 import { PrismaClient } from "@prisma/client";
-import { ProtocoloDto } from "../dto/protocolo.dto";
+import { GetPgIdDto } from "../dto/getpgid.dto";
+
 
 const prisma = new PrismaClient();
 
-export async function GetProtocolo(protocolo: string) {
-  const dto = new ProtocoloDto(protocolo);
+export async function GetPgId(id: number) {
+  const dto = new GetPgIdDto(id);
   // Validação usando o DTO
   const erroValidacao = dto.validar();
   if (erroValidacao) {
@@ -18,12 +19,12 @@ export async function GetProtocolo(protocolo: string) {
   try {
     // Busca o protocolo no banco de dados
     const request = await prisma.nato_relatorio_financeiro.findUnique({
-      where: { protocolo: dto.protocolo }
+      where: { id: dto.id }
     });
     if (!request) {
       return {
         error: true,
-        message: "Protocolo não encontrado.",
+        message: "Id não encontrado.",
         data: null
       };
     }
