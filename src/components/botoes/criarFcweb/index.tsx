@@ -33,6 +33,7 @@ export function CriarFcweb({ Id, user }: CriarFcwebProps) {
     onClose();
     setLoading(true);
     try {
+      
       const response = await fetch("/api/fcweb", {
         method: "POST",
         headers: {

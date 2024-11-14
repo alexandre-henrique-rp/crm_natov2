@@ -105,7 +105,7 @@ export const CardCobranca = ({ data }: CardCobrancaProps) => {
             onClick={() => ConfirmePg(data.id)}
             disabled={!data.statusNota}
           >
-            Confinar Pagamento
+            Confirmar pagamento
           </Button>
         </>
       )}
