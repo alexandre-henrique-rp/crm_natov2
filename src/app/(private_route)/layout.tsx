@@ -22,7 +22,7 @@ export default async function PrivateLayout({ children }: PrivateLayoutProps) {
       });
       const data = await request.json();
       console.log("🚀 ~ PrivateLayout ~ data:", data);
-      console.log("🚀 ~ data:", request);
+      // console.log("🚀 ~ data:", request);
     } catch (error) {
       console.log("🚀 ~ error:", error);
     }
