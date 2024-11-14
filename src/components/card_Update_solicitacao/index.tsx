@@ -162,7 +162,7 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                 <Box>
                   <Alert justifyContent={'space-between'} status="warning" variant="left-accent">
                     <AlertIcon />
-                    Apenas para clientes Presentes na Construtora.
+                    Apenas para clientes presentes no Plantão de Venda.
                   <BtnAlertNow
                     id={setDadosCard.id}
                     andamento={setDadosCard.Andamento}
