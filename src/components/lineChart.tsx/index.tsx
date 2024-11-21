@@ -24,6 +24,8 @@ ChartJS.register(
 );
 
 interface LineChartProps {
+  labelTitle: string,
+  labelTitle2: string,
   labels: string[];
   dataValues: number[];
   dataQuantidades: number;
@@ -42,6 +44,8 @@ function secondsToTime(seconds: number): string {
 }
 
 export default function LineChart({
+  labelTitle,
+  labelTitle2,
   labels,
   dataValues,
   dataQuantidades,
@@ -119,7 +123,7 @@ export default function LineChart({
       >
         <Flex flexDirection={"row"} gap={1}>
           <Text fontSize="xl" color={"#00713C"}>
-            Quantidade de Certificados:
+            {labelTitle}
           </Text>
           <Text fontSize="xl" color={"#1D1D1B"}>
             {dataQuantidades}
@@ -127,7 +131,7 @@ export default function LineChart({
         </Flex>
         <Flex flexDirection={"row"} gap={1}>
           <Text fontSize="xl" color={"#00713C"}>
-            Media de Horas/Certificado:
+            {labelTitle2}
           </Text>
           <Text fontSize="xl" color={"#1D1D1B"}>
             {dataMedia}
