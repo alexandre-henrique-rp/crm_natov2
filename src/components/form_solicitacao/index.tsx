@@ -132,51 +132,51 @@ export default function SolicitacaoForm({
       };
       console.log("🚀 ~ handlesubmit ~ data:", data)
 
-      // try {
-      //   setLoad(true);
-      //   const response = await fetch(
-      //     `/api/solicitacao?sms=${Sms}&vendedor=${VendedorName}`,
-      //     {
-      //       method: "POST",
-      //       headers: {
-      //         "Content-Type": "application/json"
-      //       },
-      //       body: JSON.stringify(data)
-      //     }
-      //   );
-      //   const retorno = await response.json();
-      //   if (response.ok) {
-      //     toast({
-      //       title: "Sucesso",
-      //       description: "Solicitacao enviada com sucesso",
-      //       status: "success",
-      //       duration: 3000,
-      //       isClosable: true
-      //     });
-      //     setLoad(false);
-      //     router.push("/home");
-      //   } else {
-      //     console.log("🚀 ~ handlesubmit ~ retorno:", retorno)
-      //     toast({
-      //       title: "Erro",
-      //       description: retorno.message[1],
-      //       status: "error",
-      //       duration: 3000,
-      //       isClosable: true
-      //     });
-      //     setLoad(false);
-      //   }
-      // } catch (error) {
-      //   console.log("🚀 ~ handlesubmit ~ error:", error)
-      //   toast({
-      //     title: "Erro",
-      //     description: "Erro ao enviar solicitacao",
-      //     status: "error",
-      //     duration: 3000,
-      //     isClosable: true
-      //   });
-      //   setLoad(false);
-      // }
+      try {
+        setLoad(true);
+        const response = await fetch(
+          `/api/solicitacao?sms=${Sms}&vendedor=${VendedorName}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+          }
+        );
+        const retorno = await response.json();
+        if (response.ok) {
+          toast({
+            title: "Sucesso",
+            description: "Solicitacao enviada com sucesso",
+            status: "success",
+            duration: 3000,
+            isClosable: true
+          });
+          setLoad(false);
+          router.push("/home");
+        } else {
+          console.log("🚀 ~ handlesubmit ~ retorno:", retorno)
+          toast({
+            title: "Erro",
+            description: retorno.message[1],
+            status: "error",
+            duration: 3000,
+            isClosable: true
+          });
+          setLoad(false);
+        }
+      } catch (error) {
+        console.log("🚀 ~ handlesubmit ~ error:", error)
+        toast({
+          title: "Erro",
+          description: "Erro ao enviar solicitacao",
+          status: "error",
+          duration: 3000,
+          isClosable: true
+        });
+        setLoad(false);
+      }
     }
   };
 

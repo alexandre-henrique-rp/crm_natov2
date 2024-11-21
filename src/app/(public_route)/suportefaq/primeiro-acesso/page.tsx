@@ -116,7 +116,7 @@ export default function SuporteFaqPrimeiroAcesso() {
           Criação de Senha
           </Text>
           <Text mt={2}>
-          Na tela de criação de senha do APP, defina uma senha para acessar o aplicativo.  No campo, insera uma senha que atenda aos requisitos de segurança.
+          Na tela de criação de senha do APP, defina uma senha para acessar o aplicativo.  No campo, insira uma senha que atenda aos requisitos de segurança.
           </Text>
           <Flex 
           mt={4} 
