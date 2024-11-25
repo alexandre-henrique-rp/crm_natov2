@@ -1,8 +1,10 @@
 "use client";
 import {
   Box,
+  Button,
   Flex,
   IconButton,
+  Link,
   Menu,
   MenuItem,
   MenuList,
@@ -15,6 +17,7 @@ import {  IoMenuOutline } from "react-icons/io5";
 import BotaoPainelAdm from "../bt_paineladm";
 import BotaoUser from "../bt_user";
 import BotaoHome from "../bt_home";
+import { FaQuestionCircle } from "react-icons/fa";
 
 export default function BotaoJuncao() {
   const { data: session } = useSession();
@@ -32,11 +35,14 @@ export default function BotaoJuncao() {
       bg={"#00713D"}
       px={"11rem"}
     >
+      
       <Box
         display={"flex"}
         gap={"20px"}
         w={"100%"}
       >
+        
+
         {isLargerThanTablet ? (
           <>
             <BotaoHome />
@@ -53,6 +59,15 @@ export default function BotaoJuncao() {
                 {/* <BotaoPainelFinanceiro /> */}
               </>
             )}
+            
+          <Button variant="link" gap={2} color="white" size="sm">
+            <FaQuestionCircle />
+            <Link href="/suportefaq" isExternal>
+             FAQ / Suporte
+            </Link>
+          </Button>
+
+
           </>
         ) : (
           <Menu>

@@ -5,8 +5,10 @@ import BarChart from "@/components/barChart";
 import DashFiltrado from "@/components/dashFiltrado";
 import LineChart from "@/components/lineChart.tsx";
 import PieChart from "@/components/pieChart.tsx";
+import { auth } from "@/lib/auth_confg";
 import { Flex, VStack, Text, Divider } from "@chakra-ui/react";
 import { Metadata } from "next";
+import { getServerSession } from "next-auth";
 
 // Definir metadata
 export const metadata: Metadata = {
@@ -14,6 +16,11 @@ export const metadata: Metadata = {
 };
 
 export default async function DashBoard() {
+  const session = await getServerSession(auth);
+
+  const user = session?.user
+
+
   // Função para buscar dados da API
   const fetchData = async () => {
     const response = await fetch(
@@ -175,7 +182,7 @@ export default async function DashBoard() {
         >
           Dashboard Filtrado
         </Text>
-        <DashFiltrado construtoras={construtoras} financeiras={financeiras} empreendimentos={empreendimentos} />
+        <DashFiltrado construtoras={user?.hierarquia == 'ADM' ? construtoras : user?.construtora} financeiras={user?.hierarquia == 'ADM' ? financeiras : null} empreendimentos={user?.hierarquia == 'ADM' ? empreendimentos : null} />
       </VStack>
     </Flex>
   );
