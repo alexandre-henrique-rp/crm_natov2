@@ -1,8 +1,14 @@
+import GetConstrutoras from "@/actions/dashboard/services/getConstrutoras";
+import GetEmpreendimentos from "@/actions/dashboard/services/getEmpreendimentos";
+import GetFinanceiras from "@/actions/dashboard/services/getFinanceiras";
 import BarChart from "@/components/barChart";
+import DashFiltrado from "@/components/dashFiltrado";
 import LineChart from "@/components/lineChart.tsx";
 import PieChart from "@/components/pieChart.tsx";
-import { Flex, VStack, Text, Divider, Box, Select } from "@chakra-ui/react";
+import { auth } from "@/lib/auth_confg";
+import { Flex, VStack, Text, Divider } from "@chakra-ui/react";
 import { Metadata } from "next";
+import { getServerSession } from "next-auth";
 
 // Definir metadata
 export const metadata: Metadata = {
@@ -10,6 +16,11 @@ export const metadata: Metadata = {
 };
 
 export default async function DashBoard() {
+  const session = await getServerSession(auth);
+
+  const user = session?.user
+
+
   // Função para buscar dados da API
   const fetchData = async () => {
     const response = await fetch(
@@ -29,6 +40,13 @@ export default async function DashBoard() {
   const data = req.infosGlobal;
   const tags = req.tags;
   // console.log("🚀 ~ DashBoard ~ tags:", tags)
+
+  //Dados para o filtro
+  const construtoras = await GetConstrutoras()
+  const empreendimentos = await GetEmpreendimentos()
+  const financeiras = await GetFinanceiras()
+  // console.log("🚀 ~ DashBoard ~ empreendimentos:", empreendimentos)
+
 
   // Dados tags
   const lista_tags = tags.lista_tags;
@@ -164,13 +182,7 @@ export default async function DashBoard() {
         >
           Dashboard Filtrado
         </Text>
-        <Box shadow={"md"} w={"100%"} bg={"white"}>
-          <Select placeholder="Select option">
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-          </Select>
-        </Box>
+        <DashFiltrado construtoras={user?.hierarquia == 'ADM' ? construtoras : user?.construtora} financeiras={user?.hierarquia == 'ADM' ? financeiras : null} empreendimentos={user?.hierarquia == 'ADM' ? empreendimentos : user?.empreendimento} />
       </VStack>
     </Flex>
   );

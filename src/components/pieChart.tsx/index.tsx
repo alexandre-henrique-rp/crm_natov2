@@ -60,7 +60,7 @@ export default function PieChart({
   return (
     <Box
       w="100%"
-      maxW="278px"
+      maxW="280px"
       h="auto"
       p={5}
       bg={"white"}

@@ -16,6 +16,7 @@ import {
 } from "react-icons/fc";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { BsPersonVideo } from "react-icons/bs";
 
 export default function Sidebar() {
   const [expanded, setExpanded] = useState<number>(0);
@@ -247,6 +248,18 @@ export default function Sidebar() {
             <FcHighPriority size={20} />
             <Text ml={2} fontWeight="medium">
               Perguntas Frequentes 
+            </Text>
+          </Flex>
+          <Flex
+            align="center"
+            _hover={{ bg: "green.100", cursor: "pointer" }}
+            bg={expanded === 5 ? "green.100" : "transparent"}
+            p={4}
+            onClick={() => {toggleExpand(5); handleGuiaUsuario("/suportefaq/videos-tutoriais")}}
+          >
+            <BsPersonVideo size={20} color="teal"/>
+            <Text ml={2} fontWeight="medium">
+              Videos Tutoriais
             </Text>
           </Flex>
         </Box>
