@@ -18,6 +18,7 @@ import BotaoPainelAdm from "../bt_paineladm";
 import BotaoUser from "../bt_user";
 import BotaoHome from "../bt_home";
 import { FaQuestionCircle } from "react-icons/fa";
+import BotaoDashboard from "../bt_dashboard";
 
 export default function BotaoJuncao() {
   const { data: session } = useSession();
@@ -59,6 +60,7 @@ export default function BotaoJuncao() {
                 {/* <BotaoPainelFinanceiro /> */}
               </>
             )}
+            <BotaoDashboard />
             
           <Button variant="link" gap={2} color="white" size="sm">
             <FaQuestionCircle />

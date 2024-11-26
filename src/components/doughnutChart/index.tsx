@@ -47,7 +47,7 @@ export default function DoughnutChart({
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false, // Desabilitar a legenda padrão
+        display: false, 
       },
       title: {
         display: !!title,
@@ -55,7 +55,7 @@ export default function DoughnutChart({
       },
       datalabels: {
         display: true,
-        color: "white",
+        color: "black",
         font: {
           weight: "bold" as const,
           size: 12,

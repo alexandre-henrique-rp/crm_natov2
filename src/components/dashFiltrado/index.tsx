@@ -33,10 +33,10 @@ export default function DashFiltrado({
     setDados(null)
   }
   const handleSubmit = async () => {
-    if(hierarquia !== 'ADM' && construtora == null){
+    if(hierarquia !== 'ADM' && construtora == null || empreedimento == null){
       toast({
         title: "Erro no Filtro",
-        description: `Selecione Uma Construtora`,
+        description: `Selecione a Construtora e Empreendimento`,
         status: "error", 
         duration: 5000, 
         isClosable: true,
@@ -52,6 +52,7 @@ export default function DashFiltrado({
         empreedimento,
         financeiro
     }
+    console.log("🚀 ~ handleSubmit ~ data:", data)
     try {
         const req = await fetch('http://localhost:3030/get/infos/search',{
            method: 'POST',
@@ -130,9 +131,10 @@ export default function DashFiltrado({
         </Select>
         <Select
           w={"200px"}
-          placeholder="Construtora"
-          onChange={(e) => setConstrutora(e.target.value)}
+          value={construtora || ''}
+          onChange={(e) => setConstrutora(e.target.value || null)}
         >
+          <option value="">Construtora</option>
           {construtoras?.map((construtora: any) => (
             <option key={construtora.id} value={construtora.id}>
               {construtora.fantasia}
@@ -203,17 +205,18 @@ export default function DashFiltrado({
             </option>
           ))}
         </Select>
-        {/* <Select
+        <Select
           w={"200px"}
-          placeholder="Empreendimento"
-          onChange={(e) => setEmpreendimento(e.target.value)}
+          value={empreedimento || ''}
+          onChange={(e) => setEmpreendimento(e.target.value || null)}
         >
+          <option value="">Empreendimento</option>
           {empreendimentos?.map((empreendimento: any) => (
             <option key={empreendimento.id} value={empreendimento.id}>
               {empreendimento.nome}
             </option>
           ))}
-        </Select> */}
+        </Select>
         {/* <Select w={"200px"} placeholder="Financeira" onChange={(e) => setFinanceira(e.target.value)}>
           {financeiras?.map((financeira: any) => (
             <option key={financeira.id} value={financeira.id}>
