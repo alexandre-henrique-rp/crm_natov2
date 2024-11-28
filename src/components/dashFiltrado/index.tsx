@@ -33,7 +33,7 @@ export default function DashFiltrado({
     setDados(null)
   }
   const handleSubmit = async () => {
-    if(hierarquia !== 'ADM' && construtora == null || empreedimento == null){
+    if(hierarquia !== 'ADM' && (construtora == null || empreedimento == null)){
       toast({
         title: "Erro no Filtro",
         description: `Selecione a Construtora e Empreendimento`,

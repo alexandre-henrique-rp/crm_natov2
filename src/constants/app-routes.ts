@@ -11,6 +11,7 @@ export const APP_ROUTES: ConfigRoutes = {
     "/aprovacao/:id",
     "/perfil",
     "/perfil/:id",
-    "/register"
+    "/register",
+    "/dashboard"
   ]
 };
