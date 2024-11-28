@@ -31,7 +31,6 @@ import { LuAlertTriangle } from "react-icons/lu";
 import { BotoesFunction } from "../botoes/bt_group_function";
 import { keyframes } from "@emotion/react";
 import GetAllConstrutoras from "@/actions/construtora/service/getAllContrutoras";
-import { FaRunning } from "react-icons/fa";
 
 interface TabelaProps {
   ClientData: solictacao.SolicitacaoGetType[];
