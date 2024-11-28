@@ -109,9 +109,10 @@ export function BtCreateAlertCliente({
       {hierarquia === "ADM" && (
         <>
           <Button
+          
             colorScheme="yellow"
             variant="solid"
-            size="md"
+            size="sm"
             onClick={onOpen}
             isLoading={Loading}
             spinner={<BeatLoader size={8} color="black" />}

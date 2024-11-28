@@ -10,6 +10,7 @@ import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import { UpdateSolicitacao } from "@/actions/solicitacao/service/update";
 import { SessionUserType } from "@/types/next-auth";
 import BtnAlertNow from "../btn_alerta_now";
+import BtnIniciarAtendimento from "../botoes/btn_iniciar_atendimento";
 
 // const prisma = new PrismaClient();
 type Props = {
@@ -218,6 +219,7 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
             alignItems={"center"}
             gap={3}
             px={4}
+            wrap={'wrap'}
           >
             {setDadosCard.distrato && setDadosCard.ativo && (
               <CardCreateUpdate.GridDistrato Id={setDadosCard.id} User={user} />
@@ -232,9 +234,10 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
               />
             )}
             {setDadosCard.ativo && <ResendSms id={setDadosCard.id} />}
-            <SaveBtm colorScheme="green" type="submit">
+            <SaveBtm colorScheme="green" size={'sm'} type="submit">
               Salvar
             </SaveBtm>
+            <BtnIniciarAtendimento status={setDadosCard.statusAtendimento} aprovacao={setDadosCard.status_aprovacao} id={setDadosCard.id}/>
           </Flex>
         </CardCreateUpdate.Form>
       </CardCreateUpdate.Root>
