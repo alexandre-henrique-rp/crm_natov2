@@ -69,6 +69,7 @@ export function Tabela({
   }
 
   const downTimeInDays = (item: solictacao.SolicitacaoGetType) => {
+    console.log("🚀 ~ downTimeInDays ~ item:", item)
     if (!item || !item.createdAt) return null;
 
     if (item.distrato || !item.ativo) {
@@ -98,8 +99,9 @@ export function Tabela({
   };
 
   const tabela = ClientData.map((item) => {
+    console.log("🚀 ~ tabela ~ item:", item)
     const fantasia = Construtoras.find((construtora: { id: number; }) => construtora.id === item.construtora)?.fantasia;
-
+    
     const ano = item.dt_agendamento?.split("-")[0];
     const mes = item.dt_agendamento?.split("-")[1];
     const diaBruto = item.dt_agendamento?.split("-")[2];

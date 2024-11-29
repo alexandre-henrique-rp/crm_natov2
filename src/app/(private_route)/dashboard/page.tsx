@@ -24,7 +24,7 @@ export default async function DashBoard() {
   // Função para buscar dados da API
   const fetchData = async () => {
     const response = await fetch(
-      "http://localhost:3030/bot/atualiza/infos/global",
+      "http://189.5.194.55:3030/bot/atualiza/infos/global",
       {
         method: "GET",
         headers: {
