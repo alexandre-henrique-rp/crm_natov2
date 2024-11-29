@@ -44,6 +44,7 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                   CPF={setDadosCard?.cpf}
                   w={{ base: "100%", md: "10rem" }}
                 />
+                <input type="text" hidden value={setDadosCard.ativo.toString()} readOnly name="StatusAtivo" />
                 <CardCreateUpdate.GridName
                   Nome={setDadosCard.nome}
                   w={{ base: "100%", md: "33rem" }}

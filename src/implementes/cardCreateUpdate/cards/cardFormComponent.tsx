@@ -23,8 +23,6 @@ export function CardFormComponent(props: CardFormProps) {
 
   const [state, formAction] = useFormState(props.action, { error: null });
 
-  console.log("🚀 ~ useEffect ~ state:", state);
-
   useEffect(() => {
     if (state?.error) {
       setIsError(true);
@@ -47,9 +45,7 @@ export function CardFormComponent(props: CardFormProps) {
         isClosable: true,
         position: "top-right",
       });
-      setTimeout(() => {
-        route.back();
-      }, 2000);
+     route.refresh();
       setIsSuccess(false); // Reset state after showing toast
     }
     if (isError) {
