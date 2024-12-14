@@ -100,7 +100,7 @@ export function Tabela({
 
   const tabela = ClientData.map((item) => {
     console.log("🚀 ~ tabela ~ item:", item)
-    const fantasia = Construtoras.find((construtora: { id: number; }) => construtora.id === item.construtora)?.fantasia;
+    const fantasia = Construtoras?.find((construtora: { id: number; }) => construtora.id === item.construtora)?.fantasia;
     
     const ano = item.dt_agendamento?.split("-")[0];
     const mes = item.dt_agendamento?.split("-")[1];

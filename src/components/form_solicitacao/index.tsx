@@ -250,11 +250,20 @@ export default function SolicitacaoForm({
     (async () => {
       if (relacionamento === "sim" && cpfdois.length === 11) {
         const check = await checkCpf(cpfdois);
+        if(cpf === cpfdois){
+          toast({
+            title: "Os CPFs nao podem ser iguais!",
+            status: "warning",
+            duration: 3000,
+            isClosable: true
+          });
+        }
         if (check) {
           toast({
             title: "CPF já cadastrado!",
-            status: "warning",
+            status: "error",
             duration: 3000,
+            position: "top-right",
             isClosable: true
           });
         }

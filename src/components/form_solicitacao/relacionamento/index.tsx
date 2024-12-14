@@ -57,7 +57,16 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
   }, [SetValue]);
 
   const handlesubmit = () => {
-    if (!nome || !email || !tel || !email || !DataNascimento) {
+    if(SetValue.cpf.replace(/\W+/g, "") === cpf.replace(/\W+/g, "")){
+      toast({
+        title: "Cpf Duplicado",
+        description: "O cpf do principal não pode ser igual ao do relacionado",
+        status: "error",
+        duration: 15000,
+        isClosable: true,
+        position: "top-right"
+      });
+    } else if (!nome || !email || !tel || !email || !DataNascimento) {
       const capos = [];
       if (!nome) {
         capos.push("Nome");

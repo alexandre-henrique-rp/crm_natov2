@@ -46,13 +46,21 @@ export default function GerarCobranca() {
 
   async function handlePesquisa() {
     setLoading(true);
-    const dados = await GetIncioFimSituacaoConstrutora(
-      Construtora,
-      empreedimento,
-      Inicio,
-      Fim,
-      Situacao
-    );
+    const request = await fetch(`/api/relatorio/financeiro/personalizado`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        Construtora,
+        empreedimento,
+        Inicio,
+        Fim,
+        Situacao
+      })
+    });
+
+    const dados = await request.json();
     if (dados.error) {
       toast({
         title: "Erro",
@@ -64,8 +72,8 @@ export default function GerarCobranca() {
     }
     if (!dados.error) {
       console.log(dados.data);
-      setTotalArray(dados.data)
-    };
+      setTotalArray(dados.data.solicitacao);
+    }
     setLoading(false);
   }
 
@@ -163,8 +171,6 @@ export default function GerarCobranca() {
         session?.user.hierarquia === "ADM"
           ? Number(Construtora)
           : session?.user.construtora[0].id;
-
-      
 
       const DataPost = {
         solicitacao: TotalArray,
@@ -421,7 +427,14 @@ export default function GerarCobranca() {
                 justifyContent={"center"}
                 alignItems={"center"}
               >
-                <Spinner w={"10rem"} h={"10rem"} thickness='1rem' speed='0.75s' emptyColor='gray.200' color='green.500' />
+                <Spinner
+                  w={"10rem"}
+                  h={"10rem"}
+                  thickness="1rem"
+                  speed="0.75s"
+                  emptyColor="gray.200"
+                  color="green.500"
+                />
               </Flex>
             </>
           ) : (
