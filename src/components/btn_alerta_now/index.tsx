@@ -72,6 +72,23 @@ export default function BtnAlertNow({
   }
 
   const handleConfirm = async () => {
+    const now = new Date();
+
+    const hora = now.getHours();
+    const minutos = now.getMinutes();
+  
+    const dentroHorario = (hora > 9 || (hora === 9 && minutos >= 30)) && hora <= 18
+
+    if(!dentroHorario){
+      toast({
+        position: "top",
+        title: "Somente entre 9:30 e 18:00",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return
+    }
     const req = await CreateNow({
       id,
       andamento,

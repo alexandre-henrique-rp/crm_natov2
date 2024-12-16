@@ -346,8 +346,8 @@ model nato_alerta {
   createdAt           DateTime            @default(now()) @db.DateTime(0)
   updatedAt           DateTime?           @db.DateTime(0)
   status              Boolean?            @default(true)
-  nato_empreendimento nato_empreendimento @relation(fields: [empreendimento], references: [id], onUpdate: Restrict, map: "nato_alerta_nato_empreendimento_FK")
-  nato_user           nato_user?          @relation(fields: [corretor], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "nato_alerta_nato_user_FK")
+  nato_empreendimento nato_empreendimento @relation(fields: [empreendimento], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "nato_alerta_nato_empreendimento_FK")
+  nato_user           nato_user?          @relation(fields: [corretor], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "nato_alerta_nato_user_FK")
 
   @@index([empreendimento], map: "nato_alerta_nato_empreendimento_FK")
   @@index([corretor], map: "nato_alerta_nato_user_FK")
@@ -377,7 +377,7 @@ model nato_empreendimento {
   financeiro    String?        @db.LongText
   tag           String?        @db.VarChar(100)
   nato_alerta   nato_alerta[]
-  nato_empresas nato_empresas? @relation(fields: [construtora], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "nato_empreendimento_nato_empresas_FK")
+  nato_empresas nato_empresas? @relation(fields: [construtora], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "nato_empreendimento_nato_empresas_FK")
 
   @@index([construtora], map: "nato_empreendimento_nato_empresas_FK")
 }
@@ -483,7 +483,7 @@ model nato_solicitacoes_certificado {
   docSuspenso       String?   @db.VarChar(100)
   alertanow         Boolean?  @default(false)
   dt_criacao_now    DateTime? @db.DateTime(0)
-  statusAtendimento Int?      @default(0)
+  statusAtendimento Boolean   @default(false)
 
   @@index([id_fcw], map: "nato_solicitacoes_certificado_fcweb_FK")
   @@index([construtora], map: "nato_solicitacoes_certificado_nato_empresas_FK")
@@ -810,4 +810,22 @@ model nato_chamados {
   images      String?   @db.LongText
   images_adm  String?   @db.LongText
   idUser      Int?
+}
+
+model suporte {
+  id             Int            @id @default(autoincrement())
+  id_fcw         String         @db.VarChar(50)
+  nome           String         @db.VarChar(100)
+  telefone       String         @db.VarChar(20)
+  email          String         @db.VarChar(100)
+  origem         suporte_origem
+  descricao      String         @db.Text
+  data_submissao DateTime       @default(now()) @db.Timestamp(0)
+}
+
+enum suporte_origem {
+  Interface
+  SisNATO
+  Parceiro
+  Outro
 }

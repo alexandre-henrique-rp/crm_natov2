@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { SelectComponent } from "../select";
 import { ModalComponent } from "../modal_alert";
+import BotaoPageChamados from "../botoes/btn_page_chamados";
 
 export default function PerfilHome() {
   const [IdEmpreedimento, setIdEmpreedimento] = useState(0);
@@ -72,6 +73,7 @@ export default function PerfilHome() {
               )
             )}
           </Box>
+          <BotaoPageChamados />
         </Flex>
       )}
     </>

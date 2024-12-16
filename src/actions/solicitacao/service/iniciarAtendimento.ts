@@ -11,7 +11,7 @@ export async function IniciarAtendimento(id: number) {
                 id: id
             },
             data: {
-                statusAtendimento: 1
+                statusAtendimento: true
             }
             
         });

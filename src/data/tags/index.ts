@@ -61,4 +61,12 @@ export const TagsOptions: TagsProps = [
         id:13,
         label: 'Cliente demora responder'
     },
+    {
+        id:14,
+        label: 'Aguardando Cliente enviar foto do documento'
+    },
+    {
+        id:15,
+        label:'Aguardando Cliente confirmar email'
+    },
 ]
