@@ -8,34 +8,39 @@ interface PrivateLayoutProps {
   children: React.ReactNode;
 }
 
-
 export default async function PrivateLayout({ children }: PrivateLayoutProps) {
   const session = await getServerSession(auth);
+
   if (session) {
     try {
-      const request = await fetch(`${process.env.MONITOR_URL}/`, {
+      const response = await fetch(`${process.env.MONITOR_URL}/`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ token: session.token })
+        body: JSON.stringify({ token: session.token }),
       });
-      const data = await request.json();
-      console.log("🚀 ~ PrivateLayout ~ data:", data);
-      // console.log("🚀 ~ data:", request);
+
+      if (!response.ok) {
+        console.error(`Erro na requisição: ${response.status} - ${response.statusText}`);
+      } else {
+        const data = await response.json();
+        console.log("🚀 ~ PrivateLayout ~ data:", data);
+      }
     } catch (error) {
-      console.log("🚀 ~ error:", error);
+      console.error("🚀 ~ erro na requisição:", error);
     }
   }
+
   return (
     <Flex
-      w={"100vw"}
-      h={"100vh"}
-      justifyContent={"space-between"}
-      flexDir={"column"}
+      w="100vw"
+      h="100vh"
+      justifyContent="space-between"
+      flexDir="column"
     >
       <BotaoJuncao />
-      <Box h={"90vh"} overflowY={"auto"}>
+      <Box h="90vh" overflowY="auto">
         {children}
       </Box>
       <FooterComponent />

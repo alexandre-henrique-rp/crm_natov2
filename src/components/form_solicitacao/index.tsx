@@ -53,7 +53,6 @@ export default function SolicitacaoForm({
   const [UploadCnhUrl, setUploadCnhUrl] = useState<string>("");
   const [UploadRgUrl, setUploadRgUrl] = useState<string>("");
   const [relacionamento, setrelacionamento] = useState<string>("nao");
-  const [Voucher, setVoucher] = useState<string>("");
   const [tel, setTel] = useState<string>("");
   const [teldois, SetTeldois] = useState<string>("");
   const [DataNascimento, setDataNascimento] = useState<Date | string | any>();
@@ -113,69 +112,97 @@ export default function SolicitacaoForm({
         position: "top-right"
       });
     } else {
-      const data: any = {
-        nome: nome.toUpperCase(),
-        telefone: tel.replace(/\W+/g, ""),
-        cpf: cpf.replace(/\W+/g, ""),
-        telefone2: teldois.replace(/\W+/g, ""),
-        email: email.replace(/\s+/g, "").toLowerCase(),
-        uploadRg: UploadRgUrl,
-        uploadCnh: UploadCnhUrl,
-        corretor: user?.hierarquia === "ADM" ? CorretorId : Number(user?.id),
-        construtora: Number(ConstrutoraID),
-        empreedimento: Number(empreendimento),
-        dt_nascimento: DataNascimento,
-        relacionamento: cpfdois && relacionamento === "sim" ? [cpfdois] : [],
-        rela_quest: relacionamento === "sim" ? true : false,
-        voucher: Voucher,
-        financeiro: Number(FinanceiraID)
-      };
-      console.log("🚀 ~ handlesubmit ~ data:", data)
-
-      try {
-        setLoad(true);
-        const response = await fetch(
-          `/api/solicitacao?sms=${Sms}&vendedor=${VendedorName}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
+      const request = await fetch(
+        `/api/consulta/cpf/${cpf.replace(/\W+/g, "")}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
           }
-        );
-        const retorno = await response.json();
-        if (response.ok) {
-          toast({
-            title: "Sucesso",
-            description: "Solicitacao enviada com sucesso",
-            status: "success",
-            duration: 3000,
-            isClosable: true
-          });
-          setLoad(false);
-          router.push("/home");
-        } else {
-          console.log("🚀 ~ handlesubmit ~ retorno:", retorno)
+        }
+      );
+      if (!request.ok) {
+        toast({
+          title: "Erro!",
+          description: "Erro ao verificar CPF!",
+          status: "error",
+          duration: 3000,
+          isClosable: true
+        });
+      }
+      const response = await request.json();
+      if (response.cpf) {
+        toast({
+          title: "CPF já cadastrado!",
+          description: response.message,
+          status: "warning",
+          duration: 3000,
+          isClosable: true
+        });
+      } else {
+        const data: any = {
+          nome: nome.toUpperCase(),
+          telefone: tel.replace(/\W+/g, ""),
+          cpf: cpf.replace(/\W+/g, ""),
+          telefone2: teldois.replace(/\W+/g, ""),
+          email: email.replace(/\s+/g, "").toLowerCase(),
+          uploadRg: UploadRgUrl,
+          uploadCnh: UploadCnhUrl,
+          corretor: user?.hierarquia === "ADM" ? CorretorId : Number(user?.id),
+          construtora: Number(ConstrutoraID),
+          empreedimento: Number(empreendimento),
+          dt_nascimento: DataNascimento,
+          relacionamento: cpfdois && relacionamento === "sim" ? [cpfdois] : [],
+          rela_quest: relacionamento === "sim" ? true : false,
+          financeiro: Number(FinanceiraID)
+        };
+        console.log("🚀 ~ handlesubmit ~ data:", data);
+  
+        try {
+          setLoad(true);
+          const response = await fetch(
+            `/api/solicitacao?sms=${Sms}&vendedor=${VendedorName}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(data)
+            }
+          );
+          const retorno = await response.json();
+          if (response.ok) {
+            toast({
+              title: "Sucesso",
+              description: "Solicitacao enviada com sucesso",
+              status: "success",
+              duration: 3000,
+              isClosable: true
+            });
+            setLoad(false);
+            router.push("/home");
+          } else {
+            console.log("🚀 ~ handlesubmit ~ retorno:", retorno);
+            toast({
+              title: "Erro",
+              description: retorno.message[1],
+              status: "error",
+              duration: 3000,
+              isClosable: true
+            });
+            setLoad(false);
+          }
+        } catch (error) {
+          console.log("🚀 ~ handlesubmit ~ error:", error);
           toast({
             title: "Erro",
-            description: retorno.message[1],
+            description: "Erro ao enviar solicitacao",
             status: "error",
             duration: 3000,
             isClosable: true
           });
           setLoad(false);
         }
-      } catch (error) {
-        console.log("🚀 ~ handlesubmit ~ error:", error)
-        toast({
-          title: "Erro",
-          description: "Erro ao enviar solicitacao",
-          status: "error",
-          duration: 3000,
-          isClosable: true
-        });
-        setLoad(false);
       }
     }
   };
@@ -196,81 +223,124 @@ export default function SolicitacaoForm({
     setCpf(cpf);
   };
 
-  useEffect(() => {
-    if (relacionamento === "sim" && cpfdois.length === 11) {
-      if (
-        !nome ||
-        !cpf ||
-        !email ||
-        !tel ||
-        ConstrutoraID === 0 ||
-        empreendimento === 0 ||
-        FinanceiraID === 0 ||
-        !email ||
-        !DataNascimento
-      ) {
-        const capos = [];
-        if (!nome) {
-          capos.push("Nome");
+  const checkCpf = async (cpf: string) => {
+    const request = await fetch(
+      `/api/consulta/cpf/${cpf.replace(/\W+/g, "")}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
         }
-        if (!cpf) {
-          capos.push("CPF");
-        }
-        if (!email) {
-          capos.push("Email");
-        }
-        if (!tel) {
-          capos.push("Telefone");
-        }
-        if (ConstrutoraID === 0) {
-          capos.push("Construtora");
-        }
-        if (empreendimento === 0) {
-          capos.push("Empreendimento");
-        }
-        if (FinanceiraID === 0) {
-          capos.push("Financeira");
-        }
-        if (!DataNascimento) {
-          capos.push("Data de Nascimento");
-        }
-        toast({
-          title: "Preencha todos os campos",
-          description:
-            "os seguintes campos não foram preenchidos:" + capos.join(", "),
-          status: "error",
-          duration: 15000,
-          isClosable: true,
-          position: "top-right"
-        });
+      }
+    );
+
+    if (request.ok) {
+      const response = await request.json();
+
+      if (response.cpf) {
+        return true;
       } else {
-        ishidden("sim");
-        const data: solictacao.SolicitacaoPost = {
-          nome: nome.toUpperCase(),
-          cpf: cpf.replace(/\W+/g, ""),
-          telefone: tel.replace(/\W+/g, ""),
-          telefone2: teldois,
-          dt_nascimento: DataNascimento,
-          email: email.replace(/\s+/g, "").toLowerCase(),
-          uploadRg: UploadRgUrl,
-          uploadCnh: UploadCnhUrl,
-          corretor: user?.hierarquia === "ADM" ? CorretorId : Number(user?.id),
-          relacionamento: [cpfdois],
-          cpfdois: cpfdois,
-          construtora: Number(ConstrutoraID),
-          empreedimento: Number(empreendimento),
-          financeiro: Number(FinanceiraID),
-          rela_quest: relacionamento === "sim" ? true : false,
-          voucher: Voucher,
-          vendedorName: VendedorName
-        };
-        onvalue(data);
+        return false;
       }
     }
+    return false;
+  };
 
-    if (relacionamento === "nao" || cpfdois.length < 11) {
-      ishidden("nao");
-    }
+  useEffect(() => {
+    (async () => {
+      if (relacionamento === "sim" && cpfdois.length === 11) {
+        const check = await checkCpf(cpfdois);
+        if(cpf === cpfdois){
+          toast({
+            title: "Os CPFs nao podem ser iguais!",
+            status: "warning",
+            duration: 3000,
+            isClosable: true
+          });
+        }
+        if (check) {
+          toast({
+            title: "CPF já cadastrado!",
+            status: "error",
+            duration: 3000,
+            position: "top-right",
+            isClosable: true
+          });
+        }
+        if (
+          !nome ||
+          !cpf ||
+          !email ||
+          !tel ||
+          ConstrutoraID === 0 ||
+          empreendimento === 0 ||
+          FinanceiraID === 0 ||
+          !email ||
+          !DataNascimento
+        ) {
+          const capos = [];
+          if (!nome) {
+            capos.push("Nome");
+          }
+          if (!cpf) {
+            capos.push("CPF");
+          }
+          if (!email) {
+            capos.push("Email");
+          }
+          if (!tel) {
+            capos.push("Telefone");
+          }
+          if (ConstrutoraID === 0) {
+            capos.push("Construtora");
+          }
+          if (empreendimento === 0) {
+            capos.push("Empreendimento");
+          }
+          if (FinanceiraID === 0) {
+            capos.push("Financeira");
+          }
+          if (!DataNascimento) {
+            capos.push("Data de Nascimento");
+          }
+          toast({
+            title: "Preencha todos os campos",
+            description:
+              "os seguintes campos não foram preenchidos:" + capos.join(", "),
+            status: "error",
+            duration: 15000,
+            isClosable: true,
+            position: "top-right"
+          });
+        } else {
+          ishidden("sim");
+          const data: solictacao.SolicitacaoPost = {
+            nome: nome.toUpperCase(),
+            cpf: cpf.replace(/\W+/g, ""),
+            telefone: tel.replace(/\W+/g, ""),
+            telefone2: teldois,
+            dt_nascimento: DataNascimento,
+            email: email.replace(/\s+/g, "").toLowerCase(),
+            uploadRg: UploadRgUrl,
+            uploadCnh: UploadCnhUrl,
+            corretor:
+              user?.hierarquia === "ADM" ? CorretorId : Number(user?.id),
+            relacionamento: [cpfdois],
+            cpfdois: cpfdois,
+            construtora: Number(ConstrutoraID),
+            empreedimento: Number(empreendimento),
+            financeiro: Number(FinanceiraID),
+            rela_quest: relacionamento === "sim" ? true : false,
+            vendedorName: VendedorName
+          };
+          onvalue(data);
+        }
+      }
+
+      if (relacionamento === "nao" || cpfdois.length < 11) {
+        ishidden("nao");
+      }
+    })();
   }, [
     ConstrutoraID,
     CorretorId,
@@ -279,7 +349,6 @@ export default function SolicitacaoForm({
     UploadCnhUrl,
     UploadRgUrl,
     VendedorName,
-    Voucher,
     cpf,
     cpfdois,
     email,

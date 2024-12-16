@@ -15,6 +15,12 @@ type dataType = {
   valorcd: number | null;
 };
 
+type RetornoType = {
+solicitacao?: dataType[];
+totalFcw: number;
+ValorTotal: number;
+};
+let total = 0;
 /**
  * Busca as solicitações no banco de dados, considerando o construtora,
  * data de início e fim, e situação de pagamento.
@@ -34,7 +40,7 @@ export async function GetIncioFimSituacaoConstrutora(
   inicio: string,
   fim: string,
   situacao: number,
-): Promise<{ error: boolean; message: string; data: dataType[] | null }> {
+): Promise<{ error: boolean; message: string; data: RetornoType | null }> {
   const dto = new DetIncioFimSituacaoConstrutoraDto(
     construtora,
     empreedimento,
@@ -54,6 +60,7 @@ export async function GetIncioFimSituacaoConstrutora(
   }
 
   try {
+    const valorConst = await getConstrutoraValor(dto.construtora)
     // Busca as solicitações no banco de dados
     const dados = await prisma.nato_solicitacoes_certificado.findMany({
       where: {
@@ -93,17 +100,25 @@ export async function GetIncioFimSituacaoConstrutora(
     return {
       error: false,
       message: "Success",
-      data: await Promise.all(dados.map(async(item: any) => ({
-        ...item,
-        empreedimento: await getEmpreedimento(item.empreedimento),
-        financeiro: await getFinaceiro(item.financeiro),
-        corretor: await getCorretor(item.corretor),
-        createdAt: new Date(item.createdAt).toISOString(),
-        dt_aprovacao: item.dt_aprovacao
-          ? new Date(item.dt_aprovacao).toISOString()
-          : null,
-        certificado: await getCertificado(item.cpf,dto.inicio,dto.fim)
-      })))
+      data: {
+        ...(dados.length > 0 && {
+          solicitacao: await Promise.all(dados.map(async(item: any) => ({
+            ...item,
+            empreedimento: await getEmpreedimento(item.empreedimento),
+            financeiro: await getFinaceiro(item.financeiro),
+            corretor: await getCorretor(item.corretor),
+            createdAt: new Date(item.createdAt).toISOString(),
+            dt_aprovacao: item.dt_aprovacao
+              ? new Date(item.dt_aprovacao).toISOString()
+              : null,
+            certificado: await getCertificado(item.cpf,dto.inicio,dto.fim)
+          })))
+        }),
+        totalFcw: total,
+        ValorTotal: total> 0 ? total * valorConst : 0
+      }
+      
+      //consertar retorno
     };
   } catch (error: any) {
     // Tratamento genérico de erro
@@ -232,5 +247,20 @@ const getCertificado = async (cpf: string, inicio: string, fim: string) => {
     },
   })
   await prisma.$disconnect();
+  total += certificado
   return certificado
+}
+
+const getConstrutoraValor = async (id: number) => {
+  const construtora = await prisma.nato_empresas.findUnique({
+    where: {
+      id
+    },
+    select: {
+      valor_cert: true
+    }
+      
+  })
+  await prisma.$disconnect();
+  return !construtora?.valor_cert ? 100 : construtora?.valor_cert
 }

@@ -9,10 +9,22 @@ const prisma = new PrismaClient();
 
 export async function UpdateSolicitacao(_: any, data: FormData) {
   const session = await getServerSession(auth);
+  if (!session) {
+    return {
+      error: true,
+      message: "Unauthorized",
+      data: null
+    };
+  }
   // console.log(data);
 
   const id = Number(data.get("id_cliente"));
-  const Ativo = data.get("ativo") === "true" ? true : false;
+  const Ativo = data.get("StatusAtivo") === "true" ? true : false;
+  const corretor = Number(data.get("corretor")) || 0;
+  const hierarquia = session?.user.hierarquia;
+  const avaliar = !Ativo && corretor > 0 && hierarquia === "ADM" ? true : false;
+  const Avaliar2 =
+    !Ativo && corretor > 0 && hierarquia !== "ADM" ? true : false;
 
   const TagsArray = data.get("Tags") as any;
   await PostTags(TagsArray, id);
@@ -24,10 +36,18 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
       session?.user.hierarquia !== "ADM" && {
         corretor: Number(session?.user?.id)
       }),
+    ...(Avaliar2 && {
+      corretor: Number(session?.user?.id),
+      ativo: true
+    }),
     ...(Ativo &&
       session?.user.hierarquia === "ADM" && {
         corretor: Number(data.get("corretor"))
       }),
+    ...(avaliar && {
+      corretor: Number(data.get("corretor")),
+      ativo: true
+    }),
     ...(data.get("cpf") && { cpf: data.get("cpf") }),
     ...(data.get("nome") && { nome: data.get("nome") }),
     ...(data.get("telefones1") && { telefone: data.get("telefones1") }),
@@ -60,7 +80,7 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
     }),
     ...(data.get("Relacionamento") && { rela_quest: true })
   };
- 
+
   const request = await fetch(
     `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/solicitacao/update/${id}`,
     {
@@ -78,25 +98,32 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
 
     if (response.name === "PrismaClientValidationError") {
       return {
-        name: "PrismaClientValidationError",
-        message: "Erro ao atualizar o registro",
-        error: response
+        data: null,
+        message: "Erro ao atualizar o registro - PrismaClientValidationError",
+        error: true
       };
     }
-
-    // console.log("Atualização bem-sucedida:", response);
-    return response;
+    prisma.$disconnect();
+    return {
+      error: false,
+      message: "Atualização bem-sucedida",
+      data: response
+    };
   } else {
     console.error("Erro ao atualizar:", request.statusText);
+    prisma.$disconnect();
+    return {
+      error: true,
+      message: "Erro ao atualizar o registro" + request.statusText,
+      data: null
+    };
   }
-  prisma.$disconnect();
 }
-
 
 async function PostTags(value: any, id: number) {
   const session = await getServerSession(auth);
   const tags = JSON.parse(value);
-  if(value) {
+  if (value) {
     for (let i = 0; i < tags.length; i++) {
       const tag: Tag = tags[i];
       if (tag.label && session?.user.hierarquia === "ADM") {
