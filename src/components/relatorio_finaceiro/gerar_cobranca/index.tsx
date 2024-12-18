@@ -12,6 +12,7 @@ import {
   FormLabel,
   Input,
   Select,
+  Spinner,
   useToast
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
@@ -19,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
 import SelectEmpreedimento from "@/components/selectEmpreedimento";
+// import Loading from "@/app/loading";
 
 export default function GerarCobranca() {
   const [Inicio, setInicio] = useState("");
@@ -31,6 +33,7 @@ export default function GerarCobranca() {
   const [Protocolo, setProtocolo] = useState<boolean>(false);
   const [ProtocoloNumber, setProtocoloNumber] = useState<string>("");
   const [N_NotaFiscal, setN_NotaFiscal] = useState<string>("");
+  const [Loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
   const { data: session } = useSession();
   const route = useRouter();
@@ -42,13 +45,22 @@ export default function GerarCobranca() {
   }, [session?.user.construtora, session?.user.hierarquia]);
 
   async function handlePesquisa() {
-    const dados = await GetIncioFimSituacaoConstrutora(
-      Construtora,
-      empreedimento,
-      Inicio,
-      Fim,
-      Situacao,
-    );
+    setLoading(true);
+    const request = await fetch(`/api/relatorio/financeiro/personalizado`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        Construtora,
+        empreedimento,
+        Inicio,
+        Fim,
+        Situacao
+      })
+    });
+
+    const dados = await request.json();
     if (dados.error) {
       toast({
         title: "Erro",
@@ -58,10 +70,15 @@ export default function GerarCobranca() {
         isClosable: true
       });
     }
-    if (!dados.error) setTotalArray(dados.data);
+    if (!dados.error) {
+      console.log(dados.data);
+      setTotalArray(dados.data.solicitacao);
+    }
+    setLoading(false);
   }
 
   async function handlePesquisaProtocolo() {
+    setLoading(true);
     const dados: any = await GetProtocolo(ProtocoloNumber);
     if (dados.error) {
       toast({
@@ -72,13 +89,16 @@ export default function GerarCobranca() {
         isClosable: true
       });
     }
-    setInicio(dados.data?.start.split("T")[0]);
-    setFim(dados.data?.end.split("T")[0]);
+    console.log(dados.data);
+    console.log(dados.data?.start);
+    setInicio(dados.data?.start?.split("T")[0]);
+    setFim(dados.data?.end?.split("T")[0]);
     setSituacao(dados.data?.situacao_pg);
     setN_NotaFiscal(dados.data?.nota_fiscal);
     setSituacao(dados.data?.situacao_pg);
     setConstrutora(dados.data?.construtora?.id);
     setTotalArray(dados.data?.solicitacao);
+    setLoading(false);
   }
 
   async function handleDownload() {
@@ -399,50 +419,75 @@ export default function GerarCobranca() {
           </>
         )}
         <Box w={"100%"} h={"80%"} bg={"gray.100"} overflowX={"auto"} my={2}>
-          <table style={{ width: "100%" }}>
-            <tr style={{ position: "sticky", top: 0, background: "#f2f2f2" }}>
-              <th>x</th>
-              <th>id</th>
-              <th>nome</th>
-              <th>cpf</th>
-              <th>status</th>
-              <th>Data aprovação</th>
-              <th>Data cadastro</th>
-            </tr>
-            {TotalArray.length > 0 &&
-              TotalArray.map((item: any, index: number) => {
-                return (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{item.id}</td>
-                    <td>{item.nome}</td>
-                    <td>
-                      {item.cpf.replace(
-                        /(\d{3})(\d{3})(\d{3})(\d{2})/,
-                        "$1.$2.$3-$4"
-                      )}
-                    </td>
-                    <td>{item.estatos_pgto}</td>
-                    <td style={{ textAlign: "center" }}>
-                      {item.dt_aprovacao
-                        ? item.dt_aprovacao
+          {Loading ? (
+            <>
+              <Flex
+                w={"100%"}
+                h={"100%"}
+                justifyContent={"center"}
+                alignItems={"center"}
+              >
+                <Spinner
+                  w={"10rem"}
+                  h={"10rem"}
+                  thickness="1rem"
+                  speed="0.75s"
+                  emptyColor="gray.200"
+                  color="green.500"
+                />
+              </Flex>
+            </>
+          ) : (
+            <>
+              <table style={{ width: "100%" }}>
+                <tr
+                  style={{ position: "sticky", top: 0, background: "#f2f2f2" }}
+                >
+                  <th>x</th>
+                  <th>id</th>
+                  <th>nome</th>
+                  <th>cpf</th>
+                  <th>status</th>
+                  <th>Data aprovação</th>
+                  <th>Data cadastro</th>
+                </tr>
+                {TotalArray.length > 0 &&
+                  !Loading &&
+                  TotalArray.map((item: any, index: number) => {
+                    return (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{item.id}</td>
+                        <td>{item.nome}</td>
+                        <td>
+                          {item.cpf.replace(
+                            /(\d{3})(\d{3})(\d{3})(\d{2})/,
+                            "$1.$2.$3-$4"
+                          )}
+                        </td>
+                        <td>{item.estatos_pgto}</td>
+                        <td style={{ textAlign: "center" }}>
+                          {item.dt_aprovacao
+                            ? item.dt_aprovacao
+                                .split("T")[0]
+                                .split("-")
+                                .reverse()
+                                .join("-")
+                            : ""}
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          {item.createdAt
                             .split("T")[0]
                             .split("-")
                             .reverse()
-                            .join("-")
-                        : ""}
-                    </td>
-                    <td style={{ textAlign: "center" }}>
-                      {item.createdAt
-                        .split("T")[0]
-                        .split("-")
-                        .reverse()
-                        .join("-")}
-                    </td>
-                  </tr>
-                );
-              })}
-          </table>
+                            .join("-")}
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </table>
+            </>
+          )}
         </Box>
         <Flex w={"100%"} justifyContent={"space-between"}>
           {/* {Personalizado ? (

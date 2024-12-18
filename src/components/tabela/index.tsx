@@ -99,6 +99,7 @@ export function Tabela({
   };
 
   const tabela = ClientData.map((item) => {
+
     const fantasia = Construtoras.find(
       (construtora: { id: number }) => construtora.id === item.construtora
     )?.fantasia;
