@@ -16,7 +16,6 @@ export default function BotaoPageChamados() {
     const [qtdChamadosAberto, setQtdChamadosAberto] = useState<number>(0);
     const session = useSession();
     const user = session?.data?.user;
-    console.log("🚀 ~ BotaoPageChamados ~ user:", user)
     
     useEffect(() => {
         async function fetchData() {

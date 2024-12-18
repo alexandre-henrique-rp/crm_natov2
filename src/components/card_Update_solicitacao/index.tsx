@@ -12,6 +12,7 @@ import { SessionUserType } from "@/types/next-auth";
 import BtnAlertNow from "../btn_alerta_now";
 import BtnIniciarAtendimento from "../botoes/btn_iniciar_atendimento";
 import CreateChamado from "../botoes/btn_chamado";
+import BotaoReativarSolicitacao from "../botoes/btn_reativar_solicitacao";
 
 // const prisma = new PrismaClient();
 type Props = {
@@ -21,6 +22,7 @@ type Props = {
 export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
   
   const HierarquiaUser = user?.hierarquia;
+  console.log("🚀 ~ CardUpdateSolicitacao ~ HierarquiaUser:", HierarquiaUser)
   return (
     <>
       <CardCreateUpdate.Root>
@@ -240,6 +242,7 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
               Salvar
             </SaveBtm>
             <CreateChamado id={setDadosCard.id}/>
+            {!setDadosCard.ativo && HierarquiaUser === 'ADM' ? <BotaoReativarSolicitacao id={setDadosCard.id} /> : <Box hidden></Box>}
             <BtnIniciarAtendimento hierarquia={HierarquiaUser} status={setDadosCard.statusAtendimento} aprovacao={setDadosCard.Andamento} id={setDadosCard.id}/>
           </Flex>
         </CardCreateUpdate.Form>
