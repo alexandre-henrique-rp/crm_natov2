@@ -7,17 +7,20 @@ import { useState } from "react";
 
 
 interface BtnIniciarAtendimentoProps {
-  status: number;
-  aprovacao: boolean;
+  hierarquia: string;
+  status: boolean;
+  aprovacao: string;
   id: number;
 }
 
 export default function BtnIniciarAtendimento({
+  hierarquia,
   status: initialStatus,
   aprovacao,
   id,
 }: BtnIniciarAtendimentoProps) {
   const [status, setStatus] = useState(initialStatus);
+  console.log("🚀 ~ status:", status)
   const toast = useToast();
 
   const handleIniciarAtendimento = async () => {
@@ -41,7 +44,7 @@ export default function BtnIniciarAtendimento({
       position: "top-right",
     });
 
-    setStatus(1);
+    setStatus(true);
   };
 
   const handleCancelarAtendimento = async () => {
@@ -59,25 +62,25 @@ export default function BtnIniciarAtendimento({
 
     toast({
       title: req.message,
-      status: "success",
+      status: "warning",
       duration: 2000,
       isClosable: true,
       position: "top-right",
     });
 
-    setStatus(0);
+    setStatus(false);
   };
 
   return (
     <>
-      {(!aprovacao || status === 3) && (
+      {(!["EMITIDO", "REVOGADO", "APROVADO"].includes(aprovacao) && hierarquia === "ADM") && (
         <>
-          {status === 1 && (
+          {status && (
             <Button size="sm" colorScheme="red" onClick={handleCancelarAtendimento}>
               Cancelar Atendimento
             </Button>
           )}
-          {status === 0 && (
+          {!status && (
             <Button size="sm" colorScheme="teal" onClick={handleIniciarAtendimento}>
               Iniciar Atendimento
             </Button>

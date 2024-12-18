@@ -20,7 +20,8 @@ import {
   Td,
   Th,
   Thead,
-  Tr
+  Tooltip,
+  Tr,
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -31,7 +32,7 @@ import { LuAlertTriangle } from "react-icons/lu";
 import { BotoesFunction } from "../botoes/bt_group_function";
 import { keyframes } from "@emotion/react";
 import GetAllConstrutoras from "@/actions/construtora/service/getAllContrutoras";
-
+import { FaRunning } from "react-icons/fa";
 interface TabelaProps {
   ClientData: solictacao.SolicitacaoGetType[];
   total: number | null;
@@ -51,25 +52,24 @@ export function Tabela({
   ClientData,
   total,
   AtualPage,
-  SetVewPage
+  SetVewPage,
 }: TabelaProps) {
   const [SelectPage, setSelectPage] = useState(1);
   const [Construtoras, setConstrutoras] = useState<any>([]);
   const { data: session } = useSession();
   const user = session?.user;
-  
+
   useEffect(() => {
     getConstrutoras();
     setSelectPage(AtualPage);
   }, [AtualPage]);
-  
-  const getConstrutoras = async () =>{
+
+  const getConstrutoras = async () => {
     const construtoras = await GetAllConstrutoras();
     setConstrutoras(construtoras.data);
-  }
+  };
 
   const downTimeInDays = (item: solictacao.SolicitacaoGetType) => {
-    console.log("🚀 ~ downTimeInDays ~ item:", item)
     if (!item || !item.createdAt) return null;
 
     if (item.distrato || !item.ativo) {
@@ -99,9 +99,11 @@ export function Tabela({
   };
 
   const tabela = ClientData.map((item) => {
-    console.log("🚀 ~ tabela ~ item:", item)
-    const fantasia = Construtoras?.find((construtora: { id: number; }) => construtora.id === item.construtora)?.fantasia;
-    
+
+    const fantasia = Construtoras.find(
+      (construtora: { id: number }) => construtora.id === item.construtora
+    )?.fantasia;
+
     const ano = item.dt_agendamento?.split("-")[0];
     const mes = item.dt_agendamento?.split("-")[1];
     const diaBruto = item.dt_agendamento?.split("-")[2];
@@ -177,12 +179,27 @@ export function Tabela({
             ) : (
               <Box ms={10}></Box>
             )}
+            {(item.statusAtendimento && !["EMITIDO", "REVOGADO", "APROVADO"].includes(andamento)) ? (
+              <Tooltip label="Em Andamento">
+                <Box as="span">
+                  <Icon
+                    as={FaRunning}
+                    color={"green.500"}
+                    fontSize={"1.75rem"}
+                    fontWeight={"900"}
+                    ms={2}
+                  />
+                </Box>
+              </Tooltip>
+            ) : (
+              <Box ms={10}></Box>
+            )}
             {item.alertanow &&
             !["EMITIDO", "REVOGADO", "APROVADO"].includes(andamento) &&
             item.ativo ? (
               <Box
                 alignSelf={"center"}
-                w={'45px'}
+                w={"45px"}
                 h={"fit-content"}
                 as="span"
                 fontWeight="bold"

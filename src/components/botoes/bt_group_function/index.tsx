@@ -111,7 +111,6 @@ export const BotoesFunction = ({ id, distrato, exclude }: BotoesFunctionProps) =
                 onClick={onClose}
               />
               <Button
-                leftIcon={<BsFillTrashFill />}
                 onClick={(e) => HandleDelet(e)}
                 colorScheme="red"
               >

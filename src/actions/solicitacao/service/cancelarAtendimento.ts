@@ -11,7 +11,7 @@ export async function CancelarAtendimento(id: number) {
                  id: id
              },
              data: {
-                 statusAtendimento: 0
+                 statusAtendimento: false
              }
              
          });

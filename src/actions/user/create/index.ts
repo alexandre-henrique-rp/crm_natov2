@@ -36,6 +36,16 @@ export default async function UserCreate(_: any, data: FormData) {
   const passwordConfir = data.get("confirsenha") as string;
   const Password_key = generateHash(password);
 
+  const UsuarioExiste = await prisma.nato_user.findFirst({
+    where: {
+      username: username
+    }
+  })
+
+  if(UsuarioExiste){
+    return { error: true, message: "Neme de Usuário ja cadastrado", data: null }
+  }
+
   const dto = new CreateUsuariosDto(cpf, nome, username, telefone, email, construtora, empreendimento, Financeira, Cargo, hierarquia, password, passwordConfir);
   
   const erroValidacao = dto.validar();
