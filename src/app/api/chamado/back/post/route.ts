@@ -1,14 +1,24 @@
-// src/app/api/suporte/upload/route.ts
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
     try {
         const data = await request.json();
+        const session = await getServerSession(auth);
+
+        if (!session) {
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
 
         const response = await fetch("https://devapisisnato.redebrasilrp.com.br/chamado/create", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', 
+                Authorization: `Bearer ${session?.token}`,
             },
             body: JSON.stringify(data), 
         });

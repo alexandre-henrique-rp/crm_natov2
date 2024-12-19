@@ -174,7 +174,7 @@ export default function ResponderChamado({
       ...(resposta && { resposta }),
       ...(urlFinal.length > 0 && { images_adm: urlFinal }),
     };
-
+    
     try {
       const response = await fetch("/api/chamado/back/put", {
         method: "PUT",

@@ -98,9 +98,10 @@ export function TabelaChamados({
 
     return (
       <Tr key={chamado.id}>
-        <Td display={"flex"} gap={2}>
+        <Td>
           <IconButton
             size={"sm"}
+            m={1}
             colorScheme="blue"
             aria-label="Editar"
             icon={<IoOpenOutline style={{ fontWeight: "900" }} />}
@@ -110,6 +111,7 @@ export function TabelaChamados({
               <PopoverTrigger>
               <IconButton
             size={"sm"}
+            m={1}
             colorScheme="red"
             aria-label="Excluir"
             icon={<IoIosTrash style={{ fontWeight: "900" }} />}
