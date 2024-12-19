@@ -15,8 +15,6 @@ import {
   useToast,
   Box,
 } from "@chakra-ui/react";
-import CreateNow from "@/actions/alertaNow/services/createNow";
-import CancelAlertaNow from "@/actions/alertaNow/services/cancelAlertaNow";
 
 interface BtnAlertNowProps {
   id: number;
@@ -29,9 +27,6 @@ interface BtnAlertNowProps {
 
 export default function BtnAlertNow({
   id,
-  andamento,
-  ativo,
-  distrato,
   construtora,
     alertanow
 
@@ -47,8 +42,18 @@ export default function BtnAlertNow({
   const idConstrutora = construtora.id
 
   const handleCancel = async () => {
-    const req = await CancelAlertaNow(id);
-    if(req.error){
+    // const req = await CancelAlertaNow(id);
+    const req = await fetch(`/api/alertanow/putNow/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        alertanow: false,
+      }),
+    })
+
+    if(!req.ok){
       toast({
         position: "top",
         title: "Erro ao cancelar alerta!",
@@ -89,17 +94,19 @@ export default function BtnAlertNow({
       });
       return
     }
-    const req = await CreateNow({
-      id,
-      andamento,
-      ativo,
-      distrato,
-      construtora,
+    const req = await fetch(`/api/alertanow/putNow/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        alertanow: true
+      })
     });
-    if (req.error) {
+    if (!req.ok) {
       toast({
         position: "top",
-        title: req.message,
+        title: "Erro ao criar alerta!",
         status: "error",
         duration: 9000,
         isClosable: true,
