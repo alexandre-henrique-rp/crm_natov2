@@ -14,7 +14,7 @@ export async function POST(request: Request) {
             );
         }
 
-        const response = await fetch("https://devapisisnato.redebrasilrp.com.br/chamado/create", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', 
