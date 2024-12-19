@@ -7,14 +7,11 @@ export async function POST(
   try {
     const body: any = await request.json();
     const tel = body.telefone;
-    const api = await fetch("https://chatwebhook.redebrasilrp.com.br/webhook/test_whatsapp", {
+    const api = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/checktel/${tel}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        telefone: tel,
-      }),
     });
     const data = await api.json();
     return NextResponse.json({ data: data }, { status: 200 });

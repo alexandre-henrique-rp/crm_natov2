@@ -197,5 +197,6 @@ declare namespace solictacao {
     rela_quest?: boolean;
     voucher?: string;
     vendedorName?: string;
+    obs?: string;
   }
 }

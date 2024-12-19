@@ -60,6 +60,7 @@ export default function SolicitacaoForm({
   const [Whatappdois, setWhatappdois] = useState<string>("");
   const [VendedorName, setVendedorName] = useState<string>("");
   const [Sms, setSms] = useState<boolean>(true);
+  const [Logwhats, setLogwhats] = useState<string>('');
   const toast = useToast();
   const router = useRouter();
   const { data: session } = useSession();
@@ -154,7 +155,8 @@ export default function SolicitacaoForm({
           dt_nascimento: DataNascimento,
           relacionamento: cpfdois && relacionamento === "sim" ? [cpfdois] : [],
           rela_quest: relacionamento === "sim" ? true : false,
-          financeiro: Number(FinanceiraID)
+          financeiro: Number(FinanceiraID),
+          ...(Logwhats && {obs: Logwhats})
         };
         console.log("🚀 ~ handlesubmit ~ data:", data);
   
@@ -331,7 +333,8 @@ export default function SolicitacaoForm({
             empreedimento: Number(empreendimento),
             financeiro: Number(FinanceiraID),
             rela_quest: relacionamento === "sim" ? true : false,
-            vendedorName: VendedorName
+            vendedorName: VendedorName,
+            ...(Logwhats && {obs: Logwhats})
           };
           onvalue(data);
         }
@@ -341,28 +344,7 @@ export default function SolicitacaoForm({
         ishidden("nao");
       }
     })();
-  }, [
-    ConstrutoraID,
-    CorretorId,
-    DataNascimento,
-    FinanceiraID,
-    UploadCnhUrl,
-    UploadRgUrl,
-    VendedorName,
-    cpf,
-    cpfdois,
-    email,
-    empreendimento,
-    ishidden,
-    nome,
-    onvalue,
-    relacionamento,
-    tel,
-    teldois,
-    toast,
-    user?.hierarquia,
-    user?.id
-  ]);
+  }, [ConstrutoraID, CorretorId, DataNascimento, FinanceiraID, Logwhats, UploadCnhUrl, UploadRgUrl, VendedorName, cpf, cpfdois, email, empreendimento, ishidden, nome, onvalue, relacionamento, tel, teldois, toast, user?.hierarquia, user?.id]);
 
   if (Load) {
     return <Loading />;
@@ -439,7 +421,7 @@ export default function SolicitacaoForm({
               </chakra.p>
             </Flex>
           </FormLabel>
-          <Whatsapp setValue={tel} onValue={setTel} />
+          <Whatsapp setValue={tel} onValue={setTel}  retornoLog={setLogwhats}/>
         </GridItem>
         <GridItem>
           <FormLabel>Whatsapp com DDD 2</FormLabel>

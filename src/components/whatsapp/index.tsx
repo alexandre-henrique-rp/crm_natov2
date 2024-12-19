@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { chakra, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { mask, unMask } from "remask";
@@ -5,9 +6,10 @@ import { mask, unMask } from "remask";
 interface WhatsAppProps {
   onValue: any;
   setValue: string;
+  retornoLog: any;
 }
 
-export const Whatsapp = ({ onValue, setValue }: WhatsAppProps) => {
+export const Whatsapp = ({ onValue, setValue, retornoLog }: WhatsAppProps) => {
   const [Tel, setTel] = useState("");
   const [IsvalideTel, setIsvalideTel] = useState(false);
 
@@ -53,6 +55,10 @@ export const Whatsapp = ({ onValue, setValue }: WhatsAppProps) => {
         }),
       });
       const data = await request.json();
+      if(data.data.log){
+        retornoLog(data.data.log)
+        return true;
+      }
       console.log("🚀 ~ checkwhatsapp ~ data:", data.data.exists)
       if (!data.data.exists) {
         return false;

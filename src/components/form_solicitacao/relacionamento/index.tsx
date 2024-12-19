@@ -45,6 +45,7 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
   const [Sms, setSms] = useState<boolean>(true);
   const [UploadRgUrl, setUploadRgUrl] = useState<string>("");
   const [UploadCnhUrl, setUploadCnhUrl] = useState<string>("");
+  const [Logwhats, setLogwhats] = useState<string>('');
   const toast = useToast();
   const router = useRouter();
   const { data: session } = useSession();
@@ -104,7 +105,8 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
         dt_nascimento: SetValue.dt_nascimento,
         relacionamento: SetValue.relacionamento,
         rela_quest: SetValue.rela_quest,
-        financeiro: SetValue.financeiro
+        financeiro: SetValue.financeiro,
+        ...(SetValue.obs && { obs: SetValue.obs })
       };
       const dados: solictacao.SolicitacaoPost = {
         nome: nome.toUpperCase(),
@@ -120,7 +122,8 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
         dt_nascimento: DataNascimento,
         relacionamento: SetValue.cpf ? [SetValue.cpf] : [],
         rela_quest: SetValue.rela_quest ? true : false,
-        financeiro: SetValue.financeiro
+        financeiro: SetValue.financeiro,
+        ...(Logwhats && { obs: Logwhats })
       };
 
       const data = [dados, dadossuperior];
@@ -261,7 +264,7 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
               (Obrigatório)
             </chakra.p>
           </FormLabel>
-          <Whatsapp setValue={tel} onValue={setTel} />
+          <Whatsapp setValue={tel} onValue={setTel} retornoLog={setLogwhats} />
         </GridItem>
         <GridItem>
           <FormLabel>Whatsapp com DDD 2</FormLabel>
