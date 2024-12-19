@@ -11,10 +11,7 @@ export async function POST(request: Request) {
     }
     const body: any = await request.json();
     const tel = body.telefone;
-    console.log(
-      "🚀 ~ file: route.ts:7 ~ POST ~ body:",
-      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/checktel/${tel}`
-    );
+   
     const api = await fetch(
       `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/checktel/${tel}`,
       {
