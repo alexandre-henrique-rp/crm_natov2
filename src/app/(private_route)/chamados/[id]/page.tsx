@@ -22,14 +22,12 @@ type Props = {
   params: { id: string };
 };
 
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const id = params.id;
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/${id}`
-  );
-  const data = await res.json();
+  
   return {
-    title: `Chamado ID: ${data.id}`,
+    title: `Chamado ID: ${id}`,
   };
 }
 
@@ -39,7 +37,14 @@ export default async function EditarChamado({ params }: Props) {
   const UserSessionId = userSession?.id;
   const userHierarquia = userSession?.hierarquia;
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/${params.id}`
+    `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/${params.id}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.token}`,
+      },
+    }
   );
   const data = await res.json();
 

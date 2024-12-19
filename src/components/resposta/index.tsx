@@ -161,22 +161,7 @@ export default function RespostaChamado({
         </Button>
         {mostrarResposta && renderResponseContent()}
 
-        {userResposta && (
-          <Flex
-            direction="column"
-            p={8}
-            borderWidth={1}
-            borderRadius="lg"
-            shadow="lg"
-            bg="white"
-            gap={6}
-            w="100%"
-            mx="auto"
-            mt={4}
-          >
-            <Text>{userResposta.name}</Text>
-          </Flex>
-        )}
+        
       </Flex>
     </>
   );

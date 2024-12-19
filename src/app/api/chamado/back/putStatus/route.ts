@@ -1,9 +1,19 @@
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export async function PUT(request: Request) {
     try {
         const data = await request.json();
-        
+        const session = await getServerSession(auth);
+
+        if (!session) {
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
         const status = {
             status: data.status
         };
@@ -14,6 +24,7 @@ export async function PUT(request: Request) {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${session?.token}`,
                 },
                 body: JSON.stringify(status), 
             }
