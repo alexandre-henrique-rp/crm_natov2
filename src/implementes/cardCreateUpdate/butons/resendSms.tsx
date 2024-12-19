@@ -46,6 +46,7 @@ export function ResendSms({ id }: ResendSmsProps) {
   return (
     <>
       <Button
+        size={'sm'}
         colorScheme="blue"
         onClick={handleResendSms}
         isLoading={Loading}

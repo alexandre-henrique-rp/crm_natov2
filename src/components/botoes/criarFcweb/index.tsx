@@ -71,7 +71,7 @@ export function CriarFcweb({ Id, user }: CriarFcwebProps) {
     <>
       {hierarquia === "ADM" && (
         <>
-          <Button colorScheme="cyan" isLoading={Loading} onClick={onOpen}>
+          <Button colorScheme="cyan" size={'sm'} isLoading={Loading} onClick={onOpen}>
             Criar FCWEB
           </Button>
           <AlertDialog

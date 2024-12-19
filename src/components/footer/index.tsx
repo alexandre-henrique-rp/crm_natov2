@@ -38,7 +38,7 @@ export default function FooterComponent() {
       </Flex>
       <Button variant="link" color="white" size="sm">
           <Link href="/suportefaq" isExternal>
-          FAQ / Suporte
+          FAQ 
           </Link>
       </Button>
 

@@ -19,8 +19,8 @@ import {
 import { MouseEvent } from "react";
 import { BsBoxArrowUpRight, BsFillTrashFill } from "react-icons/bs";
 import { IoIosArrowBack } from "react-icons/io";
-import revalidateSolicitacao from "./revalodate";
 import BtmDistrato from "../btm_distra";
+import { useRouter } from "next/navigation";
 
 
 interface BotoesFunctionProps {
@@ -32,6 +32,7 @@ interface BotoesFunctionProps {
 export const BotoesFunction = ({ id, distrato, exclude }: BotoesFunctionProps) => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const route = useRouter();
 
 
 
@@ -53,7 +54,7 @@ export const BotoesFunction = ({ id, distrato, exclude }: BotoesFunctionProps) =
           duration: 3000,
           isClosable: true,
         });
-        revalidateSolicitacao();
+        route.refresh();
       }
     } catch (error) {
       toast({
@@ -109,9 +110,7 @@ export const BotoesFunction = ({ id, distrato, exclude }: BotoesFunctionProps) =
                 leftIcon={<IoIosArrowBack />}
                 onClick={onClose}
               />
-
               <Button
-                // leftIcon={<BsFillTrashFill />}
                 onClick={(e) => HandleDelet(e)}
                 colorScheme="red"
               >

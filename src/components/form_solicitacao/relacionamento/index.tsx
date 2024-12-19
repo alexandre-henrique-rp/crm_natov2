@@ -14,13 +14,11 @@ import {
   FormControl,
   FormLabel,
   GridItem,
-  Icon,
   Input,
   InputGroup,
   SimpleGrid,
   Stack,
   Switch,
-  Tooltip,
   useToast
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
@@ -42,12 +40,12 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
   const [tel, setTel] = useState<string>("");
   const [teldois, SetTeldois] = useState<string>("");
   const [Whatappdois, setWhatappdois] = useState<string>("");
-  const [Voucher, setVoucher] = useState<string>("");
   const [DataNascimento, setDataNascimento] = useState<Date | string | any>();
   const [Load, setLoad] = useState<boolean>(false);
   const [Sms, setSms] = useState<boolean>(true);
   const [UploadRgUrl, setUploadRgUrl] = useState<string>("");
   const [UploadCnhUrl, setUploadCnhUrl] = useState<string>("");
+  const [Logwhats, setLogwhats] = useState<string>('');
   const toast = useToast();
   const router = useRouter();
   const { data: session } = useSession();
@@ -60,7 +58,16 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
   }, [SetValue]);
 
   const handlesubmit = () => {
-    if (!nome || !email || !tel || !email || !DataNascimento) {
+    if(SetValue.cpf.replace(/\W+/g, "") === cpf.replace(/\W+/g, "")){
+      toast({
+        title: "Cpf Duplicado",
+        description: "O cpf do principal não pode ser igual ao do relacionado",
+        status: "error",
+        duration: 15000,
+        isClosable: true,
+        position: "top-right"
+      });
+    } else if (!nome || !email || !tel || !email || !DataNascimento) {
       const capos = [];
       if (!nome) {
         capos.push("Nome");
@@ -98,8 +105,8 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
         dt_nascimento: SetValue.dt_nascimento,
         relacionamento: SetValue.relacionamento,
         rela_quest: SetValue.rela_quest,
-        voucher: SetValue.voucher,
-        financeiro: SetValue.financeiro
+        financeiro: SetValue.financeiro,
+        ...(SetValue.obs && { obs: SetValue.obs })
       };
       const dados: solictacao.SolicitacaoPost = {
         nome: nome.toUpperCase(),
@@ -115,8 +122,8 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
         dt_nascimento: DataNascimento,
         relacionamento: SetValue.cpf ? [SetValue.cpf] : [],
         rela_quest: SetValue.rela_quest ? true : false,
-        voucher: Voucher,
-        financeiro: SetValue.financeiro
+        financeiro: SetValue.financeiro,
+        ...(Logwhats && { obs: Logwhats })
       };
 
       const data = [dados, dadossuperior];
@@ -257,7 +264,7 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
               (Obrigatório)
             </chakra.p>
           </FormLabel>
-          <Whatsapp setValue={tel} onValue={setTel} />
+          <Whatsapp setValue={tel} onValue={setTel} retornoLog={setLogwhats} />
         </GridItem>
         <GridItem>
           <FormLabel>Whatsapp com DDD 2</FormLabel>
@@ -307,24 +314,6 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
           <FormLabel>RG</FormLabel>
           <VerificadorFileComponent onFileUploaded={handleFileUploadedRg} />
         </FormControl>
-        {user?.hierarquia === "ADM" && (
-          <Box>
-            <FormLabel>
-              Voucher
-              <Tooltip
-                label="Voucher para Atendimento em qualquer unidade Soluti"
-                aria-label="A tooltip"
-              >
-                <Icon ml={1} color="black" cursor="pointer" boxSize={3} />
-              </Tooltip>
-            </FormLabel>
-            <Input
-              type="text"
-              onChange={(e) => setVoucher(e.target.value)}
-              readOnly
-            />
-          </Box>
-        )}
         {user?.hierarquia === "ADM" && (
           <Box>
             <FormLabel>Envio de SMS</FormLabel>

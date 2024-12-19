@@ -10,6 +10,9 @@ import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import { UpdateSolicitacao } from "@/actions/solicitacao/service/update";
 import { SessionUserType } from "@/types/next-auth";
 import BtnAlertNow from "../btn_alerta_now";
+import BtnIniciarAtendimento from "../botoes/btn_iniciar_atendimento";
+import CreateChamado from "../botoes/btn_chamado";
+import BotaoReativarSolicitacao from "../botoes/btn_reativar_solicitacao";
 
 // const prisma = new PrismaClient();
 type Props = {
@@ -17,7 +20,9 @@ type Props = {
   user: SessionUserType.User;
 };
 export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
+  
   const HierarquiaUser = user?.hierarquia;
+  console.log("🚀 ~ CardUpdateSolicitacao ~ HierarquiaUser:", HierarquiaUser)
   return (
     <>
       <CardCreateUpdate.Root>
@@ -44,6 +49,7 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                   CPF={setDadosCard?.cpf}
                   w={{ base: "100%", md: "10rem" }}
                 />
+                <input type="text" hidden value={setDadosCard.ativo.toString()} readOnly name="StatusAtivo" />
                 <CardCreateUpdate.GridName
                   Nome={setDadosCard.nome}
                   w={{ base: "100%", md: "33rem" }}
@@ -162,7 +168,7 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                 <Box>
                   <Alert justifyContent={'space-between'} status="warning" variant="left-accent">
                     <AlertIcon />
-                    Apenas para clientes Presentes na Construtora.
+                    Apenas para clientes presentes no Plantão de Venda.
                   <BtnAlertNow
                     id={setDadosCard.id}
                     andamento={setDadosCard.Andamento}
@@ -218,6 +224,7 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
             alignItems={"center"}
             gap={3}
             px={4}
+            wrap={'wrap'}
           >
             {setDadosCard.distrato && setDadosCard.ativo && (
               <CardCreateUpdate.GridDistrato Id={setDadosCard.id} User={user} />
@@ -232,9 +239,12 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
               />
             )}
             {setDadosCard.ativo && <ResendSms id={setDadosCard.id} />}
-            <SaveBtm colorScheme="green" type="submit">
+            <SaveBtm colorScheme="green" size={'sm'} type="submit">
               Salvar
             </SaveBtm>
+            <CreateChamado id={setDadosCard.id}/>
+            {!setDadosCard.ativo && HierarquiaUser === 'ADM' ? <BotaoReativarSolicitacao id={setDadosCard.id} /> : <Box hidden></Box>}
+            <BtnIniciarAtendimento hierarquia={HierarquiaUser} status={setDadosCard.statusAtendimento} aprovacao={setDadosCard.Andamento} id={setDadosCard.id}/>
           </Flex>
         </CardCreateUpdate.Form>
       </CardCreateUpdate.Root>

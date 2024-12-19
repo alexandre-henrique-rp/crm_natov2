@@ -15,7 +15,6 @@ export default function InputEmpreendimentoNome({ setNomeValue, ...props }: Inpu
 
   useEffect(() => {
     if(construtoraTag){
-        console.log("🚀 ~ useEffect ~ construtoraTag:", construtoraTag)
         setNomeLocal(`${construtoraTag} - `)
         return 
     }
@@ -28,8 +27,7 @@ export default function InputEmpreendimentoNome({ setNomeValue, ...props }: Inpu
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const valor = e.target.value;
-    const removeCaracteresEspeciais = valor.replace(/[^a-zA-Z\s\.,\/\\:;!?'"()-]/g, "");
-    const Linite1EspacoEntre = removeCaracteresEspeciais.replace(/\s+/g, " ");
+    const Linite1EspacoEntre = valor.replace(/\s+/g, " ");
     const RemosEspacosExtras = Linite1EspacoEntre;
     setNomeLocal(RemosEspacosExtras);
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions

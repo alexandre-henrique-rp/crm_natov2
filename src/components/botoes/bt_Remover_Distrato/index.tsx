@@ -74,6 +74,7 @@ export default function BtRemoverDistrato({ id }: BtRemoverDistratoProps) {
 
   return (
     <Button
+      size={'sm'}
       colorScheme="cyan"
       variant="solid"
       onClick={handleClick}
