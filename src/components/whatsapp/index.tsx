@@ -55,6 +55,7 @@ export const Whatsapp = ({ onValue, setValue, retornoLog }: WhatsAppProps) => {
         }),
       });
       const data = await request.json();
+      console.log("🚀 ~ checkwhatsapp ~ data:", data)
       if(data.data.log){
         retornoLog(data.data.log)
         return true;
