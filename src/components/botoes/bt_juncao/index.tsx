@@ -54,12 +54,6 @@ export default function BotaoJuncao() {
                 {/* <BotaoPainelFinanceiro /> */}
               </>
             )}
-            {but === "CONST" && (
-              <>
-                <BotaoPainelAdm />
-                {/* <BotaoPainelFinanceiro /> */}
-              </>
-            )}
             <BotaoDashboard />
             
           <Button variant="link" gap={2} color="white" size="sm">
@@ -68,8 +62,6 @@ export default function BotaoJuncao() {
              FAQ / Suporte
             </Link>
           </Button>
-
-
           </>
         ) : (
           <Menu>
@@ -86,13 +78,6 @@ export default function BotaoJuncao() {
                 <BotaoNovaSolicita />
               </MenuItem>
               {but === "ADM" && (
-                <>
-                  <MenuItem bg={"transparent"}>
-                    <BotaoPainelAdm />
-                  </MenuItem>
-                </>
-              )}
-              {but === "CONST" && (
                 <>
                   <MenuItem bg={"transparent"}>
                     <BotaoPainelAdm />
