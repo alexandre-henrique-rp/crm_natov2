@@ -20,9 +20,7 @@ type Props = {
   user: SessionUserType.User;
 };
 export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
-  
   const HierarquiaUser = user?.hierarquia;
-  console.log("🚀 ~ CardUpdateSolicitacao ~ HierarquiaUser:", HierarquiaUser)
   return (
     <>
       <CardCreateUpdate.Root>
@@ -49,7 +47,13 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                   CPF={setDadosCard?.cpf}
                   w={{ base: "100%", md: "10rem" }}
                 />
-                <input type="text" hidden value={setDadosCard.ativo.toString()} readOnly name="StatusAtivo" />
+                <input
+                  type="text"
+                  hidden
+                  value={setDadosCard.ativo.toString()}
+                  readOnly
+                  name="StatusAtivo"
+                />
                 <CardCreateUpdate.GridName
                   Nome={setDadosCard.nome}
                   w={{ base: "100%", md: "33rem" }}
@@ -166,17 +170,21 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
               </Flex>
               {setDadosCard.construtora.id === 5 ? (
                 <Box>
-                  <Alert justifyContent={'space-between'} status="warning" variant="left-accent">
+                  <Alert
+                    justifyContent={"space-between"}
+                    status="warning"
+                    variant="left-accent"
+                  >
                     <AlertIcon />
                     Apenas para clientes presentes no Plantão de Venda.
-                  <BtnAlertNow
-                    id={setDadosCard.id}
-                    andamento={setDadosCard.Andamento}
-                    ativo={setDadosCard.ativo}
-                    distrato={setDadosCard.distrato}
-                    construtora={setDadosCard.construtora}
-                    alertanow={setDadosCard.alertanow}
-                  />
+                    <BtnAlertNow
+                      id={setDadosCard.id}
+                      andamento={setDadosCard.Andamento}
+                      ativo={setDadosCard.ativo}
+                      distrato={setDadosCard.distrato}
+                      construtora={setDadosCard.construtora}
+                      alertanow={setDadosCard.alertanow}
+                    />
                   </Alert>
                 </Box>
               ) : (
@@ -224,7 +232,7 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
             alignItems={"center"}
             gap={3}
             px={4}
-            wrap={'wrap'}
+            wrap={"wrap"}
           >
             {setDadosCard.distrato && setDadosCard.ativo && (
               <CardCreateUpdate.GridDistrato Id={setDadosCard.id} User={user} />
@@ -239,12 +247,21 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
               />
             )}
             {setDadosCard.ativo && <ResendSms id={setDadosCard.id} />}
-            <SaveBtm colorScheme="green" size={'sm'} type="submit">
+            <CreateChamado id={setDadosCard.id} />
+            {!setDadosCard.ativo && HierarquiaUser === "ADM" ? (
+              <BotaoReativarSolicitacao id={setDadosCard.id} />
+            ) : (
+              <Box hidden></Box>
+            )}
+            <BtnIniciarAtendimento
+              hierarquia={HierarquiaUser}
+              status={setDadosCard.statusAtendimento}
+              aprovacao={setDadosCard.Andamento}
+              id={setDadosCard.id}
+            />
+            <SaveBtm colorScheme="green" size={"sm"} type="submit">
               Salvar
             </SaveBtm>
-            <CreateChamado id={setDadosCard.id}/>
-            {!setDadosCard.ativo && HierarquiaUser === 'ADM' ? <BotaoReativarSolicitacao id={setDadosCard.id} /> : <Box hidden></Box>}
-            <BtnIniciarAtendimento hierarquia={HierarquiaUser} status={setDadosCard.statusAtendimento} aprovacao={setDadosCard.Andamento} id={setDadosCard.id}/>
           </Flex>
         </CardCreateUpdate.Form>
       </CardCreateUpdate.Root>
