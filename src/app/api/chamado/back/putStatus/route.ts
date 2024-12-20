@@ -26,8 +26,8 @@ export async function PUT(request: Request) {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${session?.token}`,
                 },
-                body: JSON.stringify(status), 
-            }
+                body: JSON.stringify(status),
+            }   
         );
 
         const retornoArquivo = await response.json();

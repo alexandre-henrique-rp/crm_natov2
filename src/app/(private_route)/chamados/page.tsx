@@ -1,5 +1,3 @@
-import { getAllChamados } from "@/actions/chamados/service/getAll";
-import { getById } from "@/actions/chamados/service/getById";
 import { TabelaChamados } from "@/components/tabelaChamados";
 import { auth } from "@/lib/auth_confg";
 import { Flex } from "@chakra-ui/react";
@@ -8,25 +6,45 @@ import { getServerSession } from "next-auth/next";
 
 export const metadata: Metadata = {
   title: "CHAMADOS",
-  description: "sistema de suporte"
+  description: "sistema de suporte",
 };
 
 export default async function ChamadosPage() {
   const session = await getServerSession(auth);
   const userHierarquia = session?.user.hierarquia;
-  const idUser = session?.user.id
-  async function isAdm(id: any){
-    if(userHierarquia === "ADM"){
-      const res = await getAllChamados();
-      return  res
-    }else{
-      const res = await getById(id)
-      return res
+  const idUser = session?.user.id;
+
+  async function isAdm(id: any) {
+    if (userHierarquia === "ADM") {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado`, {
+        method: "GET",
+          headers: {
+             Authorization: `Bearer ${session?.token}`
+        }
+      });
+      if (!res.ok) {
+        throw new Error(`Erro na requisição: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+      return data; 
+    } else {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/pesquisar?idUser=${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session?.token}`
+        }
+      });
+      if(!res.ok){
+        throw new Error(`Erro na requisição: ${res.statusText}`);
+      }
+      const data = await res.json();
+      return data; 
     }
   }
-  const res = await isAdm(idUser)
-  const chamados = res.data;
 
+  const chamados = await isAdm(idUser);
+  console.log("🚀 ~ ChamadosPage ~ chamados:", chamados)
 
   return (
     <Flex
@@ -38,9 +56,6 @@ export default async function ChamadosPage() {
       py="2rem"
     >
       <TabelaChamados chamados={chamados} registrosPorPagina={10} />
-
     </Flex>
-    
   );
 }
-
