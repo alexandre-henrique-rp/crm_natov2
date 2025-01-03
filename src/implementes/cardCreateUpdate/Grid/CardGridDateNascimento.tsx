@@ -1,13 +1,15 @@
-'use client';
+"use client";
 import { Box, BoxProps, FormLabel, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 interface CardGridDateNascimento extends BoxProps {
   DataSolicitacao: solictacao.SolicitacaoGetType;
+  readonly?: boolean;
 }
 
 export default function CardGridDateNascimento({
   DataSolicitacao,
+  readonly,
   ...props
 }: CardGridDateNascimento) {
   const [Date, setDate] = useState<string>("");
@@ -17,7 +19,7 @@ export default function CardGridDateNascimento({
       setDate(DataSolicitacao?.dt_nascimento.split("T")[0]);
     }
   }, [DataSolicitacao]);
-  
+
   return (
     <>
       <Box {...props}>
@@ -33,6 +35,7 @@ export default function CardGridDateNascimento({
           px={1}
           bg={"gray.100"}
           borderColor={"gray.400"}
+          readOnly={readonly}
         />
       </Box>
     </>

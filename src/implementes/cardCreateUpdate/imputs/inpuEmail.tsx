@@ -6,10 +6,12 @@ import { useEffect, useState } from "react";
 
 export interface InputEmailProps extends InputProps {
   setValueEmail?: string;
+  readonly?: boolean;
 }
 
 export default function InputEmail({
   setValueEmail,
+  readonly,
   ...props
 }: InputEmailProps) {
   const [email, setEmail] = useState<string>("");
@@ -35,7 +37,13 @@ export default function InputEmail({
 
   return (
     <>
-      <Input {...props} value={email} type="email" onChange={handleChange} />
+      <Input
+        {...props}
+        value={email}
+        type="email"
+        onChange={handleChange}
+        readOnly={readonly}
+      />
     </>
   );
 }
