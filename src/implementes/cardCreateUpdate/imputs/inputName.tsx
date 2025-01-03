@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 "use client";
 
-import { Box, Input, InputProps } from "@chakra-ui/react";
+import { Box, Input, InputProps, Tooltip } from "@chakra-ui/react";
 import { createContext, useEffect, useState } from "react";
 
 export interface InputCpfProps extends InputProps {
@@ -63,13 +63,22 @@ export default function InputName({
         value={{ NameContex: Nome, setNameContex: setNome }}
       >
         <Box>
-          <Input
-            {...props}
-            value={Nome}
-            type="text"
-            onChange={handleChange}
-            readOnly={readonly}
-          />
+          {readonly ? (
+            <Tooltip
+              bg={"orange.400"}
+              label="Para fazer alguma alteração, solicite abrindo um chamado!"
+              rounded={"lg"}
+            >
+              <Input {...props} value={Nome} type="text" readOnly />
+            </Tooltip>
+          ) : (
+            <Input
+              {...props}
+              value={Nome}
+              type="text"
+              onChange={handleChange}
+            />
+          )}
         </Box>
       </InputNameContext.Provider>
     </>

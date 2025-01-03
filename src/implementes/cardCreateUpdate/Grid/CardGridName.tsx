@@ -8,25 +8,23 @@ interface CardGridNameProps extends BoxProps {
 
 export default function CardGridName({
   Nome,
-  readonly,
+  readonly = false,
   ...props
 }: CardGridNameProps) {
   return (
-    <>
-      <Box {...props}>
-        <FormLabel fontSize="sm" fontWeight="md" m={0}>
-          Nome Completo
-        </FormLabel>
-        <InputName
-          name="nome"
-          variant="flushed"
-          setValueName={Nome}
-          borderColor={"gray.400"}
-          px={1}
-          bg={"gray.100"}
-          readonly={readonly}
-        />
-      </Box>
-    </>
+    <Box {...props}>
+      <FormLabel fontSize="sm" fontWeight="md" m={0}>
+        Nome Completo
+      </FormLabel>
+      <InputName
+        name="nome"
+        variant="flushed"
+        setValueName={Nome}
+        borderColor="gray.400"
+        px={1}
+        bg="gray.100"
+        readonly={readonly}
+      />
+    </Box>
   );
 }

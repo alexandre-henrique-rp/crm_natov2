@@ -21,7 +21,7 @@ type Props = {
 };
 export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
   const HierarquiaUser = user?.hierarquia;
-  const readonly = HierarquiaUser === "ADM" ? false : true;
+  const readonly = HierarquiaUser === "ADM" ? true : false;
   console.log("🚀 ~ CardUpdateSolicitacao ~ HierarquiaUser:", HierarquiaUser);
   return (
     <>

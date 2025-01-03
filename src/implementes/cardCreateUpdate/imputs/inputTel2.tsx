@@ -1,5 +1,5 @@
 "use client";
-import { Box, Input, InputProps, Text } from "@chakra-ui/react";
+import { Box, Input, InputProps, Text, Tooltip } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { mask } from "remask";
 
@@ -10,7 +10,12 @@ interface InputTel1Props extends InputProps {
   readonly?: boolean;
 }
 
-export const InputTel2 = ({ index, SetValue, readonly, ...props }: InputTel1Props) => {
+export const InputTel2 = ({
+  index,
+  SetValue,
+  readonly,
+  ...props
+}: InputTel1Props) => {
   const [tel1, setTel1] = useState<string>("");
   const [Verifique, setVerifique] = useState<boolean>(false);
 
@@ -54,16 +59,34 @@ export const InputTel2 = ({ index, SetValue, readonly, ...props }: InputTel1Prop
 
   return (
     <>
-      <Input
-        type="tel"
-        placeholder="(__) _____-____"
-        variant="flushed"
-        value={tel1}
-        onChange={handleChange}
-        onBlur={Whatsapp}
-        readOnly={readonly}
-        {...props} // Spread dos props adicionais do Chakra UI
-      />
+      {readonly ? (
+        <Tooltip
+          bg={"orange.400"}
+          label="Para fazer alguma alteração, solicite abrindo um chamado!"
+          rounded={"lg"}
+        >
+          <Input
+            type="tel"
+            placeholder="(__) _____-____"
+            variant="flushed"
+            value={tel1}
+            onBlur={Whatsapp}
+            readOnly
+            {...props} // Spread dos props adicionais do Chakra UI
+          />
+        </Tooltip>
+      ) : (
+        <Input
+          type="tel"
+          placeholder="(__) _____-____"
+          variant="flushed"
+          value={tel1}
+          onChange={handleChange}
+          onBlur={Whatsapp}
+          {...props} // Spread dos props adicionais do Chakra UI
+        />
+      )}
+
       {Verifique && (
         <Text color={"red"} fontSize={"xs"}>
           Número de telefone inválido

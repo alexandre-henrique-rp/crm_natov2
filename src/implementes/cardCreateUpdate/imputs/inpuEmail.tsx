@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 "use client";
 
-import { Input, InputProps } from "@chakra-ui/react";
+import { Input, InputProps, Tooltip } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 export interface InputEmailProps extends InputProps {
@@ -37,13 +37,17 @@ export default function InputEmail({
 
   return (
     <>
-      <Input
-        {...props}
-        value={email}
-        type="email"
-        onChange={handleChange}
-        readOnly={readonly}
-      />
+      {readonly ? (
+        <Tooltip
+          bg={"orange.400"}
+          label="Para fazer alguma alteração, solicite abrindo um chamado!"
+          rounded={"lg"}
+        >
+          <Input {...props} value={email} type="email" readOnly />
+        </Tooltip>
+      ) : (
+        <Input {...props} value={email} type="email" onChange={handleChange} />
+      )}
     </>
   );
 }
