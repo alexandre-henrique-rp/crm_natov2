@@ -32,7 +32,7 @@ import { FaRunning } from "react-icons/fa";
 import { FaFileSignature } from "react-icons/fa6";
 import { ImClock } from "react-icons/im";
 import { IoIosArrowForward } from "react-icons/io";
-import { LuAlertTriangle } from "react-icons/lu";
+import { LuTriangleAlert } from "react-icons/lu";
 import { BotoesFunction } from "../botoes/bt_group_function";
 interface TabelaProps {
   ClientData: solictacao.SolicitacaoGetType[];
@@ -162,7 +162,7 @@ export function Tabela({
                       <IconButton
                         variant={"outline"}
                         color={"red"}
-                        icon={<LuAlertTriangle style={{ fontWeight: "900" }} />}
+                        icon={<LuTriangleAlert style={{ fontWeight: "900" }} />}
                         aria-label={"Alert"}
                         fontSize={"1.7rem"}
                         fontWeight={"900"}
