@@ -12,6 +12,15 @@ export const APP_ROUTES: ConfigRoutes = {
     "/perfil",
     "/perfil/:id",
     "/register",
-    "/dashboard"
-  ]
+    "/dashboard",
+    "/usuarios",
+    "/usuarios/:id",
+    "/usuarios/cadastrar",
+    "/financeiras",
+    "/financeiras/:id",
+    "/financeiras/cadastrar",
+    "/empreendimentos",
+    "/empreendimentos/:id",
+    "/empreendimentos/cadastrar"
+  ],
 };

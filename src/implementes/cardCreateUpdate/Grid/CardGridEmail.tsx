@@ -4,6 +4,7 @@ import InputEmail from "../imputs/inpuEmail";
 interface CardGridEmailProps extends BoxProps {
   DataSolicitacao?: solictacao.SolicitacaoGetType;
   type?: string;
+  readonly?: boolean;
 }
 
 /**
@@ -17,6 +18,7 @@ interface CardGridEmailProps extends BoxProps {
 export default function CardGridRegisterEmail({
   DataSolicitacao,
   type,
+  readonly,
   ...props
 }: CardGridEmailProps): JSX.Element {
   return (
@@ -32,6 +34,7 @@ export default function CardGridRegisterEmail({
           px={1}
           bg={"gray.100"}
           borderColor={"gray.400"}
+          readonly={readonly}
         />
       </Box>
     </>
