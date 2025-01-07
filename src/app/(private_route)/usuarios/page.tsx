@@ -5,7 +5,6 @@ import UserProvider from "@/provider/UserProvider";
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
-import React from "react";
 
 async function GetUser() {
   try {

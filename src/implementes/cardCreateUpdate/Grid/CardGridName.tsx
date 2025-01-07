@@ -8,7 +8,7 @@ interface CardGridNameProps extends BoxProps {
 
 export default function CardGridName({
   Nome,
-  readonly = false,
+  readonly,
   ...props
 }: CardGridNameProps) {
   return (

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createRouteMatch } from "./lib/route";
 import { APP_ROUTES } from "./constants/app-routes";
+import { createRouteMatch } from "./lib/route";
 
 export async function middleware(req: NextRequest) {
   const cookiesAll = req.cookies.getAll();
@@ -31,7 +31,6 @@ export async function middleware(req: NextRequest) {
     if (!session) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
-
     return NextResponse.next();
   }
 
