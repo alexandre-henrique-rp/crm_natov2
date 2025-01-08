@@ -22,6 +22,7 @@ export function BtmConstrutoraListUser({
   data,
   ...props
 }: BtmConstrutoraListUserProps) {
+  console.log("🚀 ~ data:", data)
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (

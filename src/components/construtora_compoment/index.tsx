@@ -1,41 +1,18 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { FaCopy } from "react-icons/fa6";
 import { mask } from "remask";
-import { PrismaClient } from "@prisma/client";
 import BtmExcluirConstrutora from "../botoes/btn_excluir_construtora";
 import { BtmCopy } from "../botoes/btn_copy";
 import { BtmConstrutoraListUser } from "../botoes/btn_construtora_list_user";
-import { ConstrutoraType } from "@/app/(private_route)/construtoras/page";
 import { BtnEditarConstrutora } from "../botoes/btn_editar_construtoras";
+import GetCorretorByConstrutora from "@/actions/construtora/service/getCorretorByConstrutora";
 
-const prisma = new PrismaClient();
 
 interface TypeConstrutora {
-  data: ConstrutoraType[];
+  data: any
 }
 
-async function GetCorretorByConstrutora(Id: number) {
-  try {
-    const reqest = await prisma.nato_user.findMany({
-      where: {
-        construtora: {
-          contains: Id.toString()
-        }
-      },
-      select: {
-        id: true,
-        nome: true,
-        cargo: true,
-      }
-    })
 
-    return reqest
-
-  } catch (error) {
-    console.log(error);
-    return null
-  }
-}
 
 export default function Construtora({ data }: TypeConstrutora) {
   return (
@@ -47,7 +24,7 @@ export default function Construtora({ data }: TypeConstrutora) {
         alignItems="center"
       ></Flex>
       <Flex gap={4} flexWrap={"wrap"}>
-        {data.map(async(c: ConstrutoraType) => {
+        {data.map(async(c: any) => {
           const corretores = await GetCorretorByConstrutora(c.id);
           return (
             <Box
@@ -91,7 +68,7 @@ export default function Construtora({ data }: TypeConstrutora) {
                 </Flex>
               </Flex>
               <Flex mt={3} gap={2} w="100%" justifyContent="space-between">
-                <BtmConstrutoraListUser data={corretores}/>
+                <BtmConstrutoraListUser data={corretores.data}/>
                 <BtnEditarConstrutora id={c.id} />
                 <BtmExcluirConstrutora id={c.id} status={c.status} />
               </Flex>

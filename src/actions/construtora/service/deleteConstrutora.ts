@@ -1,29 +1,29 @@
 "use server";
-import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 
 export default async function DeleteConstrutora(id: number) {
-  const referencias = await prisma.nato_empreendimento.findMany({
-    where: {
-      construtora: id
-    }
-  });
 
-  if (referencias.length > 0) {
-    return {
-      error: true,
-      message:
-        "Existem Empreendimentos cadastrados para essa empresa referências na tabela ",
-      data: referencias
-    };
-  } else {
-    await prisma.nato_empresas.delete({
-      where: {
-        id: id
-      }
-    });
-    await prisma.$disconnect();
-    return { error: false };
+  const session = await getServerSession(auth);
+
+  if (!session) {
+    return { error: true, message: "Unauthorized" };
+  }
+
+  const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/construtoras/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${session?.token}`
+    }
+  })
+
+  const res = await req.json();
+
+  if (res.error) {
+    return { error: true, message: res.message };
+  }else{
+    return { error: false, message: 'Construtora deletada com sucesso' };
   }
 }
