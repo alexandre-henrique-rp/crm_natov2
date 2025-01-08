@@ -1,18 +1,18 @@
-import { Alert, AlertIcon, Box, Divider, Flex, Input } from "@chakra-ui/react";
 import UserCompraProvider from "@/provider/UserCompra";
+import { Alert, AlertIcon, Box, Divider, Flex, Input } from "@chakra-ui/react";
 
-import { ResendSms } from "@/implementes/cardCreateUpdate/butons/resendSms";
-import { CriarFcweb } from "../botoes/criarFcweb";
-import { BtCreateAlertCliente } from "../botoes/bt_create_alert_cliente";
-import { SaveBtm } from "@/implementes/cardCreateUpdate/butons/saveBtm";
-import DistratoAlertPrint from "../Distrato_alert_print";
-import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import { UpdateSolicitacao } from "@/actions/solicitacao/service/update";
+import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
+import { ResendSms } from "@/implementes/cardCreateUpdate/butons/resendSms";
+import { SaveBtm } from "@/implementes/cardCreateUpdate/butons/saveBtm";
 import { SessionUserType } from "@/types/next-auth";
-import BtnAlertNow from "../btn_alerta_now";
-import BtnIniciarAtendimento from "../botoes/btn_iniciar_atendimento";
+import { BtCreateAlertCliente } from "../botoes/bt_create_alert_cliente";
 import CreateChamado from "../botoes/btn_chamado";
+import BtnIniciarAtendimento from "../botoes/btn_iniciar_atendimento";
 import BotaoReativarSolicitacao from "../botoes/btn_reativar_solicitacao";
+import { CriarFcweb } from "../botoes/criarFcweb";
+import BtnAlertNow from "../btn_alerta_now";
+import DistratoAlertPrint from "../Distrato_alert_print";
 
 // const prisma = new PrismaClient();
 type Props = {
@@ -21,6 +21,8 @@ type Props = {
 };
 export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
   const HierarquiaUser = user?.hierarquia;
+
+  const readonly = HierarquiaUser === "ADM" ? false : true;
   return (
     <>
       <CardCreateUpdate.Root>
@@ -56,11 +58,13 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                 />
                 <CardCreateUpdate.GridName
                   Nome={setDadosCard.nome}
+                  readonly={readonly}
                   w={{ base: "100%", md: "33rem" }}
                 />
                 <CardCreateUpdate.GridDateNasc
                   DataSolicitacao={setDadosCard}
                   w={{ base: "100%", md: "10rem" }}
+                  readonly={readonly}
                 />
                 <CardCreateUpdate.GridRelacionamento
                   DataSolicitacao={setDadosCard}
@@ -77,16 +81,19 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                   type="register"
                   DataSolicitacao={setDadosCard}
                   w={{ base: "100%", md: "25rem" }}
+                  readonly={readonly}
                 />
                 <CardCreateUpdate.GridTel
                   index={1}
                   DataSolicitacao={setDadosCard.telefone}
                   w={{ base: "100%", md: "10rem" }}
+                  readonly={readonly}
                 />
                 <CardCreateUpdate.GridTel
                   index={2}
                   DataSolicitacao={setDadosCard.telefone2}
                   w={{ base: "100%", md: "10rem" }}
+                  readonly={readonly}
                 />
                 <CardCreateUpdate.GridConstrutora
                   user={user}
@@ -247,6 +254,9 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
               />
             )}
             {setDadosCard.ativo && <ResendSms id={setDadosCard.id} />}
+            <SaveBtm colorScheme="green" size={"sm"} type="submit">
+              Salvar
+            </SaveBtm>
             <CreateChamado id={setDadosCard.id} />
             {!setDadosCard.ativo && HierarquiaUser === "ADM" ? (
               <BotaoReativarSolicitacao id={setDadosCard.id} />
@@ -259,9 +269,6 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
               aprovacao={setDadosCard.Andamento}
               id={setDadosCard.id}
             />
-            <SaveBtm colorScheme="green" size={"sm"} type="submit">
-              Salvar
-            </SaveBtm>
           </Flex>
         </CardCreateUpdate.Form>
       </CardCreateUpdate.Root>

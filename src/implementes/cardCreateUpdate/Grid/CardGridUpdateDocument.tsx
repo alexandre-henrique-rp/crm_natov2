@@ -42,6 +42,6 @@ export default async function CardGridUpdateDocument({
         />
         {Hierarquia !== "USER" && (suspenso ? <Text color={'red'}>{suspenso}</Text> : <ButtonsDownloadsCnh url={Url} />)}
       </Box>
-    </>
+    </>       
   );
 }

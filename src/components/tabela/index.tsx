@@ -1,5 +1,7 @@
 "use client";
+import GetAllConstrutoras from "@/actions/construtora/service/getAllContrutoras";
 import {
+  Badge,
   Box,
   ButtonGroup,
   Flex,
@@ -21,18 +23,17 @@ import {
   Th,
   Thead,
   Tooltip,
-  Tr,
+  Tr
 } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { FaRunning } from "react-icons/fa";
 import { FaFileSignature } from "react-icons/fa6";
 import { ImClock } from "react-icons/im";
 import { IoIosArrowForward } from "react-icons/io";
-import { LuAlertTriangle } from "react-icons/lu";
+import { LuTriangleAlert } from "react-icons/lu";
 import { BotoesFunction } from "../botoes/bt_group_function";
-import { keyframes } from "@emotion/react";
-import GetAllConstrutoras from "@/actions/construtora/service/getAllContrutoras";
-import { FaRunning } from "react-icons/fa";
 interface TabelaProps {
   ClientData: solictacao.SolicitacaoGetType[];
   total: number | null;
@@ -52,7 +53,7 @@ export function Tabela({
   ClientData,
   total,
   AtualPage,
-  SetVewPage,
+  SetVewPage
 }: TabelaProps) {
   const [SelectPage, setSelectPage] = useState(1);
   const [Construtoras, setConstrutoras] = useState<any>([]);
@@ -99,7 +100,6 @@ export function Tabela({
   };
 
   const tabela = ClientData.map((item) => {
-
     const fantasia = Construtoras.find(
       (construtora: { id: number }) => construtora.id === item.construtora
     )?.fantasia;
@@ -113,6 +113,14 @@ export function Tabela({
 
     const horaAgenda = item.hr_agendamento?.split("T")[1].split(".")[0];
     const andamento = item.Andamento;
+    const toolTipAndamento =
+      andamento === "EMITIDO"
+        ? "Certificado já emitido pelo Cliente, e pronto para uso."
+        : andamento === "INICIADO"
+        ? "Em contato com cliente, aguardando aprovação."
+        : andamento === "APROVADO"
+        ? "Certificação aprovada, aguardando cliente baixar o aplicativo e fazer a emissão do certificado."
+        : null;
     // const statusPg = item.fcweb?.estatos_pgto;
     const colors = !item.ativo
       ? "red.400"
@@ -154,7 +162,7 @@ export function Tabela({
                       <IconButton
                         variant={"outline"}
                         color={"red"}
-                        icon={<LuAlertTriangle style={{ fontWeight: "900" }} />}
+                        icon={<LuTriangleAlert style={{ fontWeight: "900" }} />}
                         aria-label={"Alert"}
                         fontSize={"1.7rem"}
                         fontWeight={"900"}
@@ -179,7 +187,8 @@ export function Tabela({
             ) : (
               <Box ms={10}></Box>
             )}
-            {(item.statusAtendimento && !["EMITIDO", "REVOGADO", "APROVADO"].includes(andamento)) ? (
+            {item.statusAtendimento &&
+            !["EMITIDO", "REVOGADO", "APROVADO"].includes(andamento) ? (
               <Tooltip label="Em Andamento">
                 <Box as="span">
                   <Icon
@@ -206,7 +215,7 @@ export function Tabela({
                 sx={{
                   transform: "rotate(-90deg)",
                   textOrientation: "upright",
-                  animation: `${rgbBlink} 2s infinite`,
+                  animation: `${rgbBlink} 2s infinite`
                 }}
               >
                 N O W
@@ -236,7 +245,17 @@ export function Tabela({
             </>
           ) : null}
         </Td>
-        <Td>{andamento}</Td>
+        <Td>
+          <Tooltip label={toolTipAndamento}>
+            <Badge
+              _hover={{ cursor: "pointer" }}
+              colorScheme={"blue"}
+              variant={"outline"}
+            >
+              {andamento}
+            </Badge>
+          </Tooltip>
+        </Td>
         <Td>{item.ativo && downTimeInDays(item)}</Td>
         <Td textAlign={"center"}>
           {AssDocAss && item.ativo && !item.distrato && (
