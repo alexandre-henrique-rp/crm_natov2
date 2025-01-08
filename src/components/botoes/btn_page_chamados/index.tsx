@@ -1,3 +1,4 @@
+'use client';
 import { Button, HStack, Text } from "@chakra-ui/react";
 import { MdErrorOutline } from "react-icons/md"; // Ícone de alerta
 import getInfoChamados from "@/actions/chamados/service/infoChamados";
@@ -19,8 +20,11 @@ export default function BotaoPageChamados() {
     
     useEffect(() => {
         async function fetchData() {
-            const response = await getInfoChamados();
-            setQtdChamadosAberto(response?.data ?? 0);
+            const response = await fetch(`/api/chamado/back/count`,{ method: "GET" })
+
+            const data = await response.json();
+            
+            setQtdChamadosAberto(data);
         }
         fetchData();
     }, []);

@@ -1,9 +1,7 @@
 'use server'
-import { PrismaClient } from "@prisma/client";
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { UpdateConstrutoraDto } from "../dto/updateConstrutora.dto";
-
-const prisma = new PrismaClient();
 
 export default async function UpdateConstrutora(_: any, data: FormData) {
 
@@ -13,25 +11,50 @@ export default async function UpdateConstrutora(_: any, data: FormData) {
     const email = data.get("email") as string;
     const fantasia = data.get("fantasia") as string;
 
-    const dto = new UpdateConstrutoraDto(razaoSocial, tel, email, fantasia);
-    
-    const erroValidacao = dto.validate();
-    if(erroValidacao){
-        return { error: true, message: erroValidacao, data: null }
+    const body = {
+        razaosocial: razaoSocial,
+        tel: tel,
+        email: email,
+        fantasia: fantasia,
     }
 
-    await prisma.nato_empresas.update({
-        where: {
-            id: Number(id),
-        },
-        data: {
-            razaosocial: razaoSocial,
-            tel: tel,
-            email: email,
-            fantasia: fantasia,
-        },
-    });
+    const session = await getServerSession(auth);
 
-    await prisma.$disconnect();
-    redirect("/construtoras");
+    if (!session) {
+        return {
+            error: true,
+            message: "Unauthorized",
+            data: null,
+        };
+    }
+
+    const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/construtoras/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.token}`
+        },
+        body: JSON.stringify(body),
+    })
+
+    const res = await req.json();
+
+    if (!req.ok) {
+        return {
+            error: true,
+            message: "ERRO ao atualizar a construtoras",
+            data: null,
+        };
+    }
+
+    if(res.error){
+        return {
+            error: true,
+            message: res.message,
+            data: null,
+        };
+    }else{
+        redirect("/construtoras");
+    }
+    
 }

@@ -1,29 +1,33 @@
 'use server'
-import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 
 export default async function GetAllConstrutoras(){
-    try {
-        const request = await prisma.nato_empresas.findMany({
-            where:{
-                id: { not: 1 },
-            },
-            select: {
-                id: true,
-                cnpj: true,
-                razaosocial: true,
-                tel: true,
-                email: true,
-                atividade: true,
-                fantasia: true,
-            }
-        });
-        return { status: 200, message: "success", data: request };
-    } catch (error: any) {
-        console.log(error);
-        return { status: 500, message: "error", data: null };
-    } finally {
-        await prisma.$disconnect();
+
+    const session = await getServerSession(auth);
+
+    if (!session) {
+        return { error: true, message: "Unauthorized" };
+    }
+
+    const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/construtoras`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.token}`
+        }
+    })
+
+    if (!req.ok) {
+        return { error: true, message: "ERRO Ao buscar construtoras"};
+    }
+
+    const res = await req.json();
+
+    if (res.error) {
+        return {status: 500, error: true, message: res.message };
+    }else{
+        return {status: 200, error: false, message: 'Sucesso', data: res }
     }
 }

@@ -28,7 +28,6 @@ import { ChamadoOptions } from "@/data/chamado";
 import { IoOpenOutline } from "react-icons/io5";
 import { useRouter } from "next/navigation"; // Import useRouter
 import Link from "next/link";
-import { deleteById } from "@/actions/chamados/service/deleteById";
 
 interface TabelaChamadosProps {
   chamados: any[];
@@ -65,8 +64,15 @@ export function TabelaChamados({
   };
 
   async function DeleteChamado(id: number) {
-    const res = await deleteById(id)
-    if(res.error){
+    const req : any = await fetch(`/api/chamado/back/delete/${id}`,{
+      method: 'DELETE',
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await req.json()
+ 
+    if(!req.ok){
       toast({
         title: "Erro ao deletar chamado!",
         description: res.message,
@@ -82,7 +88,7 @@ export function TabelaChamados({
         duration: 3000,
         isClosable: true,
       })
-      window.location.reload()
+      setTimeout (() => {window.location.reload()}, 1000)
     }
   }
 
