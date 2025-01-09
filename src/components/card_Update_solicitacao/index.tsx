@@ -253,21 +253,34 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
               />
             )}
             {setDadosCard.ativo && <ResendSms id={setDadosCard.id} />}
-            <SaveBtm colorScheme="green" size={"sm"} type="submit">
-              Salvar
-            </SaveBtm>
+
             <CreateChamado id={setDadosCard.id} />
-            {!setDadosCard.ativo && HierarquiaUser === "ADM" ? (
-              <BotaoReativarSolicitacao id={setDadosCard.id} />
-            ) : (
-              <Box hidden></Box>
-            )}
+          </Flex>
+          <Flex
+            w={"100%"}
+            justifyContent={"end"}
+            alignItems={"center"}
+            gap={3}
+            px={4}
+            py={3}
+            wrap={"wrap"}
+          >
+          
             <BtnIniciarAtendimento
               hierarquia={HierarquiaUser}
               status={setDadosCard.statusAtendimento}
               aprovacao={setDadosCard.Andamento}
               id={setDadosCard.id}
             />
+            <SaveBtm colorScheme="green" size={"sm"} type="submit">
+              Salvar
+            </SaveBtm>
+            
+            {!setDadosCard.ativo && HierarquiaUser === "ADM" ? (
+              <BotaoReativarSolicitacao id={setDadosCard.id} />
+            ) : (
+              <Box hidden></Box>
+            )}
           </Flex>
         </CardCreateUpdate.Form>
       </CardCreateUpdate.Root>
