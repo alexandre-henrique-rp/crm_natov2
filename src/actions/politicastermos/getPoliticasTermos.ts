@@ -1,13 +1,11 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient(); 
-
 export default async function getLastPoliticaTermo() {
-    const data = await prisma.nato_termos.findFirst({
-        orderBy: {
-            id: 'desc',
+
+    return await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/get-infos/termos`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
         },
-    });
-    await prisma.$disconnect();
-    return data;
+    })
+        .then((response) => response.json())
+
 }
