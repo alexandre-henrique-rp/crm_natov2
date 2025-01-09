@@ -1,39 +1,30 @@
 'use server'
-import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 
-export type FinanceiraType = {
-    id: number;
-    cnpj: string;
-    razaosocial: string;
-    tel: string | null;
-    email: string | null;
-    responsavel: string | null;
-  }
-  
+export async function GetAllFinanceiras() {
 
-export async function GetAllFinanceiras(): Promise<{ status: number; message: string; data: any }> {
-    try {
-        const request = await prisma.nato_financeiro.findMany({
-            where: {
-                razaosocial: {
-                    not: undefined,
-                },
-            },
-            select: {
-                id: true,
-                cnpj: true,
-                razaosocial: true,
-                tel: true,
-                email: true,
-                fantasia: true,
-            }
-        });
-        return { status: 200, message: "success", data: request };
-    } catch (error: any) {
-        return { status: 500, message: "error", data: error };
-    }finally{
-        await prisma.$disconnect();
+    const session = await getServerSession(auth);
+
+    if(!session){
+        return { error: true, message: "Unauthorized", status: 401 };
     }
+    
+    const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/financeiro`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.token}`
+        }
+    })
+
+    if(!req.ok){
+        return { error: true, message: "ERRO Ao Atualizar Financeira", status: 500, data: null };
+    }
+    
+    if(req.ok){
+        return { error: false, message: "Sucesso ao Atualizar Financeira", status: 200, data: await req.json() };
+    }
+    
 }
