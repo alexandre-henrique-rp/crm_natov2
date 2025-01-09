@@ -14,19 +14,19 @@ export const metadata: Metadata = {
 export default async function ChamadosPage() {
   const session = await getServerSession(auth);
   const userHierarquia = session?.user.hierarquia;
-  const idUser = session?.user.id
-  async function isAdm(id: any){
-    if(userHierarquia === "ADM"){
+
+  const idUser = session?.user.id;
+  async function isAdm(id: any) {
+    if (userHierarquia === "ADM") {
       const res = await getAllChamados();
-      return  res
-    }else{
-      const res = await getById(id)
-      return res
+      return res;
+    } else {
+      const res = await getById(id);
+      return res;
     }
   }
-  const res = await isAdm(idUser)
+  const res = await isAdm(idUser);
   const chamados = res.data;
-
 
   return (
     <Flex
@@ -38,9 +38,6 @@ export default async function ChamadosPage() {
       py="2rem"
     >
       <TabelaChamados chamados={chamados} registrosPorPagina={10} />
-
     </Flex>
-    
   );
 }
-

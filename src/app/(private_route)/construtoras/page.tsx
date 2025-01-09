@@ -6,6 +6,7 @@ import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { PrismaClient } from "@prisma/client";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 const prisma = new PrismaClient();
 
@@ -66,6 +67,10 @@ export const metadata: Metadata = {
   title: "Construtoras"
 };
 export default async function ConstrutoraPage() {
+  const session = await getServerSession(auth);
+  if (session?.user.hierarquia !== "ADM") {
+    redirect("/");
+  }
   const Dados = await GetConstrutora();
   return (
     <>

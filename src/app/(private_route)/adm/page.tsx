@@ -1,14 +1,21 @@
 import CreateAlertGeral from "@/components/botoes/btn_creat_Alert_geral";
 import GerarCobranca from "@/components/relatorio_finaceiro/gerar_cobranca";
 import ListCobranca from "@/components/relatorio_finaceiro/list_cobranca";
+import { auth } from "@/lib/auth_confg";
 import { Divider, Flex, Heading, Link } from "@chakra-ui/react";
 import { Metadata } from "next";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "PAINEL ADMINISTRATIVO"
 };
 
-export default function PainelAdministrativo() {
+export default async function PainelAdministrativo() {
+  const session = await getServerSession(auth);
+  if (session?.user.hierarquia !== "ADM") {
+    redirect("/");
+  }
   return (
     <>
       <Flex w={"100%"} px={{ base: 2, md: "10rem" }} py={5} flexDir={"column"}>
