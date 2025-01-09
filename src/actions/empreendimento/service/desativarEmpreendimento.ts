@@ -1,38 +1,32 @@
 "use server";
-import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 
 export async function DesativarEmpreendimento(id: string) {
-  const request = await prisma.nato_empreendimento.findUnique({
-    where: {
-      id: parseInt(id)
-    },
-    select: {
-      ativo: true
-    }
-  });
-  if (request?.ativo === true) {
-    const update = await prisma.nato_empreendimento.update({
-      where: {
-        id: parseInt(id)
-      },
-      data: {
-        ativo: false
-      }
-    });
-    prisma.$disconnect();
-    return { error: false, message: "Empreendimento desativado", data: update };
-  } else {
-    const update = await prisma.nato_empreendimento.update({
-      where: {
-        id: parseInt(id)
-      },
-      data: {
-        ativo: true
-      }
-    });
-    prisma.$disconnect();
-    return { error: false, message: "Empreendimento ativado", data: update };
+
+  const session = await getServerSession(auth);
+
+  if (!session) {
+    return { error: true, message: "Unauthorized" };
   }
+
+  const req =  await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/empreendimento/delete/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${session?.token}`
+    }
+  })
+
+  const res = await req.json();
+
+  if(!req.ok){
+    return { error: true, message: "ERRO Ao Atualizar Empreendimento" };
+  }
+
+  if(req.ok){
+    return { error: false, message: "Sucesso ao Atualizar Empreendimento", data: res };
+  }
+
 }
