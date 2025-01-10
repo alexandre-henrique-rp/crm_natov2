@@ -1,7 +1,6 @@
 'use client';
 
-import { CancelarAtendimento } from "@/actions/solicitacao/service/cancelarAtendimento";
-import { IniciarAtendimento } from "@/actions/solicitacao/service/iniciarAtendimento";
+import { IniciarCalcelarAtendimento } from "@/actions/solicitacao/service/IniciarCalcelarAtendimento";
 import { Button, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 
@@ -20,11 +19,10 @@ export default function BtnIniciarAtendimento({
   id,
 }: BtnIniciarAtendimentoProps) {
   const [status, setStatus] = useState(initialStatus);
-  console.log("🚀 ~ status:", status)
   const toast = useToast();
 
   const handleIniciarAtendimento = async () => {
-    const req = await IniciarAtendimento(id);
+    const req = await IniciarCalcelarAtendimento(id);
     if (req.error) {
       toast({
         title: req.message,
@@ -48,7 +46,7 @@ export default function BtnIniciarAtendimento({
   };
 
   const handleCancelarAtendimento = async () => {
-    const req = await CancelarAtendimento(id);
+    const req = await IniciarCalcelarAtendimento(id);
     if (req.error) {
       toast({
         title: req.message,

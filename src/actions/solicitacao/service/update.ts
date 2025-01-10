@@ -1,11 +1,7 @@
 "use server";
 
-import { Tag } from "@/data/tags";
 import { auth } from "@/lib/auth_confg";
-import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
-
-const prisma = new PrismaClient();
 
 export async function UpdateSolicitacao(_: any, data: FormData) {
   const session = await getServerSession(auth);
@@ -103,7 +99,6 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
         error: true
       };
     }
-    prisma.$disconnect();
     return {
       error: false,
       message: "Atualização bem-sucedida",
@@ -111,7 +106,6 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
     };
   } else {
     console.error("Erro ao atualizar:", request.statusText);
-    prisma.$disconnect();
     return {
       error: true,
       message: "Erro ao atualizar o registro" + request.statusText,
@@ -123,27 +117,21 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
 async function PostTags(value: any, id: number) {
   const session = await getServerSession(auth);
   const tags = JSON.parse(value);
-  if (value) {
-    for (let i = 0; i < tags.length; i++) {
-      const tag: Tag = tags[i];
-      if (tag.label && session?.user.hierarquia === "ADM") {
-        const verifique = await prisma.nato_tags.findFirst({
-          where: {
-            descricao: tag.label,
-            solicitacao: id
-          }
-        });
-        const filtro = verifique ? false : true;
-        if (filtro) {
-          await prisma.nato_tags.create({
-            data: {
-              descricao: tag.label,
-              solicitacao: id
-            }
-          });
-        }
-      }
-    }
-    await prisma.$disconnect();
-  }
+
+  await fetch(
+    `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/solicitacao/posttags`,{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${session?.token}`
+      },
+      body: JSON.stringify({
+        tags: tags,
+        solicitacao: id
+
+        
+      })
+    },
+  )
+
 }
