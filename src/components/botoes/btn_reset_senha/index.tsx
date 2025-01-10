@@ -77,11 +77,11 @@ export function BtnResetSenha({ ID }: BtnResetSenhaProps) {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Delete Customer
+              Resetar Senha
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Tem certeza? Você não pode desfazer esta ação depois.
+              Tem certeza que deseja resetar a senha? Você não pode desfazer esta ação depois.
             </AlertDialogBody>
 
             <AlertDialogFooter>

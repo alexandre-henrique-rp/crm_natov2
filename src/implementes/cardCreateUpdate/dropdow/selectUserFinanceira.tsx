@@ -38,7 +38,8 @@ export function SelectUserFinanceira({
     getFinanceira();
 
     if (setValue) {
-      const dataValue = JSON.parse(setValue);
+      console.log("🚀 ~ useEffect ~ setValue:", setValue)
+      const dataValue = setValue;
       if (dataValue.length > 0) {
         (async () => {
           const data = await Promise.all(

@@ -43,7 +43,7 @@ export default async function UserCreate(_: any, data: FormData) {
   })
 
   if(UsuarioExiste){
-    return { error: true, message: "Neme de Usuário ja cadastrado", data: null }
+    return { error: true, message: "Nome de Usuário ja cadastrado", data: null }
   }
 
   const dto = new CreateUsuariosDto(cpf, nome, username, telefone, email, construtora, empreendimento, Financeira, Cargo, hierarquia, password, passwordConfir);
