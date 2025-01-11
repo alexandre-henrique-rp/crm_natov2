@@ -4,6 +4,9 @@ import { Metadata } from "next";
 import { GetUser } from "@/actions/user/service";
 import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 import { CardUpdateUsuario } from "@/components/card_update_usuario";
+import { getServerSession } from "next-auth";
+import { auth } from "@/lib/auth_confg";
+import { redirect } from "next/navigation";
 
 type Props = {
   params: { id: string };
@@ -19,6 +22,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function EditarUsuario({ params }: Props) {
+  const session = await getServerSession(auth);
+  if (session?.user.hierarquia !== "ADM") {
+    redirect("/");
+  }
   const id = Number(params.id);
 
   const data = await GetUser(id);

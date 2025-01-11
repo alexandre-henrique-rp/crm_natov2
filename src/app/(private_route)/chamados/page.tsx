@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 export default async function ChamadosPage() {
   const session = await getServerSession(auth);
   const userHierarquia = session?.user.hierarquia;
+
   const idUser = session?.user.id;
 
   async function isAdm(id: any) {
