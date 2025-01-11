@@ -1,77 +1,17 @@
+import GetAllConstrutoras from "@/actions/construtora/service/getAllContrutoras";
 import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 import Construtora from "@/components/construtora_compoment";
-import { auth } from "@/lib/auth_confg";
 
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
-import { PrismaClient } from "@prisma/client";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-
-const prisma = new PrismaClient();
-
-/**
- * Get construtora
- * @type {ConstrutoraType}
- * @param { number } id
- * @param { string } cnpj
- * @param { string } razaosocial
- * @param { string | null } tel
- * @param { string | null } email
- * @param { Date | string | any } createdAt
- * @param { string | null } fantasia
- *
- * @returns { id: number, cnpj: string, razaosocial: string, tel: string | null, email: string | null, createdAt: Date | string | any, fantasia: string | null }
- *
- */
-export type ConstrutoraType = {
-  id: number;
-  cnpj: string;
-  razaosocial: string;
-  tel: string | null;
-  email: string | null;
-  createdAt: Date | string | any;
-  fantasia: string | null;
-  status: boolean;
-};
-
-async function GetConstrutora() {
-  const session = await getServerSession(auth);
-  const hierarquia = session?.user?.hierarquia;
-  try {
-    const request = await prisma.nato_empresas.findMany({
-      where: {
-        atividade: "CONST",
-        ...(hierarquia !== "ADM" && {
-          status: true
-        })
-      },
-      select: {
-        id: true,
-        cnpj: true,
-        email: true,
-        razaosocial: true,
-        createdAt: true,
-        tel: true,
-        fantasia: true,
-        status: true
-      }
-    });
-    return { status: 200, message: "success", data: request };
-  } catch (error: any) {
-    return { status: 500, message: "error", data: error };
-  }
-}
 
 export const metadata: Metadata = {
   title: "Construtoras"
 };
 export default async function ConstrutoraPage() {
-  const session = await getServerSession(auth);
-  if (session?.user.hierarquia !== "ADM") {
-    redirect("/");
-  }
-  const Dados = await GetConstrutora();
+
+  const Dados = await GetAllConstrutoras();
+
   return (
     <>
       <Flex

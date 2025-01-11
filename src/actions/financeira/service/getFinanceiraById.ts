@@ -1,44 +1,28 @@
-import { PrismaClient } from "@prisma/client";
-import { GetFinanceiraDto } from "../dto/getFinanceira.dto";
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 
-const prisma = new PrismaClient();
+export async function GetFinanceiraById(id: number){
 
-export type FinanceiraType = {
-    id: number;
-    cnpj: string;
-    razaosocial: string;
-    tel: string | null;
-    email: string | null;
-    responsavel: string | null;
-  }
+    const session = await getServerSession(auth);
 
-export async function GetFinanceiraById(id: number): Promise<{ error: boolean; message: string; data: any }> {
-
-    const dto = new GetFinanceiraDto(id);
-    const erroValidacao = dto.validar();
-    if(erroValidacao){
-        return { error: true, message: erroValidacao, data: null };
+    if(!session){
+        return { error: true, message: "Unauthorized", status: 401 };
     }
 
-    try{
-        const request = await prisma.nato_financeiro.findFirst({
-            where:{
-                id: id
-            },
-            select:{
-                id: true,
-                cnpj: true,
-                razaosocial: true,
-                tel: true,
-                email: true,
-                responsavel: true,
-                fantasia: true,
-            }
-        });
-        return { error: false, message: "success", data: request };
-    } catch (error: any) {
-        return { error: true, message: "error", data: error };
-    }finally{
-        await prisma.$disconnect();
+    const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/financeiro/${id}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.token}`
+        }
+    })
+
+    const res = await req.json();
+
+    if(!req.ok){
+        return { error: true, message: "Erro ao buscar financeira", status: 500, data: null };
     }
+
+    return { error: false, message: "success", status: 200, data: res };
+
 }

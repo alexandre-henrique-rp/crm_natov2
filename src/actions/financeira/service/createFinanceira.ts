@@ -1,9 +1,8 @@
 'use server'
-import { PrismaClient } from "@prisma/client";
-import { CreateFinanceiraDto } from "../dto/createFinanceira.dto";
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
-const prisma = new PrismaClient();
 
 export default async function FinanceiraCreate(_: any, data: FormData) {
     const cnpj = data.get("cnpj") as string;
@@ -16,34 +15,19 @@ export default async function FinanceiraCreate(_: any, data: FormData) {
 
     const telefone = tel.replace(/[^0-9]/g, '');
 
-    const dto = new CreateFinanceiraDto(cnpj, razaosocial, telefone, email, responsavel, fantasia);    
-    const erroValidacao = dto.validar();
+    const session = await getServerSession(auth);
 
-
-    if (erroValidacao) {
-        return {
-            error: true,
-            message: erroValidacao,
-            data: null,
-        };
+    if (!session) {
+        return { error: true, message: "Unauthorized", data: null, status: 401 };
     }
-
-
-    const req = await prisma.nato_financeiro.findFirst({
-        where: { cnpj }
-    });
-
-    if (req) {
-        return {
-            error: true,
-            message: "CNPJ já cadastrado",
-            data: null,
-        };
-    }
-
-
-    await prisma.nato_financeiro.create({
-        data: {
+    
+    const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/financeiro`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.token}`
+        },
+        body: JSON.stringify({
             cnpj: cnpj,
             razaosocial: razaosocial,
             tel: telefone,
@@ -51,8 +35,20 @@ export default async function FinanceiraCreate(_: any, data: FormData) {
             colaboradores: colaboradores,
             responsavel: responsavel,
             fantasia: fantasia,
-        }
-    });
-    prisma.$disconnect();
+        })
+    })
+
+    const res = await req.json();
+    
+    if (!req.ok) {
+        return {
+            error: true,
+            message: res.message,
+            data: null,
+            status: req.status
+        };
+    }
+    
     redirect('/financeiras');
+
 }

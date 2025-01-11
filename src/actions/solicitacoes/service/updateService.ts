@@ -1,47 +1,38 @@
 'use server'
 import { SuporteTagsOptions } from "@/data/suporte";
-import { PrismaClient } from "@prisma/client";
-import { CreateSuportDto } from "../dto/createService.dto";
-
-const prisma = new PrismaClient();
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 
 export default async function UpdateService(id: number, tagId: number, descricao: string, urlSuporte: any) {
-
-  const imgSalvas = await prisma.nato_suporte.findUnique({
-    where: {
-      id: id,
-    },
-    select: {
-      urlSuporte: true
-    }
-  })
-  if(imgSalvas && imgSalvas.urlSuporte){
-    const urlSuporteSalvas = JSON.parse(imgSalvas.urlSuporte)
-    urlSuporte = urlSuporte.concat(urlSuporteSalvas)
-  }
   
   const tagObj = SuporteTagsOptions.find((tag) => tag.id === tagId)
   const tag = tagObj ? tagObj.label : ''
-  const dto = new CreateSuportDto(id, descricao, tag)
-  const erroValidate = dto.validar()
-  if (erroValidate) {
-      return { error: true, message: erroValidate }
+
+  const session = await getServerSession(auth);
+
+  if (!session) {
+    return { error: true, message: "Unauthorized", data: null };
   }
-  try{
-      const req = await prisma.nato_suporte.update({
-      where: {
-        id: id,
-      },
-      data: {
-          tag: tag,
-          deescricao: descricao,
-          urlSuporte: JSON.stringify(urlSuporte),
-      },
-    })
-    return {error: false, message: "Suporte atualizado com sucesso",data: req}
-  }catch{
-        return {error: true, message: "Erro ao atualizar suporte", data: null}
-  }finally{
-      await prisma.$disconnect();
+
+  const body = {
+    tag: tag,
+    deescricao: descricao,
+    urlSuporte: urlSuporte
   }
+  
+  const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/suporte/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${session?.token}`
+    },
+    body: JSON.stringify(body)
+  })
+
+  const res = await req.json()
+
+  if(!req.ok){
+    return { error: true, message: res.message, data: null }
+  }
+  return { error: false, message: "Suporte Atualizado com sucesso", data: res }
 }

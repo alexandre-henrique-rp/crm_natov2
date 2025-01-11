@@ -1,25 +1,25 @@
 'use server'
-import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 
 export default async function GetAllSuporteId(id: number) {
-  try {
-    const suporte = await prisma.nato_suporte.findMany({
-      where: {
-        solicitacao: id,
-      },
-    });    
-    return suporte.map((i) => {
-      return{
-        ...i,
-        ...(i.urlSuporte &&{urlSuporte : JSON.parse(i.urlSuporte)})
+
+  const session = await getServerSession(auth);
+
+  const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/suporte/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${session?.token}`
     }
-    });
-  } catch (error: any) {
-    console.log("erro ao buscar tags",error.message);
-    return [];
-  } finally {
-    await prisma.$disconnect();
+  })
+
+  const res = await req.json()
+
+  if(!req.ok){
+    return { error: true, message: "ERRO Ao buscar suporte", data: null };
+  }else{
+    return { error: false, message: 'Sucesso', data: res }
   }
 }

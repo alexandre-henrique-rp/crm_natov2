@@ -199,21 +199,33 @@ export default function CreateSuportAlert({ id }: CreateSuportAlertProps) {
   const HandleOnClick = async (idTag: number) => {
     setUpdate(true);
     const req = await GetSuporteById(idTag);
-    console.log("🚀 ~ HandleOnClick ~ req:", req)
-    if (req) {
+    if(req.error){
+      toast({
+        title: "Erro",
+        description: req.message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+
+    const res = req.data
+    
+    console.log("🚀 ~ HandleOnClick ~ res:", res)
+    if (res) {
       const selectedTag = SuporteTagsOptions.find(
-        (item) => item.label === req.tag
+        (item) => item.label === res.tag
       );
       if (selectedTag) {
         setTagUni(selectedTag.id);
         setTagsId(selectedTag.id);
       }
-      setDescricao(req?.deescricao || "");
-      if(req.imgSuspensa){
-        setImgSuspensa(req.imgSuspensa)
+      setDescricao(res?.deescricao || "");
+      if(res.imgSuspensa){
+        setImgSuspensa(res.imgSuspensa)
         
       }else{
-        setStoredImages(req.urlSuporte.map((url: any) => {
+        setStoredImages(res.urlSuporte.map((url: any) => {
           return {
             urlDownload: url.urlDownload,
             urlView: url.urlView,
@@ -292,7 +304,11 @@ export default function CreateSuportAlert({ id }: CreateSuportAlertProps) {
 
   async function fetchTags() {
     const req = await GetAllSuporteId(id);
-    setSuporteTags(req || []);
+    if(req.error){
+      setSuporteTags([req.message]);
+    }else{
+      setSuporteTags(req.data);
+    }
   }
 
   const handleModalClose = () => {

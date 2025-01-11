@@ -1,14 +1,8 @@
 "use server";
-import { PrismaClient } from "@prisma/client";
-import * as bcrypt from 'bcrypt';
-import { CreateUsuariosDto } from "../dto/createUsuarios.dto";
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 
 
-const prisma = new PrismaClient();
-
- function generateHash(password: string) {
-    return bcrypt.hashSync(password, 10);
-  }
 
   function parseArrayString(str: string): string {
     if(str === null) {
@@ -34,62 +28,61 @@ export default async function UserCreate(_: any, data: FormData) {
   const hierarquia = data.get("hierarquia") as string;
   const password = data.get("senha") as string;
   const passwordConfir = data.get("confirsenha") as string;
-  const Password_key = generateHash(password);
+  const construtoraArray = parseArrayString(construtora);
+  const empreendimentoArray = parseArrayString(empreendimento);
+  const FinanceiraArray = parseArrayString(Financeira);
 
-  const UsuarioExiste = await prisma.nato_user.findFirst({
-    where: {
-      username: username
-    }
-  })
+  const session = await getServerSession(auth);
 
-  if(UsuarioExiste){
-    return { error: true, message: "Neme de Usuário ja cadastrado", data: null }
+  if (!session) {
+    return {
+      error: true,
+      message: "Unauthorized",
+      data: null,
+      status: 401
+    };
+  }
+  const body = {
+    cpf: cpf,
+    nome: nome,
+    username: username,
+    telefone: telefoneFormat,
+    email: email,
+    construtora: construtoraArray,
+    empreendimento: empreendimentoArray,
+    Financeira: FinanceiraArray,
+    cargo: Cargo,
+    hierarquia: hierarquia,
+    password: password,
+    passwordConfir: passwordConfir
   }
 
-  const dto = new CreateUsuariosDto(cpf, nome, username, telefone, email, construtora, empreendimento, Financeira, Cargo, hierarquia, password, passwordConfir);
-  
-  const erroValidacao = dto.validar();
-  if(erroValidacao){
-    return { error: true, message: erroValidacao, data: null
-  }
-}
-  const verificaCpf = await prisma.nato_user.findFirst({
-    where: {
-      cpf: cpf
-    }
+  const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${session?.token}`
+    },
+    body: JSON.stringify(
+      body
+    )
   });
-  if (verificaCpf) {
-    return { error: true, message: "CPF já cadastrado", data: null };
-  }else {
-    try{
-      const construtoraArray = parseArrayString(construtora);
-      const empreendimentoArray = parseArrayString(empreendimento);
-      const FinanceiraArray = parseArrayString(Financeira);
-      
-      const user = await prisma.nato_user.create({
-        data: {
-          cpf: cpf,
-            nome: nome.toUpperCase(),
-            username: username.toUpperCase(),
-            telefone: telefoneFormat,
-            email: email,
-            construtora: construtoraArray,
-            empreendimento: empreendimentoArray,
-            Financeira: FinanceiraArray,
-            hierarquia: hierarquia,
-            password: password,
-            status: false,
-            cargo: Cargo,
-            password_key: Password_key,
-            reset_password: true,
-          }
-        });
-        
-        return { error: false, message: "Usuario criado com sucesso", data: user };
-    }catch(err){
-      return { error: true, message: "Erro ao criar usuario", data: err };
-    }finally{
-      await prisma.$disconnect();
-    }
+
+  const res = await req.json();
+
+  if(!req.ok){
+    return {
+      error: true,
+      message: res.message,
+      data: null,
+      status: req.status
+    };
+  }
+  return {
+    error: false,
+    message: res.message,
+    data: res.data,
+    status: req.status
+  };
 }
-}
+

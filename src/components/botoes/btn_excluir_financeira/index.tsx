@@ -30,7 +30,7 @@ export function BtnExcluirFinanceira({ id }: BtnExcluirFinanceiraProps) {
   const handleExcluir = async () => {
     const data = await DeleteFinanceira(id);
 
-    if (data.error === false) {
+    if (data?.error === false) {
       toast({
         title: "Sucesso!",
         description: "Financeira excluída com sucesso!",

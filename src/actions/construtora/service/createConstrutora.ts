@@ -1,52 +1,57 @@
 'use server'
-import { PrismaClient } from "@prisma/client";
-import { CreateConstrutoraDto } from "../dto/createconstrutora.dto";
-import { redirect } from "next/navigation";
-
-
-
-const prisma = new PrismaClient();
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
+import { NextResponse } from "next/server";
 
 export default async function CreateConstrutora(_: any, data: FormData) {
+try{ 
 
     const cnpj = data.get("cnpj") as string;
-    const razaoSocial = data.get("razaosocial") as string;
+    const razaosocial = data.get("razaosocial") as string;
     const tel = data.get("telefone") as string;
     const email = data.get("email") as string;
     const fantasia = data.get("fantasia") as string;
     const financeiro = '[]'
     const atividade = 'CONST'
 
-    const dto = new CreateConstrutoraDto(cnpj, razaoSocial, tel, email, fantasia);
-    const erroValidacao = dto.validar();
-    if(erroValidacao){
-        return { error: true, message: erroValidacao, data: null }
-    }
-
-
-    if (await prisma.nato_empresas.findFirst({ where: { cnpj , atividade: "CONST"} })) {
-        redirect("/construtoras");
-        return { error: true, message: "CNPJ já cadastrado", data: null };
-    }
-try{
-    await prisma.nato_empresas.create({
-         data:{
-             cnpj: cnpj,
-             razaosocial: razaoSocial,
-             tel: tel,
-             email: email,
-             fantasia: fantasia,
-             financeiro: financeiro,
-             atividade: atividade,
-             status: true
-         }
-     });
-
-     return { error: false, message: "Construtora cadastrada com sucesso", data: null };    
-}catch(err){
-    return { error: true, message: "Erro ao cadastrar construtora", data: err };
-}finally{
-    await prisma.$disconnect();
-}
+            const body = {
+                cnpj,
+                razaosocial,
+                fantasia,
+                tel,
+                email,
+                financeiro,
+                atividade
+            }
+            const session = await getServerSession(auth);
+    
+            if (!session) {
+                return NextResponse.json(
+                    { message: "Unauthorized" },
+                    { status: 401 }
+                );   
+            }
+    
+            const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/construtoras`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${session?.token}`
+                },
+                body: JSON.stringify(body),
+            })
+    
+            const result = await res.json();
+    
+            if (!res.ok) {
+                return { error: true, message: "Erro ao cadastrar construtora", data: result }
+            }
+    
+            return { error: false, message: "Construtora cadastrada com sucesso", data: null }
+            
+        }catch (error: any) {
+            console.error("Erro ao criar chamado:", error);
+            return { error: true, message: "Erro ao cadastrar construtora", data: error }
+        }
 
 }

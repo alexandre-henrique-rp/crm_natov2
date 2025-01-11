@@ -1,21 +1,29 @@
 'use server'
 
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 
 export default async function DeleteSuporte(id: number) {
-  try{
-    const suporte = await prisma.nato_suporte.delete({
-      where: {
-        id: id,
-      },
-    })
-    return {error: false, message: "Suporte deletado com sucesso!", data: suporte};
-  }catch(err){
-    console.log(err)
-    return {error: true, message: "Erro ao deletar suporte!"};
-  }finally{
-    await prisma.$disconnect();
+
+  const session = await getServerSession(auth);
+
+  if (!session) {
+    return { error: true, message: "Unauthorized" };
   }
+
+  const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/suporte/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${session?.token}`
+    }
+  })
+
+  const res = await req.json()
+
+  if(!req.ok){
+    return { error: true, message: res.message, data: null }
+  }
+  return { error: false, message: res.message, data: res.data };
+
 }

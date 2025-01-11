@@ -1,22 +1,24 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 
 export default async function GetAllEmpreendimento(){
-    try {
-        const request = await prisma.nato_empreendimento.findMany({
-            select: {
-                id: true,
-                nome: true,
-                uf: true,
-                cidade: true,
-                ativo: true,
-            }
-        });
-        return { status: 200, message: "success", data: request };
-    } catch (error) {
-        return { status: 500, message: "error", data: error };
-    } finally {
-        await prisma.$disconnect();
+
+    const session = await getServerSession(auth);
+
+    const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/empreendimento`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.token}`
+        }
+    })
+
+    const res = await req.json();
+    
+    if(!req.ok){
+        return { status: 500, message: "ERRO", data: null };
     }
+
+    return {status:200, message: "sucess", data: res}
+
 }
