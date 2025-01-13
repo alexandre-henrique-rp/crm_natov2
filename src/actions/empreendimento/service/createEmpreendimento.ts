@@ -1,12 +1,15 @@
 'use server'
 
-import { PrismaClient } from "@prisma/client";
-import { CreateEmpreendimentoDto } from "../dto/createEmpreendimento.dto";
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
-const prisma = new PrismaClient();
-
 export async function CreateEmpreendimento(_: any, data: FormData) {
+    const session = await getServerSession(auth);
+
+    if (!session) {
+        return {status: 401, message: "Unauthorized", error: true};
+    }
 
     const construtora = Number(data.get("empreendimentoConstrutora") as string);
     const nome = data.get("nomeEmpreendimento") as string;
@@ -20,34 +23,39 @@ export async function CreateEmpreendimento(_: any, data: FormData) {
     const ativo = true;
     const vendedores = '[]'
 
-    const dto = new CreateEmpreendimentoDto(nome, construtora, uf, cidade, ativo, financeiro, tag);
-    const erroValidacao = dto.validar();
+     const body = {
+        nome: nome,
+        construtora: construtora,
+        dt_inicio: dataAtual.toISOString(),
+        cidade: cidade,
+        uf: uf,
+        ativo: ativo,
+        financeiro: financeiroFormatado,
+        vendedores: vendedores,
+        tag: tag
+     }
 
-    if (erroValidacao) {
-        return {
-            error: true,
-            message: erroValidacao,
-            data: null,
-        };
-    }
+     const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/empreendimento`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.token}`
+        },
+        body: JSON.stringify(body)
+     })
 
-    await prisma.nato_empreendimento.create({
-        data: {
-            nome: nome,
-            construtora: construtora,
-            dt_inicio: dataAtual.toISOString(),
-            cidade: cidade,
-            uf: uf,
-            ativo: ativo,
-            financeiro: financeiroFormatado,
-            vendedores: vendedores,
-            tag: tag
-        }
-    });
-
+     const res = await req.json();
      
-    prisma.$disconnect();
-    redirect('/empreendimentos');
 
+     if (!req.ok) {
+        return {error: true, message: res.message, data: null, status:500}
+     }
+
+
+     if (res.error) {
+        return {error: true, message: res.message, data: null, status:500}
+     }
+
+     redirect('/empreendimentos');
 
 }

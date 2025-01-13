@@ -1,21 +1,24 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient()
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 
 export default async function GetEmpreendimentos(){
-    try {
-        const req = await prisma.nato_empreendimento.findMany({
-            select:{
-                id: true,
-                nome:true
-            }
-        })
-
-        return req
-    } catch (error) {
-        console.log(error)
-    }finally{
-        await prisma.$disconnect
-    }
+    const session = await getServerSession(auth);
     
+    if(!session){
+        return null
+    }
+
+    const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/dashboard/empreendimentos`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.token}`
+        }
+    })
+
+    if(!req.ok){
+        return null
+    }
+
+    return await req.json()
 }

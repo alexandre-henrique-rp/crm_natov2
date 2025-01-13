@@ -1,32 +1,38 @@
 'use server';
-import { PrismaClient } from "@prisma/client";
-import { UpdateTermosDto } from "../dto/updateTermos.dto";
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 
-const prisma = new PrismaClient();
 
 export default async function UpdateTermos(id : number, termo : boolean){ 
     const termoAceito = termo
-    const idUser = id
 
-    const dto = new UpdateTermosDto(idUser, termoAceito); 
-    const erroValidacao = dto.validar();
-    if(erroValidacao){
-        return { error: true, message: erroValidacao, data: null };
+    const session = await getServerSession(auth);
+
+    if (!session) {
+        return { error: true, message: "Unauthorized", data: null };
+    }
+
+    const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/termo/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.token}`
+        },
+        body: JSON.stringify({
+            termo: termoAceito
+        })
+    })
+
+    const res = await req.json();
+
+    if (!req.ok) {
+        return { error: true, message: "ERRO Ao Aceitar Termos" };
     }
     
-    try{
-        const data = await prisma.nato_user.update({
-            where:{
-                id: idUser
-            },
-            data:{
-                termos: termoAceito
-            }
-        })
-        return { error: false, message: 'Política de Privacidade e Termo de uso aceito', data: data };
-    }catch(err){
-        return { error: true, message: (err as Error).message, data: null };
-    }finally{
-        await prisma.$disconnect();
+    if(res.error){
+        return { error: true, message: res.message, data: null };
+    }else{
+        return { error: false, message: res.message, data: res.data };
     }
+
 }

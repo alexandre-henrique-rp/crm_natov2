@@ -1,9 +1,7 @@
 'use server';
-import { PrismaClient } from "@prisma/client";
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { UpdateFinanceiraDto } from "../dto/updateFinanceira.dto";
-
-const prisma = new PrismaClient();
 
 export async function UpdateFinanceira(_: any, data: FormData) {
   const id = Number(data.get("id"));
@@ -14,35 +12,44 @@ export async function UpdateFinanceira(_: any, data: FormData) {
   const responsavel = data.get("responsavel") as string;
   const fantasia = data.get("fantasia") as string;
 
+  const session = await getServerSession(auth);
 
-  const dto = new UpdateFinanceiraDto(
-    cnpj,
-    razaoSocial,
-    telefone,
-    email,
-    responsavel,
-    fantasia
-  );
-  const error = dto.validar();
-  
-  if (error) {
-    await prisma.$disconnect();
-    return { error: true, message: error, data: null };
+  if (!session) {
+    return {
+      error: true,
+      message: "Unauthorized",
+      data: null,
+      status: 401
+    };
   }
 
-  const request = await prisma.nato_financeiro.update({
-    where: { id: id },
-    data: {
+  const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/financeiro/update/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${session?.token}`
+    },
+    body: JSON.stringify({
       cnpj: cnpj,
       razaosocial: razaoSocial,
       tel: telefone,
       email: email,
       responsavel: responsavel,
-      fantasia: fantasia,
-    },
+      fantasia: fantasia
+    })
   });
-  await prisma.$disconnect();
+
+  const res = await req.json();
+
+  if (!req.ok) {
+    return {
+      error: true,
+      message: res.message,
+      data: null,
+      status: req.status
+    };
+  }
+  
   redirect("/financeiras");
 
-  return { error: false, message: "success", data: request };
 }

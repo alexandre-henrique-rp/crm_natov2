@@ -4,6 +4,7 @@ import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 import BotaoCancelar from "@/components/botoes/btn_cancelar";
 
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
+import { auth } from "@/lib/auth_confg";
 import ContrutoraProvider from "@/provider/ConstrutoraProvider";
 import { Box, Button, Divider, Flex, Heading, Spacer } from "@chakra-ui/react";
 import { Metadata } from "next";
@@ -12,7 +13,11 @@ export const metadata: Metadata = {
   title: "CADASTRO DE CONSTRUTORA"
 };
 
-export default function CadastrarFinanceira() {
+export default async function CadastrarFinanceira() {
+  const session = await getServerSession(auth);
+  if (session?.user.hierarquia !== "ADM") {
+    redirect("/");
+  }
   return (
     <>
       <Flex

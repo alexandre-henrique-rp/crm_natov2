@@ -41,7 +41,7 @@ export function SelectUserEmpreendimento({
     getEmpreendimento();
 
     if (setValue) {
-      const dataValue = JSON.parse(setValue);
+      const dataValue = setValue;
       if (dataValue.length > 0) {
         (async () => {
           const data = await Promise.all(
@@ -105,7 +105,6 @@ export function SelectUserEmpreendimento({
     setEmpreedimentoCX(EmpreendimentoArray);
   }, [EmpreendimentoArray, setEmpreedimentoCX]);
 
-  console.log(EmpreendimentoArray);
 
   return (
     <>

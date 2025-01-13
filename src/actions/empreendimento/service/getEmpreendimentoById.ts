@@ -1,44 +1,23 @@
-import { PrismaClient } from "@prisma/client";
-import { GetEmpreendimentoDto } from "../dto/getEmpreendimento.dto";
-
-const prisma = new PrismaClient();
-
-export type EmpreendimentoType = {
-    id: number;
-    nome: string;
-    uf: string;
-    cidade: string;
-    ativo: boolean;
-}
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 
 export default async function GetEmpreendimentoById(id : number){
-    
-    
-    const dto = new GetEmpreendimentoDto(id);
-    const erroValidacao = dto.validar();
-    if(erroValidacao){
-        return { error: true, message: erroValidacao, data: null };
+
+    const session = await getServerSession(auth);
+
+    const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/empreendimento/${id}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.token}`
+        }
+    })
+
+    if(!req.ok){
+        return { error: true, message: "Erro ao buscar empreendimento", data: null };;
     }
 
-    try {
-        const request = await prisma.nato_empreendimento.findFirst({
-            where: {
-                id: id,
-            },
-            select: {
-                id: true,
-                nome: true,
-                construtora: true,
-                uf: true,
-                cidade: true,
-                ativo: true,
-                financeiro: true,
-            }
-        });
-        return { error: false, message: "success", data: request };
-    } catch (error) {
-        return { error: true, message: "error", data: error };
-    } finally {
-        await prisma.$disconnect();
-    }
+    const res = await req.json();
+
+    return { error: false, message: "success", data: res };
 }

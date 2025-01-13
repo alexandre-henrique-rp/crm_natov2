@@ -1,13 +1,20 @@
 import GetAllEmpreendimento from "@/actions/empreendimento/service/getAllEmpreendimentos";
 import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 import Empreendimentos from "@/components/empreendimentoCard";
+import { auth } from "@/lib/auth_confg";
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { Metadata } from "next";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "EMPREENDIMENTOS"
 };
 export default async function EmpreendimentoPage() {
+    const session = await getServerSession(auth);
+    if (session?.user.hierarquia !== "ADM") {
+      redirect("/");
+    }
   const dados = await GetAllEmpreendimento();
 
   return (

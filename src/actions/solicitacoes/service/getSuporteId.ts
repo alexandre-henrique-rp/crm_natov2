@@ -1,21 +1,30 @@
 'use server'
 
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 
 export default async function GetSuporteById(id: number) {
-  const suporte = await prisma.nato_suporte.findUnique({
-    where: {
-      id: id,
-    },
-  });
-  await prisma.$disconnect();
-  if (suporte) {
-    return {
-      ...suporte,
-      ...(suporte.urlSuporte && { urlSuporte: JSON.parse(suporte.urlSuporte) })
-    };
+
+  const session = await getServerSession(auth);
+
+  if (!session) {
+    return { error: true, message: "Unauthorized", data: null };
+  }  
+
+  const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/suporte/getone/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${session?.token}`
+    }
+  })
+
+  const res = await req.json()
+  
+  if(!req.ok){
+    return { error: true, message: "ERRO Ao buscar suporte", data: null };
   }
-  return null;
+    return { error: false, message: 'Sucesso', data: res }  
+  
+
 }

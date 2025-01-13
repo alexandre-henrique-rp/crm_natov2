@@ -1,19 +1,29 @@
 'use server'
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();  
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 
 export async function DeleteFinanceira(id: string) {
-  try {
-    const request = await prisma.nato_financeiro.delete({
-      where: {
-        id: parseInt(id),
-      },
-    });
-    return { error: false, message: "Financeira deletada", data: request };
-  } catch (error) {
-    return { error: true, message: "Erro ao deletar Financeira", data: error };
-  } finally {
-    await prisma.$disconnect();
+
+  const session = await getServerSession(auth);
+  
+  if(!session){
+    return { error: true, message: "Unauthorized", status: 401 };
   }
+
+  const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/financeiro/delete/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${session?.token}`
+    }
+  })
+
+  if(!req.ok){
+    return { error: true, message: "ERRO Ao Atualizar Financeira", status: 500 };
+  }
+  
+  if(req.ok){
+    return { error: false, message: "Sucesso ao Atualizar Financeira", status: 200 };
+  }
+
 }

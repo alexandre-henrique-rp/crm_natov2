@@ -9,7 +9,9 @@ export const metadata: Metadata = {
   title: "Construtoras"
 };
 export default async function ConstrutoraPage() {
+
   const Dados = await GetAllConstrutoras();
+
   return (
     <>
       <Flex

@@ -1,17 +1,25 @@
 "use server";
-import { PrismaClient } from "@prisma/client";
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
-const prisma = new PrismaClient();
-
 export async function GetUser(id: number) {
-  const user = await prisma.nato_user.findUnique({
-    where: {
-      id: id
-    }
-  });
+  
+  const session = await getServerSession(auth);
 
-  return user;
+  if (!session) {
+    return null;
+  }
+
+  const user = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/get/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${session?.token}`
+    },
+  })
+  const res = await user.json()
+  return res
 }
 
 export async function UpdateUser(_: any, data: FormData) {
@@ -33,13 +41,23 @@ export async function UpdateUser(_: any, data: FormData) {
   const empreendimentoArray = empreendimento
     ? empreendimento.split(",").map(Number)
     : [];
-  const FinanceiraArray = financeira ? financeira.split(",").map(Number) : [];
+  const FinanceiraArray = financeira 
+    ? financeira.split(",").map(Number) 
+    : [];
 
-  await prisma.nato_user.update({
-    where: {
-      id: Number(id)
+    const session = await getServerSession(auth);
+
+    if (!session) {
+      return null;
+    }
+
+  await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/update/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${session?.token}`
     },
-    data: {
+    body: JSON.stringify({
       cpf: cpf,
       nome: nome,
       username: username,
@@ -52,8 +70,7 @@ export async function UpdateUser(_: any, data: FormData) {
       ...(financeira && { Financeira: JSON.stringify(FinanceiraArray) }),
       hierarquia: hierarquia,
       cargo: cargo
-    }
+    })
   });
-  await prisma.$disconnect();
   redirect("/usuarios");
 }

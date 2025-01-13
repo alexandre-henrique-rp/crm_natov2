@@ -5,6 +5,7 @@ import UserProvider from "@/provider/UserProvider";
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 async function GetUser() {
   try {
@@ -47,6 +48,10 @@ export const metadata: Metadata = {
   title: "USUÁRIOS"
 };
 export default async function UsuariosPage() {
+  const session = await getServerSession(auth);
+  if (session?.user.hierarquia !== "ADM") {
+    redirect("/");
+  }
   const Dados = await GetUser();
 
   return (
