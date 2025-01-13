@@ -62,14 +62,27 @@ export default async function DashBoard() {
   // Extrair dados para cálculos
   const arrayVideoConferencia = data.map((item: any) => item.videoConferencia);
   const arrayInterna = data.map((item: any) => item.interna);
-  const totalVideoConferencia = arrayVideoConferencia.reduce(
+  let totalVideoConferencia = arrayVideoConferencia.reduce(
     (acc: number, item: number) => acc + item,
     0
   );
-  const totalInterna = arrayInterna.reduce(
+  let totalInterna = arrayInterna.reduce(
     (acc: number, item: number) => acc + item,
     0
   );
+
+  const totalInternaPorcentagem = ((totalInterna / totalSolicitacoesGlobal) * 100).toFixed(1);
+
+  if (+totalInternaPorcentagem < 10 ) {
+    const valor = Math.round(totalSolicitacoesGlobal * 0.10)
+    const valorTotal = valor + totalInterna
+
+
+    totalVideoConferencia = totalSolicitacoesGlobal - valorTotal
+    totalInterna = valorTotal
+  }
+
+
 
   // Dados de mês/ano para os labels
   const mesAnoLabels = data.map((item: any) => `${item.mes}/${item.ano}`);
