@@ -22,12 +22,11 @@ export default async function GetAllConstrutoras(){
     if (!req.ok) {
         return { error: true, message: "ERRO Ao buscar construtoras"};
     }
+    
 
     const res = await req.json();
+    console.log("🚀 ~ GetAllConstrutoras ~ res:", res)
+    return res;
 
-    if (res.error) {
-        return {status: 500, error: true, message: res.message };
-    }else{
-        return {status: 200, error: false, message: 'Sucesso', data: res }
-    }
+
 }

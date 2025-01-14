@@ -24,7 +24,7 @@ export async function GET() {
             })
 
         if(!req.ok){
-            return new NextResponse("Invalid credentials", { status: 401 });
+            return new NextResponse("Invalid credentials", { status: 405 });
         }
         const data = await req.json()
 

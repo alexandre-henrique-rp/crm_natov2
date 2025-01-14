@@ -1,7 +1,6 @@
 'use client';
 import { Button, HStack, Text } from "@chakra-ui/react";
 import { MdErrorOutline } from "react-icons/md"; // Ícone de alerta
-import getInfoChamados from "@/actions/chamados/service/infoChamados";
 import { useEffect, useState } from "react";
 import { keyframes } from "@emotion/react";
 import { useSession } from "next-auth/react";
@@ -24,7 +23,7 @@ export default function BotaoPageChamados() {
 
             const data = await response.json();
             
-            setQtdChamadosAberto(data);
+            setQtdChamadosAberto(data || 0);
         }
         fetchData();
     }, []);

@@ -1,5 +1,4 @@
 "use client";
-import GetAllConstrutoras from "@/actions/construtora/service/getAllContrutoras";
 import {
   Badge,
   Box,
@@ -66,8 +65,9 @@ export function Tabela({
   }, [AtualPage]);
 
   const getConstrutoras = async () => {
-    const construtoras = await GetAllConstrutoras();
-    setConstrutoras(construtoras.data);
+    const construtoras = await fetch(`/api/construtora/getall`);
+    const data = await construtoras.json();
+    setConstrutoras(data);
   };
 
   const downTimeInDays = (item: solictacao.SolicitacaoGetType) => {
