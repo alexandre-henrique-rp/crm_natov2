@@ -45,7 +45,6 @@ export default async function ChamadosPage() {
   }
 
   const chamados = await isAdm(idUser);
-  console.log("🚀 ~ ChamadosPage ~ chamados:", chamados)
 
   return (
     <Flex

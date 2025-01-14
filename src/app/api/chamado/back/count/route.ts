@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
     try{
         const session = await getServerSession(auth)
+        console.log(session?.token)
         
         // if(!session){
         //     return NextResponse.json(
@@ -13,7 +14,7 @@ export async function GET() {
         //     );
         // }   
         
-        const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/count`,
+        const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/count/total`,
             {
                 method: 'GET',
                 
@@ -23,13 +24,15 @@ export async function GET() {
                 }
                 
             })
+            console.log("🚀 ~ GET ~ req:", req)
+
 
         if(!req.ok){
-
             const dataRetorno: any = 0
             return new NextResponse(dataRetorno, { status: 200 });
         }
         const data = await req.json()
+        console.log("🚀 ~ GET ~ data:", data)
 
         return NextResponse.json(data, {status: 200})
         
