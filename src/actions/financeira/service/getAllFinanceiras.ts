@@ -22,9 +22,7 @@ export async function GetAllFinanceiras() {
     if(!req.ok){
         return { error: true, message: "ERRO Ao Atualizar Financeira", status: 500, data: null };
     }
-    
-    if(req.ok){
         return { error: false, message: "Sucesso ao Atualizar Financeira", status: 200, data: await req.json() };
-    }
+    
     
 }
