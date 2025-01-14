@@ -13,6 +13,7 @@ import BotaoReativarSolicitacao from "../botoes/btn_reativar_solicitacao";
 import { CriarFcweb } from "../botoes/criarFcweb";
 import BtnAlertNow from "../btn_alerta_now";
 import DistratoAlertPrint from "../Distrato_alert_print";
+import BotaoPausar from "../botoes/btn_pausar";
 
 // const prisma = new PrismaClient();
 type Props = {
@@ -266,7 +267,9 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
             py={3}
             wrap={"wrap"}
           >
-          
+            {HierarquiaUser === "ADM" && (
+              <BotaoPausar id={setDadosCard.id} statusPause={setDadosCard.pause} />
+            )}   
             <BtnIniciarAtendimento
               hierarquia={HierarquiaUser}
               status={setDadosCard.statusAtendimento}
