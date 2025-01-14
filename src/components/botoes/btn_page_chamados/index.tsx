@@ -27,7 +27,7 @@ export default function BotaoPageChamados() {
             
             const data = await response.json();
             
-            setQtdChamadosAberto(data);
+            setQtdChamadosAberto(data || 0);
         }
         fetchData();
     }, []);

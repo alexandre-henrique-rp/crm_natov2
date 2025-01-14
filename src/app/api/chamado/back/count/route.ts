@@ -25,6 +25,7 @@ export async function GET() {
             })
 
         if(!req.ok){
+
             const dataRetorno: any = 0
             return new NextResponse(dataRetorno, { status: 200 });
         }
