@@ -7,7 +7,7 @@ export async function GetConstrutoraById(id: number){
     const session = await getServerSession(auth);
 
     if(!session){
-        return { error: true, message: "Unauthorized" };
+        return { error: true, message: "Unauthorized", data: null };
     }
 
     const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/construtoras/${id}`, {

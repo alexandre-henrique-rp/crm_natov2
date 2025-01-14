@@ -6,25 +6,28 @@ export async function GET() {
     try{
         const session = await getServerSession(auth)
         
-        if(!session){
-            return NextResponse.json(
-                { message: "Unauthorized" },
-                { status: 401 }
-            );
-        }   
+        // if(!session){
+        //     return NextResponse.json(
+        //         { message: "Unauthorized" },
+        //         { status: 401 }
+        //     );
+        // }   
         
         const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/count`,
             {
                 method: 'GET',
                 
                 headers: {
-                    Authorization: `Bearer ${session?.token}`
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${session?.token}`
                 }
                 
             })
 
         if(!req.ok){
-            return new NextResponse("Invalid credentials", { status: 405 });
+
+            const dataRetorno: any = 0
+            return new NextResponse(dataRetorno, { status: 200 });
         }
         const data = await req.json()
 

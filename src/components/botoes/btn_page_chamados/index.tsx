@@ -21,6 +21,10 @@ export default function BotaoPageChamados() {
         async function fetchData() {
             const response = await fetch(`/api/chamado/back/count`,{ method: "GET" })
 
+            if(!response.ok){
+                setQtdChamadosAberto(0);
+            }
+            
             const data = await response.json();
             
             setQtdChamadosAberto(data || 0);
