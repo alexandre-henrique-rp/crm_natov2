@@ -9,7 +9,7 @@ export default async function GetFinanceiras(){
         return null
     }
 
-    const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/dashboard/empreendimentos`, {
+    const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/dashboard/financeiras`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

@@ -52,9 +52,8 @@ export default function DashFiltrado({
         empreedimento,
         financeiro
     }
-    console.log("🚀 ~ handleSubmit ~ data:", data)
     try {
-        const req = await fetch('http://localhost:3030/get/infos/search',{
+        const req = await fetch('https://dashboard.redebrasilrp.com.br/get/infos/search',{
            method: 'POST',
            headers: {
                "Content-Type": "application/json" 
@@ -155,7 +154,7 @@ export default function DashFiltrado({
         <Select w={"200px"} placeholder="Financeira" onChange={(e) => setFinanceira(e.target.value)}>
           {financeiras?.map((financeira: any) => (
             <option key={financeira.id} value={financeira.id}>
-              {financeira.nome}
+              {financeira.fantasia}
             </option>
           ))}
         </Select>

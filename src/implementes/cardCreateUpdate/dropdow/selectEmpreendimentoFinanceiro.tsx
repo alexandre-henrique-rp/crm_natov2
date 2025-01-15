@@ -46,7 +46,7 @@ export function SelectEmpreendimentoFinanceiro({
     getFinanceira();
 
     if (setValue) {
-      const dataValue = JSON.parse(setValue);
+      const dataValue = setValue;
       if (dataValue.length > 0) {
         (async () => {
           const data = await Promise.all(
