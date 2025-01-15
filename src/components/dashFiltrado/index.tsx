@@ -155,7 +155,7 @@ export default function DashFiltrado({
         <Select w={"200px"} placeholder="Financeira" onChange={(e) => setFinanceira(e.target.value)}>
           {financeiras?.map((financeira: any) => (
             <option key={financeira.id} value={financeira.id}>
-              {financeira.fantasia}
+              {financeira.nome}
             </option>
           ))}
         </Select>

@@ -48,11 +48,12 @@ export function ResendSms({ id }: ResendSmsProps) {
       <Button
         size={'sm'}
         colorScheme="blue"
+        textColor={'black'}
         onClick={handleResendSms}
         isLoading={Loading}
         spinner={<BeatLoader size={8} color="white" />}
-      >
-        Reenviar SMS
+      > 
+        REENVIAR SMS
       </Button>
     </>
   );

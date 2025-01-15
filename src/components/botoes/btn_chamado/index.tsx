@@ -237,7 +237,7 @@ export default function CreateChamado({ id }: CreateChamadoProps) {
 
 
   return (
-    <>
+    <><Tooltip label="Botão para solicitar suporte,solicitação ou alterações referente a este cliente." bg={"orange.700"}>
       <Button
         size={'sm'}
         colorScheme="orange"
@@ -246,9 +246,11 @@ export default function CreateChamado({ id }: CreateChamadoProps) {
         onClick={() => {
           onOpen();
         }}
+        textColor={'black'}
       >
-        Criar Chamado
+        CRIAR CHAMADO
       </Button>
+    </Tooltip>
 
       <Modal isOpen={isOpen} size={"xl"} onClose={handleModalClose}>
         <ModalOverlay />

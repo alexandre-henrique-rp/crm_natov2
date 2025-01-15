@@ -74,13 +74,13 @@ export default function BtnIniciarAtendimento({
       {(!["EMITIDO", "REVOGADO", "APROVADO"].includes(aprovacao) && hierarquia === "ADM") && (
         <>
           {status && (
-            <Button size="sm" colorScheme="red" onClick={handleCancelarAtendimento}>
-              Cancelar Atendimento
+            <Button size="sm" colorScheme="red" textColor={'black'} onClick={handleCancelarAtendimento}>
+              CANCELAR ATENDIMENTO
             </Button>
           )}
           {!status && (
-            <Button size="sm" colorScheme="teal" onClick={handleIniciarAtendimento}>
-              Iniciar Atendimento
+            <Button size="sm" colorScheme="teal" textColor={'black'} onClick={handleIniciarAtendimento}>
+              INICIAR ATENDIMENTO
             </Button>
           )}
         </>

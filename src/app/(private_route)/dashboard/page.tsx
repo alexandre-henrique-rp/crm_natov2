@@ -195,7 +195,7 @@ export default async function DashBoard() {
         >
           Dashboard Filtrado
         </Text>
-        <DashFiltrado construtoras={user?.hierarquia == 'ADM' ? construtoras : user?.construtora} financeiras={user?.hierarquia == 'ADM' ? financeiras : null} empreendimentos={user?.hierarquia == 'ADM' ? empreendimentos : user?.empreendimento} />
+        <DashFiltrado construtoras={user?.hierarquia == 'ADM' ? construtoras : user?.construtora} financeiras={user?.hierarquia == 'ADM' ? financeiras : user?.Financeira} empreendimentos={user?.hierarquia == 'ADM' ? empreendimentos : user?.empreendimento} />
       </VStack>
     </Flex>
   );

@@ -1,6 +1,6 @@
 'use client'
 import pausar from "@/actions/solicitacao/service/pausar";
-import { Button, useToast } from "@chakra-ui/react";
+import { Button, Tooltip, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 
 interface BotaoPausarProps {
@@ -62,13 +62,17 @@ const handleOnClick = async () => {
     }
 
     return (
+        <>
+        <Tooltip label={`Botão para congelar o tempo do cliente no sistema, quando despausado volta ao fluxo normal.`} bg={'yellow.700'} >
         <Button
-            textColor={"white"}
+            textColor={"black"}
             size="sm"
             colorScheme="yellow"
             onClick={handleOnClick}
         >
-            {pause ? "Despausar" : "Pausar"}
-        </Button>
+            {pause ? "DESPAUSAR" : "PAUSAR"}
+        </Button> 
+        </Tooltip>
+        </>
     )
 }
