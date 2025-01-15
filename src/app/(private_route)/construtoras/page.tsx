@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 export default async function ConstrutoraPage() {
 
   const Dados = await GetAllConstrutoras();
-  console.log("🚀 ~ ConstrutoraPage ~ Dados:", Dados)
 
   return (
     <>
