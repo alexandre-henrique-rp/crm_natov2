@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 export default async function ConstrutoraPage() {
 
   const Dados = await GetAllConstrutoras();
+  console.log("🚀 ~ ConstrutoraPage ~ Dados:", Dados)
 
   return (
     <>
@@ -55,7 +56,7 @@ export default async function ConstrutoraPage() {
         </Box>
         <Box w={"100%"}>
           <Box>
-            {Dados?.status === 200 ? <Construtora data={Dados?.data} /> : <></>}
+            {Dados.error ? <Text>{Dados.message}</Text> : <Construtora data={Dados.data} />}
           </Box>
         </Box>
       </Flex>

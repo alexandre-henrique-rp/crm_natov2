@@ -25,8 +25,7 @@ export default async function GetAllConstrutoras(){
     
 
     const res = await req.json();
-    console.log("🚀 ~ GetAllConstrutoras ~ res:", res)
-    return res;
+    return { error: false, message: 'Sucesso', data: res };
 
 
 }
