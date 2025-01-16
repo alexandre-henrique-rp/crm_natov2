@@ -1,6 +1,4 @@
 "use client";
-import { AnosOptions } from "@/data/anos";
-import { MesesOptions } from "@/data/meses";
 import {
   Box,
   Select,
@@ -9,7 +7,8 @@ import {
   Flex,
   Text,
   Divider,
-  Spinner
+  Spinner,
+  Input
 } from "@chakra-ui/react";
 import { useState } from "react";
 import PieChart from "../pieChart.tsx";
@@ -27,8 +26,10 @@ export default function DashFiltrado({
   empreendimentos,
   financeiras
 }: DashFiltradoProps) {
-  const [mes, setMes] = useState<string | null>(null);
-  const [ano, setAno] = useState<string | null>(null);
+  const [dataInicio, setDataInicio] = useState<string | null>(null);
+  const [dataFim, setDataFim] = useState<string | null>(null);
+  // const [mes, setMes] = useState<string | null>(null);
+  // const [ano, setAno] = useState<string | null>(null);
   const [construtora, setConstrutora] = useState<string | null>(null);
   const [empreedimento, setEmpreendimento] = useState<string | null>(null);
   const [financeiro, setFinanceira] = useState<string | null>(null);
@@ -61,8 +62,8 @@ export default function DashFiltrado({
     }
 
     const data = {
-      mes,
-      ano,
+      dataInicio,
+      dataFim,
       construtora,
       empreedimento,
       financeiro
@@ -125,28 +126,9 @@ export default function DashFiltrado({
       {hierarquia == "ADM" && (
         <>
           <Box display={"flex"} justifyContent={"center"} gap={2} w={"100%"}>
-            <Select
-              w={"135px"}
-              placeholder="Mês"
-              onChange={(e) => setMes(e.target.value)}
-            >
-              {MesesOptions.map((mes) => (
-                <option key={mes.id} value={mes.id}>
-                  {mes.label}
-                </option>
-              ))}
-            </Select>
-            <Select
-              w={"100px"}
-              placeholder="Ano"
-              onChange={(e) => setAno(e.target.value)}
-            >
-              {AnosOptions.map((ano) => (
-                <option key={ano.id} value={ano.ano}>
-                  {ano.ano}
-                </option>
-              ))}
-            </Select>
+          <Input placeholder='Select Date and Time' width={"10%"} size='md' type='date' onChange={(e) => setDataInicio(e.target.value)}/>
+          <Input placeholder='Select Date and Time' w={'10%'} size='md' type='date' onChange={(e) => setDataFim(e.target.value)}/>
+
             <Select
               w={"200px"}
               value={construtora || ""}
@@ -205,28 +187,8 @@ export default function DashFiltrado({
       {hierarquia !== "ADM" && (
         <>
           <Box display={"flex"} justifyContent={"center"} gap={2} w={"100%"}>
-            <Select
-              w={"135px"}
-              placeholder="Mês"
-              onChange={(e) => setMes(e.target.value)}
-            >
-              {MesesOptions.map((mes) => (
-                <option key={mes.id} value={mes.id}>
-                  {mes.label}
-                </option>
-              ))}
-            </Select>
-            <Select
-              w={"100px"}
-              placeholder="Ano"
-              onChange={(e) => setAno(e.target.value)}
-            >
-              {AnosOptions.map((ano) => (
-                <option key={ano.id} value={ano.ano}>
-                  {ano.ano}
-                </option>
-              ))}
-            </Select>
+          <Input placeholder='Select Date and Time' width={"10%"} size='md' type='date' onChange={(e) => setDataInicio(e.target.value)}/>
+          <Input placeholder='Select Date and Time' w={'10%'} size='md' type='date' onChange={(e) => setDataFim(e.target.value)}/>
             <Select
               w={"200px"}
               value={construtora || ""}
