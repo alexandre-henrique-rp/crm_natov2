@@ -93,17 +93,31 @@ export default function DashFiltrado({
         return;
       } else {
         const result = await req.json();
-        setLoading(false);
-        setDados(result);
 
-        toast({
-          title: "Sucesso!",
-          description: "Dados filtrados com sucesso.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-          position: "top-right"
-        });
+        if(result.error) {
+          toast({
+            title: "Erro",
+            description: result.message,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "top-right"
+          });
+          setDados(null);
+          setLoading(false);
+        }else{
+          setLoading(false);
+          setDados(result);
+  
+          toast({
+            title: "Sucesso!",
+            description: "Dados filtrados com sucesso.",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right"
+          });
+        }
       }
     } catch (error) {
       toast({
