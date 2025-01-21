@@ -41,23 +41,33 @@ export default function DashFiltrado({
   const hierarquia = session?.user?.hierarquia;
 
   const handleLimpar = async () => {
+    nullValues();
     setDados(null);
   };
+
+  const nullValues = () => {
+    setDataInicio(null);
+    setDataFim(null);
+    setConstrutora(null);
+    setEmpreendimento(null);
+    setFinanceira(null);
+  }
   const handleSubmit = async () => {
     setDados(null);
     setLoading(true);
     if (
-      hierarquia !== "ADM" &&
-      (construtora == null || empreedimento == null)
+      !construtora
     ) {
       toast({
         title: "Erro no Filtro",
-        description: `Selecione a Construtora e Empreendimento`,
+        description: `Selecione uma Construtora`,
         status: "error",
         duration: 5000,
         isClosable: true,
         position: "top-right"
       });
+      nullValues();
+      setLoading(false);
       return;
     }
 
@@ -89,6 +99,7 @@ export default function DashFiltrado({
           isClosable: true,
           position: "top-right"
         });
+        nullValues();
         setLoading(false);
         return;
       } else {
@@ -103,6 +114,7 @@ export default function DashFiltrado({
             isClosable: true,
             position: "top-right"
           });
+          nullValues();
           setDados(null);
           setLoading(false);
         }else{
@@ -129,6 +141,7 @@ export default function DashFiltrado({
         isClosable: true,
         position: "top-right"
       });
+      nullValues();
       setLoading(false);
       console.error("Erro:", error);
     }
