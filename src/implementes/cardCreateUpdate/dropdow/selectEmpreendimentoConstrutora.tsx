@@ -41,7 +41,7 @@ export function SelectEmpreendimentoConstrutora({
   useEffect(() => {
     const getConstrutora = async () => {
       const req = await GetAllConstrutoras();
-      if (req.status === 200) {
+      if (!req.error) {
         const data = req.data;
         if (data) {
           setConstrutoraData(data);

@@ -48,7 +48,7 @@ export default function BotaoReativarSolicitacao({id}: BotaoReativarSolicitacaoP
         colorScheme="green"
         onClick={(e) => handleReativar(e)}
         >
-            Reativar Solicitação
+            REATIVAR SOLICITAÇÃO
         </Button>
     )
     

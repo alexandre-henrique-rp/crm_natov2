@@ -88,8 +88,8 @@ export function BtnResetSenha({ ID }: BtnResetSenhaProps) {
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel
               </Button>
-              <Button colorScheme="red" onClick={handleReset} ml={3}>
-                Delete
+              <Button colorScheme="green" onClick={handleReset} ml={3}>
+                Resetar
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

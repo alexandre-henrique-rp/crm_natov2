@@ -13,7 +13,7 @@ export async function GET() {
         //     );
         // }   
         
-        const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/count`,
+        const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/count/total`,
             {
                 method: 'GET',
                 
@@ -24,8 +24,8 @@ export async function GET() {
                 
             })
 
-        if(!req.ok){
 
+        if(!req.ok){
             const dataRetorno: any = 0
             return new NextResponse(dataRetorno, { status: 200 });
         }

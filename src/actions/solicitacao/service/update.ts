@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth_confg";
 import { getServerSession } from "next-auth";
 
 export async function UpdateSolicitacao(_: any, data: FormData) {
+  console.log("🚀 ~ UpdateSolicitacao ~ data:", data)
   const session = await getServerSession(auth);
   if (!session) {
     return {
@@ -15,6 +16,7 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
   // console.log(data);
 
   const id = Number(data.get("id_cliente"));
+  console.log("🚀 ~ UpdateSolicitacao ~ id:", id)
   const Ativo = data.get("StatusAtivo") === "true" ? true : false;
   const corretor = Number(data.get("corretor")) || 0;
   const hierarquia = session?.user.hierarquia;
@@ -128,10 +130,7 @@ async function PostTags(value: any, id: number) {
       body: JSON.stringify({
         tags: tags,
         solicitacao: id
-
-        
       })
     },
   )
-
 }

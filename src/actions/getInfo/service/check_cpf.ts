@@ -27,13 +27,13 @@ export const CheckCpf = async (cpf: string) => {
   const res = await req.json();
 
   if(!req.ok){
-    return { error: true, message: "Erro ao buscar financeira", status: 500, data: null };
+    return { error: true, message: "Erro ao buscar cpf", status: 500, data: null };
   }
 
-  if(res){
-    return { error: true, message: "CPF ja cadastrado", status: 500, data: null };
+  if(res.error){
+    return { error: true, message: res.message, status: 500, data: null };
   }else{
-    return { error: false, message: "success", status: 202, data: res };
+    return { error: false, message: res.message, status: 202, data: res };
   }
 
 }

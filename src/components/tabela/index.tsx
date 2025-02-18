@@ -133,8 +133,10 @@ export function Tabela({
       : item.alertanow &&
         !["EMITIDO", "REVOGADO", "APROVADO"].includes(item.Andamento)
       ? "green.200"
-      : "transparent";
-
+      : item.pause && user?.hierarquia === "ADM" 
+      ? "yellow.200" :
+      "transparent";
+    console.log(colors, item.pause);
     const fontColor =
       colors === "red.400"
         ? "white"
