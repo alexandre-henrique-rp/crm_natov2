@@ -80,6 +80,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         cache: "no-store",
       }
     );
+    console.log("🚀 ~ GET ~ user:", user)
 
     if (!user.ok) {
       return new NextResponse("Invalid credentials", { status: 401 });
