@@ -9,28 +9,6 @@ interface PrivateLayoutProps {
 }
 
 export default async function PrivateLayout({ children }: PrivateLayoutProps) {
-  // const session = await getServerSession(auth);
-
-  // if (session) {
-  //   try {
-  //     const response = await fetch(`${process.env.MONITOR_URL}/`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ token: session.token }),
-  //     });
-
-  //     if (!response.ok) {
-  //       console.error(`Erro na requisição: ${response.status} - ${response.statusText}`);
-  //     } else {
-  //       const data = await response.json();
-  //       console.log("🚀 ~ PrivateLayout ~ data:", data);
-  //     }
-  //   } catch (error) {
-  //     console.error("🚀 ~ erro na requisição:", error);
-  //   }
-  // }
 
   return (
     <Flex
