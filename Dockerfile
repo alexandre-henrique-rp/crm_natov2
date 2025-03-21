@@ -10,20 +10,8 @@ COPY package*.json ./
 # Install dependencies
 RUN yarn
 
-# prisma cli
-RUN npx prisma
-
 # Copy the rest of the application code
 COPY . .
-
-# update db
-RUN npx prisma db pull
-
-# Install dependencies
-RUN npx prisma generate
-
-# Build the Next.js application
-RUN yarn build
 
 # Expose the port the app runs on
 EXPOSE 3002

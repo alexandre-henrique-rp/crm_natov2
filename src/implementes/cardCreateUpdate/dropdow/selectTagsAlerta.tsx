@@ -98,6 +98,7 @@ export function SelectTagsAlerta({
       console.log(response);
       if (!request.ok) {
         setTags([]);
+        return;
       }
       const data = response?.map((item: any) => {
         return { id: item.id, label: item.descricao };
