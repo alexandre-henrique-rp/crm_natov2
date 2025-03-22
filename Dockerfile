@@ -13,6 +13,12 @@ RUN yarn
 # Copy the rest of the application code
 COPY . .
 
+# sincronizar banco de dados
+RUN yarn prisma generate
+
+# Build the application
+RUN yarn build
+
 # Expose the port the app runs on
 EXPOSE 3002
 
