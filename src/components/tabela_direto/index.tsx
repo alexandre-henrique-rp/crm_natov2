@@ -22,7 +22,7 @@ import {
   Th,
   Thead,
   Tooltip,
-  Tr
+  Tr,
 } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
 import { useSession } from "next-auth/react";
@@ -32,9 +32,11 @@ import { FaFileSignature } from "react-icons/fa6";
 import { ImClock } from "react-icons/im";
 import { IoIosArrowForward } from "react-icons/io";
 import { LuTriangleAlert } from "react-icons/lu";
-import { BotoesFunction } from "../botoes/bt_group_functiondireto";
-interface TabelaProps {
-  ClientData?: solictacao.SolicitacaoGetType[];
+import {
+  BotoesFunctionDireto,
+} from "../botoes/bt_group_function";
+interface TabelaDiretoProps {
+  ClientData?: solictacao.SolicitacaoDiretotypes[];
   total?: number | null;
   AtualPage?: number;
   SetVewPage: (page: number) => any;
@@ -48,29 +50,43 @@ const rgbBlink = keyframes`
   100% { color: green; }
 `;
 
-export function Tabela({
+export function TabelaDireto({
   ClientData,
   total,
   AtualPage,
-  SetVewPage
-}: TabelaProps) {
+  SetVewPage,
+}: TabelaDiretoProps) {
   const [SelectPage, setSelectPage] = useState(1);
   const [Construtoras, setConstrutoras] = useState<any>([]);
   const { data: session } = useSession();
+  const [Financeiro, setFinanceiro] = useState<any>([]);
+  const [Tags, setTags] = useState<any>([]);
   const user = session?.user;
 
   useEffect(() => {
-    getConstrutoras();
-    setSelectPage(AtualPage);
-  }, [AtualPage]);
+    getFinanceiro();
+    if (AtualPage !== undefined) {
+      setSelectPage(AtualPage);
+    }
+    getTags();
+  }, []);
 
-  const getConstrutoras = async () => {
-    const construtoras = await fetch(`/api/construtora/getall`);
-    const data = await construtoras.json();
-    setConstrutoras(data);
+  const getFinanceiro = async () => {
+    const financeira = await fetch(`/api/financeira/getall`);
+    const data = await financeira.json();
+    setFinanceiro(data);
   };
 
-  const downTimeInDays = (item: solictacao.SolicitacaoGetType) => {
+  const getTags = async () => {
+    try {
+      const response = await fetch(`/api/tags/getall`);
+      const data = await response.json();
+      setTags(data); // Armazena os dados no estado
+    } catch (error) {
+      console.error("Erro ao buscar tags:", error);
+    }
+  };
+  const downTimeInDays = (item: solictacao.SolicitacaoDiretotypes | any) => {
     if (!item || !item.createdAt) return null;
 
     if (item.distrato || !item.ativo) {
@@ -102,10 +118,10 @@ export function Tabela({
   if (!ClientData) {
     return <div>Carregando...</div>;
   }
-  
+
   const tabela = ClientData.map((item) => {
-    const fantasia = Construtoras.find(
-      (construtora: { id: number }) => construtora.id === item.construtora
+    const fantasia = Financeiro.find(
+      (financeiro: { id: number }) => financeiro.id === Number(item.financeiro)
     )?.fantasia;
 
     const ano = item.dt_agendamento?.split("-")[0];
@@ -125,39 +141,13 @@ export function Tabela({
         : andamento === "APROVADO"
         ? "Certificação aprovada, aguardando cliente baixar o aplicativo e fazer a emissão do certificado."
         : null;
-    // const statusPg = item.fcweb?.estatos_pgto;
-    const colors = !item.ativo
-      ? "red.400"
-      : item.distrato && user?.hierarquia === "ADM"
-      ? "gray.600"
-      : item.distrato && user?.hierarquia === "CONST"
-      ? "gray.600"
-      : item.distrato && user?.hierarquia === "GRT"
-      ? "gray.600"
-      : item.alertanow &&
-        !["EMITIDO", "REVOGADO", "APROVADO"].includes(item.Andamento)
-      ? "green.200"
-      : item.pause && user?.hierarquia === "ADM" 
-      ? "yellow.200" :
-      "transparent";
-    console.log(colors, item.pause);
-    const fontColor =
-      colors === "red.400"
-        ? "white"
-        : colors === "gray.600"
-        ? "white"
-        : "black";
 
-    const regexAssinado = new RegExp("\\bAssinado\\b");
-    const AssDocAss = regexAssinado.test(item.ass_doc);
-
-    const regexExpirado = new RegExp("\\bexpirado\\b");
-    const AssDocExp = regexExpirado.test(item.ass_doc);
     return (
-      <Tr key={item.id} bg={colors} color={fontColor}>
+      <Tr key={item.id}>
         <Td>
           <Flex>
-            {item.tag.length > 0 &&
+            {Array.isArray(item.tag) &&
+            item.tag.length > 0 &&
             item.ativo &&
             !item.distrato &&
             item.Andamento !== "EMITIDO" ? (
@@ -182,7 +172,9 @@ export function Tabela({
                         <PopoverHeader>Atenção</PopoverHeader>
                         <PopoverCloseButton />
                         <PopoverBody>
-                          {item.tag.map((item) => item.descricao).join(",\n")}
+                          {item.tag
+                            .map((item: { descricao: any }) => item.descricao)
+                            .join(",\n")}
                         </PopoverBody>
                         <PopoverFooter></PopoverFooter>
                       </PopoverContent>
@@ -221,7 +213,7 @@ export function Tabela({
                 sx={{
                   transform: "rotate(-90deg)",
                   textOrientation: "upright",
-                  animation: `${rgbBlink} 2s infinite`
+                  animation: `${rgbBlink} 2s infinite`,
                 }}
               >
                 N O W
@@ -229,7 +221,7 @@ export function Tabela({
             ) : (
               <Box ms={10}></Box>
             )}
-            <BotoesFunction
+            <BotoesFunctionDireto
               id={item.id}
               distrato={item.distrato ? true : false}
               exclude={!item.ativo ? true : false}
@@ -263,29 +255,7 @@ export function Tabela({
           </Tooltip>
         </Td>
         <Td>{item.ativo && downTimeInDays(item)}</Td>
-        <Td textAlign={"center"}>
-          {AssDocAss && item.ativo && !item.distrato && (
-            <Icon
-              as={FaFileSignature}
-              color={"green.500"}
-              fontSize={"1.75rem"}
-            />
-          )}
-          {AssDocExp && item.ativo && !item.distrato && (
-            <Icon as={FaFileSignature} color={"red.500"} fontSize={"1.75rem"} />
-          )}
-          {!AssDocAss &&
-            !AssDocExp &&
-            item.ativo &&
-            !item.distrato &&
-            item.link_doc && (
-              <Icon
-                as={FaFileSignature}
-                color={"gray.300"}
-                fontSize={"1.75rem"}
-              />
-            )}
-        </Td>
+
         <Td>{fantasia}</Td>
         {/* {user?.hierarquia === "ADM" && (
           <>
