@@ -346,8 +346,8 @@ model nato_alerta {
   createdAt           DateTime            @default(now()) @db.DateTime(0)
   updatedAt           DateTime?           @db.DateTime(0)
   status              Boolean?            @default(true)
-  nato_empreendimento nato_empreendimento @relation(fields: [empreendimento], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "nato_alerta_nato_empreendimento_FK")
-  nato_user           nato_user?          @relation(fields: [corretor], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "nato_alerta_nato_user_FK")
+  nato_empreendimento nato_empreendimento @relation(fields: [empreendimento], references: [id], onUpdate: Restrict, map: "nato_alerta_nato_empreendimento_FK")
+  nato_user           nato_user?          @relation(fields: [corretor], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "nato_alerta_nato_user_FK")
 
   @@index([empreendimento], map: "nato_alerta_nato_empreendimento_FK")
   @@index([corretor], map: "nato_alerta_nato_user_FK")
@@ -358,6 +358,21 @@ model nato_bug_alert {
   mesagen   String?  @db.Text
   createdAt DateTime @default(now()) @db.DateTime(0)
   status    Boolean? @default(true)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model nato_chamados {
+  id          Int       @id @default(autoincrement())
+  solicitacao Int?
+  descricao   String?   @db.LongText
+  createdAt   DateTime  @default(now()) @db.DateTime(0)
+  status      Int?
+  updatedAt   DateTime? @db.DateTime(0)
+  images      String?   @db.LongText
+  images_adm  String?   @db.LongText
+  idUser      Int?
+  idResposta  Int?
+  resposta    String?   @db.LongText
 }
 
 model nato_empreendimento {
@@ -377,7 +392,7 @@ model nato_empreendimento {
   financeiro    String?        @db.LongText
   tag           String?        @db.VarChar(100)
   nato_alerta   nato_alerta[]
-  nato_empresas nato_empresas? @relation(fields: [construtora], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "nato_empreendimento_nato_empresas_FK")
+  nato_empresas nato_empresas? @relation(fields: [construtora], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "nato_empreendimento_nato_empresas_FK")
 
   @@index([construtora], map: "nato_empreendimento_nato_empresas_FK")
 }
@@ -484,11 +499,21 @@ model nato_solicitacoes_certificado {
   alertanow         Boolean?  @default(false)
   dt_criacao_now    DateTime? @db.DateTime(0)
   statusAtendimento Boolean   @default(false)
-  pause             Boolean   @default(false)
+  pause             Boolean?  @default(false)
 
   @@index([id_fcw], map: "nato_solicitacoes_certificado_fcweb_FK")
   @@index([construtora], map: "nato_solicitacoes_certificado_nato_empresas_FK")
   @@index([corretor], map: "nato_solicitacoes_certificado_nato_user_FK")
+}
+
+model nato_suporte {
+  id          Int      @id @default(autoincrement())
+  tag         String   @db.VarChar(100)
+  deescricao  String?  @db.VarChar(256)
+  solicitacao Int?
+  createAt    DateTime @default(now()) @db.DateTime(0)
+  urlSuporte  String?  @db.LongText
+  imgSuspensa String?  @db.VarChar(100)
 }
 
 model nato_tags {
@@ -496,6 +521,13 @@ model nato_tags {
   solicitacao Int?
   createAt    DateTime @default(now()) @db.DateTime(0)
   descricao   String?  @db.VarChar(100)
+}
+
+model nato_termos {
+  id        Int      @id @default(autoincrement())
+  termo     String?  @db.LongText
+  politicas String?  @db.LongText
+  createdAt DateTime @default(now()) @db.DateTime(0)
 }
 
 model nato_user {
@@ -687,6 +719,20 @@ model solicitacoes_certificado {
   ass_doc        String?  @db.VarChar(255)
 }
 
+model suporte {
+  id             Int      @id @default(autoincrement())
+  status         String   @db.Text
+  usuario        String   @db.VarChar(50)
+  id_fcw         String   @db.VarChar(50)
+  nome           String   @db.VarChar(100)
+  telefone       String   @db.VarChar(20)
+  email          String   @db.VarChar(100)
+  origem         String   @db.Text
+  descricao      String   @db.LongText
+  data_submissao DateTime @default(now()) @db.Timestamp(0)
+  tempo          DateTime @db.Time(0)
+}
+
 model users {
   id             String     @id @default("") @db.Char(36)
   name           String?    @db.VarChar(150)
@@ -742,6 +788,7 @@ model usuariosfcw {
   A3PF_12             String?   @map("A3PF-12") @db.VarChar(150)
   A3PF_24             String?   @map("A3PF-24") @db.VarChar(150)
   A3PF                String?   @db.VarChar(150)
+  A3PF_Bird5000       String    @map("A3PF Bird5000") @db.VarChar(10)
   A3PF_HSM_1ano       String?   @map("A3PF-HSM-1ano") @db.VarChar(150)
   A1PJ                String?   @db.VarChar(150)
   A3PJ_12             String?   @map("A3PJ-12") @db.VarChar(150)
@@ -776,60 +823,11 @@ model visitas {
 }
 
 model voucher {
-  id         Int    @id @default(autoincrement())
-  voucher    String @db.VarChar(150)
-  estatos    String @db.VarChar(150)
-  dt_resgate Int
-  id_fcw     String @db.VarChar(150)
-}
-
-model nato_suporte {
-  id          Int      @id @default(autoincrement())
-  tag         String   @db.VarChar(100)
-  deescricao  String?  @db.VarChar(256)
-  solicitacao Int?
-  createAt    DateTime @default(now()) @db.DateTime(0)
-  urlSuporte  String?  @db.LongText
-  imgSuspensa String?  @db.VarChar(100)
-}
-
-model nato_termos {
-  id        Int      @id @default(autoincrement())
-  termo     String?  @db.LongText
-  politicas String?  @db.LongText
-  createdAt DateTime @default(now()) @db.DateTime(0)
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model nato_chamados {
-  id          Int       @id @default(autoincrement())
-  solicitacao Int?
-  descricao   String?   @db.LongText
-  createdAt   DateTime  @default(now()) @db.DateTime(0)
-  status      Int?
-  updatedAt   DateTime? @db.DateTime(0)
-  images      String?   @db.LongText
-  images_adm  String?   @db.LongText
-  idUser      Int?
-  idResposta  Int?
-  resposta    String?   @db.LongText
-}
-
-model suporte {
-  id             Int            @id @default(autoincrement())
-  status         String         @db.Text
-  id_fcw         String         @db.VarChar(50)
-  nome           String         @db.VarChar(100)
-  telefone       String         @db.VarChar(20)
-  email          String         @db.VarChar(100)
-  origem         suporte_origem
-  descricao      String         @db.Text
-  data_submissao DateTime       @default(now()) @db.Timestamp(0)
-}
-
-enum suporte_origem {
-  Interface
-  SisNATO
-  Parceiro
-  Outro
+  id           Int      @id @default(autoincrement())
+  tipo         String   @db.Text
+  voucher      String   @db.VarChar(150)
+  estatos      String   @db.VarChar(150)
+  dt_resgate   DateTime @db.DateTime(0)
+  id_fcw       String   @db.VarChar(150)
+  dt_aprovacao DateTime @db.Date
 }

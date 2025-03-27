@@ -16,10 +16,14 @@ export async function POST(request: Request) {
             body: File,
             cache: 'no-store'
         });
+        
+        if(!Envio.ok) {
+            const data = await Envio.text();
+            console.log("🚀 ~ POST ~ data:", data)
+            throw { message: "Erro ao enviar o arquivo, por favor entre em contato com o Suporte" };
+        }
         const retornoArquivo = await Envio.json();
-        console.log("🚀 ~ POST ~ retornoArquivo:", retornoArquivo)
-        if (retornoArquivo.error) throw retornoArquivo.error;
-
+    
         return NextResponse.json({ data: retornoArquivo, message: "Arquivo enviado com sucesso" }, { status: 200 });
 
     } catch (error: any) {
