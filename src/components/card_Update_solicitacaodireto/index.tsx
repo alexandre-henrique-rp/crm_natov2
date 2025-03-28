@@ -24,13 +24,14 @@ export async function CardUpdateSolicitacaoDireto({
   setDadosCard,
   user,
 }: Props) {
+  console.log(setDadosCard);
   const HierarquiaUser = user?.hierarquia;
 
   const readonly = HierarquiaUser === "ADM" ? false : true;
   return (
     <>
       <CardCreateUpdate.Root>
-        <CardCreateUpdate.Headers SetDados={setDadosCard} />
+        <CardCreateUpdate.HeadersDireto SetDados={setDadosCard} />
         <Divider borderColor="#00713D" my={4} />
         <CardCreateUpdate.Form action={UpdateSolicitacao}>
           <UserCompraProvider>
@@ -108,6 +109,7 @@ export async function CardUpdateSolicitacaoDireto({
                   DataSolicitacao={setDadosCard}
                   w={{ base: "100%", md: "10rem" }}
                 />
+
                 <CardCreateUpdate.GridStatus
                   DataSolicitacao={setDadosCard}
                   w={{ base: "100%", md: "10rem" }}
@@ -181,7 +183,7 @@ export async function CardUpdateSolicitacaoDireto({
               <CriarFcweb Id={setDadosCard.id} user={user} />
             )}
             {setDadosCard.ativo && (
-              <BtCreateAlertCliente
+              <BtCreateAlertClienteDireto
                 DataSolicitacao={setDadosCard}
                 user={user}
               />

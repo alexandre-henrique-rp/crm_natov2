@@ -15,8 +15,8 @@ const Requestes = async (id: string) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.token}`
-      }
+        Authorization: `Bearer ${session?.token}`,
+      },
     });
     if (!request.ok) {
       throw new Error("Erro");
@@ -37,12 +37,12 @@ const RequestAlert = async (id: string) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.token}`
+        Authorization: `Bearer ${session?.token}`,
       },
       cache: "no-store",
       next: {
-        tags: ["get_Alert"]
-      }
+        tags: ["get_Alert"],
+      },
     });
     if (!request.ok) {
       throw new Error("Erro");
@@ -64,12 +64,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const id = params.id;
   const request = await Requestes(id);
   return {
-    title: `Cliente - ${request.nome}`
+    title: `Cliente - ${request.nome}`,
   };
 }
 
 export default async function perfilPage({
-  params
+  params,
 }: {
   params: { id: string };
 }) {

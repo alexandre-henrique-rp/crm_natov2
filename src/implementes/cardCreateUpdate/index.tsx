@@ -46,6 +46,7 @@ import CardGridConstrutoraTel from "./Grid/CardGridConstrutoraTel";
 import CardGridConstrutoraEmail from "./Grid/CardGridConstrutoraEmail";
 import CardGridConstrutoraFantasia from "./Grid/CardGridConstrutoraFantasia";
 import { CardGridSuport } from "./Grid/CardGridSuport";
+import { CardHeaderDireto } from "./cards/CardHeaderDireto";
 
 
 
@@ -54,7 +55,8 @@ import { CardGridSuport } from "./Grid/CardGridSuport";
  * @name CardCreateUpdate
  * @description Componente que renderiza o card de criação e atualização de um registro
  * @property {CardRoot} Root - Componente que renderiza o card de criação e atualização de um registro
- * @property {CardHeader} Headers - Componente que renderiza o cabeçalho do card de criação e atualização de um registro
+ * @property {CardHeader} Headers 
+ * @property {CardHeaderDireto} HeadersDireto - Componente que renderiza o cabeçalho do card de criação e atualização de um registro
  * @property {CardFormComponent} Form - Componente que renderiza o formulário do card de criação e atualização de um registro
  * @property {CardGridCpf} GridCpf - Componente que renderiza a grid de CPF do card de criação e atualização de um registro
  * @property {CardGridName} GridName - Componente que renderiza a grid de nome do card de criação e atualização de um registro
@@ -84,6 +86,7 @@ import { CardGridSuport } from "./Grid/CardGridSuport";
 export const CardCreateUpdate = {
   Root: CardRoot,
   Headers: CardHeader,
+  HeadersDireto: CardHeaderDireto,
   Form: CardFormComponent,
   GridCpf: CardGridCpf,
   GridName: CardGridName,

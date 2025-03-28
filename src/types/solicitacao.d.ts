@@ -208,36 +208,45 @@ declare namespace solictacao {
   }
 
   interface SolicitacaoDiretotypes {
+    fcweb?: {
+      id: number;
+      andamento?: string;
+      dt_agenda?: string | any;
+      hr_agenda?: string | any;
+      valorcd?: string;
+      estatos_pgto?: string;
+      validacao?: string;
+      dt_aprovacao?: string | any;
+      vouchersoluti?: string | any;
+    };
     tag: any;
-    id: number,
-    nome: string,
-    cpf: string,
-    email: string,
-    dt_solicitacao: Date | string | any,
-    corretor: string,
-    construtora: string,
-    telefone: string,
-    dt_nascimento: Date | string | any,
-    alert: AlertProps[],
-    ativo: boolean,
-    createdAt: Date | string | any,
-    financeiro: string,
-    distrato: boolean,
-    type_validacao: string,
-    dt_agendamento: Date | string | any,
-    hr_aprovacao: string,
-    hr_agendamento: Date | string | any,
-    statusAtendimento: boolean,
-    alertanow: boolean,
-    Andamento: string,
-    status_pgto: string,
-    dt_criacao_now: Date | string | any,
-    imagemQrcode: string,
-    pixCopiaECola: string,
-    qrcode:  string,
-    txid: number,
-    valor: number
+    id: number;
+    nome: string;
+    cpf: string;
+    email: string;
+    dt_solicitacao: Date | string | any;
+    corretor: string;
+    construtora: string;
+    telefone: string;
+    dt_nascimento: Date | string | any;
+    alert: AlertProps[];
+    ativo: boolean;
+    createdAt: Date | string | any;
+    financeiro: string;
+    distrato: boolean;
+    type_validacao: string;
+    dt_agendamento: Date | string | any;
+    hr_aprovacao: string;
+    hr_agendamento: Date | string | any;
+    statusAtendimento: boolean;
+    alertanow: boolean;
+    Andamento: string;
+    status_pgto: string;
+    dt_criacao_now: Date | string | any;
+    imagemQrcode: string;
+    pixCopiaECola: string;
+    qrcode: string;
+    txid: number;
+    valor: number;
   }
-
-
 }

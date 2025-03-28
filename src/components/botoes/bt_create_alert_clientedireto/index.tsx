@@ -21,15 +21,15 @@ import {
 import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 
-interface BtCreateAlertClienteDiretoProps {
-  DataSolicitacao: solictacao.SolicitacaoDiretotypes;
+interface BtCreateAlertClienteProps {
+  DataSolicitacao: solictacao.SolicitacaoGetType;
   user: SessionUserType.User;
 }
 
-export function BtCreateAlertClienteDireto({
+export function BtCreateAlertCliente({
   DataSolicitacao,
   user,
-}: BtCreateAlertClienteDiretoProps) {
+}: BtCreateAlertClienteProps) {
   const hierarquia = user?.hierarquia;
   const [Data, setData] = useState<any>();
   const [Loading, setLoading] = useState(false);
@@ -52,8 +52,8 @@ export function BtCreateAlertClienteDireto({
     e.preventDefault();
     setLoading(true);
     const data: AlertsType.AlertsProps = {
-      tipo: "FINANCEIRO",
-      corretor: Data?.financeiro.id,
+      tipo: "CORRETOR",
+      corretor: Data?.corretor.id,
       empreendimento: Data?.empreedimento.id,
       solicitacao_id: Data?.id,
       tag: "warning",
@@ -125,7 +125,7 @@ export function BtCreateAlertClienteDireto({
             <ModalContent>
               <ModalHeader>
                 {Data?.nome &&
-                  `Criar Alerta para ${Data?.nome} vendedor ${Data?.financeiro?.nome}`}
+                  `Criar Alerta para ${Data?.nome} vendedor ${Data?.corretor?.nome}`}
               </ModalHeader>
               <ModalCloseButton />
               <FormControl>
