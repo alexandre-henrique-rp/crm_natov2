@@ -35,6 +35,7 @@ export const FilterRoute = () => {
       });
       const data = await req.json();
       if (req.ok) {
+        console.log(data.data);
         setDados(data.data);
         setTotal(data.total);
         setPagAtual(data.page);
