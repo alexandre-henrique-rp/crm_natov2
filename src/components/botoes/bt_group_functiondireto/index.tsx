@@ -1,5 +1,6 @@
 "use client";
 
+
 import {
   Box,
   Button,
@@ -21,20 +22,19 @@ import { IoIosArrowBack } from "react-icons/io";
 import BtmDistrato from "../btm_distra";
 import { useRouter } from "next/navigation";
 
+
 interface BotoesFunctionProps {
   id: number;
   distrato: boolean;
   exclude?: boolean;
 }
 
-export const BotoesFunctionDireto = ({
-  id,
-  distrato,
-  exclude,
-}: BotoesFunctionProps) => {
+export const BotoesFunction = ({ id, distrato, exclude }: BotoesFunctionProps) => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const route = useRouter();
+
+
 
   const HandleDelet = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -68,8 +68,8 @@ export const BotoesFunctionDireto = ({
   };
 
   const HandleRedirect = () => {
-    window.open(`/solicitacoesdireto/${id}`, "_blank");
-  };
+    window.open(`/solicitacoes/${id}`, "_blank");
+  }
 
   return (
     <Flex justifyContent={"start"} alignItems={"center"} gap={"5px"}>
@@ -110,7 +110,10 @@ export const BotoesFunctionDireto = ({
                 leftIcon={<IoIosArrowBack />}
                 onClick={onClose}
               />
-              <Button onClick={(e) => HandleDelet(e)} colorScheme="red">
+              <Button
+                onClick={(e) => HandleDelet(e)}
+                colorScheme="red"
+              >
                 Confirmar Exclusão
               </Button>
             </Flex>

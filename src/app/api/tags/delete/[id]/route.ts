@@ -1,23 +1,25 @@
-import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
-
 export async function DELETE(
-    request: Request,
-    { params }: { params: { id: string } }
+  request: Request,
+  { params }: { params: { id: string } }
 ) {
-    try {
-        const { id } = params;
-    
-       const data = await prisma.nato_tags.delete({
-            where: { id: Number(id) },
-        });
-console.log(data)
-
-        return NextResponse.json({message: "Tag excluída com sucesso"}, { status: 200 });
-    } catch (error: any) {
-        console.log(error)
-        return NextResponse.json({message: "Erro ao excluir a tag"}, { status: 500 });
-    }
+  try {
+    const { id } = params;
+    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/direto-tags/${id}`;
+    const tag = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await tag.json();
+    return NextResponse.json(data, { status: 200 });
+  } catch (error: any) {
+    console.log(error);
+    return NextResponse.json(
+      { message: "Erro ao buscar as tags" },
+      { status: 500 }
+    );
+  }
 }
