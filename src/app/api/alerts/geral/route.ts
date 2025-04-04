@@ -8,7 +8,7 @@ export async function GET() {
     if (!session)
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
-    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/alerts`;
+    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/alert`;
     const request = await fetch(url, {
       method: "GET",
       headers: {
@@ -17,14 +17,19 @@ export async function GET() {
       },
     });
     const data = await request.json();
-    
+
     if (!request.ok)
       return NextResponse.json(
         { message: "Solicitação não encontrada" },
         { status: 404 }
       );
 
-    const filterData = data.filter((alert: any) => alert.status === true).filter((alert: any) => alert.corretor === session?.user.id || alert.corretor === null);
+    const filterData = data
+      .filter((alert: any) => alert.status === true)
+      .filter(
+        (alert: any) =>
+          alert.corretor === session?.user.id || alert.corretor === null
+      );
 
     return NextResponse.json(filterData, { status: 200 });
   } catch (error) {

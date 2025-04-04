@@ -40,19 +40,19 @@ export const FiltroComponent = ({ onData }: FiltroGeralProps) => {
         setDataFinanceira(data);
       })();
     } else {
-      if (user){
+      if (user) {
         if (user.construtora.length > 0) {
           setDataConstrutora(user?.construtora);
         }
 
         if (user.construtora.length === 0 && user?.hierarquia === "CONST") {
-           (async () => {
-             const resq = await fetch(`/api/construtora/getall`);
-             const data = await resq.json();
-             setDataConstrutora(data);
-           })();
+          (async () => {
+            const resq = await fetch(`/api/construtora/getall`);
+            const data = await resq.json();
+            setDataConstrutora(data);
+          })();
         }
-        
+
         if (user.empreendimento.length > 0) {
           setDataEmpreendimento(user?.empreendimento);
         }
@@ -70,11 +70,11 @@ export const FiltroComponent = ({ onData }: FiltroGeralProps) => {
         }
 
         if (user.Financeira.length === 0 && user?.hierarquia === "CONST") {
-           (async () => {
-             const resq = await fetch(`/api/financeira/getall`);
-             const data = await resq.json();
-             setDataFinanceira(data);
-           })();
+          (async () => {
+            const resq = await fetch(`/api/financeira/getall`);
+            const data = await resq.json();
+            setDataFinanceira(data);
+          })();
         }
       }
     }
@@ -148,7 +148,6 @@ export const FiltroComponent = ({ onData }: FiltroGeralProps) => {
           onChange={(e) => {
             setFilterId(Number(e.target.value.replace(/\D/g, "")));
           }}
-          
         />
       </Box>
 
