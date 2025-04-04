@@ -12,14 +12,13 @@ import { getServerSession } from "next-auth";
 
 // Definir metadata
 export const metadata: Metadata = {
-  title: "DASHBOARD",
+  title: "DASHBOARD"
 };
 
 export default async function DashBoard() {
   const session = await getServerSession(auth);
 
-  const user = session?.user
-
+  const user = session?.user;
 
   // Função para buscar dados da API
   const fetchData = async () => {
@@ -28,9 +27,9 @@ export default async function DashBoard() {
       {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        cache: "no-cache",
+        cache: "no-cache"
       }
     );
     return response.json();
@@ -42,11 +41,10 @@ export default async function DashBoard() {
   // console.log("🚀 ~ DashBoard ~ tags:", tags)
 
   //Dados para o filtro
-  const construtoras = await GetConstrutoras()
-  const empreendimentos = await GetEmpreendimentos()
-  const financeiras = await GetFinanceiras()
+  const construtoras = await GetConstrutoras();
+  const empreendimentos = await GetEmpreendimentos();
+  const financeiras = await GetFinanceiras();
   // console.log("🚀 ~ DashBoard ~ empreendimentos:", empreendimentos)
-
 
   // Dados tags
   const lista_tags = tags.lista_tags;
@@ -71,18 +69,18 @@ export default async function DashBoard() {
     0
   );
 
-  const totalInternaPorcentagem = ((totalInterna / totalSolicitacoesGlobal) * 100).toFixed(1);
+  const totalInternaPorcentagem = (
+    (totalInterna / totalSolicitacoesGlobal) *
+    100
+  ).toFixed(1);
 
-  if (+totalInternaPorcentagem < 10 ) {
-    const valor = Math.round(totalSolicitacoesGlobal * 0.10)
-    const valorTotal = valor + totalInterna
+  if (+totalInternaPorcentagem < 10) {
+    const valor = Math.round(totalSolicitacoesGlobal * 0.1);
+    const valorTotal = valor + totalInterna;
 
-
-    totalVideoConferencia = totalSolicitacoesGlobal - valorTotal
-    totalInterna = valorTotal
+    totalVideoConferencia = totalSolicitacoesGlobal - valorTotal;
+    totalInterna = valorTotal;
   }
-
-
 
   // Dados de mês/ano para os labels
   const mesAnoLabels = data.map((item: any) => `${item.mes}/${item.ano}`);
@@ -195,7 +193,17 @@ export default async function DashBoard() {
         >
           Dashboard Filtrado
         </Text>
-        <DashFiltrado construtoras={user?.hierarquia == 'ADM' ? construtoras : user?.construtora} financeiras={user?.hierarquia == 'ADM' ? financeiras : user?.Financeira} empreendimentos={user?.hierarquia == 'ADM' ? empreendimentos : user?.empreendimento} />
+        <DashFiltrado
+          construtoras={
+            user?.hierarquia == "ADM" ? construtoras : user?.construtora
+          }
+          financeiras={
+            user?.hierarquia == "ADM" ? financeiras : user?.Financeira
+          }
+          empreendimentos={
+            user?.hierarquia == "ADM" ? empreendimentos : user?.empreendimento
+          }
+        />
       </VStack>
     </Flex>
   );
