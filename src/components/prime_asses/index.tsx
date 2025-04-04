@@ -12,14 +12,13 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { SetStateAction, useEffect, useState } from "react";
 import { SenhaComponent } from "../Senha";
 
-
-export const ModalPrimeAsses = () => {
+export default function ModalPrimeAsses() {
   const [Senha, setSenha] = useState("");
   const [ConfirmeSenha, setConfirmeSenha] = useState("");
   const toast = useToast();
@@ -29,13 +28,11 @@ export const ModalPrimeAsses = () => {
   const primeiro_asseso = session?.user?.reset_password;
   const ID = session?.user?.id;
 
-  //TODO arrumar o reset password
   useEffect(() => {
     if (primeiro_asseso) {
       (async () => {
         const request = await fetch(`/api/usuario/getId/${ID}`);
         const data = await request.json();
-        console.log("🚀 ~ data:", data)
         if (data.reset_password) {
           onOpen();
         }
@@ -44,12 +41,7 @@ export const ModalPrimeAsses = () => {
   }, [ID, onOpen, primeiro_asseso]);
 
   const OverlayTwo = () => (
-    <ModalOverlay
-      bg="none"
-      backdropFilter="auto"
-      backdropInvert="80%"
-      // backdropBlur='2px'
-    />
+    <ModalOverlay bg="none" backdropFilter="auto" backdropInvert="80%" />
   );
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
@@ -62,12 +54,12 @@ export const ModalPrimeAsses = () => {
         description: "As senhas devem ser iguais!",
         status: "error",
         duration: 3000,
-        isClosable: true
+        isClosable: true,
       });
       return;
     }
     const data = {
-      password: Senha
+      password: Senha,
     };
 
     const ID = session?.user?.id;
@@ -75,27 +67,27 @@ export const ModalPrimeAsses = () => {
     const request = await fetch(`/api/reset_password/${ID}`, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
     if (request.ok) {
       toast({
         title: "Sucesso!",
-        description: "Alerta criado com sucesso!",
+        description: "Senha Alterada com sucesso!",
         status: "success",
         duration: 3000,
-        isClosable: true
+        isClosable: true,
       });
     }
     onClose();
     if (!request.ok) {
       toast({
         title: "Erro!",
-        description: "Erro ao criar alerta!",
+        description: "Erro ao Alterar senha!",
         status: "error",
         duration: 3000,
-        isClosable: true
+        isClosable: true,
       });
     }
   };
@@ -128,7 +120,7 @@ export const ModalPrimeAsses = () => {
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="green" mr={3} onClick={handleSubmit}>
-                Enviar
+                Salvar
               </Button>
               <Button variant="ghost" onClick={onClose}>
                 Cancelar
@@ -139,4 +131,4 @@ export const ModalPrimeAsses = () => {
       </Modal>
     </>
   );
-};
+}
