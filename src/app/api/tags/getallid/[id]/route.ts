@@ -7,6 +7,7 @@ export async function GET(
     request: Request,
     { params }: { params: { id: string } }
 ) {
+    //TODO retirar do banco de dados
     try {
         const { id } = params;
 

@@ -1,6 +1,4 @@
 "use client";
-import getUserID from "@/actions/termos/service/getUserID";
-import UpdateTermos from "@/actions/termos/service/updateTermos";
 import {
   Modal,
   ModalOverlay,
@@ -13,56 +11,88 @@ import {
   useDisclosure,
   Flex,
   Link,
-  Checkbox,
+  Checkbox
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { FiFileText } from "react-icons/fi";
-import { useToast } from "@chakra-ui/react"; 
+import { useToast } from "@chakra-ui/react";
 
 export default function TermosPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: session } = useSession();
   const [check, setCheck] = useState(false);
-  const toast = useToast(); 
+  const toast = useToast();
 
   const termosAceitos = session?.user.termos;
-  const idUser = Number(session?.user.id)
+  const idUser = Number(session?.user.id);
 
   useEffect(() => {
-    
     if (!termosAceitos) {
       (async () => {
-        const request = await getUserID(idUser);
-       if (!request?.termos){
-         onOpen();
-       };
-      })()
+        try {
+          const req = await fetch(`api/termo/get/${idUser}`);
+          const res = await req.json();
+
+          if (!req.ok) {
+            throw new Error(res.message);
+          }
+          if (!res.termos) {
+            onOpen();
+          }
+        } catch (error: any) {
+          console.log(error);
+          onOpen();
+          toast({
+            title: "Erro!",
+            description: error.message,
+            status: "error",
+            duration: 8000,
+            isClosable: true
+          });
+        }
+      })();
     }
-  }, [onOpen, termosAceitos, idUser]);
+  }, [onOpen, termosAceitos, idUser, toast]);
 
   const handleCheckboxChange = (e: any) => {
     setCheck(e.target.checked);
   };
 
   const handleSubmit = async () => {
-    const data = await UpdateTermos(idUser, check)
-    if(data.error){
-      toast({
-        title: "Erro!",
-        description: data.message,
-        status: "error",
-        duration: 5000
-      })
-    }else{
+    try {
+      const data = await fetch(`api/termo/update/${idUser}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ termoAceito: check })
+      });
+      const res = await data.json();
+
+      if (!data.ok) {
+        throw new Error(res.message);
+      }
+      onClose();
       toast({
         title: "Política de Privacidade e Termos de uso Aceito!",
-        description: data.message,
+        description: res.message,
         status: "success",
         duration: 5000
-    })
-  }
-}
+      });
+    } catch (error: any) {
+      console.log(error);
+      toast({
+        title: "Erro!",
+        description: `Ops ocorreu um erro inesperado erro: ${error.message}`,
+        status: "error",
+        duration: 8000
+      });
+      setTimeout(() => {
+        onClose();
+      }, 5000);
+    }
+  };
 
   return (
     <Modal
@@ -71,12 +101,9 @@ export default function TermosPage() {
       isOpen={isOpen}
       motionPreset="slideInBottom"
       closeOnOverlayClick={false}
-      closeOnEsc={false} 
+      closeOnEsc={false}
     >
-      <ModalOverlay 
-      backdropFilter="blur(10px)" 
-      bg="rgba(0, 0, 0, 0.4)" 
-      />
+      <ModalOverlay backdropFilter="blur(10px)" bg="rgba(0, 0, 0, 0.4)" />
       <ModalContent p={6}>
         <Flex
           flexDirection={"column"}
@@ -107,13 +134,21 @@ export default function TermosPage() {
               onChange={handleCheckboxChange}
               isChecked={check}
             >
-              <Text fontSize={'sm'}>
-                Declaro que li e aceito as Políticas de Privacidade e Termos de Uso.
+              <Text fontSize={"sm"}>
+                Declaro que li e aceito as Políticas de Privacidade e Termos de
+                Uso.
               </Text>
             </Checkbox>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={() => {onClose(); handleSubmit(); }} isDisabled={!check}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                handleSubmit();
+              }}
+              isDisabled={!check}
+            >
               Aceitar e Continuar
             </Button>
           </ModalFooter>

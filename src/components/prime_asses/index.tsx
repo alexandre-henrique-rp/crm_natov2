@@ -29,6 +29,7 @@ export const ModalPrimeAsses = () => {
   const primeiro_asseso = session?.user?.reset_password;
   const ID = session?.user?.id;
 
+  //TODO arrumar o reset password
   useEffect(() => {
     if (primeiro_asseso) {
       (async () => {

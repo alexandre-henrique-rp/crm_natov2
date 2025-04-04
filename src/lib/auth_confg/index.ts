@@ -20,8 +20,9 @@ export const auth: NextAuthOptions = {
             username: credentials.email,
             password: credentials.password
           };
+          const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/auth`;
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/auth`,
+            url,
             {
               method: "POST",
               body: JSON.stringify(dados),

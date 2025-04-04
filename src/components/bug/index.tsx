@@ -16,7 +16,7 @@ export const BugReport = () => {
     })();
   }, []);
 
-  const MapBug = bug.map((bug: any) => {
+  const MapBug = bug?.map((bug: any) => {
     return (
       <>
         <Box
@@ -25,7 +25,7 @@ export const BugReport = () => {
           bg={"yellowgreen"}
           textAlign={"center"}
         >
-          {bug.message}
+          {bug.descricao}
           {user?.hierarquia === "ADM" && <p> - {bug.createdAt}</p>}
         </Box>
       </>

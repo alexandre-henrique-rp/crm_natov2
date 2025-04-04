@@ -19,7 +19,7 @@ export default function PerfilHome() {
   const SetIdConstrutora = (id: number) => {
     setIdConstrutora(id);
   };
-  if (user?.construtora.length === 1 && !IdConstrutora) {
+  if (user?.construtora?.length === 1 && !IdConstrutora) {
     setIdConstrutora(user.construtora[0].id);
   }
   if (user?.empreendimento.length === 1 && !IdEmpreedimento) {
@@ -48,7 +48,7 @@ export default function PerfilHome() {
           <Box w={{ base: "100%", md: "40%" }}>
             <TextHome SetName="CARGO" SetValue={user.cargo} />
 
-            {user.construtora.length > 1 ? (
+            {user.construtora?.length > 1 ? (
               <>
                 <Text textColor="#00713D" fontWeight="bold">
                   CONSTRUTORA
@@ -65,7 +65,7 @@ export default function PerfilHome() {
                 />
               </>
             ) : (
-              user.construtora.length === 1 && (
+              user.construtora?.length === 1 && (
                 <TextHome
                   SetName="CONSTRUTORA"
                   SetValue={user.construtora[0].fantasia}
