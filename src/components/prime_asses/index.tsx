@@ -35,6 +35,7 @@ export const ModalPrimeAsses = () => {
       (async () => {
         const request = await fetch(`/api/usuario/getId/${ID}`);
         const data = await request.json();
+        console.log("🚀 ~ data:", data)
         if (data.reset_password) {
           onOpen();
         }

@@ -1,24 +1,44 @@
-import { PrismaClient } from "@prisma/client";
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
-
 export async function DELETE(
-    request: Request,
-    { params }: { params: { id: string } }
+  request: Request,
+  { params }: { params: { id: string } }
 ) {
-    //TODO retirar do banco de dados
-    try {
-        const { id } = params;
-    
-       const data = await prisma.nato_tags.delete({
-            where: { id: Number(id) },
-        });
-console.log(data)
+  try {
+    const { id } = params;
 
-        return NextResponse.json({message: "Tag excluída com sucesso"}, { status: 200 });
-    } catch (error: any) {
-        console.log(error)
-        return NextResponse.json({message: "Erro ao excluir a tag"}, { status: 500 });
+    const session = await getServerSession(auth);
+
+    if (!session) {
+      return new NextResponse("Unauthorized", { status: 401 });
     }
+
+    const reqest = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/tags/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.token}`
+        }
+      }
+    );
+
+    if (!reqest.ok) {
+      return new NextResponse("Invalid credentials", { status: 401 });
+    }
+
+    return NextResponse.json(
+      { message: "Tag excluída com sucesso" },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.log(error);
+    return NextResponse.json(
+      { message: "Erro ao excluir a tag" },
+      { status: 500 }
+    );
+  }
 }
