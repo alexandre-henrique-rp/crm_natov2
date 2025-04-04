@@ -1,4 +1,4 @@
-'use server'
+'use server';
 
 import { auth } from "@/lib/auth_confg";
 import { getServerSession } from "next-auth";

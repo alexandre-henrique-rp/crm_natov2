@@ -33,7 +33,8 @@ export default function BotaoPageChamados() {
     }, []);
 
     return (
-        <Button
+      <>
+       <Button
             size="sm"
             bg={qtdChamadosAberto > 0 && user?.hierarquia === "ADM" ? "orange.400" : "green.400"}
             border="1px solid"
@@ -47,10 +48,10 @@ export default function BotaoPageChamados() {
             onClick={() => window.open("/chamados")}
         >
             <HStack>
-                {/* Ícone de alerta quando há chamados */}
                 {qtdChamadosAberto > 0 && user?.hierarquia === "ADM" && <MdErrorOutline size="20px" />}
                 <Text>Chamados {user?.hierarquia === "ADM" ? `: ${qtdChamadosAberto}` : null}</Text>
             </HStack>
         </Button>
+      </>
     );
 }

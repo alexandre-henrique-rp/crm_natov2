@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 "use client";
 
 import { Box, Input, InputProps, Tooltip } from "@chakra-ui/react";
@@ -42,19 +41,23 @@ export default function InputName({
   }, [setValueName]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const valor = e.target.value;
-    const ValorSemAcentos = valor
-      .normalize("NFD")
+    const rawValue = e.target.value;
+  
+    const normalized = rawValue
+      .normalize("NFD") // remove acentos
       .replace(/[\u0300-\u036f]/g, "");
-    const removeCaracteresEspeciais = ValorSemAcentos.replace(
-      /[^a-zA-Z\s]/g,
-      ""
-    );
-    const Linite1EspacoEntre = removeCaracteresEspeciais.replace(/\s+/g, " ");
-    const RemosEspacosExtras = Linite1EspacoEntre;
-    const UpCase = RemosEspacosExtras.toUpperCase();
-    setNome(UpCase);
-    props.onChange && props.onChange(e); // Mantém o evento original se passado
+  
+    const noSpecialChars = normalized.replace(/[^a-zA-Z\s]/g, "");
+  
+    const singleSpaced = noSpecialChars.replace(/\s+/g, " ").trim();
+  
+    const upperCased = singleSpaced.toUpperCase();
+  
+    setNome(upperCased);
+  
+    if (props.onChange) {
+      props.onChange(e); // mantém o evento original se foi passado
+    }
   };
 
   return (
