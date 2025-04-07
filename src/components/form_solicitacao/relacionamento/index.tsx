@@ -92,6 +92,7 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
       });
     } else {
       const dadossuperior: solictacao.SolicitacaoPost = {
+        url: window.location.origin,
         nome: SetValue.nome.toUpperCase(),
         telefone: SetValue.telefone.replace(/\W+/g, ""),
         cpf: SetValue.cpf.replace(/\W+/g, ""),
@@ -109,6 +110,7 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
         ...(SetValue.obs && { obs: SetValue.obs })
       };
       const dados: solictacao.SolicitacaoPost = {
+        url: window.location.origin,
         nome: nome.toUpperCase(),
         telefone: tel.replace(/\W+/g, ""),
         cpf: cpf.replace(/\W+/g, ""),

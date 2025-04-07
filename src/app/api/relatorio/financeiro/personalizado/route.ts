@@ -38,6 +38,7 @@ export async function POST(request: Request) {
       return NextResponse.json(data, { status: 400 });
     }
     return NextResponse.json(data, { status: 200 });
+    // return NextResponse.json({ message: "Not implemented" }, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json(error, { status: 500 });
