@@ -1,20 +1,22 @@
 "use server";
-import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth_confg";
 import { getServerSession } from "next-auth";
+import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  const { id } = params;
   try {
-    const { id } = params;
     const session = await getServerSession(auth);
+
     if (!session) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-    const req = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/construtora/${id}`,
+
+    const request = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/construtora/${id}`,
       {
         method: "GET",
         headers: {
@@ -23,15 +25,13 @@ export async function GET(
         },
       }
     );
+    const data = await request.json();
 
-    if (!req.ok) {
-      return new NextResponse("ERRO", { status: 401 });
+    if (!request.ok) {
+      return new NextResponse("Invalid credentials", { status: 401 });
     }
-    const data = await req.json();
-    return NextResponse.json(
-      { error: false, message: "Sucesso", data: data },
-      { status: 200 }
-    );
+
+    return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({ error: error }, { status: 500 });
   }

@@ -1,6 +1,5 @@
 "use client";
 
-import DeleteConstrutora from "@/actions/construtora/service/deleteConstrutora";
 import {
   Button,
   IconButton,
@@ -12,7 +11,7 @@ import {
   Text,
   Tooltip,
   useDisclosure,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { BsFillTrashFill } from "react-icons/bs";
@@ -24,7 +23,7 @@ interface BtnExcluirUserProps {
 }
 export default function BtmExcluirConstrutora({
   id,
-  status
+  status,
 }: BtnExcluirUserProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -33,15 +32,18 @@ export default function BtmExcluirConstrutora({
   const handleExcluir = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    const response = await DeleteConstrutora(Number(id));
+    const response = await fetch(`/api/construtora/delete/${id}`, {
+      method: "DELETE",
+    });
 
-    if (response.error === false) {
+    const res = await response.json();
+    if (response.ok) {
       toast({
         title: "Sucesso!",
         description: "Construtora excluído com sucesso!",
         status: "success",
         duration: 9000,
-        isClosable: true
+        isClosable: true,
       });
 
       onClose();
@@ -49,10 +51,10 @@ export default function BtmExcluirConstrutora({
     } else {
       toast({
         title: "Erro!",
-        description: response.message,
+        description: res,
         status: "error",
         duration: 9000,
-        isClosable: true
+        isClosable: true,
       });
 
       onClose();

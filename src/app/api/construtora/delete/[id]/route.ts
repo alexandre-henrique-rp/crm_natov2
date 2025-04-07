@@ -1,7 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-
-const prisma = new PrismaClient();
 
 export async function DELETE(
   request: Request,
@@ -10,21 +9,34 @@ export async function DELETE(
   try {
     const { id } = params;
 
-    const request = await prisma.nato_empresas.update({
-      where: { 
-        id: Number(id) 
-      }, 
-      data: {
-        status: false
-      } 
-    });
+    const session = await getServerSession(auth);
 
-    if (!request) {
-      return NextResponse.json({message: "Construtora inexistente"}, { status: 404 });
+    if (!session) {
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    return NextResponse.json({message: "Construtora excluída com sucesso"}, { status: 200 });
-    
+    const request = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/construtora/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.token}`,
+        },
+      }
+    );
+
+    if (!request) {
+      return NextResponse.json(
+        { message: "Construtora inexistente" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Construtora Desativada com sucesso" },
+      { status: 200 }
+    );
   } catch (error: any) {
     return NextResponse.json({ error: error }, { status: 500 });
   }
