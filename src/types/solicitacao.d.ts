@@ -181,6 +181,7 @@ declare namespace solictacao {
   }
 
   interface SolicitacaoPost {
+    url?: string;
     nome: string;
     telefone: string;
     cpf: string;

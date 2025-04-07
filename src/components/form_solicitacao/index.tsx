@@ -142,6 +142,7 @@ export default function SolicitacaoForm({
         });
       } else {
         const data: any = {
+          url: window.location.origin,
           nome: nome.toUpperCase(),
           telefone: tel.replace(/\W+/g, ""),
           cpf: cpf.replace(/\W+/g, ""),
@@ -317,6 +318,7 @@ export default function SolicitacaoForm({
         } else {
           ishidden("sim");
           const data: solictacao.SolicitacaoPost = {
+            url: window.location.origin,
             nome: nome.toUpperCase(),
             cpf: cpf.replace(/\W+/g, ""),
             telefone: tel.replace(/\W+/g, ""),
