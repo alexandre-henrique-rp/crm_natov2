@@ -1,5 +1,4 @@
 "use client";
-import { GetAllFinanceiras } from "@/actions/financeira/service/getAllFinanceiras";
 import useEmpreendimentoContext from "@/hook/useEmpreendimentoContext";
 
 import {
@@ -10,7 +9,7 @@ import {
   Input,
   Select,
   SelectProps,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -25,17 +24,18 @@ export function SelectEmpreendimentoFinanceiro({
   ...props
 }: SelectEmpreendimentoFinanceiroProps) {
   const [Financeira, setFinanceira] = useState<number | undefined>();
-  const [FinanceiraData, setFinanceiraData] = useState([]);
+  const [FinanceiraData, setFinanceiraData] = useState<any>([]);
   const [FinanceiraArray, setFinanceiraArray] = useState<any>([]);
   const [FinanceiraArrayTotal, setFinanceiraArrayTotal] = useState<any>([]);
+  console.log("🚀 ~ FinanceiraArrayTotal:", FinanceiraArrayTotal);
   const [FinanceiraDisabled, setFinanceiraDisabled] = useState(false);
   const { setFinanceiraCX } = useEmpreendimentoContext();
 
   useEffect(() => {
     const getFinanceira = async () => {
-      const req = await GetAllFinanceiras();
-      if (req.status === 200) {
-        const data = req.data;
+      const req = await fetch("/api/financeira/getall");
+      if (req.ok) {
+        const data = await req.json();
         if (data) {
           setFinanceiraData(data);
         }
@@ -48,15 +48,11 @@ export function SelectEmpreendimentoFinanceiro({
     if (setValue) {
       const dataValue = setValue;
       if (dataValue.length > 0) {
-        (async () => {
-          const data = await Promise.all(
-            dataValue.map(async (e: any) => {
-              const response = await fetch(`/api/financeira/get/${e}`);
-              return await response.json();
-            })
-          );
-          setFinanceiraArrayTotal(data);
-        })();
+        const data = dataValue.map((e: any) => {
+          return e.financeiro;
+        });
+
+        setFinanceiraArrayTotal(data);
         setFinanceiraArray(dataValue);
       }
     }
@@ -92,10 +88,12 @@ export function SelectEmpreendimentoFinanceiro({
           fontSize={"0.8rem"}
           onClick={() => {
             setFinanceiraArray(
-              FinanceiraArray.filter((item: any) => item !== e.id)
+              FinanceiraArray.filter((item: any) => item !== e)
             );
             setFinanceiraArrayTotal(
-              FinanceiraArrayTotal.filter((item: any) => item !== e)
+              FinanceiraArrayTotal.filter((item: any) => {
+                return item !== e;
+              })
             );
           }}
           cursor={"pointer"}
@@ -157,7 +155,11 @@ export function SelectEmpreendimentoFinanceiro({
         {RandBoard}
       </Flex>
       <Box hidden>
-        <Input name="financeira" value={FinanceiraArray} readOnly />
+        <Input
+          name="financeira"
+          value={FinanceiraArrayTotal.map((e: any) => e.id)}
+          readOnly
+        />
       </Box>
     </>
   );

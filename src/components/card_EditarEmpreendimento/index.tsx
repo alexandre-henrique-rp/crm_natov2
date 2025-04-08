@@ -31,12 +31,14 @@ export function CardUpdateEmpreendimento({ id, setEmpreendimentoCard }: Props) {
               w={"15rem"}
             />
             <CardCreateUpdate.GridEmpreendimentoUf
-              uf={setEmpreendimentoCard.uf ?? ""}
+              uf={setEmpreendimentoCard.estado ?? ""}
               id={id}
               w={"3rem"}
             />
             <CardCreateUpdate.GridEmpreendimentoFinanceiro
-              empreendimentoFinanceiro={setEmpreendimentoCard?.financeiro ?? ""}
+              empreendimentoFinanceiro={
+                setEmpreendimentoCard?.financeiros ?? ""
+              }
               w={"20rem"}
             />
           </EmpreendimentoProvider>

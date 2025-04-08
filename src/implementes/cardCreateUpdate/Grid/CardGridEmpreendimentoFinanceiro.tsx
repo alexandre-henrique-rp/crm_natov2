@@ -7,7 +7,7 @@ interface CardGridEmpreendimentoFinanceiroProps extends BoxProps {
 }
 
 export function CardGridEmpreendimentoFinanceiro({
-    empreendimentoFinanceiro,
+  empreendimentoFinanceiro,
   ...props
 }: CardGridEmpreendimentoFinanceiroProps) {
   return (

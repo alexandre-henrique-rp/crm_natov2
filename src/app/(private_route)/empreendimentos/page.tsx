@@ -1,21 +1,48 @@
-import GetAllEmpreendimento from "@/actions/empreendimento/service/getAllEmpreendimentos";
+"use client";
 import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 import Empreendimentos from "@/components/empreendimentoCard";
-import { auth } from "@/lib/auth_confg";
-import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
-import { Metadata } from "next";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+import {
+  Box,
+  Divider,
+  Flex,
+  Heading,
+  Link,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 
-export const metadata: Metadata = {
-  title: "EMPREENDIMENTOS"
-};
-export default async function EmpreendimentoPage() {
-    const session = await getServerSession(auth);
-    if (session?.user.hierarquia !== "ADM") {
-      redirect("/");
+export default function EmpreendimentoPage() {
+  const [empreendimentos, setEmpreendimentos] = useState([]);
+  const toast = useToast();
+
+  useEffect(() => {
+    fetchEmpreendimentos();
+  }, []);
+
+  const fetchEmpreendimentos = async () => {
+    const response = await fetch("/api/empreendimento/getall");
+    const data = await response.json();
+    if (!response.ok) {
+      toast({
+        title: "Erro!",
+        description: data,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      setEmpreendimentos([]);
+    } else {
+      toast({
+        title: "Sucesso!",
+        description: "Empreendimentos carregados com sucesso!",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+      setEmpreendimentos(data);
     }
-  const dados = await GetAllEmpreendimento();
+  };
 
   return (
     <>
@@ -60,8 +87,8 @@ export default async function EmpreendimentoPage() {
         </Box>
         <Box w={"100%"} overflow={"auto"}>
           <Box>
-            {dados?.status === 200 ? (
-              <Empreendimentos data={dados?.data} />
+            {empreendimentos ? (
+              <Empreendimentos data={empreendimentos} />
             ) : (
               <></>
             )}
