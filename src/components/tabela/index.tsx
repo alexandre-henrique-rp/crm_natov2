@@ -122,6 +122,9 @@ export function Tabela({
         ? "Certificação aprovada, aguardando cliente baixar o aplicativo e fazer a emissão do certificado."
         : null;
     // const statusPg = item.fcweb?.estatos_pgto;
+    if (!item.tag) {
+      console.log(item.tag)
+    }
     const colors = !item.ativo
       ? "red.400"
       : item.distrato && user?.hierarquia === "ADM"
@@ -153,7 +156,7 @@ export function Tabela({
       <Tr key={item.id} bg={colors} color={fontColor}>
         <Td>
           <Flex>
-            {item.tag.length > 0 &&
+            {item.tag?.length > 0 &&
             item.ativo &&
             !item.distrato &&
             item.Andamento !== "EMITIDO" ? (
