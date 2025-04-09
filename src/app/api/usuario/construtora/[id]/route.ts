@@ -7,15 +7,16 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  const { id } = params;
   try {
-    const { id } = params;
     const session = await getServerSession(auth);
 
     if (!session) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
+
     const request = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/financeiro/${id}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/construtora/${id}`,
       {
         method: "GET",
         headers: {
@@ -24,10 +25,10 @@ export async function GET(
         },
       }
     );
-
     const data = await request.json();
+
     if (!request.ok) {
-      return new NextResponse(data, { status: 401 });
+      return new NextResponse("Invalid credentials", { status: 401 });
     }
 
     return NextResponse.json(data, { status: 200 });

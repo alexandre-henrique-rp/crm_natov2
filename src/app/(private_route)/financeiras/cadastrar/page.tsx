@@ -1,23 +1,11 @@
 import { Box, Button, Divider, Flex, Heading, Spacer } from "@chakra-ui/react";
-import { Metadata } from "next";
 import FinanceiraProvider from "@/provider/FinanceiraProvider";
 import FinanceiraCreate from "@/actions/financeira/service/createFinanceira";
 import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import BotaoCancelar from "@/components/botoes/btn_cancelar";
-import { getServerSession } from "next-auth";
-import { auth } from "@/lib/auth_confg";
-import { redirect } from "next/navigation";
-
-export const metadata: Metadata = {
-  title: "CADASTRO DE FINANCEIRA"
-};
 
 export default async function CadastrarFinanceira() {
-    const session = await getServerSession(auth);
-    if (session?.user.hierarquia !== "ADM") {
-      redirect("/");
-    }
   return (
     <>
       <Flex
@@ -50,6 +38,7 @@ export default async function CadastrarFinanceira() {
                 <CardCreateUpdate.GridRazaoSocialEmail w={"30rem"} />
                 <CardCreateUpdate.GridResponsavel w={"25rem"} />
                 <CardCreateUpdate.GridFantasia w={"15rem"} />
+                <CardCreateUpdate.GridFinanceiraConstrutora w={"25rem"} />
               </FinanceiraProvider>
               <Spacer />
               <Button

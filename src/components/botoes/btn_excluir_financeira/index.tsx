@@ -1,6 +1,5 @@
 "use client";
 
-import { DeleteFinanceira } from "@/actions/financeira/service/deleteFinanceira";
 import {
   Button,
   IconButton,
@@ -12,7 +11,7 @@ import {
   Text,
   Tooltip,
   useDisclosure,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { BsFillTrashFill } from "react-icons/bs";
@@ -28,15 +27,18 @@ export function BtnExcluirFinanceira({ id }: BtnExcluirFinanceiraProps) {
   const router = useRouter();
 
   const handleExcluir = async () => {
-    const data = await DeleteFinanceira(id);
+    const data = await fetch(`/api/financeira/delete/${id}`, {
+      method: "DELETE",
+    });
+    const res = await data.json();
 
-    if (data?.error === false) {
+    if (!res.error) {
       toast({
         title: "Sucesso!",
         description: "Financeira excluída com sucesso!",
         status: "success",
         duration: 9000,
-        isClosable: true
+        isClosable: true,
       });
       onClose();
       router.refresh();
@@ -46,7 +48,7 @@ export function BtnExcluirFinanceira({ id }: BtnExcluirFinanceiraProps) {
         description: "Ocorreu um erro ao excluir a Financeira!",
         status: "error",
         duration: 9000,
-        isClosable: true
+        isClosable: true,
       });
       onClose();
     }

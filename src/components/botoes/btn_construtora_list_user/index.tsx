@@ -10,7 +10,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react";
 import Link from "next/link";
 
@@ -22,7 +22,6 @@ export function BtmConstrutoraListUser({
   data,
   ...props
 }: BtmConstrutoraListUserProps) {
-  console.log("🚀 ~ data:", data)
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -49,7 +48,7 @@ export function BtmConstrutoraListUser({
                       _hover={{
                         cursor: "pointer",
                         bg: "gray.200",
-                        borderRadius: "8px"
+                        borderRadius: "8px",
                       }}
                     >
                       nome:{" "}

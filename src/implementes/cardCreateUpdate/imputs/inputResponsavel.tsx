@@ -1,45 +1,73 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 "use client";
 
-import { Box, Input, InputProps } from "@chakra-ui/react";
+import { Box, Flex, Input, Select, SelectProps } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useEffect } from "react";
 
-export interface InputResponsavelProps extends InputProps {
-    setValueResponsavel?: string;
+export interface InputResponsavelProps extends SelectProps {
+  setValue: any;
 }
-export default function InputResponsavel({ setValueResponsavel, ...props }: InputResponsavelProps) {
-    
-    const [responsavelLocal, setResponsavelLocal] = useState<string>("");
-
+export default function InputResponsavel({
+  setValue,
+  ...props
+}: InputResponsavelProps) {
+  const [Usuario, setUsuario] = useState<number | undefined>();
+  const [UsuarioData, setUsuarioData] = useState<any>([]);
 
   useEffect(() => {
-    if (!setValueResponsavel) return;
-    const ValorSemAcentos = setValueResponsavel.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const removeCaracteresEspeciais = ValorSemAcentos.replace(/[^a-zA-Z\s]/g, "");
-    const Linite1EspacoEntre = removeCaracteresEspeciais.replace(/\s+/g, " ");
-    const RemosEspacosExtras = Linite1EspacoEntre.trim();
-    const UpCase = RemosEspacosExtras.toUpperCase();
+    const getConstrutora = async () => {
+      const req = await fetch("/api/usuario/getall");
+      if (req.ok) {
+        const data = await req.json();
+        if (data) {
+          setUsuarioData(data);
+        }
+      } else {
+        return { status: 500, message: "error", data: null };
+      }
+    };
+    getConstrutora();
 
-    setResponsavelLocal(UpCase);
-  }, [setValueResponsavel]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const valor = e.target.value;
-    const ValorSemAcentos = valor.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const removeCaracteresEspeciais = ValorSemAcentos.replace(/[^a-zA-Z\s]/g, "");
-    const Linite1EspacoEntre = removeCaracteresEspeciais.replace(/\s+/g, " ");
-    const RemosEspacosExtras = Linite1EspacoEntre;
-    const UpCase = RemosEspacosExtras.toUpperCase();
-    setResponsavelLocal(UpCase);
-    props.onChange && props.onChange(e);
-  };
+    if (setValue) {
+      const dataValue = setValue;
+      setUsuario(dataValue.id);
+    }
+  }, [setValue]);
 
   return (
     <>
-        <Box>
-          <Input {...props} value={responsavelLocal} type="text" onChange={handleChange} />
-        </Box>
+      <Flex gap={2}>
+        <Select
+          {...props}
+          border="1px solid #b8b8b8cc"
+          borderTop={"none"}
+          borderRight={"none"}
+          borderLeft={"none"}
+          borderRadius="0"
+          bg={"gray.100"}
+          borderColor={"gray.400"}
+          onChange={(e: any) => setUsuario(Number(e.target.value))}
+          value={Usuario}
+        >
+          <option style={{ backgroundColor: "#EDF2F7" }} value={0}>
+            Selecione um responsável
+          </option>
+          {UsuarioData.length > 0 &&
+            UsuarioData.map((Usuario: any) => (
+              <option
+                style={{ backgroundColor: "#EDF2F7" }}
+                key={Usuario.id}
+                value={Usuario.id}
+              >
+                {Usuario.nome}
+              </option>
+            ))}
+        </Select>
+      </Flex>
+      <Box hidden>
+        <Input name="responsavel" value={Usuario} readOnly />
+      </Box>
     </>
   );
 }

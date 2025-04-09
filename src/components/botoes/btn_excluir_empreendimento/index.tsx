@@ -1,6 +1,5 @@
 "use client";
 
-import { DesativarEmpreendimento } from "@/actions/empreendimento/service/desativarEmpreendimento";
 import { Button, Tooltip, useToast, Icon } from "@chakra-ui/react";
 import { useState } from "react";
 import { GrStatusCritical, GrStatusGood } from "react-icons/gr";
@@ -12,16 +11,19 @@ interface BtnDesativarEmpreendimentoProps {
 
 export default function BtnDesativarEmpreendimento({
   id,
-  ativo
+  ativo,
 }: BtnDesativarEmpreendimentoProps) {
   const toast = useToast();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleToggleStatus = async () => {
     setIsLoading(true);
-    const data = await DesativarEmpreendimento(id);
+    const data = await fetch(`/api/empreendimento/delete/${id}`, {
+      method: "DELETE",
+    });
+    const res = await data.json();
 
-    if (data && data.error === false) {
+    if (!res.ok) {
       toast({
         title: "Sucesso!",
         description: ativo
@@ -29,7 +31,7 @@ export default function BtnDesativarEmpreendimento({
           : "Empreendimento Ativado com sucesso!",
         status: "success",
         duration: 9000,
-        isClosable: true
+        isClosable: true,
       });
       window.location.reload();
     } else {
@@ -38,7 +40,7 @@ export default function BtnDesativarEmpreendimento({
         description: "Ocorreu um erro ao alterar o status do Empreendimento",
         status: "error",
         duration: 9000,
-        isClosable: true
+        isClosable: true,
       });
       window.location.reload();
     }

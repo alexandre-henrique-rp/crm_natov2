@@ -1,36 +1,26 @@
-import { GetFinanceiraById } from "@/actions/financeira/service/getFinanceiraById";
+"use client";
 import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 import { CardUpdateFinanceira } from "@/components/card_EditarFinanceira";
-import { auth } from "@/lib/auth_confg";
 import { Box, Divider, Flex, Heading } from "@chakra-ui/react";
-import { Metadata } from "next";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type Props = {
   params: { id: string };
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const id = params.id;
-  const req = await GetFinanceiraById(Number(id));
-  const data = req.data;
-
-  return {
-    title: `Editar Financeira: ${data.fantasia || "Usuário"}`
-  };
-}
-
-export default async function EditarUsuario({ params }: Props) {
-    const session = await getServerSession(auth);
-    if (session?.user.hierarquia !== "ADM") {
-      redirect("/");
-    }
+export default function EditarUsuario({ params }: Props) {
   const id = Number(params.id);
+  const [data, setData] = useState<any>({});
 
-  const req = await GetFinanceiraById(id);
-  const data = req.data;
+  useEffect(() => {
+    fetchFinanceira(id);
+  }, [id]);
 
+  const fetchFinanceira = async (id: number) => {
+    const req = await fetch(`/api/financeira/get/${id}`);
+    const res = await req.json();
+    setData(res);
+  };
   return (
     <>
       <Flex

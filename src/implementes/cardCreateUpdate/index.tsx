@@ -23,7 +23,7 @@ import CardGridCorretor from "./Grid/CardGridCorreto";
 import { CardGridUserConstrutora } from "./Grid/CardGridUserConstrutora";
 import { CardGridTagsAlert } from "./Grid/CardGridTagsAlert";
 import { CardGridUserEmpreedimento } from "./Grid/CardGridUserEmpreedimento";
-import { CardGridUserFinanceira} from "./Grid/CardGridUserFinanceira";
+import { CardGridUserFinanceira } from "./Grid/CardGridUserFinanceira";
 import { CardGridUserCargo } from "./Grid/CardGridUserCargo";
 import { CardGridUserHierarquia } from "./Grid/CardGridUserHierarquia";
 import { CardGridUserSenha } from "./Grid/CardUserSenha";
@@ -46,9 +46,7 @@ import CardGridConstrutoraTel from "./Grid/CardGridConstrutoraTel";
 import CardGridConstrutoraEmail from "./Grid/CardGridConstrutoraEmail";
 import CardGridConstrutoraFantasia from "./Grid/CardGridConstrutoraFantasia";
 import { CardGridSuport } from "./Grid/CardGridSuport";
-
-
-
+import { CardGridFinanceiraConstrutora } from "./Grid/CardGridFinanceiraConstrutora";
 
 /**
  * @name CardCreateUpdate
@@ -79,7 +77,7 @@ import { CardGridSuport } from "./Grid/CardGridSuport";
  * @property {CardGridUserCorretor} GridUserCorretor - criar e receber usuario corretor
  * @property {CardGridTagsAlert} GridTagsAlert - criar e receber tags
  * @property {CardGridUserEmpreedimento} GridUserEmpreedimento - criar e receber usuario empreendimento
-  * 
+ *
  */
 export const CardCreateUpdate = {
   Root: CardRoot,
@@ -110,15 +108,16 @@ export const CardCreateUpdate = {
   GridUserFinanceiro: CardGridUserFinanceira,
   GridUserCargo: CardGridUserCargo,
   GridUserHierarquia: CardGridUserHierarquia,
-  GridUserSenha : CardGridUserSenha,
-  GridUserConfirSenha : CardGridUserConfirSenha,
-  // Financeira Cadastro 
+  GridUserSenha: CardGridUserSenha,
+  GridUserConfirSenha: CardGridUserConfirSenha,
+  // Financeira Cadastro
   GridCnpj: CardGridCnpj,
   GridRazaoSocial: CardGridRazaoSocial,
   GridRazaoSocialTel: CardGridRazaoSocialTel,
   GridRazaoSocialEmail: CardGridEmailRazaoSocial,
   GridResponsavel: CardGridResponsavel,
   GridFantasia: CardGridFantasia,
+  GridFinanceiraConstrutora: CardGridFinanceiraConstrutora,
   // Empreendimento Cadastro
   GridEmpreendimentoNome: CardGridEmpreendimentoNome,
   GridEmpreendimentoUf: CardGridEmpreendimentoUf,
@@ -133,8 +132,4 @@ export const CardCreateUpdate = {
   GridConstrutoraEmail: CardGridConstrutoraEmail,
   GridConstrutoraFantasia: CardGridConstrutoraFantasia,
   GridSuporte: CardGridSuport,
-
-  
-  
-  
 };

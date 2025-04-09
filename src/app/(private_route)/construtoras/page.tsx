@@ -1,19 +1,50 @@
-import GetAllConstrutoras from "@/actions/construtora/service/getAllContrutoras";
+"use client";
 import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 import Construtora from "@/components/construtora_compoment";
 
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
-import { Metadata } from "next";
+import Head from "next/head";
+import { useEffect, useState } from "react";
 
-export const metadata: Metadata = {
-  title: "Construtoras"
-};
-export default async function ConstrutoraPage() {
+export default function ConstrutoraPage() {
+  const [Dados, setDados] = useState<any[]>([]);
 
-  const Dados = await GetAllConstrutoras();
+  useEffect(() => {
+    FetchData();
+  }, []);
+
+  const FetchData = async () => {
+    try {
+      const req = await fetch("/api/construtora/getall");
+      const res = await req.json();
+
+      const construtorasComCorretores = await Promise.all(
+        res.map(async (construtora: any) => {
+          const corretoresRes = await fetch(
+            `/api/usuario/construtora/${construtora.id}`
+          );
+          const corretoresJson = await corretoresRes.json();
+
+          return {
+            ...construtora,
+            corretores: corretoresJson.data || [],
+          };
+        })
+      );
+
+      setDados(construtorasComCorretores);
+    } catch (error) {
+      console.error("Erro ao buscar dados das construtoras:", error);
+    }
+  };
 
   return (
     <>
+      <Head>
+        <title>Construtoras</title>
+        <meta name="description" content="Lista de construtoras cadastradas" />
+      </Head>
+
       <Flex
         w={"100%"}
         minH={"90.9dvh"}
@@ -54,9 +85,11 @@ export default async function ConstrutoraPage() {
           </Text>
         </Box>
         <Box w={"100%"}>
-          <Box>
-            {Dados.error ? <Text>{Dados.message}</Text> : <Construtora data={Dados.data} />}
-          </Box>
+          {Dados.length === 0 ? (
+            <Text>{Dados}</Text>
+          ) : (
+            <Construtora data={Dados} />
+          )}
         </Box>
       </Flex>
     </>

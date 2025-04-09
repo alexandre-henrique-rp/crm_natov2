@@ -9,34 +9,40 @@ export async function EditEmpreendimento(_: any, data: FormData) {
   const nome = data.get("nomeEmpreendimento") as string;
   const cidade = data.get("nomeCidade") as string;
   const uf = data.get("empreendimentoUf") as string;
-  const financeiro = data.get("financeira") as string;
-  const financeiroFormatado = `[${financeiro}]`;
+  const financeiro = data.get("financeira") as any;
+  const financeiroArray = financeiro.split(",");
+  const financeiroFinal = financeiroArray.map((element: number) => {
+    return +element;
+  });
 
   const session = await getServerSession(auth);
 
   if (!session) {
-    return {status: 401, message: "Unauthorized", error: true};
+    return { status: 401, message: "Unauthorized", error: true };
   }
 
   const body = {
     nome: nome,
-    construtora: construtora,
+    construtoraId: construtora,
     cidade: cidade,
-    uf: uf,
-    financeiro: financeiroFormatado
-  }
+    estado: uf,
+    financeiro: financeiroFinal,
+  };
 
-  const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/empreendimento/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${session?.token}`
-    },
-    body: JSON.stringify(body)
-  });
+  const req = await fetch(
+    `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/empreendimento/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.token}`,
+      },
+      body: JSON.stringify(body),
+    }
+  );
 
   if (!req.ok) {
-    return {status: req.status, message: "Error", error: true};
+    return { status: req.status, message: "Error", error: true };
   }
 
   redirect("/empreendimentos");

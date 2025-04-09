@@ -1,36 +1,26 @@
-import { GetConstrutoraById } from "@/actions/construtora/service/getConstrutoraById";
+"use client";
 import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 import { CardUpdateConstrutora } from "@/components/card_UpdateConstrutora";
-import { auth } from "@/lib/auth_confg";
 import { Box, Divider, Flex, Heading } from "@chakra-ui/react";
-
-import { Metadata } from "next";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type Props = {
   params: { id: string };
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const id = params.id;
-  const req = await GetConstrutoraById(Number(id));
-  const data = req.data;
-
-  return {
-    title: `Editar Construtora: ${data.fantasia || "Construtora"}`
-  };
-}
-
-export default async function ConstrutoraById({ params }: Props) {
-  const session = await getServerSession(auth);
-  if (session?.user.hierarquia !== "ADM") {
-    redirect("/");
-  }
+export default function ConstrutoraById({ params }: Props) {
   const id = Number(params.id);
-  const req = await GetConstrutoraById(id);
-  const data = req.data;
+  const [data, setData] = useState({});
 
+  useEffect(() => {
+    fetchConstrutora(id);
+  }, [id]);
+
+  const fetchConstrutora = async (id: number) => {
+    const req = await fetch(`/api/construtora/get/${id}`);
+    const res = await req.json();
+    setData(res.data);
+  };
   return (
     <>
       <Flex

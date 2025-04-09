@@ -53,7 +53,7 @@ export default function Empreendimentos({ data }: EmpreendimentosType) {
                   <Text fontWeight="bold" fontSize="sm">
                     UF:
                   </Text>
-                  {solicitacao.uf}
+                  {solicitacao.estado}
                 </Flex>
                 <Flex gap={2}>
                   <Text fontWeight="bold" fontSize="sm">
@@ -66,8 +66,8 @@ export default function Empreendimentos({ data }: EmpreendimentosType) {
                     STATUS:
                   </Text>
                   <Icon
-                    as={solicitacao.ativo ? GrStatusGood : GrStatusCritical}
-                    color={solicitacao.ativo ? "green.500" : "red.500"}
+                    as={solicitacao.status ? GrStatusGood : GrStatusCritical}
+                    color={solicitacao.status ? "green.500" : "red.500"}
                     mr={2}
                   />
                 </Flex>
@@ -75,7 +75,7 @@ export default function Empreendimentos({ data }: EmpreendimentosType) {
               <Flex mt={3} gap={2} w="100%" justifyContent="end">
                 <BtnDesativarEmpreendimento
                   id={solicitacao.id}
-                  ativo={solicitacao.ativo}
+                  ativo={solicitacao.status}
                 />
                 <BtnEditarEmpreendimento id={solicitacao.id} />
               </Flex>

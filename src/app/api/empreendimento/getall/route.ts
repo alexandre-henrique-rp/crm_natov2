@@ -4,8 +4,8 @@ import { auth } from "@/lib/auth_confg";
 
 export async function GET() {
   try {
-    const session = await getServerSession(auth)
-   
+    const session = await getServerSession(auth);
+
     if (!session) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -16,17 +16,17 @@ export async function GET() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.token}`
-        }
+          Authorization: `Bearer ${session?.token}`,
+        },
       }
     );
 
     const data = await reqest.json();
-    
+
     if (!reqest.ok) {
-      return new NextResponse("Invalid credentials", { status: 401 });
+      return new NextResponse("ERRO", { status: 401 });
     }
-    return NextResponse.json(data, { status: 200 });    
+    return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({ error: error }, { status: 500 });
   }
