@@ -15,6 +15,8 @@ type FinanceiraType = {
   setFantasia: (value: string | null) => void;
   data: any;
   setData: (value: any) => void;
+  ConstrutoraCX: number[];
+  setConstrutoraCX: (value: number[]) => void;
 };
 
 export const FinanceiraContext = createContext<FinanceiraType>({
@@ -32,4 +34,6 @@ export const FinanceiraContext = createContext<FinanceiraType>({
   setFantasia: () => {},
   data: null,
   setData: () => {},
+  ConstrutoraCX: [],
+  setConstrutoraCX: () => {},
 });

@@ -1,3 +1,4 @@
+"use client";
 import UserRegisterProvider from "@/provider/UserRegister";
 import { Flex, Spacer, Divider, Button } from "@chakra-ui/react";
 import { UpdateFinanceira } from "@/actions/financeira/service/updateFinanceira";
@@ -9,7 +10,7 @@ type Props = {
   id?: number;
 };
 
-export async function CardUpdateFinanceira({ id, setFinanceiraCard }: Props) {
+export function CardUpdateFinanceira({ id, setFinanceiraCard }: Props) {
   return (
     <>
       <CardCreateUpdate.Form action={UpdateFinanceira}>
@@ -39,6 +40,10 @@ export async function CardUpdateFinanceira({ id, setFinanceiraCard }: Props) {
             <CardCreateUpdate.GridFantasia
               w={"15rem"}
               Fantasia={setFinanceiraCard?.fantasia ?? ""}
+            />
+            <CardCreateUpdate.GridFinanceiraConstrutora
+              financeiroConstrutora={setFinanceiraCard?.construtoras ?? 0}
+              w={"15rem"}
             />
           </UserRegisterProvider>
           <Spacer />

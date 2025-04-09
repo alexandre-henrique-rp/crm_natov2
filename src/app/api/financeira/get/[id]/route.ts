@@ -1,24 +1,37 @@
+"use server";
+import { auth } from "@/lib/auth_confg";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
 
 export async function GET(
-    request: Request,
-    { params }: { params: { id: string } }
+  request: Request,
+  { params }: { params: { id: string } }
 ) {
+  try {
+    const { id } = params;
+    const session = await getServerSession(auth);
 
-    try {
-        const { id } = params;
-        
-        const data = await prisma.nato_financeiro.findUnique({
-            where: {
-                id: Number(id),
-            },
-        });
-        return NextResponse.json(data, { status: 200 });
-
-    } catch (error: any) {
-        return NextResponse.json({ error: error }, { status: 500 });
+    if (!session) {
+      return new NextResponse("Unauthorized", { status: 401 });
     }
+    const request = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/financeiro/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.token}`,
+        },
+      }
+    );
+
+    const data = await request.json();
+    if (!request.ok) {
+      return new NextResponse(data, { status: 401 });
+    }
+
+    return NextResponse.json(data, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error }, { status: 500 });
+  }
 }

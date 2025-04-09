@@ -1,5 +1,4 @@
 "use client";
-import useEmpreendimentoContext from "@/hook/useEmpreendimentoContext";
 
 import {
   Box,
@@ -15,62 +14,61 @@ import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { BeatLoader } from "react-spinners";
-interface SelectEmpreendimentoFinanceiroProps extends SelectProps {
+interface SelectConstrutoraFinanceiroProps extends SelectProps {
   setValue: any;
 }
 
-export function SelectEmpreendimentoFinanceiro({
+export function SelectConstrutoraFinanceiro({
   setValue,
   ...props
-}: SelectEmpreendimentoFinanceiroProps) {
-  const [Financeira, setFinanceira] = useState<number | undefined>();
-  const [FinanceiraData, setFinanceiraData] = useState<any>([]);
-  const [FinanceiraArray, setFinanceiraArray] = useState<any>([]);
-  const [FinanceiraArrayTotal, setFinanceiraArrayTotal] = useState<any>([]);
-  const [FinanceiraDisabled, setFinanceiraDisabled] = useState(false);
-  const { setFinanceiraCX } = useEmpreendimentoContext();
+}: SelectConstrutoraFinanceiroProps) {
+  const [Construtora, setConstrutora] = useState<number | undefined>();
+  const [ConstrutoraData, setConstrutoraData] = useState<any>([]);
+  const [ConstrutoraArray, setConstrutoraArray] = useState<any>([]);
+  const [ConstrutoraArrayTotal, setConstrutoraArrayTotal] = useState<any>([]);
+  const [ConstrutoraDisabled, setConstrutoraDisabled] = useState(false);
 
   useEffect(() => {
-    const getFinanceira = async () => {
-      const req = await fetch("/api/financeira/getall");
+    const getConstrutora = async () => {
+      const req = await fetch("/api/construtora/getall");
       if (req.ok) {
         const data = await req.json();
         if (data) {
-          setFinanceiraData(data);
+          setConstrutoraData(data);
         }
       } else {
         return { status: 500, message: "error", data: null };
       }
     };
-    getFinanceira();
+    getConstrutora();
 
     if (setValue) {
       const dataValue = setValue;
       if (dataValue.length > 0) {
         const data = dataValue.map((e: any) => {
-          return e.financeiro;
+          return e.construtora;
         });
 
-        setFinanceiraArrayTotal(data);
-        setFinanceiraArray(dataValue);
+        setConstrutoraArrayTotal(data);
+        setConstrutoraArray(dataValue);
       }
     }
   }, [setValue]);
 
-  const HandleSelectFinanceira = () => {
-    setFinanceiraDisabled(true);
-    const value = Financeira;
+  const HandleSelectConstrutora = () => {
+    setConstrutoraDisabled(true);
+    const value = Construtora;
 
-    const Filtro = FinanceiraData.filter((e: any) => e.id === Number(value));
+    const Filtro = ConstrutoraData.filter((e: any) => e.id === Number(value));
     const Ids = Filtro.map((e: any) => e.id);
 
-    setFinanceiraArray([...FinanceiraArray, ...Ids]);
-    setFinanceiraArrayTotal([...FinanceiraArrayTotal, ...Filtro]);
+    setConstrutoraArray([...ConstrutoraArray, ...Ids]);
+    setConstrutoraArrayTotal([...ConstrutoraArrayTotal, ...Filtro]);
 
-    setFinanceiraDisabled(false);
+    setConstrutoraDisabled(false);
   };
 
-  const RandBoard = FinanceiraArrayTotal.map((e: any) => {
+  const RandBoard = ConstrutoraArrayTotal.map((e: any) => {
     return (
       <Flex
         key={e.id}
@@ -86,11 +84,11 @@ export function SelectEmpreendimentoFinanceiro({
           as={RxCross2}
           fontSize={"0.8rem"}
           onClick={() => {
-            setFinanceiraArray(
-              FinanceiraArray.filter((item: any) => item !== e)
+            setConstrutoraArray(
+              ConstrutoraArray.filter((item: any) => item !== e)
             );
-            setFinanceiraArrayTotal(
-              FinanceiraArrayTotal.filter((item: any) => {
+            setConstrutoraArrayTotal(
+              ConstrutoraArrayTotal.filter((item: any) => {
                 return item !== e;
               })
             );
@@ -100,12 +98,6 @@ export function SelectEmpreendimentoFinanceiro({
       </Flex>
     );
   });
-
-  useEffect(() => {
-    if (setFinanceiraCX && typeof setFinanceiraCX === "function") {
-      setFinanceiraCX(FinanceiraArray);
-    }
-  }, [FinanceiraArray, setFinanceiraCX]);
 
   return (
     <>
@@ -119,21 +111,21 @@ export function SelectEmpreendimentoFinanceiro({
           borderRadius="0"
           bg={"gray.100"}
           borderColor={"gray.400"}
-          isDisabled={FinanceiraDisabled}
-          onChange={(e: any) => setFinanceira(Number(e.target.value))}
-          value={Financeira}
+          isDisabled={ConstrutoraDisabled}
+          onChange={(e: any) => setConstrutora(Number(e.target.value))}
+          value={Construtora}
         >
           <option style={{ backgroundColor: "#EDF2F7" }} value={0}>
             Selecione uma financeira
           </option>
-          {FinanceiraData.length > 0 &&
-            FinanceiraData.map((Financeira: any) => (
+          {ConstrutoraData.length > 0 &&
+            ConstrutoraData.map((Construtora: any) => (
               <option
                 style={{ backgroundColor: "#EDF2F7" }}
-                key={Financeira.id}
-                value={Financeira.id}
+                key={Construtora.id}
+                value={Construtora.id}
               >
-                {Financeira.fantasia}
+                {Construtora.fantasia}
               </option>
             ))}
         </Select>
@@ -142,10 +134,10 @@ export function SelectEmpreendimentoFinanceiro({
           leftIcon={<FaPlus />}
           alignSelf={"center"}
           size={"sm"}
-          isLoading={FinanceiraDisabled}
+          isLoading={ConstrutoraDisabled}
           spinner={<BeatLoader size={8} color="white" />}
           fontSize={"0.7rem"}
-          onClick={HandleSelectFinanceira}
+          onClick={HandleSelectConstrutora}
         >
           Adicionar
         </Button>
@@ -155,8 +147,8 @@ export function SelectEmpreendimentoFinanceiro({
       </Flex>
       <Box hidden>
         <Input
-          name="financeira"
-          value={FinanceiraArrayTotal.map((e: any) => e.id)}
+          name="construtora"
+          value={ConstrutoraArrayTotal.map((e: any) => e.id)}
           readOnly
         />
       </Box>

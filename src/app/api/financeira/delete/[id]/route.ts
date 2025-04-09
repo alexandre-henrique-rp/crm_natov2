@@ -15,7 +15,7 @@ export async function DELETE(
     }
 
     const reqest = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/financeiro/delete/${id}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/financeiro/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -26,7 +26,6 @@ export async function DELETE(
     );
 
     const data = await reqest.json();
-    console.log("🚀 ~ file: route.ts:PUT ~ data:", data);
     if (!reqest.ok) {
       return new NextResponse("Invalid credentials", { status: 401 });
     }

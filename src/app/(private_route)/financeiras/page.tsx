@@ -1,22 +1,29 @@
-import { GetAllFinanceiras } from "@/actions/financeira/service/getAllFinanceiras";
+"use client";
 import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 import Financeiras from "@/components/financeirasCard";
-import { auth } from "@/lib/auth_confg";
 import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
-import { Metadata } from "next";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export const metadata: Metadata = {
-  title: "FINANCEIRAS"
-};
+export default function PainelFinanceiro() {
+  const [dados, setDados] = useState<any[]>([]);
 
-export default async function PainelFinanceiro() {
-    const session = await getServerSession(auth);
-    if (session?.user.hierarquia !== "ADM") {
-      redirect("/");
+  useEffect(() => {
+    FetchData();
+  }, []);
+
+  const FetchData = async () => {
+    try {
+      const req = await fetch("/api/financeira/getall");
+      if (!req.ok) {
+        setDados([]);
+      }
+      const res = await req.json();
+      setDados(res);
+    } catch (error) {
+      console.error("Erro ao buscar dados das construtoras:", error);
+      setDados([]);
     }
-  const dados = await GetAllFinanceiras();
+  };
   return (
     <>
       <Flex
@@ -67,9 +74,7 @@ export default async function PainelFinanceiro() {
             justifyContent="center"
             alignItems="center"
           ></Flex>
-          <Box>
-            {dados?.status === 200 ? <Financeiras data={dados?.data} /> : <></>}
-          </Box>
+          <Box>{dados ? <Financeiras data={dados} /> : <></>}</Box>
         </Box>
       </Flex>
     </>

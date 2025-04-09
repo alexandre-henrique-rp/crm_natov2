@@ -17,6 +17,7 @@ export default function FinanceiraProvider({
   const [responsavel, setResponsavel] = useState<string | null>(null);
   const [fantasia, setFantasia] = useState<string | null>(null);
   const [data, setData] = useState<any>(null);
+  const [ConstrutoraCX, setConstrutoraCX] = useState<number[]>([]);
   
 
   return (
@@ -36,6 +37,8 @@ export default function FinanceiraProvider({
         setFantasia,
         data,
         setData,
+        ConstrutoraCX,
+        setConstrutoraCX,
       }}
     >
       {children}
