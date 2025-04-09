@@ -35,10 +35,9 @@ export async function POST(request: Request) {
     console.log("🚀 ~ POST ~ data:", data)
 
     if (!user.ok) {
-      return NextResponse.json(data, { status: 400 });
+      return NextResponse.json({message: data.message.map((i: string) => i).join(",\n")}, { status: 400 });
     }
     return NextResponse.json(data, { status: 200 });
-    // return NextResponse.json({ message: "Not implemented" }, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json(error, { status: 500 });

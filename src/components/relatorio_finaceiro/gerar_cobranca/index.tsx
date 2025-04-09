@@ -45,36 +45,37 @@ export default function GerarCobranca() {
   }, [session?.user.construtora, session?.user.hierarquia]);
 
   async function handlePesquisa() {
-    setLoading(true);
-    const request = await fetch(`/api/relatorio/financeiro/personalizado`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        Construtora,
-        empreedimento,
-        Inicio,
-        Fim,
-        Situacao
-      })
-    });
-
-    const dados = await request.json();
-    if (dados.error) {
-      toast({
-        title: "Erro",
-        description: dados.message,
-        status: "error",
-        duration: 3000,
-        isClosable: true
+    try {
+      setLoading(true);
+      const request = await fetch(`/api/relatorio/financeiro/personalizado`, {
+        method: "POST",
+        body: JSON.stringify({
+          Construtora,
+          empreedimento,
+          Inicio,
+          Fim,
+          Situacao
+        })
       });
-    }
-    if (!dados.error) {
+  
+      const dados = await request.json();
+      if (!request.ok) {
+        throw new Error(dados.message);
+      }
       console.log(dados.data);
       setTotalArray(dados.data.solicitacao);
+      setLoading(false);
+      return;
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: `${error.message}`,
+        status: "error",
+        duration: 9000,
+        isClosable: true
+      });
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   async function handlePesquisaProtocolo() {
@@ -83,7 +84,7 @@ export default function GerarCobranca() {
     if (dados.error) {
       toast({
         title: "Erro",
-        description: dados.message,
+        description: `${dados.message}`,
         status: "error",
         duration: 3000,
         isClosable: true
