@@ -1,5 +1,5 @@
 import { Box, BoxProps, FormLabel } from "@chakra-ui/react";
-import { SelectUserFinanceira} from "../dropdow/selectUserFinanceira";
+import { SelectUserFinanceira } from "../dropdow/selectUserFinanceira";
 import React from "react";
 
 interface CardGridUserFinanceiraProps extends BoxProps {

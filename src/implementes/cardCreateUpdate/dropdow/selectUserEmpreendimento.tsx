@@ -8,7 +8,7 @@ import {
   Input,
   Select,
   SelectProps,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -43,15 +43,7 @@ export function SelectUserEmpreendimento({
     if (setValue) {
       const dataValue = setValue;
       if (dataValue.length > 0) {
-        (async () => {
-          const data = await Promise.all(
-            dataValue.map(async (e: any) => {
-              const response = await fetch(`/api/empreendimento/get/${e}`);
-              return await response.json();
-            })
-          );
-          setEmpreendimentoArrayTotal(data);
-        })();
+        setEmpreendimentoArrayTotal(dataValue);
         setEmpreendimentoArray(dataValue);
       }
     }
@@ -105,7 +97,6 @@ export function SelectUserEmpreendimento({
     setEmpreedimentoCX(EmpreendimentoArray);
   }, [EmpreendimentoArray, setEmpreedimentoCX]);
 
-
   return (
     <>
       <Flex gap={2}>
@@ -150,7 +141,11 @@ export function SelectUserEmpreendimento({
         {RandBoard}
       </Flex>
       <Box hidden>
-        <Input name="empreendimento" value={EmpreendimentoArray.join(",")} readOnly/>
+        <Input
+          name="empreendimento"
+          value={EmpreendimentoArrayTotal.map((e: any) => e.id)}
+          readOnly
+        />
       </Box>
     </>
   );

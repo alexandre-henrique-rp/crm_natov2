@@ -3,28 +3,8 @@ import { auth } from "@/lib/auth_confg";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
-export async function GetUser(id: number) {
-  
-  const session = await getServerSession(auth);
-
-  if (!session) {
-    return null;
-  }
-
-  const user = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/get/${id}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${session?.token}`
-    },
-  })
-  const res = await user.json()
-  return res
-}
-
 export async function UpdateUser(_: any, data: FormData) {
   const id = data.get("id") as string;
-  const cpf = data.get("cpf") as string;
   const nome = data.get("nome") as string;
   const username = data.get("usuario") as string;
   const telefone = data.get("telefone") as string;
@@ -41,36 +21,53 @@ export async function UpdateUser(_: any, data: FormData) {
   const empreendimentoArray = empreendimento
     ? empreendimento.split(",").map(Number)
     : [];
-  const FinanceiraArray = financeira 
-    ? financeira.split(",").map(Number) 
-    : [];
+  const FinanceiraArray = financeira ? financeira.split(",").map(Number) : [];
 
-    const session = await getServerSession(auth);
+  const session = await getServerSession(auth);
 
-    if (!session) {
-      return null;
+  if (!session) {
+    return {
+      error: true,
+      message: "Unauthorized",
+      data: null,
+      status: 401,
+    };
+  }
+
+  const body = {
+    nome: nome,
+    username: username,
+    ...(telefone && { telefone: telefone.replace(/\D/gm, "") }),
+    email: email,
+    ...(construtora && { construtora: construtoraArray }),
+    ...(empreendimento && {
+      empreendimento: empreendimentoArray,
+    }),
+    ...(financeira && { Financeira: FinanceiraArray }),
+    hierarquia: hierarquia,
+    cargo: cargo,
+  };
+
+  const req = await fetch(
+    `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/update/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.token}`,
+      },
+      body: JSON.stringify(body),
     }
+  );
+  const res = await req.json();
+  if (!req.ok) {
+    return {
+      error: true,
+      message: res.message,
+      data: null,
+      status: req.status,
+    };
+  }
 
-  await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/update/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${session?.token}`
-    },
-    body: JSON.stringify({
-      cpf: cpf,
-      nome: nome,
-      username: username,
-      ...(telefone && { telefone: telefone.replace(/\D/gm, "") }),
-      email: email,
-      ...(construtora && { construtora: JSON.stringify(construtoraArray) }),
-      ...(empreendimento && {
-        empreendimento: JSON.stringify(empreendimentoArray)
-      }),
-      ...(financeira && { Financeira: JSON.stringify(FinanceiraArray) }),
-      hierarquia: hierarquia,
-      cargo: cargo
-    })
-  });
   redirect("/usuarios");
 }

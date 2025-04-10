@@ -1,58 +1,60 @@
+"use client";
 import FiltroUser from "@/components/filtroUser";
 import Usuarios from "@/components/usuarios_component";
-import { auth } from "@/lib/auth_confg";
 import UserProvider from "@/provider/UserProvider";
-import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
-import { Metadata } from "next";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+import {
+  Box,
+  Divider,
+  Flex,
+  Heading,
+  Link,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 
-async function GetUser() {
-  try {
-    const session = await getServerSession(auth);
+export default function UsuariosPage() {
+  const [Dados, setDados] = useState([]);
+  const toast = useToast();
 
-    if (!session) {
-      const data = { status: 401, message: "Unauthorized", data: null };
-      return data;
-    }
+  useEffect(() => {
+    FetchData();
+  }, []);
 
-    const reqest = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.token}`
-        }
+  const FetchData = async () => {
+    try {
+      const req = await fetch("/api/usuario/getall");
+      if (!req.ok) {
+        setDados([]);
+        toast({
+          title: "Erro",
+          description: "Não foi possível carregar os dados",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
-    );
-
-    if (!reqest.ok) {
-      const data = { status: 400, message: "Invalid credentials", data: null };
-      return data;
+      const res = await req.json();
+      toast({
+        title: "Sucesso",
+        description: "Dados carregados com sucesso",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      setDados(res);
+    } catch (error) {
+      console.error("Erro ao buscar dados das construtoras:", error);
+      setDados([]);
+      toast({
+        title: "Erro",
+        description: "Não foi possível carregar os dados",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
-    const data = await reqest.json();
-    const users = data.filter((user: any) => user.hierarquia !== "ADM");
-
-    return {
-      status: 200,
-      message: "Success",
-      data: users
-    };
-  } catch (error: any) {
-    return { status: 500, message: "error", data: error };
-  }
-}
-
-export const metadata: Metadata = {
-  title: "USUÁRIOS"
-};
-export default async function UsuariosPage() {
-  const session = await getServerSession(auth);
-  if (session?.user.hierarquia !== "ADM") {
-    redirect("/");
-  }
-  const Dados = await GetUser();
+  };
 
   return (
     <>
@@ -95,9 +97,7 @@ export default async function UsuariosPage() {
             <Flex w={"100%"} mb={8} justifyContent="center" alignItems="center">
               <FiltroUser />
             </Flex>
-            <Box>
-              {Dados?.status === 200 ? <Usuarios data={Dados?.data} /> : <></>}
-            </Box>
+            <Box>{Dados ? <Usuarios data={Dados} /> : <></>}</Box>
           </UserProvider>
         </Box>
       </Flex>

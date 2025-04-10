@@ -1,35 +1,26 @@
+"use client";
 import { Box, Divider, Flex, Heading } from "@chakra-ui/react";
-import React from "react";
-import { Metadata } from "next";
-import { GetUser } from "@/actions/user/service";
+import React, { useEffect, useState } from "react";
 import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 import { CardUpdateUsuario } from "@/components/card_update_usuario";
-import { getServerSession } from "next-auth";
-import { auth } from "@/lib/auth_confg";
-import { redirect } from "next/navigation";
 
 type Props = {
   params: { id: string };
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const id = params.id;
-  const data = await GetUser(Number(id));
-
-  return {
-    title: `Editar Usuário: ${data?.nome || "Usuário"}`
-  };
-}
-
-export default async function EditarUsuario({ params }: Props) {
-  const session = await getServerSession(auth);
-  if (session?.user.hierarquia !== "ADM") {
-    redirect("/");
-  }
+export default function EditarUsuario({ params }: Props) {
+  const [data, setData] = useState<any>({});
   const id = Number(params.id);
 
-  const data = await GetUser(id);
+  const fetchUser = async (id: number) => {
+    const req = await fetch(`/api/usuario/getId/${id}`);
+    const res = await req.json();
+    setData(res);
+  };
 
+  useEffect(() => {
+    fetchUser(id);
+  }, [id]);
   return (
     <>
       <Flex

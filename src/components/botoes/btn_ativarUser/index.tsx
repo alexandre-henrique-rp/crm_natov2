@@ -1,5 +1,4 @@
 "use client";
-import { ativarUsuario } from "@/actions/user/service/ativarUsuario";
 import { IconButton, Tooltip, useToast } from "@chakra-ui/react";
 import { VscActivateBreakpoints } from "react-icons/vsc";
 
@@ -11,14 +10,17 @@ export function BtnAtivarUser({ id }: BtnAtivarUserProps) {
   const toast = useToast();
 
   const handleAtivarUsuario = async (id: number) => {
-    const response = await ativarUsuario(id);
-    if (response.error) {
+    const response = await fetch(`api/usuario/put/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({ status: true }),
+    });
+    if (!response.ok) {
       toast({
         title: "Erro",
-        description: response.message,
+        description: "Ocorreu um erro ao ativar o usuário",
         status: "error",
         duration: 2000,
-        position: "top-right"
+        position: "top-right",
       });
       setTimeout(() => {
         window.location.reload();
@@ -26,10 +28,10 @@ export function BtnAtivarUser({ id }: BtnAtivarUserProps) {
     } else {
       toast({
         title: "Sucesso",
-        description: response.message,
+        description: "Usuário ativado com sucesso",
         status: "success",
         duration: 2000,
-        position: "top-right"
+        position: "top-right",
       });
       setTimeout(() => {
         window.location.reload();
