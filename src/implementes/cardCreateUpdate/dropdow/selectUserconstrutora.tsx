@@ -38,22 +38,14 @@ export function SelectUserConstrutora({
     };
     getConstrutora();
 
-    if(setValue){
+    if (setValue) {
       const dataValue = setValue;
-      if(dataValue.length > 0){
-        (async () => {
-          const data = await Promise.all(
-            dataValue.map(async (e: any) => {
-              const response = await fetch(`/api/construtora/get/${e}`);
-              return await response.json();
-            })
-          );
-          setConstrutoraArrayTotal(data);
-        })();
+      if (dataValue.length > 0) {
+        setConstrutoraArrayTotal(dataValue);
         setConstrutoraArray(dataValue);
       }
     }
-    }, [setValue]);
+  }, [setValue]);
 
   const HandleSelectConstrutora = () => {
     setConstrutoraDisabled(true);
@@ -86,7 +78,7 @@ export function SelectUserConstrutora({
             fontSize={"0.8rem"}
             onClick={() => {
               setConstrutoraArray(
-                ConstrutoraArray.filter((item: any) => item !== e.id)
+                ConstrutoraArray.filter((item: any) => item !== e)
               );
               setConstrutoraArrayTotal(
                 ConstrutoraArrayTotal.filter((item: any) => item !== e)
@@ -147,7 +139,11 @@ export function SelectUserConstrutora({
         {RendBoard}
       </Flex>
       <Box hidden>
-        <Input name="construtora" value={ConstrutoraArray} readOnly />
+        <Input
+          name="construtora"
+          value={ConstrutoraArrayTotal.map((e: any) => e.id)}
+          readOnly
+        />
       </Box>
     </>
   );

@@ -19,7 +19,6 @@ export default function Usuarios({ data }: UsuariosType) {
   const [Usuarios, setUsuarios] = useState<any[]>([]);
   const toast = useToast();
 
-
   const { id, nome, construtora, financeira } = useContext(FiltroContext);
 
   useEffect(() => {
@@ -73,11 +72,10 @@ export default function Usuarios({ data }: UsuariosType) {
               flexDir="column"
               w={{ base: "100%", md: "30%", lg: "20em" }}
               fontSize={"0.8rem"}
-              bg={solicitacao.status ? "white" : "green.50"} 
-              
+              bg={solicitacao.status ? "white" : "green.50"}
             >
               <Flex w="100%" flexDir={"column"} gap={4}>
-                <Flex  gap={2} align="center">
+                <Flex gap={2} align="center">
                   <Text fontWeight="bold" fontSize="sm">
                     ID:
                   </Text>
@@ -134,15 +132,18 @@ export default function Usuarios({ data }: UsuariosType) {
                     Construtora:
                   </Text>
 
-                  {solicitacao.construtora.length > 0 &&
-                    solicitacao.construtora
-                      .map((item: any) => item.fantasia)
+                  {solicitacao.construtoras.length > 0 &&
+                    solicitacao.construtoras
+                      .map((item: any) => {
+                        return item.construtora.fantasia;
+                      })
                       .join(", ")}
                 </Flex>
               </Flex>
               <Flex mt={3} gap={2} w="100%" justifyContent="end">
-                
-                {solicitacao.status ? null : (<BtnAtivarUser id={solicitacao.id}/>)}
+                {solicitacao.status ? null : (
+                  <BtnAtivarUser id={solicitacao.id} />
+                )}
                 <BtnEditarUser id={solicitacao.id} />
                 <BtnResetSenha ID={solicitacao.id} />
                 <BtnExcluirUser id={solicitacao.id} />

@@ -19,7 +19,7 @@ export async function PUT(
     const reqest = await fetch(
       `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/update/${id}`,
       {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.token}`,
@@ -29,7 +29,6 @@ export async function PUT(
     );
 
     const data = await reqest.json();
-    console.log("🚀 ~ file: route.ts:PUT ~ data:", data);
     if (!reqest.ok) {
       return new NextResponse("Invalid credentials", { status: 401 });
     }

@@ -3,14 +3,13 @@ import { SelectUserConstrutora } from "../dropdow/selectUserconstrutora";
 import React from "react";
 
 interface CardGridUserConstrutoraProps extends BoxProps {
-  UserConstrutora?: string |any;
+  UserConstrutora?: string | any;
 }
 
 export function CardGridUserConstrutora({
   UserConstrutora,
   ...props
 }: CardGridUserConstrutoraProps) {
-  
   return (
     <>
       <Box {...props}>
@@ -22,4 +21,3 @@ export function CardGridUserConstrutora({
     </>
   );
 }
-

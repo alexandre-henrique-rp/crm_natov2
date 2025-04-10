@@ -8,7 +8,7 @@ import {
   Input,
   Select,
   SelectProps,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -38,18 +38,9 @@ export function SelectUserFinanceira({
     getFinanceira();
 
     if (setValue) {
-      console.log("🚀 ~ useEffect ~ setValue:", setValue)
       const dataValue = setValue;
       if (dataValue.length > 0) {
-        (async () => {
-          const data = await Promise.all(
-            dataValue.map(async (e: any) => {
-              const response = await fetch(`/api/financeira/get/${e}`);
-              return await response.json();
-            })
-          );
-          setFinanceiraArrayTotal(data);
-        })();
+        setFinanceiraArrayTotal(dataValue);
         setFinanceiraArray(dataValue);
       }
     }
@@ -147,7 +138,11 @@ export function SelectUserFinanceira({
         {RandBoard}
       </Flex>
       <Box hidden>
-        <Input name="financeira" value={FinanceiraArray} readOnly />
+        <Input
+          name="financeira"
+          value={FinanceiraArrayTotal.map((e: any) => e.id)}
+          readOnly
+        />
       </Box>
     </>
   );
