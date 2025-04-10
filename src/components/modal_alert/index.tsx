@@ -69,21 +69,17 @@ export const ModalComponent = () => {
             <Stack pt={10} pb={10}>
               <Box>
                 <Stack spacing={3}>
-                  {alerts.map((a) => {
-                    return (
-                      <>
-                        <AlertComponent
-                        DeleteAlertStatus={a.status}
-                          key={a.id}
-                          clientId={a.solicitacao_id}
-                          ID={a.id}
-                          msg={a.texto}
-                          titulo={a.titulo}
-                          status={a.tag}
-                        />
-                      </>
-                    );
-                  })}
+                  {alerts.map((a) => (
+                    <AlertComponent
+                      key={a.id}
+                      DeleteAlertStatus={a.status}
+                      clientId={a.solicitacao_id}
+                      ID={a.id}
+                      msg={a.texto}
+                      titulo={a.titulo}
+                      status={a.tag}
+                    />
+                  ))}
                 </Stack>
               </Box>
             </Stack>

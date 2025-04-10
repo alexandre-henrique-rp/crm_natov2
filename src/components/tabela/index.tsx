@@ -22,7 +22,7 @@ import {
   Th,
   Thead,
   Tooltip,
-  Tr
+  Tr,
 } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
 import { useSession } from "next-auth/react";
@@ -52,7 +52,7 @@ export function Tabela({
   ClientData,
   total,
   AtualPage,
-  SetVewPage
+  SetVewPage,
 }: TabelaProps) {
   const [SelectPage, setSelectPage] = useState(1);
   const [Construtoras, setConstrutoras] = useState<any>([]);
@@ -71,6 +71,9 @@ export function Tabela({
   };
 
   const downTimeInDays = (item: solictacao.SolicitacaoGetType) => {
+    console.log("🚀 ~ downTimeInDays ~ item:", item)
+    console.log("🚀 ~ downTimeInDays ~ item.createdAt:", !item )
+    console.log("🚀 ~ downTimeInDays ~ item.createdAt:", item.createdAt)
     if (!item || !item.createdAt) return null;
 
     if (item.distrato || !item.ativo) {
@@ -122,9 +125,7 @@ export function Tabela({
         ? "Certificação aprovada, aguardando cliente baixar o aplicativo e fazer a emissão do certificado."
         : null;
     // const statusPg = item.fcweb?.estatos_pgto;
-    if (!item.tag) {
-      console.log(item.tag)
-    }
+
     const colors = !item.ativo
       ? "red.400"
       : item.distrato && user?.hierarquia === "ADM"
@@ -136,10 +137,10 @@ export function Tabela({
       : item.alertanow &&
         !["EMITIDO", "REVOGADO", "APROVADO"].includes(item.Andamento)
       ? "green.200"
-      : item.pause && user?.hierarquia === "ADM" 
-      ? "yellow.200" :
-      "transparent";
-    console.log(colors, item.pause);
+      : item.pause && user?.hierarquia === "ADM"
+      ? "yellow.200"
+      : "transparent";
+
     const fontColor =
       colors === "red.400"
         ? "white"
@@ -220,7 +221,7 @@ export function Tabela({
                 sx={{
                   transform: "rotate(-90deg)",
                   textOrientation: "upright",
-                  animation: `${rgbBlink} 2s infinite`
+                  animation: `${rgbBlink} 2s infinite`,
                 }}
               >
                 N O W

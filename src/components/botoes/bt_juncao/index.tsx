@@ -75,12 +75,12 @@ export default function BotaoJuncao() {
             />
             <MenuList bg={"#05927b"}>
               <MenuItem bg={"transparent"}>
-                <BotaoNovaSolicita />
+                <BotaoNovaSolicita renderAsText={true} />
               </MenuItem>
               {but === "ADM" && (
                 <>
                   <MenuItem bg={"transparent"}>
-                    <BotaoPainelAdm />
+                    <BotaoPainelAdm renderAsText={true} />
                   </MenuItem>
                 </>
               )}
