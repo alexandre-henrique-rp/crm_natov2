@@ -55,25 +55,15 @@ export function Tabela({
   SetVewPage,
 }: TabelaProps) {
   const [SelectPage, setSelectPage] = useState(1);
-  const [Construtoras, setConstrutoras] = useState<any>([]);
   const { data: session } = useSession();
   const user = session?.user;
 
   useEffect(() => {
-    getConstrutoras();
     setSelectPage(AtualPage);
   }, [AtualPage]);
 
-  const getConstrutoras = async () => {
-    const construtoras = await fetch(`/api/construtora/getall`);
-    const data = await construtoras.json();
-    setConstrutoras(data);
-  };
 
   const downTimeInDays = (item: solictacao.SolicitacaoGetType) => {
-    console.log("🚀 ~ downTimeInDays ~ item:", item)
-    console.log("🚀 ~ downTimeInDays ~ item.createdAt:", !item )
-    console.log("🚀 ~ downTimeInDays ~ item.createdAt:", item.createdAt)
     if (!item || !item.createdAt) return null;
 
     if (item.distrato || !item.ativo) {
@@ -103,9 +93,8 @@ export function Tabela({
   };
 
   const tabela = ClientData.map((item) => {
-    const fantasia = Construtoras.find(
-      (construtora: { id: number }) => construtora.id === item.construtora
-    )?.fantasia;
+
+    const fantasia = item.construtora?.fantasia;
 
     const ano = item.dt_agendamento?.split("-")[0];
     const mes = item.dt_agendamento?.split("-")[1];
@@ -115,7 +104,7 @@ export function Tabela({
     const dtAgenda = item.dt_agendamento ? `${dia}/${mes}/${ano}` : null;
 
     const horaAgenda = item.hr_agendamento?.split("T")[1].split(".")[0];
-    const andamento = item.Andamento;
+    const andamento = item.andamento;
     const toolTipAndamento =
       andamento === "EMITIDO"
         ? "Certificado já emitido pelo Cliente, e pronto para uso."
@@ -135,7 +124,7 @@ export function Tabela({
       : item.distrato && user?.hierarquia === "GRT"
       ? "gray.600"
       : item.alertanow &&
-        !["EMITIDO", "REVOGADO", "APROVADO"].includes(item.Andamento)
+        !["EMITIDO", "REVOGADO", "APROVADO"].includes(item.andamento)
       ? "green.200"
       : item.pause && user?.hierarquia === "ADM"
       ? "yellow.200"
@@ -160,7 +149,7 @@ export function Tabela({
             {item.tag?.length > 0 &&
             item.ativo &&
             !item.distrato &&
-            item.Andamento !== "EMITIDO" ? (
+            item.andamento !== "EMITIDO" ? (
               <>
                 <ButtonGroup variant="solid" size="sm" me={2}>
                   <Popover>
@@ -263,42 +252,7 @@ export function Tabela({
           </Tooltip>
         </Td>
         <Td>{item.ativo && downTimeInDays(item)}</Td>
-        <Td textAlign={"center"}>
-          {AssDocAss && item.ativo && !item.distrato && (
-            <Icon
-              as={FaFileSignature}
-              color={"green.500"}
-              fontSize={"1.75rem"}
-            />
-          )}
-          {AssDocExp && item.ativo && !item.distrato && (
-            <Icon as={FaFileSignature} color={"red.500"} fontSize={"1.75rem"} />
-          )}
-          {!AssDocAss &&
-            !AssDocExp &&
-            item.ativo &&
-            !item.distrato &&
-            item.link_doc && (
-              <Icon
-                as={FaFileSignature}
-                color={"gray.300"}
-                fontSize={"1.75rem"}
-              />
-            )}
-        </Td>
-        <Td>{fantasia}</Td>
-        {/* {user?.hierarquia === "ADM" && (
-          <>
-            <Td>{statusPg}</Td>
-            <Td>{item.fcweb?.valorcd}</Td>
-          </>
-        )}
-        {user?.hierarquia === "CONT" && (
-          <>
-            <Td>{statusPg}</Td>
-            <Td>{item.fcweb?.valorcd}</Td>
-          </>
-        )} */}
+        {user?.hierarquia === "ADM" && <Td>{fantasia}</Td>}
       </Tr>
     );
   });
@@ -338,24 +292,11 @@ export function Tabela({
                 <Th>ID</Th>
                 <Th>NOME</Th>
                 <Th>AGENDAMENTO</Th>
-                <Th>CERTIFICADO</Th>
-                <Th fontSize={"20px"}>
+                <Th>Andamento</Th>
+                <Th fontSize={"22px"}>
                   <ImClock />
                 </Th>
-                <Th>ASSINATURA</Th>
-                {/* {user?.hierarquia === "CONT" && (
-                  <>
-                    <Th>STATUS PG</Th>
-                    <Th>VALOR</Th>
-                  </>
-                )}
-                <Th>EMPRESA</Th>
-                {/* {user?.hierarquia === "ADM" && (
-                  <>
-                    <Th>STATUS PG</Th>
-                    <Th>VALOR</Th>
-                  </>
-                )} */}
+                {user?.hierarquia === "ADM" && <Th>CONSTRUTORA</Th>}
               </Tr>
             </Thead>
             <Tbody>{tabela}</Tbody>

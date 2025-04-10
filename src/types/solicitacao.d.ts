@@ -36,7 +36,7 @@ declare namespace solictacao {
     cpf: string;
     email: string;
     dt_solicitacao: Date | string | any;
-    Andamento: string;
+    andamento: string;
     dt_aprovacao: string; 
     dt_agendamento: string;
     distrato_dt: string;
