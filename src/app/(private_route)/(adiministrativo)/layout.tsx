@@ -17,22 +17,18 @@ export default async function PainelAdmLayout({
         w={"100%"}
         h={"100%"}
         p={{ base: 0, md: 3 }}
+        pt={{ base: 3, md: 3 }}
         gap={{ base: 0, md: 3 }}
         justifyContent={"space-between"}
         flexDir={{ base: "column", md: "row" }}
       >
-        <Flex
-          w={{ base: "100%", md: "10%" }}
-          h={"100%"}
-          flexDir={"column"}
-        >
+        <Flex w={{ base: "100%", md: "10%" }} h={"100%"} flexDir={"column"}>
           <Box w={"100%"} mx={{ base: 0, md: 5 }}>
             <Text color={"gray.400"} fontSize={"xl"} textAlign={"center"}>
               Gerenciamento
             </Text>
           </Box>
           <Divider
-            // m={{base: 0, md: 5}}
             my={5}
             border={"1px solid"}
             borderColor={"gray.300"}
@@ -42,11 +38,13 @@ export default async function PainelAdmLayout({
             flexDir={{ base: "row", md: "column" }}
             w={"100%"}
             mx={{ base: 0, md: 5 }}
-            gap={"1rem"}
+            gap={2}
             flexWrap={{ base: "wrap", md: "nowrap" }}
             justifyContent={{ base: "center", md: "normal" }}
             alignItems={{ base: "center", md: "normal" }}
           >
+            <BotaoAdm name={"Home"} />
+            <BotaoAdm name={"Painel"} />
             <BotaoAdm name={"Usuarios"} />
             <BotaoAdm name={"Empreendimentos"} />
             <BotaoAdm name={"Construtora"} />

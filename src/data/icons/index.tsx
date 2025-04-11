@@ -1,4 +1,4 @@
-import { FiHome, FiUser, FiUserPlus } from "react-icons/fi";
+import { FiHome, FiSettings, FiUser, FiUserPlus } from "react-icons/fi";
 import { MdDomain, MdOutlineAddHomeWork, MdOutlineDomainAdd, MdOutlineHomeWork } from "react-icons/md";
 import { GoRepo, GoRepoPush } from "react-icons/go";
 
@@ -56,5 +56,11 @@ export const IconsPadrão = [
     label: 'Home',
     path: '/',
     icon: <FiHome />
+  },
+  {
+    id: 10,
+    label: 'Painel',
+    path: '/adm',
+    icon: <FiSettings />
   }
 ];
