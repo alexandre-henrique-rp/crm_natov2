@@ -1,7 +1,7 @@
 "use client";
 import { Flex, Box, Button } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { FaHome } from "react-icons/fa";
+import { FiHome } from "react-icons/fi";
 
 export default function BotaoHome() {
   const router = useRouter();
@@ -19,8 +19,9 @@ export default function BotaoHome() {
         <Button
           textColor={"white"}
           variant="link"
-          size="sm"
-          leftIcon={<FaHome />}
+          size="md"
+          fontWeight={'light'}
+          leftIcon={<FiHome />}
           onClick={() => router.push("/")}
         >
           HOME

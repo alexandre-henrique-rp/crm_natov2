@@ -1,7 +1,7 @@
 "use client";
 import { Button, Text } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { AiFillProduct } from "react-icons/ai";
+import { FiSettings } from "react-icons/fi";
 
 export default function BotaoPainelAdm({ renderAsText = false }) {
   const router = useRouter();
@@ -13,10 +13,11 @@ export default function BotaoPainelAdm({ renderAsText = false }) {
         fontSize="sm"
         cursor="pointer"
         display="flex"
+        fontWeight={'light'}
         alignItems="center"
         onClick={() => router.push("/adm")}
       >
-        <AiFillProduct style={{ marginRight: '8px' }} />
+        <FiSettings style={{ marginRight: '8px' }} />
         PAINEL ADM
       </Text>
     );
@@ -26,8 +27,9 @@ export default function BotaoPainelAdm({ renderAsText = false }) {
     <Button
       textColor={"white"}
       variant="link"
-      size="sm"
-      leftIcon={<AiFillProduct />}
+      size="md"
+      fontWeight={'light'}
+      leftIcon={<FiSettings />}
       onClick={() => router.push("/adm")}
     >
       PAINEL ADM

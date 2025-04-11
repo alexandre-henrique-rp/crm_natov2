@@ -2,13 +2,13 @@
 
 import { Button, Text } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { FiFilePlus } from "react-icons/fi";
+import { FaRegQuestionCircle } from "react-icons/fa";
 
-export default function BotaoNovaSolicita({ renderAsText = false }) {
+export default function BotaoFaq({ renderAsText = false }) {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push("/solicitacoes");
+    router.push("/suportefaq");
   };
 
   if (renderAsText) {
@@ -22,8 +22,8 @@ export default function BotaoNovaSolicita({ renderAsText = false }) {
         alignItems="center"
         onClick={handleClick}
       >
-        <FiFilePlus style={{ marginRight: '8px' }} />
-        NOVA SOLICITAÇÃO
+        <FaRegQuestionCircle style={{ marginRight: "8px" }} />
+        FAQ / Suporte
       </Text>
     );
   }
@@ -34,10 +34,10 @@ export default function BotaoNovaSolicita({ renderAsText = false }) {
       variant="link"
       size="md"
       fontWeight={'light'}
-      leftIcon={<FiFilePlus />}
+      leftIcon={<FaRegQuestionCircle />}
       onClick={handleClick}
     >
-      NOVA SOLICITAÇÃO
+      FAQ / Suporte
     </Button>
   );
 }

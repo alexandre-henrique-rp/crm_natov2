@@ -2,7 +2,7 @@
 
 import { Button, Text } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { MdDashboard } from "react-icons/md";
+import { LuLayoutDashboard } from "react-icons/lu";
 export default function BotaoDashboard({ renderAsText = false }) {
   const router = useRouter();
 
@@ -17,10 +17,11 @@ export default function BotaoDashboard({ renderAsText = false }) {
         fontSize="sm"
         cursor="pointer"
         display="flex"
+        fontWeight={'light'}
         alignItems="center"
         onClick={handleClick}
       >
-        <MdDashboard style={{ marginRight: '8px' }} />
+        <LuLayoutDashboard style={{ marginRight: '8px' }} />
         DASHBOARD
       </Text>
     );
@@ -30,8 +31,9 @@ export default function BotaoDashboard({ renderAsText = false }) {
     <Button
       textColor={"white"}
       variant="link"
-      size="sm"
-      leftIcon={<MdDashboard />}
+      size="md"
+      fontWeight={'light'}
+      leftIcon={<LuLayoutDashboard />}
       onClick={handleClick}
     >
         DASHBOARD
