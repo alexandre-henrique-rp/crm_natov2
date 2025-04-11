@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Flex, Link, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Link, Text } from "@chakra-ui/react";
 import { FaPhoneVolume } from "react-icons/fa";
 
 export default function FooterComponent() {
@@ -9,8 +9,8 @@ export default function FooterComponent() {
   return (
     <Flex
       w="100%"
-      h="5vh"
-      p="20px"
+      py={{ base: 1, md: 3 }}
+      px={{ base: 1, md: 5 }}
       bg={bg}
       justifyContent={{ base: "center", md: "space-evenly" }}
       alignItems="center"
@@ -19,12 +19,11 @@ export default function FooterComponent() {
       textAlign="center"
     >
       <Flex
-        w={{ base: "100%", md: "33%" }}
+        w={"100%"}
         h="100%"
         gap="1rem"
         alignItems="center"
         justifyContent={{ base: "center", md: "flex-start" }}
-        flexDirection={{ base: "column", md: "row" }}
       >
         <Text color="white">Precisa de Ajuda?</Text>
         <Button
@@ -36,29 +35,26 @@ export default function FooterComponent() {
           (16) 3325-4134
         </Button>
       </Flex>
-      <Button variant="link" color="white" size="sm">
-          <Link href="/suportefaq" isExternal>
-          FAQ 
-          </Link>
-      </Button>
 
-      <Flex
+      <Box
         gap="1rem"
         justifyContent="center"
         mt={{ base: "10px", md: "0" }}
         flexDirection={{ base: "column", md: "row" }}
+        display={{ base: "none", md: "flex" }}
       >
-        <Button variant="link" color="white" size="sm" >
-          <Link href="/termos/uso">
-          Termos de Uso
-          </Link>
-        </Button>   
         <Button variant="link" color="white" size="sm">
-          <Link href="/termos/privacidade">
-          Politica de Privacidade
+          <Link href="/suportefaq" isExternal>
+            FAQ
           </Link>
         </Button>
-      </Flex>
+        <Button variant="link" color="white" size="sm">
+          <Link href="/termos/uso">Termos de Uso</Link>
+        </Button>
+        <Button variant="link" color="white" size="sm">
+          <Link href="/termos/privacidade">Politica de Privacidade</Link>
+        </Button>
+      </Box>
 
       <Flex
         w={{ base: "100%", md: "33%" }}

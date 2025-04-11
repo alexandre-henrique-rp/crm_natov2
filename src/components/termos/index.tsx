@@ -25,10 +25,12 @@ export default function TermosPage() {
   const toast = useToast();
 
   const termosAceitos = session?.user.termos;
+  console.log("🚀 ~ TermosPage ~ termosAceitos:", termosAceitos)
   const idUser = Number(session?.user.id);
+  console.log("🚀 ~ TermosPage ~ idUser:", idUser)
 
   useEffect(() => {
-    if (!termosAceitos) {
+    if (!termosAceitos && idUser) {
       (async () => {
         try {
           const req = await fetch(`api/termo/get/${idUser}`);
