@@ -46,7 +46,6 @@ export async function POST(req: Request) {
     const ValorCert = construtoraInfo?.data.valor_cert
       ? construtoraInfo?.data.valor_cert
       : 0;
-    
 
     // CSV
     const separarPorEmpreendimentoId = () => {
@@ -61,7 +60,7 @@ export async function POST(req: Request) {
               acc[empreendimentoId] = {
                 nome: item.empreedimento.nome,
                 cidade: item.empreedimento.cidade,
-                itens: []
+                itens: [],
               };
             }
             acc[empreendimentoId].itens.push(item);
@@ -96,7 +95,7 @@ export async function POST(req: Request) {
         const valor = ValorCert * item.certificado;
         const ValorCertFormatado = valor.toLocaleString("pt-BR", {
           style: "currency",
-          currency: "BRL"
+          currency: "BRL",
         });
         const linha = [
           index + 1,
@@ -110,7 +109,7 @@ export async function POST(req: Request) {
           "A3PF - Nuvem",
           item.type_validacao === "VIDEO CONF" ? "VIDEO" : "PRESENCIAL",
           item.certificado,
-          ValorCertFormatado
+          ValorCertFormatado,
         ].join(";");
         csvContent += linha + "\n";
       });
@@ -128,10 +127,10 @@ export async function POST(req: Request) {
       {
         error: false,
         message: "OK",
-        data: { csvContent, csvName }
+        data: { csvContent, csvName },
       },
       {
-        status: 200
+        status: 200,
       }
     );
   } catch (error: any) {

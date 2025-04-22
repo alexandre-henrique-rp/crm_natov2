@@ -1,6 +1,4 @@
-import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth_confg";
 
 export async function PUT(
   request: Request,
@@ -11,7 +9,7 @@ export async function PUT(
     console.log("🚀 ~ data:", data);
     const { id } = params;
     console.log("🚀 ~ id:", id);
-    const session = await getServerSession(auth);
+    const session = await GetSessionServer();
 
     if (!session) {
       return new NextResponse("Unauthorized", { status: 401 });

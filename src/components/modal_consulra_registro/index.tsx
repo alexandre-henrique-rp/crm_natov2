@@ -1,5 +1,3 @@
-/* eslint-disable react/no-children-prop */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Box,
   Button,

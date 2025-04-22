@@ -23,7 +23,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hook/useSession";
 import React, { useEffect, useState } from "react";
 
 interface CreateChamadoProps {
@@ -47,8 +47,8 @@ export default function CreateChamado({ id }: CreateChamadoProps) {
   };
 
   useEffect(() => {
-    setUser(session.data?.user);
-  }, [session.data?.user]);
+    setUser(session);
+  }, [session]);
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const droppedFiles = event.dataTransfer.files;

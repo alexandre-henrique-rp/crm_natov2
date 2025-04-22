@@ -3,7 +3,7 @@ import { Button, HStack, Text } from "@chakra-ui/react";
 import { MdErrorOutline } from "react-icons/md"; // Ícone de alerta
 import { useEffect, useState } from "react";
 import { keyframes } from "@emotion/react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hook/useSession";
 
 // Animação para o efeito de piscar
 const blinkAnimation = keyframes`
@@ -15,7 +15,7 @@ const blinkAnimation = keyframes`
 export default function BotaoPageChamados() {
     const [qtdChamadosAberto, setQtdChamadosAberto] = useState<number>(0);
     const session = useSession();
-    const user = session?.data?.user;
+    const user = session;
     
     useEffect(() => {
         async function fetchData() {

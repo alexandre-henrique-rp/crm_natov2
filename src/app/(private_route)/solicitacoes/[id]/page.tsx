@@ -1,6 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import { getServerSession } from "next-auth";
-import { auth } from "@/lib/auth_confg";
+import { GetSessionServer } from "@/lib/auth_confg";
 import { Metadata } from "next";
 import AlertProvider from "@/provider/AlertProvider";
 import { CardUpdateSolicitacao } from "@/components/card_Update_solicitacao";
@@ -9,7 +8,7 @@ import CardListAlertCliente from "@/components/card_list_alert_cliente";
 const Requestes = async (id: string) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/solicitacao/${id}`;
-    const session = await getServerSession(auth);
+    const session = await GetSessionServer();
     const request = await fetch(url, {
       method: "GET",
       headers: {
@@ -21,7 +20,8 @@ const Requestes = async (id: string) => {
       throw new Error("Erro");
     }
     const data = await request.json();
-    return data;
+    // Garante que o objeto seja serializável e plain object
+    return JSON.parse(JSON.stringify(data));
   } catch (error) {
     console.log(error);
     return error;
@@ -31,7 +31,7 @@ const Requestes = async (id: string) => {
 const RequestAlert = async (id: string) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/alerts/get/cadastro/${id}`;
-    const session = await getServerSession(auth);
+    const session = await GetSessionServer();
     const request = await fetch(url, {
       method: "GET",
       headers: {
@@ -47,10 +47,12 @@ const RequestAlert = async (id: string) => {
       throw new Error("Erro");
     }
     const data = await request.json();
-    return data;
+    // Garante que o objeto seja serializável e plain object
+    return JSON.parse(JSON.stringify(data));
   } catch (error) {
     console.log(error);
-    return error;
+    // Nunca retorne o objeto de erro para o cliente
+    return null;
   }
 };
 
@@ -73,7 +75,7 @@ export default async function perfilPage({
   params: { id: string };
 }) {
   const { id } = params;
-  const session = await getServerSession(auth);
+  const session = await GetSessionServer();
   const user = session?.user;
 
   const data = await Requestes(id);

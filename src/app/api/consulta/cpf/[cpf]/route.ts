@@ -1,8 +1,4 @@
-"use server";
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
 
 export async function GET(
   request: Request,
@@ -10,32 +6,14 @@ export async function GET(
 ) {
   try {
     const { cpf } = params;
-    const data = await prisma.nato_solicitacoes_certificado.count({
-      where: {
-        cpf: {
-          equals: cpf
-        }
-      }
-    });
-
-    const solicitacao = await prisma.nato_solicitacoes_certificado.findMany({
-      where: {
-        cpf: {
-          equals: cpf
-        }
-      }
-    });
-    if (data > 0) {
+    const data = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/get-infos/checkcpf/${cpf}`);
+    const response = await data.json();
+    if (response.error) {
       return NextResponse.json(
-        {
-          message: "O CPF informado já está registrado.",
-          cpf: true,
-          solicitacoes: solicitacao
-        },
+        { message: response.message, cpf: true, solicitacoes: [] },
         { status: 200 }
       );
     }
-
     return NextResponse.json(
       { message: "Você pode prosseguir com o cadastro.", cpf: false, solicitacoes: [] },
       { status: 200 }

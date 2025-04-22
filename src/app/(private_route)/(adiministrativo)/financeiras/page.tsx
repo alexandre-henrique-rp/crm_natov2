@@ -1,7 +1,6 @@
 "use client";
-import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 import Financeiras from "@/components/financeirasCard";
-import { Box, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
+import { Box, Divider, Flex, Heading, Link } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 export default function PainelFinanceiro() {
@@ -14,10 +13,10 @@ export default function PainelFinanceiro() {
   const FetchData = async () => {
     try {
       const req = await fetch("/api/financeira/getall");
+      const res = await req.json();
       if (!req.ok) {
         setDados([]);
       }
-      const res = await req.json();
       setDados(res);
     } catch (error) {
       console.error("Erro ao buscar dados das construtoras:", error);
@@ -33,12 +32,9 @@ export default function PainelFinanceiro() {
         py={5}
         flexDir={"column"}
       >
-        <Flex w={"100%"} justifyContent={"space-around"}>
+        <Flex w={"100%"} justifyContent={"space-between"}>
           <Flex gap={2}>
-            <Box zIndex={1} alignSelf="baseline" position="initial">
-              <BotaoRetorno rota="/" />
-            </Box>
-            <Heading> </Heading>
+            <Heading fontSize={"25px"}>CCAs</Heading>
           </Flex>
           <Flex gap={5}>
             <Link
@@ -56,17 +52,12 @@ export default function PainelFinanceiro() {
                 boxShadow={"lg"}
                 cursor={"pointer"}
               >
-                Criar Financeira
+                Criar novo CCA
               </Box>
             </Link>
           </Flex>
         </Flex>
         <Divider my={5} />
-        <Box ml={4}>
-          <Text fontSize="25px" fontWeight="bold" color="#333333">
-            FINANCEIRAS CADASTRADAS
-          </Text>
-        </Box>
         <Box w={"100%"}>
           <Flex
             w={"100%"}

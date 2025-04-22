@@ -17,8 +17,11 @@ export default function CardListAlertCliente({ Id, DataAlert, user}: SetDataProp
 
   useEffect(() => {
     if (Alert) RequesteAlert();
+    if (DataAlert &&DataAlert.length > 0) {
+      setData(DataAlert);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Alert]);
+  }, [Alert, DataAlert]);
 
   const RequesteAlert = async () => {
     const req = await fetch(`/api/alerts/solicitacao/${Id}`, {
@@ -33,12 +36,6 @@ export default function CardListAlertCliente({ Id, DataAlert, user}: SetDataProp
       setData(res);
     }
   };
-
-  useEffect(() => {
-    if (DataAlert.length > 0) {
-      setData(DataAlert);
-    }
-  }, [DataAlert]);
 
   const AtualizarAlert = (e: number) => {
     if (e === 1) RequesteAlert();

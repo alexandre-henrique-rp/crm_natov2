@@ -21,7 +21,7 @@ import {
   Alert,
   AlertIcon
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hook/useSession";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loading from "@/app/loading";
@@ -63,8 +63,8 @@ export default function SolicitacaoForm({
   const [Logwhats, setLogwhats] = useState<string>('');
   const toast = useToast();
   const router = useRouter();
-  const { data: session } = useSession();
-  const user = session?.user;
+  const session = useSession();
+  const user = session;
 
   const handlesubmit = async () => {
     if (
@@ -159,7 +159,6 @@ export default function SolicitacaoForm({
           financeiro: Number(FinanceiraID),
           ...(Logwhats && {obs: Logwhats})
         };
-        console.log("🚀 ~ handlesubmit ~ data:", data);
   
         try {
           setLoad(true);
@@ -185,7 +184,6 @@ export default function SolicitacaoForm({
             setLoad(false);
             router.push("/home");
           } else {
-            console.log("🚀 ~ handlesubmit ~ retorno:", retorno);
             toast({
               title: "Erro",
               description: retorno.message[1],
@@ -196,7 +194,7 @@ export default function SolicitacaoForm({
             setLoad(false);
           }
         } catch (error) {
-          console.log("🚀 ~ handlesubmit ~ error:", error);
+          console.log("🚀 ~ form_solicitacao/relacionamento ~ error:", error);
           toast({
             title: "Erro",
             description: "Erro ao enviar solicitacao",

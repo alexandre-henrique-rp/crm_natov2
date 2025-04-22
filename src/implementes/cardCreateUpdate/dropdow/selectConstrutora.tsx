@@ -1,7 +1,7 @@
 'use client';
 import useUserCompraContext from "@/hook/useUserCompraContext";
 import { Select, SelectProps } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hook/useSession";
 import { useEffect, useState } from "react";
 
 type DropConstrutoraProps = SelectProps
@@ -9,8 +9,8 @@ type DropConstrutoraProps = SelectProps
 
 export default function SelectConstrutora({ ...props }: DropConstrutoraProps) {
     const [Data, setData] = useState<any>([]);
-    const {data: session} = useSession();
-    const user = session?.user;
+    const session = useSession();
+    const user = session;
     const hierarquia  = user?.hierarquia;
     const { setContrutoraCX } = useUserCompraContext();
 

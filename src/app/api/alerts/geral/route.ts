@@ -1,10 +1,9 @@
-import { getServerSession } from "next-auth";
+import { GetSessionServer } from "@/lib/auth_confg";
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth_confg";
 
 export async function GET() {
   try {
-    const session = await getServerSession(auth);
+    const session = await GetSessionServer();
     if (!session)
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
@@ -28,7 +27,7 @@ export async function GET() {
       .filter((alert: any) => alert.status === true)
       .filter(
         (alert: any) =>
-          alert.corretor === session?.user.id || alert.corretor === null
+          alert.corretor === session?.id || alert.corretor === null
       );
 
     return NextResponse.json(filterData, { status: 200 });

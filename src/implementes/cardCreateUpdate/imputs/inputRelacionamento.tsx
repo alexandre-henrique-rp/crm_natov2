@@ -16,7 +16,7 @@ import {
   PopoverHeader,
   PopoverTrigger,
   Text,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -44,8 +44,8 @@ export function InputRelacionamento({
     const request = await fetch(`/api/consulta/cpf/${Relacionamento}`, {
       method: "GET",
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await request.json();
@@ -61,8 +61,8 @@ export function InputRelacionamento({
           email: retorno.email,
           createdAt: retorno.createdAt,
           dt_nascimento: retorno.dt_nascimento,
-          telefone: retorno.telefone
-        }
+          telefone: retorno.telefone,
+        },
       ];
       setRelacionamentoData(ArrayData);
 
@@ -71,7 +71,7 @@ export function InputRelacionamento({
         description: "Relacionamento adicionado com sucesso",
         status: "success",
         duration: 3000,
-        isClosable: true
+        isClosable: true,
       });
       setRelacionamento("");
     } else {
@@ -80,7 +80,7 @@ export function InputRelacionamento({
         description: "Cpf não tem cadastro no sistema",
         status: "error",
         duration: 3000,
-        isClosable: true
+        isClosable: true,
       });
     }
   };
@@ -93,7 +93,7 @@ export function InputRelacionamento({
       description: "Relacionamento excluído com sucesso",
       status: "success",
       duration: 3000,
-      isClosable: true
+      isClosable: true,
     });
   };
 
@@ -133,7 +133,10 @@ export function InputRelacionamento({
               _hover={{ color: "teal.700" }}
             >
               Relacionamentos (
-              {RelacionamentoData.length > 0 && RelacionamentoData.length})
+              {RelacionamentoData &&
+                RelacionamentoData.length > 0 &&
+                RelacionamentoData.length}
+              )
             </Button>
           </PopoverTrigger>
           <PopoverContent>
@@ -141,7 +144,8 @@ export function InputRelacionamento({
             <PopoverCloseButton />
             <PopoverHeader>Lista de Relacionamento</PopoverHeader>
             <PopoverBody>
-              {RelacionamentoData.length > 0 &&
+              {RelacionamentoData &&
+                RelacionamentoData.length > 0 &&
                 RelacionamentoData.map((item: any) => (
                   <Flex justifyContent={"space-between"} key={item?.id}>
                     <Link
@@ -161,7 +165,7 @@ export function InputRelacionamento({
                     />
                   </Flex>
                 ))}
-              {RelacionamentoData.length == 0 && (
+              {RelacionamentoData && RelacionamentoData.length == 0 && (
                 <Text fontWeight={"bold"}>
                   Cliente não possui relacionamento
                 </Text>
@@ -173,7 +177,7 @@ export function InputRelacionamento({
       <Box hidden>
         <Input
           value={JSON.stringify(
-            RelacionamentoData.map((item: any) => item?.cpf)
+            RelacionamentoData && RelacionamentoData.map((item: any) => item?.cpf)
           )}
           name="Relacionamento"
           hidden

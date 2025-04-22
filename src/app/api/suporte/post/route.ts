@@ -1,4 +1,3 @@
-// src/app/api/suporte/upload/route.ts
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {

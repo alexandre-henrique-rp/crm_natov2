@@ -1,40 +1,33 @@
 "use client";
 import {
   Box,
-  Button,
   Flex,
   IconButton,
   Img,
-  Link,
   Menu,
   MenuButton,
-  MenuItem,
   MenuList,
-  useMediaQuery,
 } from "@chakra-ui/react";
-import BotaoSair from "../bt_sair";
-import { useSession } from "next-auth/react";
+  import { useSession } from "@/hook/useSession";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { HiOutlineLogout } from "react-icons/hi";
 import BotaoMenu from "../bt_menu";
 import BotaoMobileMenu from "../bt_mobile_menu";
 
 export default function BotaoJuncao() {
-  const { data: session } = useSession();
-  const but = session?.user?.hierarquia;
+  const session = useSession();
+  const but = session?.hierarquia;
 
   return (
     <Flex
-      h={"12vh"}
       justifyContent={"space-between"}
       py={3}
       w={"100%"}
       bg={"#00713D"}
-      px={20}
+      px={40}
     >
-      <Flex gap={1} w={"60%"}>
-        <Box w={"15%"}>
-          <Img src="/logo.png" alt="Logo" />
+      <Flex gap={10} w={"60%"} alignItems={"center"}>
+        <Box w={"7rem"}>
+          <Img src="/SisnatoLogoL.png" alt="Logo" width={"100%"}  />
         </Box>
         <Box display={{ base: "flex", md: "none" }}>
           <Menu>

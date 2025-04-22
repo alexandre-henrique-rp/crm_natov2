@@ -1,5 +1,4 @@
-import { auth } from "@/lib/auth_confg";
-import { getServerSession } from "next-auth";
+import { GetSessionServer } from "@/lib/auth_confg";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -7,7 +6,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(auth)
+    const session = await GetSessionServer();
     const { id } = params;
 
     if (!session?.token) {

@@ -11,23 +11,21 @@ import {
   useDisclosure,
   Flex,
   Link,
-  Checkbox
+  Checkbox,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { FiFileText } from "react-icons/fi";
 import { useToast } from "@chakra-ui/react";
+import { useSession } from "@/hook/useSession";
 
 export default function TermosPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { data: session } = useSession();
+  const session = useSession();
   const [check, setCheck] = useState(false);
   const toast = useToast();
 
-  const termosAceitos = session?.user.termos;
-  console.log("🚀 ~ TermosPage ~ termosAceitos:", termosAceitos)
-  const idUser = Number(session?.user.id);
-  console.log("🚀 ~ TermosPage ~ idUser:", idUser)
+  const termosAceitos = session?.termos;
+  const idUser = Number(session?.id);
 
   useEffect(() => {
     if (!termosAceitos && idUser) {
@@ -50,7 +48,7 @@ export default function TermosPage() {
             description: error.message,
             status: "error",
             duration: 8000,
-            isClosable: true
+            isClosable: true,
           });
         }
       })();
@@ -66,9 +64,9 @@ export default function TermosPage() {
       const data = await fetch(`api/termo/update/${idUser}`, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ termoAceito: check })
+        body: JSON.stringify({ termoAceito: check }),
       });
       const res = await data.json();
 
@@ -80,7 +78,7 @@ export default function TermosPage() {
         title: "Política de Privacidade e Termos de uso Aceito!",
         description: res.message,
         status: "success",
-        duration: 5000
+        duration: 5000,
       });
     } catch (error: any) {
       console.log(error);
@@ -88,7 +86,7 @@ export default function TermosPage() {
         title: "Erro!",
         description: `Ops ocorreu um erro inesperado erro: ${error.message}`,
         status: "error",
-        duration: 8000
+        duration: 8000,
       });
       setTimeout(() => {
         onClose();

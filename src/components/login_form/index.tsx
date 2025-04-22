@@ -9,7 +9,6 @@ import {
   Flex,
   CircularProgress
 } from "@chakra-ui/react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SenhaComponent } from "../Senha";
@@ -23,19 +22,19 @@ export const FormLogin = () => {
 
   const handlesubmit = async () => {
     setLoading(true);
-    const res: any = await signIn("credentials", {
-      email: username,
-      password: password,
-      redirect: false
+    const res: any = await fetch('/api/auth', {
+      method: "POST",
+      body: JSON.stringify({ username, password }),
     });
+    const data = await res.json();
     if (res.status !== 200) {
-      setLoading(false);
       toast({
         title: "Erro!",
-        description: "Usuario ou senha inválidos",
+        description: `${data.message}`,
         status: "error",
         duration: 5000
       });
+      setLoading(false);
     } else {
       router.replace("/");
     }

@@ -18,7 +18,7 @@ export const IconsPadrão = [
   {
     id: 3,
     label: 'Construtora',
-    path: '/construtora',
+    path: '/construtoras',
     icon: <MdOutlineHomeWork />
   },
   {

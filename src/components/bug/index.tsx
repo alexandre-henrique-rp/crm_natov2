@@ -1,12 +1,12 @@
 "use client";
+import { useSession } from "@/hook/useSession";
 import { Box } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export const BugReport = () => {
   const [bug, setBug] = useState<any>([]);
-  const { data: session } = useSession();
-  const user = session?.user;
+  const session = useSession();
+  const user = session;
 
   useEffect(() => {
     (async () => {
@@ -26,7 +26,7 @@ export const BugReport = () => {
           textAlign={"center"}
         >
           {bug.descricao}
-          {user?.hierarquia === "ADM" && <p> - {bug.createdAt}</p>}
+          {/* {user?.hierarquia === "ADM" && <p> - {bug.createdAt}</p>} */}
         </Box>
       </>
     );

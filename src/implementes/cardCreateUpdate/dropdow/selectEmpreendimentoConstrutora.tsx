@@ -1,6 +1,5 @@
 "use client";
 
-import GetAllConstrutoras from "@/actions/construtora/service/getAllContrutoras";
 import useEmpreendimentoContext from "@/hook/useEmpreendimentoContext";
 import { Flex, Select, SelectProps } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
@@ -40,9 +39,10 @@ export function SelectEmpreendimentoConstrutora({
 
   useEffect(() => {
     const getConstrutora = async () => {
-      const req = await GetAllConstrutoras();
-      if (!req.error) {
-        const data = req.data;
+      const req = await fetch("/api/construtora/getall");
+      const res = await req.json();
+      if (!req.ok) {
+        const data = res.message;
         if (data) {
           setConstrutoraData(data);
         }

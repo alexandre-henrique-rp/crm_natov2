@@ -2,17 +2,18 @@
 
 import { Flex, Box, Text } from "@chakra-ui/react";
 import TextHome from "./text";
-import { useSession } from "next-auth/react";
+
 import { useState } from "react";
 import { SelectComponent } from "../select";
 import { ModalComponent } from "../modal_alert";
 import BotaoPageChamados from "../botoes/btn_page_chamados";
+import { useSession } from "@/hook/useSession";
 
 export default function PerfilHome() {
   const [IdEmpreedimento, setIdEmpreedimento] = useState(0);
   const [IdConstrutora, setIdConstrutora] = useState(0);
-  const { data: session } = useSession();
-  const user = session?.user;
+  const session = useSession();
+  const user = session;
 
   //   setIdEmpreedimento(id);
   // };
@@ -59,7 +60,7 @@ export default function PerfilHome() {
                     nome: item.fantasia
                   }))}
                   onValue={SetIdConstrutora}
-                  hierarquia={session?.user.hierarquia}
+                  hierarquia={session?.hierarquia}
                   tag={""}
                   DefaultValue={IdConstrutora}
                 />

@@ -1,7 +1,7 @@
 "use client";
 
 import { Select } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hook/useSession";
 import { useEffect, useState } from "react";
 
 interface SelectProps {
@@ -17,8 +17,8 @@ export const SelectCorretor = ({
 }: SelectProps) => {
   const [Data, setData] = useState([]);
   const [id, setId] = useState(0);
-  const {data: session} = useSession();
-  const user = session?.user;
+  const session = useSession();
+  const user = session;
 
   useEffect(() => {
     if (setCorretor) {

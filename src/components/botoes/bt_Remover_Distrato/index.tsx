@@ -1,6 +1,7 @@
 "use client";
+import { useSession } from "@/hook/useSession";
 import { Button, useToast } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { BeatLoader } from "react-spinners";
@@ -11,8 +12,8 @@ interface BtRemoverDistratoProps {
 export default function BtRemoverDistrato({ id }: BtRemoverDistratoProps) {
   const [Loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
-  const { data: session } = useSession();
-  const User = session?.user;
+  const session = useSession();
+  const User = session;
   const route = useRouter()
 
  

@@ -1,6 +1,5 @@
 'use client';
 
-import { IniciarCalcelarAtendimento } from "@/actions/solicitacao/service/IniciarCalcelarAtendimento";
 import { Button, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 
@@ -22,10 +21,16 @@ export default function BtnIniciarAtendimento({
   const toast = useToast();
 
   const handleIniciarAtendimento = async () => {
-    const req = await IniciarCalcelarAtendimento(id);
-    if (req.error) {
+    const req = await fetch(`/api/solicitacao/atendimento/${id}`,{
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const res = await req.json();
+    if (!req.ok) {
       toast({
-        title: req.message,
+        title: res.message,
         status: "error",
         duration: 2000,
         isClosable: true,
@@ -35,7 +40,7 @@ export default function BtnIniciarAtendimento({
     }
 
     toast({
-      title: req.message,
+      title: res.message,
       status: "success",
       duration: 2000,
       isClosable: true,
@@ -46,10 +51,16 @@ export default function BtnIniciarAtendimento({
   };
 
   const handleCancelarAtendimento = async () => {
-    const req = await IniciarCalcelarAtendimento(id);
-    if (req.error) {
+    const req = await fetch(`/api/solicitacao/atendimento/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const res = await req.json();
+    if (!req.ok) {
       toast({
-        title: req.message,
+        title: res.message,
         status: "error",
         duration: 2000,
         isClosable: true,
@@ -59,7 +70,7 @@ export default function BtnIniciarAtendimento({
     }
 
     toast({
-      title: req.message,
+      title: res.message,
       status: "warning",
       duration: 2000,
       isClosable: true,

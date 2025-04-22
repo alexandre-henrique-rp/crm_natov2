@@ -1,11 +1,10 @@
 "use server";
 
-import { auth } from "@/lib/auth_confg";
-import { getServerSession } from "next-auth";
+import { GetSessionServer } from "@/lib/auth_confg";
 
 export async function UpdateSolicitacao(_: any, data: FormData) {
   console.log("🚀 ~ UpdateSolicitacao ~ data:", data)
-  const session = await getServerSession(auth);
+  const session = await GetSessionServer();
   if (!session) {
     return {
       error: true,
@@ -19,7 +18,7 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
   console.log("🚀 ~ UpdateSolicitacao ~ id:", id)
   const Ativo = data.get("StatusAtivo") === "true" ? true : false;
   const corretor = Number(data.get("corretor")) || 0;
-  const hierarquia = session?.user.hierarquia;
+  const hierarquia = session?.hierarquia;
   const avaliar = !Ativo && corretor > 0 && hierarquia === "ADM" ? true : false;
   const Avaliar2 =
     !Ativo && corretor > 0 && hierarquia !== "ADM" ? true : false;
@@ -31,15 +30,15 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
   const Dados = {
     ...(Ativo && { ativo: Ativo }),
     ...(Ativo &&
-      session?.user.hierarquia !== "ADM" && {
-        corretor: Number(session?.user?.id)
+      session?.hierarquia !== "ADM" && {
+        corretor: Number(session.id)
       }),
     ...(Avaliar2 && {
-      corretor: Number(session?.user?.id),
+      corretor: Number(session.id),
       ativo: true
     }),
     ...(Ativo &&
-      session?.user.hierarquia === "ADM" && {
+      session?.hierarquia === "ADM" && {
         corretor: Number(data.get("corretor"))
       }),
     ...(avaliar && {
@@ -117,7 +116,7 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
 }
 
 async function PostTags(value: any, id: number) {
-  const session = await getServerSession(auth);
+  const session = await GetSessionServer();
   const tags = JSON.parse(value);
 
   await fetch(

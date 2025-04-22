@@ -1,14 +1,13 @@
 'use server'
 import { SuporteTagsOptions } from "@/data/suporte";
-import { auth } from "@/lib/auth_confg";
-import { getServerSession } from "next-auth";
+import { GetSessionServer } from "@/lib/auth_confg";
 
 export default async function UpdateService(id: number, tagId: number, descricao: string, urlSuporte: any) {
   
   const tagObj = SuporteTagsOptions.find((tag) => tag.id === tagId)
   const tag = tagObj ? tagObj.label : ''
 
-  const session = await getServerSession(auth);
+  const session = await GetSessionServer();
 
   if (!session) {
     return { error: true, message: "Unauthorized", data: null };

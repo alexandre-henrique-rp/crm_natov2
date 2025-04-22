@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@chakra-ui/react";
-import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { HiOutlineLogout } from "react-icons/hi";
 
@@ -9,7 +8,6 @@ export default function BotaoSair() {
 
   const HandleSair = async (e: any) => {
     e.preventDefault();
-    signOut({ redirect: false });
     router.push("/login");
   };
 

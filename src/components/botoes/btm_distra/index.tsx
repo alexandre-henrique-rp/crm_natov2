@@ -13,7 +13,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hook/useSession";
 import { MouseEvent } from "react";
 import { BsFillTrashFill } from "react-icons/bs";
 import { IoIosArrowBack } from "react-icons/io";
@@ -27,8 +27,8 @@ interface BotoesFunctionProps {
 export default function BtmDistrato({ id, distrato, exclude }: BotoesFunctionProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-  const{ data: session } = useSession();
-  const User = session?.user;
+  const session = useSession();
+  const User = session;
   const HandleDelet = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 

@@ -27,10 +27,9 @@ export function CardFormComponent(props: CardFormProps) {
     if (state?.error) {
       setIsError(true);
     } else if (state?.error == null) {
-      
     } else if (state?.id) {
       setIsSuccess(true);
-    }else {
+    } else {
       setIsSuccess(true);
     }
   }, [state]);
@@ -45,7 +44,7 @@ export function CardFormComponent(props: CardFormProps) {
         isClosable: true,
         position: "top-right",
       });
-     route.refresh();
+      route.refresh();
       setIsSuccess(false); // Reset state after showing toast
     }
     if (isError) {

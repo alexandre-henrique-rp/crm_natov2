@@ -1,9 +1,10 @@
 "use client";
-import { CheckCpf } from "@/actions/getInfo/service/check_cpf";
+
 import Loading from "@/app/loading";
 import CpfMask from "@/components/cpf_mask";
 import VerificadorFileComponent from "@/components/file";
 import { Whatsapp } from "@/components/whatsapp";
+import { useSession } from "@/hook/useSession";
 import {
   Alert,
   AlertIcon,
@@ -19,9 +20,8 @@ import {
   SimpleGrid,
   Stack,
   Switch,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -45,11 +45,11 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
   const [Sms, setSms] = useState<boolean>(true);
   const [UploadRgUrl, setUploadRgUrl] = useState<string>("");
   const [UploadCnhUrl, setUploadCnhUrl] = useState<string>("");
-  const [Logwhats, setLogwhats] = useState<string>('');
+  const [Logwhats, setLogwhats] = useState<string>("");
   const toast = useToast();
   const router = useRouter();
-  const { data: session } = useSession();
-  const user = session?.user;
+  const session = useSession();
+  const user = session;
 
   useEffect(() => {
     if (SetValue.cpfdois) {
@@ -58,14 +58,14 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
   }, [SetValue]);
 
   const handlesubmit = () => {
-    if(SetValue.cpf.replace(/\W+/g, "") === cpf.replace(/\W+/g, "")){
+    if (SetValue.cpf.replace(/\W+/g, "") === cpf.replace(/\W+/g, "")) {
       toast({
         title: "Cpf Duplicado",
         description: "O cpf do principal não pode ser igual ao do relacionado",
         status: "error",
         duration: 15000,
         isClosable: true,
-        position: "top-right"
+        position: "top-right",
       });
     } else if (!nome || !email || !tel || !email || !DataNascimento) {
       const capos = [];
@@ -88,7 +88,7 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
         status: "error",
         duration: 15000,
         isClosable: true,
-        position: "top-right"
+        position: "top-right",
       });
     } else {
       const dadossuperior: solictacao.SolicitacaoPost = {
@@ -107,7 +107,7 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
         relacionamento: SetValue.relacionamento,
         rela_quest: SetValue.rela_quest,
         financeiro: SetValue.financeiro,
-        ...(SetValue.obs && { obs: SetValue.obs })
+        ...(SetValue.obs && { obs: SetValue.obs }),
       };
       const dados: solictacao.SolicitacaoPost = {
         url: window.location.origin,
@@ -125,20 +125,23 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
         relacionamento: SetValue.cpf ? [SetValue.cpf] : [],
         rela_quest: SetValue.rela_quest ? true : false,
         financeiro: SetValue.financeiro,
-        ...(Logwhats && { obs: Logwhats })
+        ...(Logwhats && { obs: Logwhats }),
       };
 
       const data = [dados, dadossuperior];
       setLoad(true);
       data.map(async (item: any, index: number) => {
-        const verificador = await CheckCpf(item.cpf);
-        if (verificador.error) {
+        const verificador = await fetch(
+          `/api/consulta/cpf/${item.cpf.replace(/\W+/g, "")}`
+        );
+        const retorno = await verificador.json();
+        if (!verificador.ok) {
           toast({
             title: "Erro",
-            description: verificador.message,
+            description: retorno.message,
             status: "error",
             duration: 3000,
-            isClosable: true
+            isClosable: true,
           });
           setLoad(false);
           return null;
@@ -148,9 +151,9 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
             {
               method: "POST",
               headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
               },
-              body: JSON.stringify(item)
+              body: JSON.stringify(item),
             }
           );
           if (response.ok) {
@@ -159,7 +162,7 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
               description: "Solicitações enviadas com sucesso",
               status: "success",
               duration: 3000,
-              isClosable: true
+              isClosable: true,
             });
 
             if (data.length === index + 1) {
@@ -174,7 +177,7 @@ export default function RelacionadoForm({ SetValue }: RelacionadoProps) {
               description: msg,
               status: "error",
               duration: 3000,
-              isClosable: true
+              isClosable: true,
             });
             setLoad(false);
             return null;

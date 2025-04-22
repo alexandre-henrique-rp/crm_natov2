@@ -1,12 +1,11 @@
-import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth_confg";
+import { GetSessionServer } from "@/lib/auth_confg";
 
 /**
  * GET /api/solicitacao
- * 
+ *
  * Busca todas as solicita es.
- * 
+ *
  * @param {string} nome - Nome da solicita o.
  * @param {string} andamento - Andamento da solicita o.
  * @param {string} construtora - Id da construtora.
@@ -15,7 +14,7 @@ import { auth } from "@/lib/auth_confg";
  * @param {string} id - Id da solicita o.
  * @param {string} pagina - P gina da lista.
  * @example = /api/solicitacao/getall?nome=nome&andamento=andamento&construtora=construtora&empreedimento=empreedimento&financeiro=financeiro&id=id&pagina=pagina
- * 
+ *
  * @returns {Promise<NextResponse>}
  */
 export async function GET(request: Request): Promise<NextResponse> {
@@ -53,33 +52,33 @@ export async function GET(request: Request): Promise<NextResponse> {
       Filter += `pagina=${pagina}`;
     }
 
-    const session = await getServerSession(auth)
+    const session = await GetSessionServer();
     const token = session?.token;
 
     if (!session) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const expiration = session ? session.expiration : 0;
-    const expired = Date.now() > expiration * 1000;
+    //verificar se token expirou
+    const expiration = session ? session.exp : 0;
+    const expired = Date.now() > (expiration as number) * 1000;
 
     if (expired) {
-      return NextResponse.redirect(new URL('/login', request.url))
+      return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    const url = Filter ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/solicitacao?${Filter}` : `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/solicitacao`;
+    const url = Filter
+      ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/solicitacao?${Filter}`
+      : `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/solicitacao`;
 
-    const user = await fetch(
-      url,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        cache: "no-store",
-      }
-    );
+    const user = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
 
     if (!user.ok) {
       return new NextResponse("Invalid credentials", { status: 401 });

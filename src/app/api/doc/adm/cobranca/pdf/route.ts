@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       protocolo,
       nota_fiscal,
       Inicio,
-      Fim
+      Fim,
     } = data;
 
     if (solicitacao.length === 0) {
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
         solicitacaoIds,
         construtora,
         Inicio,
-        Fim
+        Fim,
       });
       GetProtocolo = postData.data.protocolo;
     }
@@ -86,27 +86,27 @@ export async function POST(req: Request) {
         DadosCnpj?.data.bairro
       }, ${DadosCnpj?.data.municipio} - ${
         DadosCnpj?.data.uf
-      }, ${DadosCnpj?.data.cep?.replace(/(\d{5})(\d{3})/, "$1-$2")}`
+      }, ${DadosCnpj?.data.cep?.replace(/(\d{5})(\d{3})/, "$1-$2")}`,
     };
-    
-    const ValorCert = construtoraInfo?.data.valor_cert
-    ? construtoraInfo?.data.valor_cert
-    : 0;
-    
-        const ValorTotal = solicitacao.reduce(
-          (acc: number, item: any) => acc + (ValorCert * item.certificado), 0
-        );
 
+    const ValorCert = construtoraInfo?.data.valor_cert
+      ? construtoraInfo?.data.valor_cert
+      : 0;
+
+    const ValorTotal = solicitacao.reduce(
+      (acc: number, item: any) => acc + ValorCert * item.certificado,
+      0
+    );
 
     // const ValorTotal = ValorCert ? solicitacao.length * ValorCert : 0;
     const ValorCertFormatado = ValorCert.toLocaleString("pt-BR", {
       style: "currency",
-      currency: "BRL"
+      currency: "BRL",
     });
 
     const ValorTotalFormatado = ValorTotal.toLocaleString("pt-BR", {
       style: "currency",
-      currency: "BRL"
+      currency: "BRL",
     });
 
     const msg = `Certificados emitidos pelo "AR Interface certificador" no período de ${Inicio.split(
@@ -125,8 +125,10 @@ export async function POST(req: Request) {
       .reverse()
       .join("_")}.pdf`;
 
-      const calculo = solicitacao.reduce((acc: number, item: any) => acc + item.certificado, 0)
-
+    const calculo = solicitacao.reduce(
+      (acc: number, item: any) => acc + item.certificado,
+      0
+    );
 
     const pdf = await createForm(
       DadosConst,
@@ -142,11 +144,11 @@ export async function POST(req: Request) {
         message: "OK",
         data: {
           pdf,
-          pdfName
-        }
+          pdfName,
+        },
       },
       {
-        status: 200
+        status: 200,
       }
     );
   } catch (error: any) {

@@ -1,5 +1,3 @@
-import { auth } from "@/lib/auth_confg";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 

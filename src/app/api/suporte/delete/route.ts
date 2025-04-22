@@ -1,5 +1,3 @@
-// src/app/api/suporte/upload/route.ts
-'use server'
 import { NextResponse } from "next/server";
 
 export async function DELETE(request: Request) {

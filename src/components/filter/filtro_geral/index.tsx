@@ -2,7 +2,7 @@
 
 import { Box, Button, Flex, Input, Select } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hook/useSession";
 
 interface FiltroGeralProps {
   onData: any;
@@ -19,8 +19,8 @@ export const FiltroComponent = ({ onData }: FiltroGeralProps) => {
   const [DataConstrutora, setDataConstrutora] = useState<any>([]);
   const [DataFinanceira, setDataFinanceira] = useState<any>([]);
 
-  const { data: session } = useSession();
-  const user = session?.user;
+  const session = useSession();
+  const user = session;
 
   useEffect(() => {
     if (user?.hierarquia === "ADM") {

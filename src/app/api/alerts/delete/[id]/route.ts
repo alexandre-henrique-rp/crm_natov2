@@ -1,14 +1,14 @@
-import { auth } from "@/lib/auth_confg";
-import { getServerSession } from "next-auth";
+import { GetSessionServer } from "@/lib/auth_confg";
+
 import { NextResponse } from "next/server";
 
 export async function DELETE(
-  request: Request,
+  request: Request, 
   { params }: { params: { id: string } }
 ) {
   try {
     const { id } = params;
-    const session = await getServerSession(auth);
+    const session = await GetSessionServer();
 
     if (!session) {
       return new NextResponse("Unauthorized", { status: 401 });

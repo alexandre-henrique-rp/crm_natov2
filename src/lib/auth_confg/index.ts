@@ -1,165 +1,65 @@
-import { NextAuthOptions } from "next-auth";
-import { JWT } from "next-auth/jwt";
-import CredentialsProvider from "next-auth/providers/credentials";
+// servidor: biblioteca de auth (removido 'use server')
+import * as jose from "jose";
+import { cookies } from "next/headers";
 
-export const auth: NextAuthOptions = {
-  providers: [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        username: {
-          label: "Username",
-          type: "text",
-          placeholder: "123 de olivera 4"
-        },
-        password: { label: "Password", type: "password" }
-      },
-      async authorize(credentials: any) {
-        try {
-          const dados = {
-            username: credentials.email,
-            password: credentials.password
-          };
-          const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/auth`;
-          const res = await fetch(
-            url,
-            {
-              method: "POST",
-              body: JSON.stringify(dados),
-              headers: {
-                "Content-Type": "application/json"
-              }
-            }
-          );
+export async function OpenSessionToken(token: string) {
+  const secret = new TextEncoder().encode(process.env.JWT_SIGNING_PRIVATE_KEY);
+  const { payload } = await jose.jwtVerify(token, secret);
+  return payload;
+}
 
-          const retorno = await res.json();
-          console.log("🚀 ~ authorize ~ retorno:", retorno);
+export async function CreateSessionServer(payload = {}) {
+  const secret = new TextEncoder().encode(process.env.JWT_SIGNING_PRIVATE_KEY);
+  const jwt = await new jose.SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("4h")
+    .sign(secret);
 
-          const { token, user } = retorno;
+    const { exp } = await OpenSessionToken(jwt);
 
-          const {
-            id,
-            nome,
-            construtora,
-            telefone,
-            empreendimento,
-            hierarquia,
-            cargo,
-            reset_password,
-            Financeira,
-            termos
-          } = await user;
+    cookies().set("session-token", jwt, {
+      expires: (exp as number)*1000,
+      path: "/",
+      httpOnly: true,
+    });
+}
 
-          const response = {
-            jwt: token,
-            id: id,
-            name: nome,
-            construtora: construtora,
-            telefone: telefone,
-            empreendimento: empreendimento,
-            hierarquia: hierarquia,
-            cargo: cargo,
-            reset_password: reset_password,
-            Financeira: Financeira,
-            termos: termos
-          };
-          // console.log(response);
+export async function CreateSessionClient(payload = {}) {
+  const secret = new TextEncoder().encode(process.env.JWT_SIGNING_PRIVATE_KEY);
+  const jwt = await new jose.SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("4h")
+    .sign(secret);
 
-          if (!token || !id || !nome) {
-            throw new Error("Usuário e senha incorreto");
-            return null;
-          }
-          return response;
-        } catch (error) {
-          console.log(error);
-          return null;
-        }
-      }
-    })
-  ],
-  pages: {
-    signIn: "/login",
-    signOut: "/auth/signout"
-    // error: '/auth/error', // Error code passed in query string as ?error=
-    // verifyRequest: '/auth/verify-request', // (used for check email message)
-    // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
-  },
-  jwt: {
-    secret: process.env.JWT_SIGNING_PRIVATE_KEY
-  },
-  secret: process.env.NEXTAUTH_SECRET,
-  session: {
-    strategy: "jwt",
-    maxAge: 3 * 60 * 60 // 3 hours
-  },
-  callbacks: {
-    jwt: async ({
-      token,
-      user
-    }: {
-      token: JWT;
-      user: any;
-    }): Promise<any | null> => {
-      const isSignIn = !!user;
+    const { exp } = await OpenSessionToken(jwt);
 
-      const actualDateInSeconds = Math.floor(Date.now() / 1000);
-      const tokenExpirationInSeconds = 3 * 60 * 60; // 4 hours
-      const dateExpirationInSeconds =
-        actualDateInSeconds + tokenExpirationInSeconds;
+    cookies().set("session", jwt, {
+      expires: (exp as number)*1000,
+      path: "/",
+    });
+}
 
-      if (isSignIn) {
-        if (!user?.jwt || !user?.id || !user?.name) {
-          return null;
-        }
-
-        token.jwt = user.jwt;
-        token.id = user.id;
-        token.name = user.name;
-        token.construtora = user.construtora;
-        token.telefone = user.telefone;
-        token.empreendimento = user.empreendimento;
-        token.hierarquia = user.hierarquia;
-        token.cargo = user.cargo;
-        token.reset_password = user.reset_password;
-        token.Financeira = user.Financeira;
-        token.termos = user.termos;
-
-        token.expiration = dateExpirationInSeconds;
-      } else {
-        if (!token?.expiration) {
-          return null;
-        }
-      }
-
-      return token as unknown as JWT;
-    },
-    session: async ({
-      session,
-      token
-    }: {
-      session: any;
-      token: JWT;
-    }): Promise<any | null> => {
-      if (!token?.jwt || !token?.id || !token?.name || !token?.expiration) {
-        return null;
-      }
-
-      session.user = {
-        id: token.id as number,
-        name: token.name as string,
-        construtora: token.construtora as any[],
-        telefone: token.telefone as string,
-        empreendimento: token.empreendimento as any[],
-        hierarquia: token.hierarquia as string,
-        cargo: token.cargo as string,
-        reset_password: token.reset_password as boolean,
-        Financeira: token.Financeira as any[],
-        termos: token.termos as boolean
-      };
-
-      session.token = token.jwt as string;
-      session.expiration = token.expiration as number;
-      return session;
-    }
+export async function GetSessionClient() {
+  const token = cookies().get("session");
+  if (!token) {
+    return null;
   }
-};
+  const data = await OpenSessionToken(token.value);
+  return data;
+}
+
+export async function GetSessionServer() {
+  const token = cookies().get("session-token");
+  if (!token) {
+    return null;
+  }
+  const data = await OpenSessionToken(token.value);
+  return data;
+}
+
+export async function DeleteSession() {
+  cookies().delete("session");
+  cookies().delete("session-token");
+}

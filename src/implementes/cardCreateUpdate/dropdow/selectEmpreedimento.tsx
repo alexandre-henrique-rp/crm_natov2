@@ -1,7 +1,7 @@
 "use client";
 import useUserCompraContext from "@/hook/useUserCompraContext";
 import { Select, SelectProps } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hook/useSession";
 import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 
@@ -12,8 +12,8 @@ export default function SelectEmpreedimento({
 }: SelectEmpreedimentoProps) {
   const [Data, setData] = useState<any>([]);
   const [Loading, setLoading] = useState<boolean>(false);
-  const { data: session } = useSession();
-  const user = session?.user;
+  const session = useSession();
+  const user = session;
   const hierarquia = user?.hierarquia;
 
   const { ContrutoraCX, setEmpreedimentoCX } = useUserCompraContext();

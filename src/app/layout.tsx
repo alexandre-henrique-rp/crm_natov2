@@ -1,6 +1,5 @@
 import localFont from "next/font/local";
 import "./globals.css";
-import NextAuSessionProvider from "@/provider/NextAuSessionProvider";
 import { ProvidersChakra } from "@/provider/ChakraProviders";
 
 const geistSans = localFont({
@@ -22,9 +21,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <NextAuSessionProvider>
           <ProvidersChakra>{children}</ProvidersChakra>
-        </NextAuSessionProvider>
       </body>
     </html>
   );

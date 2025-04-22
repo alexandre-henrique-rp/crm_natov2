@@ -21,14 +21,13 @@ import {
   Td,
   Th,
   Thead,
-  Tooltip,
   Tr,
+  Tooltip,
 } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hook/useSession";
 import { useEffect, useState } from "react";
 import { FaRunning } from "react-icons/fa";
-import { FaFileSignature } from "react-icons/fa6";
 import { ImClock } from "react-icons/im";
 import { IoIosArrowForward } from "react-icons/io";
 import { FiAlertTriangle } from "react-icons/fi";
@@ -55,13 +54,12 @@ export function Tabela({
   SetVewPage,
 }: TabelaProps) {
   const [SelectPage, setSelectPage] = useState(1);
-  const { data: session } = useSession();
-  const user = session?.user;
+  const session = useSession();
+  const user = session;
 
   useEffect(() => {
     setSelectPage(AtualPage);
   }, [AtualPage]);
-
 
   const downTimeInDays = (item: solictacao.SolicitacaoGetType) => {
     if (!item || !item.createdAt) return null;
@@ -93,7 +91,6 @@ export function Tabela({
   };
 
   const tabela = ClientData.map((item) => {
-
     const fantasia = item.construtora?.fantasia;
 
     const ano = item.dt_agendamento?.split("-")[0];
@@ -317,7 +314,7 @@ export function Tabela({
                 borderRadius={"5px"}
                 value={SelectPage}
                 name="SelectedPage"
-                onChange={(e) => {
+                onChange={(e: { target: { value: any } }) => {
                   setSelectPage(Number(e.target.value));
                 }}
               >

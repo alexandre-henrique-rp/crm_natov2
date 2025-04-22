@@ -2,7 +2,6 @@
 
 import { IconsMenu } from "@/data/icons/menu";
 import { Button } from "@chakra-ui/react";
-import { signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 
 type BotaoMenuProps = {
@@ -32,7 +31,9 @@ export default function BotaoMenu({ name }: BotaoMenuProps) {
       leftIcon={obj?.icon}
       onClick={() => {
         if (name !== "Sair") {
-          signOut({ redirect: false });
+          // (async () => {
+          //   await fetch("/api/auth/logout");
+          // })();
           router.push("/login");
         }
         router.push(obj?.path || "");

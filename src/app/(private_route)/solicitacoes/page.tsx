@@ -54,7 +54,6 @@ export default function Solicitacao() {
           >
             <Flex>
               <Box zIndex={1} position="initial">
-                <BotaoRetorno rota="/" />
               </Box>
               <Box w="100%">
                 <Text

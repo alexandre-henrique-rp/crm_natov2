@@ -1,15 +1,14 @@
 import { BotaoRetorno } from "@/components/botoes/btm_retorno";
-import { auth } from "@/lib/auth_confg";
+import { GetSessionServer } from "@/lib/auth_confg";
 import { Box, Text } from "@chakra-ui/react";
-import { getServerSession } from "next-auth";
 
-interface CardHeaderProps {
+interface CardHeaderProps { 
   SetDados: solictacao.SolicitacaoGetType;
 }
 
 export async function CardHeader({ SetDados }: CardHeaderProps) {
-  const session = await getServerSession(auth);
-  const user = session?.user;
+  const session = await GetSessionServer();
+  const user = session;
   const input = user?.hierarquia;
 
   const dataCreated =

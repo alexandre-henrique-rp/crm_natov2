@@ -1,4 +1,5 @@
 "use client";
+import { useSession } from "@/hook/useSession";
 import {
   Alert,
   AlertDescription,
@@ -11,7 +12,6 @@ import {
   Tooltip,
   useToast,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import { IoIosWarning } from "react-icons/io";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
@@ -35,8 +35,8 @@ export const AlertComponent = ({
   atualizar,
 }: AlertProps) => {
   const toast = useToast();
-  const { data: session } = useSession();
-  const user = session?.user;
+  const session = useSession();
+  const user = session;
 
   const DeleteAlert = async () => {
     const request = await fetch(`/api/alerts/delete/${ID}`, {

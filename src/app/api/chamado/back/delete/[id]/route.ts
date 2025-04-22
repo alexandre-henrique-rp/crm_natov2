@@ -1,20 +1,15 @@
-import { auth } from "@/lib/auth_confg";
-import { getServerSession } from "next-auth";
+import { GetSessionServer } from "@/lib/auth_confg";
 import { NextResponse } from "next/server";
 
 export async function DELETE(request: Request, { params }: any) {
   try {
-
     const { id } = params;
-    const session = await getServerSession(auth);
+    const session = await GetSessionServer();
 
     if (!session) {
-      return NextResponse.json(
-        { message: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-    
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/delete/${id}`,
       {
@@ -25,24 +20,19 @@ export async function DELETE(request: Request, { params }: any) {
         },
       }
     );
-    
+
     if (!response.ok) {
       throw new Error("Erro ao deletar chamado");
     }
 
     return NextResponse.json(
-      { message: "Chamado deletado com sucesso",
-        data: { response: response }
-       },
+      { message: "Chamado deletado com sucesso", data: { response: response } },
       { status: 200 }
     );
-    
   } catch (err: any) {
     return NextResponse.json(
-      { message: err.message,
-        data: { response: err }
-       },
+      { message: err.message, data: { response: err } },
       { status: 500 }
-    )
+    );
   }
 }

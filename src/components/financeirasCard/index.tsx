@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { Box, Flex, IconButton, Text, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaCopy } from "react-icons/fa6";
@@ -6,7 +6,6 @@ import { mask } from "remask";
 import React from "react";
 import { BtnEditarFinanceira } from "../botoes/btn_editar_financeiras";
 import { BtnExcluirFinanceira } from "../botoes/btn_excluir_financeira";
-
 
 interface FinanceirasType {
   data: any;
@@ -17,18 +16,13 @@ export default function Financeiras({ data }: FinanceirasType) {
   const toast = useToast();
 
   useEffect(() => {
+    if (data && data.length > 0) {
       setFinanceiras(data);
-      
-    }, [data]);
+    }
+  }, [data]);
 
   return (
     <>
-      <Flex
-        w={"100%"}
-        mb={8}
-        justifyContent="center"
-        alignItems="center"
-      ></Flex>
       <Flex gap={4} flexWrap={"wrap"}>
         {Financeiras.map((solicitacao: any) => {
           return (
@@ -58,9 +52,8 @@ export default function Financeiras({ data }: FinanceirasType) {
                   <Text fontWeight="bold" fontSize="sm">
                     CNPJ:
                   </Text>
-                  {solicitacao.cnpj && mask(solicitacao.cnpj, [
-                    "99.999.999/9999-99"
-                  ])}
+                  {solicitacao.cnpj &&
+                    mask(solicitacao.cnpj, ["99.999.999/9999-99"])}
                 </Flex>
                 <Flex gap={2}>
                   <Text fontWeight="bold" fontSize="sm">
@@ -72,10 +65,11 @@ export default function Financeiras({ data }: FinanceirasType) {
                   <Text fontWeight="bold" fontSize="sm">
                     TELEFONE:
                   </Text>
-                  {solicitacao.tel && mask(solicitacao.tel, [
-                    "(99) 9 9999-9999",
-                    "(99) 9999-9999",
-                  ])}
+                  {solicitacao.tel &&
+                    mask(solicitacao.tel, [
+                      "(99) 9 9999-9999",
+                      "(99) 9999-9999",
+                    ])}
                   <IconButton
                     icon={<FaCopy />}
                     aria-label="copy"

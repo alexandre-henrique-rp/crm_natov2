@@ -1,6 +1,5 @@
 import { IconsMenu } from "@/data/icons/menu";
 import { MenuItem } from "@chakra-ui/react";
-import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 type BotaoMobileMenuProps = {
@@ -22,7 +21,9 @@ export default function BotaoMobileMenu({ name }: BotaoMobileMenuProps) {
         icon={obj?.icon}
         onClick={() => {
           if (name !== "Sair") {
-            signOut({ redirect: false });
+            (async () => {
+              await fetch("/api/auth/logout");
+            })();
             router.push("/login");
           }
           router.push(obj?.path || "");

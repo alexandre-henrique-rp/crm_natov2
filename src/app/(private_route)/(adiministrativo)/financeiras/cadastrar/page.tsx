@@ -10,27 +10,23 @@ export default async function CadastrarFinanceira() {
     <>
       <Flex
         w={"100%"}
-        minH={"90.9dvh"}
-        justifyContent={"center"}
-        alignItems={"center"}
+        h={"100%"}
+        px={{ base: 0, md: 8 }}
       >
         <Box
-          w={"70%"}
           bg={"gray.50"}
           borderRadius={"1rem"}
-          boxShadow={"lg"}
-          p={8}
+          boxShadow={"2xl"}
+          p={{ base: 4, md: 8 }}
         >
-          <Flex justifyContent={"space-between"}>
-            <Box>
-              <BotaoRetorno rota="/financeiras" />
-            </Box>
-            <Heading>Criar Financeira</Heading>
+          <Flex>
+  
+            <Heading fontSize={"1.5rem"}>Criar Financeira</Heading>
             <Box> </Box>
           </Flex>
           <Divider my={4} borderColor="gray.300" />
           <CardCreateUpdate.Form action={FinanceiraCreate} method="POST">
-            <Flex w={"full"} flexWrap={"wrap"} gap={5}>
+            <Flex w={"full"} flexWrap={"wrap"} gap={5} py={{ base: 4, md: 16 }}>
               <FinanceiraProvider>
                 <CardCreateUpdate.GridCnpj w={"15rem"} />
                 <CardCreateUpdate.GridRazaoSocial w={"35rem"} />
@@ -41,6 +37,10 @@ export default async function CadastrarFinanceira() {
                 <CardCreateUpdate.GridFinanceiraConstrutora w={"25rem"} />
               </FinanceiraProvider>
               <Spacer />
+            </Flex>
+            <Divider my={4} borderColor="gray.300" />
+            <Flex w={"full"} justifyContent={"end"} gap={2}>
+
               <Button
                 type="submit"
                 mt={2}
@@ -58,8 +58,6 @@ export default async function CadastrarFinanceira() {
                 size="lg"
               />
             </Flex>
-            <Divider my={4} borderColor="gray.300" />
-            <Flex w={"full"} justifyContent={"end"}></Flex>
           </CardCreateUpdate.Form>
         </Box>
       </Flex>

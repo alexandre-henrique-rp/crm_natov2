@@ -1,13 +1,12 @@
-import { getServerSession } from "next-auth";
+import { GetSessionServer } from "@/lib/auth_confg";
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth_confg";
 
 export async function GET() {
   try {
-    const session = await getServerSession(auth);
+    const session = await GetSessionServer();
 
     if (!session) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const reqest = await fetch(
@@ -21,14 +20,14 @@ export async function GET() {
       }
     );
 
-    if (!reqest.ok) {
-      return new NextResponse("Invalid credentials", { status: 401 });
-    }
     const data = await reqest.json();
+    if (!reqest.ok) {
+      throw { message: data.message };
+    }
     const users = data.filter((user: any) => user.hierarquia !== "ADM");
 
     return NextResponse.json(users, { status: 200 });
   } catch (error: any) {
-    return NextResponse.json({ error: error }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

@@ -14,19 +14,19 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import { SetStateAction, useEffect, useState } from "react";
 import { SenhaComponent } from "../Senha";
+import { useSession } from "@/hook/useSession";
 
 export default function ModalPrimeAsses() {
   const [Senha, setSenha] = useState("");
   const [ConfirmeSenha, setConfirmeSenha] = useState("");
   const toast = useToast();
-  const { data: session } = useSession();
+  const session = useSession();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const primeiro_asseso = session?.user?.reset_password;
-  const ID = session?.user?.id;
+  const primeiro_asseso = session?.reset_password;
+  const ID = session?.id;
 
   useEffect(() => {
     if (primeiro_asseso) {
@@ -62,7 +62,7 @@ export default function ModalPrimeAsses() {
       password: Senha,
     };
 
-    const ID = session?.user?.id;
+    const ID = session?.id;
 
     const request = await fetch(`/api/reset_password/${ID}`, {
       method: "PUT",
