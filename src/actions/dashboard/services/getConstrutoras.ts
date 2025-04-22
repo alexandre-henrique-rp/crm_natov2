@@ -5,10 +5,8 @@ import { getServerSession } from "next-auth";
 
 export default async function GetConstrutoras(){
     const session = await getServerSession(auth);
-    
-    if(!session){
-        return null
-    }
+
+
 
     const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/dashboard/construtoras`, {
         method: "GET",
@@ -17,10 +15,11 @@ export default async function GetConstrutoras(){
             "Authorization": `Bearer ${session?.token}`
         }
     })
-
+    console.log("ate aqui t aok",req)
+    
     if(!req.ok){
         return null
     }
-
+    console.log("resposta da API ",req)
     return await req.json()
 }

@@ -240,13 +240,13 @@ export default function DashFiltrado({
                 </option>
               ))}
             </Select>
-            {/* <Select w={"200px"} placeholder="Financeira" onChange={(e) => setFinanceira(e.target.value)}>
+             <Select w={"200px"} placeholder="Financeira" onChange={(e) => setFinanceira(e.target.value)}>
           {financeiras?.map((financeira: any) => (
             <option key={financeira.id} value={financeira.id}>
               {financeira.fantasia}
             </option>
           ))}
-        </Select> */}
+        </Select> 
             <Button
               shadow={"md"}
               size={"sm"}

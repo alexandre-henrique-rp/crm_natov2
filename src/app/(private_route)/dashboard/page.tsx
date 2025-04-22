@@ -3,19 +3,19 @@ import GetEmpreendimentos from "@/actions/dashboard/services/getEmpreendimentos"
 import GetFinanceiras from "@/actions/dashboard/services/getFinanceiras";
 import BarChart from "@/components/barChart";
 import CardInfoDashboard from "@/components/cardInfoDashboard";
-import DashFiltrado from "@/components/dashFiltrado";
 import LineChart from "@/components/lineChart.tsx";
 import PieChart from "@/components/pieChart.tsx";
-import { Flex, VStack, Text, Divider, Box } from "@chakra-ui/react";
-import { BsClipboardCheck } from "react-icons/bs";
+import { Flex, Box } from "@chakra-ui/react";
 import { FaRegClock } from "react-icons/fa6";
 import { LuClipboardCheck, LuTag } from "react-icons/lu";
+import DashFiltrado from "@/components/dashFiltrado";
+
+
 
 export default async function DashBoard() {
   // Função para buscar dados da API
   const fetchData = async () => {
-    const response = await fetch(
-      "https://dashboard.redebrasilrp.com.br/bot/atualiza/infos/global",
+    const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/dashboard`,
       {
         method: "GET",
         headers: {
@@ -24,21 +24,19 @@ export default async function DashBoard() {
         cache: "no-cache",
       }
     );
-    console.log("🚀 ~ fetchData ~ response:", response);
     if (!response.ok) {
       console.log("teste");
     }
-    return response.json();
+    return  response.json();
   };
 
   const req = await fetchData();
-  console.log("🚀 ~ DashBoard ~ req:", req);
   const data = req.infosGlobal;
   const tags = req.tags;
-  // console.log("🚀 ~ DashBoard ~ tags:", tags)
 
   //Dados para o filtro
   const construtoras = await GetConstrutoras();
+  console.log("🚀 ~ DashBoard ~ construtoras:", construtoras)
   const empreendimentos = await GetEmpreendimentos();
   const financeiras = await GetFinanceiras();
   // console.log("🚀 ~ DashBoard ~ empreendimentos:", empreendimentos)
@@ -194,20 +192,19 @@ export default async function DashBoard() {
           />
 
         </Flex>
-
-        <Box
-          w="100%"
-          borderTop="1px solid #e2e8f0"
-          mt={8}
-        >
-          <DashFiltrado
-            construtoras={construtoras}
-            empreendimentos={empreendimentos}
-            financeiras={financeiras}
-            
-          />
-        </Box>
-
+        <DashFiltrado
+          construtoras={
+            construtoras
+          }
+          financeiras={
+            financeiras
+          }
+          empreendimentos={
+            empreendimentos
+          }
+        />
+        <Flex>
+        </Flex>
       </Flex>
 
     </>
