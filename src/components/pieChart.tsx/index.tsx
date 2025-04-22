@@ -58,25 +58,34 @@ export default function PieChart({
           return `${percentage}%`;
         },
       },
+      tooltip: {
+        intersect: false,
+        backgroundColor: "#FFFFFF",
+        titleColor: "#000000",
+        bodyColor: "#00713C",
+        borderColor: "#00713C",
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 6,
+        displayColors: false,
+      },
     },
   };
 
   return (
     <Flex
-      border={"1px solid #b8b8b8cc"}
-      shadow={"xl"}
-      rounded={"12px"}
       p={4}
-      w={"100%"}
-      justifyContent={"space-around"}
+      w={"40%"}
+      justifyContent={"center"}
+      alignItems={"center"}
+      flexDir={"column"}
     >
-      <Flex w={"50%"} gap={2}>
+      <Flex w={"100%"} gap={2} justifyContent={"center"}>
         <FaChartPie />
         <Text fontWeight={"bold"}>{title}</Text>
       </Flex>
       <Box
-        w={"100%"}
-        p={5}
+        w={"50%"}
         bg={"white"}
         justifyContent={"center"}
         alignItems={"center"}

@@ -6,7 +6,7 @@ import CardInfoDashboard from "@/components/cardInfoDashboard";
 import DashFiltrado from "@/components/dashFiltrado";
 import LineChart from "@/components/lineChart.tsx";
 import PieChart from "@/components/pieChart.tsx";
-import { Flex, VStack, Text, Divider } from "@chakra-ui/react";
+import { Flex, VStack, Text, Divider, Box } from "@chakra-ui/react";
 import { BsClipboardCheck } from "react-icons/bs";
 import { FaRegClock } from "react-icons/fa6";
 import { LuClipboardCheck, LuTag } from "react-icons/lu";
@@ -123,17 +123,7 @@ export default async function DashBoard() {
   return (
     <>
       <Flex w={"full"} h={"full"} flexDir={"column"} p={2}>
-        <Flex
-          w={"100%"}
-          shadow={"md"}
-          borderBottom={"1px solid #b8b8b8cc"}
-          rounded={"12px"}
-          p={4}
-        >
-          <Text fontSize={"2xl"} fontWeight={"bold"}>
-            DashBoard Global:
-          </Text>
-        </Flex>
+
         <Flex
           w={"100%"}
           h={"auto"}
@@ -141,11 +131,13 @@ export default async function DashBoard() {
           justifyContent={"space-around"}
           p={"20px"}
         >
+
           <CardInfoDashboard
             title={"Total Solicitações"}
             value={totalSolicitacoesGlobal}
             icon={<LuClipboardCheck />}
           />
+
           <CardInfoDashboard
             title={"Total Solicitações"}
             value={totalSolicitacoesGlobal}
@@ -157,40 +149,67 @@ export default async function DashBoard() {
             icon={<LuTag />}
           />
         </Flex>
-        <Flex justifyContent={"space-around"} gap={"1%"} p={"1%"}>
-          <LineChart labels={mesAnoLabels} dataValues={MediaHorasConvertida} />
-          <BarChart
-            lista_tags={lista_tags}
-            labelTitle="Quantidade de Tags: "
-            dataQuantidades={quantidadeTags}
-          />
+        <Flex justifyContent="space-around" gap="1%" wrap="wrap" p="1%">
+          <Box
+            flex="1 1 48%"
+            minW="300px"
+            border="1px solid #e2e8f0"
+            shadow="md"
+            rounded="md"
+            p={12}
+          >
+            <LineChart labels={mesAnoLabels} dataValues={MediaHorasConvertida} />
+          </Box>
+
+          <Box
+            flex="1 1 48%"
+            minW="300px"
+            border="1px solid #e2e8f0"
+            shadow="md"
+            rounded="md"
+            p={12}
+          >
+            <BarChart
+              lista_tags={lista_tags}
+              labelTitle="Quantidade de Tags: "
+              dataQuantidades={quantidadeTags}
+            />
+          </Box>
         </Flex>
-        <Flex justifyContent={"space-around"} gap={"1%"} h={"50%"} p={"1%"}>
+
+        <Flex justifyContent="center" gap="1%" wrap="wrap" p="1%">
+
           <PieChart
             title="Quantidade de RG e CNH"
             colors={["#1D1D1B", "#00713C"]}
             labels={["RG", "CNH"]}
             dataValues={[totalRG, totalCNH]}
           />
+
           <PieChart
-            title="Video Conferencia e Presencial"
+            title="Video Conferência e Presencial"
             colors={["#00713C", "#1D1D1B"]}
             labels={["Video Conf.", "Presencial"]}
             dataValues={[totalVideoConferencia, totalInterna]}
           />
+
         </Flex>
-        <Flex
-          w={"100%"}
-          shadow={"md"}
-          border={"1px solid #b8b8b8cc"}
-          rounded={"12px"}
-          p={4}
+
+        <Box
+          w="100%"
+          borderTop="1px solid #e2e8f0"
+          mt={8}
         >
-          <Text fontSize={"2xl"} fontWeight={"bold"}>
-            DashBoard Filtrado:
-          </Text>
-        </Flex>
+          <DashFiltrado
+            construtoras={construtoras}
+            empreendimentos={empreendimentos}
+            financeiras={financeiras}
+            
+          />
+        </Box>
+
       </Flex>
+
     </>
     // <Flex
     //   w="100%"

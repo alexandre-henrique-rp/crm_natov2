@@ -12,7 +12,6 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
-// Registra os componentes do Chart.js
 ChartJS.register(
   LineElement,
   PointElement,
@@ -28,7 +27,6 @@ interface LineChartProps {
   dataValues: number[];
 }
 
-// Função para converter segundos para HH:mm:ss
 function secondsToTime(seconds: number): string {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
@@ -46,71 +44,80 @@ export default function LineChart({ labels, dataValues }: LineChartProps) {
       {
         label: "Média de Horas",
         data: dataValues,
-        borderColor: "#00713C",
-        backgroundColor: "#00713C",
-        borderWidth: 2,
         fill: true,
-        datalabels: {
-          display: false,
-        },
+        borderColor: "#00713C",
+        borderWidth: 2,
+        pointBackgroundColor: "#FFFFFF",
+        pointBorderColor: "#00713C",
+        pointHoverBackgroundColor: "#00713C",
+        pointHoverBorderColor: "#00713C",
+        pointRadius: 6,
+        pointHoverRadius: 7,
+        tension: 0.4,
       },
     ],
   };
 
   const options = {
     responsive: true,
+    interaction: {
+      mode: "index" as const,
+      intersect: false,
+      axis: "x" as const,
+    },
     plugins: {
+      datalabels: {
+        display: false,
+      },
       legend: {
         display: false,
-        position: "bottom" as const,
       },
       title: {
         display: true,
         text: "Média de Horas por Certificado",
-        position: "top" as const,
-        align: "start" as const,
-        font: {
-          size: 16,
-        },
-        padding: {
-          bottom: 30,
-        },
+        align: "start" as const, // Aqui está o fix
+        font: { size: 16 },
+        padding: { bottom: 30 },
       },
       tooltip: {
+        intersect: false,
+        backgroundColor: "#FFFFFF",
+        titleColor: "#000000",
+        bodyColor: "#00713C",
+        borderColor: "#00713C",
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 6,
+        displayColors: false,
         callbacks: {
-          label: function (context: any) {
-            const value = context.raw;
-            return `Horas: ${secondsToTime(value)}`;
-          },
+          title: (ctx: any) => `Data: ${ctx[0].label}`,
+          label: (ctx: any) => `Horas: ${secondsToTime(ctx.raw)}`,
         },
       },
     },
     scales: {
       y: {
         beginAtZero: true,
-        title: {
-          display: false,
-          text: "Horas",
-        },
         ticks: {
           callback: function (tickValue: string | number) {
             return secondsToTime(Number(tickValue));
           },
+        },
+        grid: {
+          display: false,
+          drawOnChartArea: true,
+        },
+      },
+      x: {
+        grid: {
+          display: false,
         },
       },
     },
   };
 
   return (
-    <Box
-      h="auto"
-      w={"full"}
-      p={5}
-      bg="white"
-      borderRadius="md"
-      boxShadow="md"
-      border={"1px solid #b8b8b8cc"}
-    >
+    <Box w="100%" mx="auto" borderRadius="md" p={2}>
       <Line data={data} options={options} />
     </Box>
   );

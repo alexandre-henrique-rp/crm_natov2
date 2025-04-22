@@ -16,35 +16,7 @@ export async function middleware(req: NextRequest) {
     req
   );
 
-  if (pathname === "/") {
-    if (!session) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
-    return NextResponse.next();
-  }
-
-  if (pathname === "/home") {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-
-  if (isPrivateRoute) {
-    if (!session) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
-    return NextResponse.next();
-  }
-
-  if (!session) {
-    if (isBlockRoute) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
-    if (isPrivateRoute) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
-    if (isPlublicRoute) {
-      return NextResponse.next();
-    }
-  }
+  
 }
 
 export const config = {

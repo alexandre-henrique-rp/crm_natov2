@@ -13,7 +13,7 @@ export default function CardInfoDashboard({
     <Flex
       rounded={"12px"}
       shadow={"md"}
-      border={"1px solid #b8b8b8cc"}
+      
       wrap={"wrap"}
       alignItems={"start"}
       p={4}
@@ -23,7 +23,7 @@ export default function CardInfoDashboard({
       <Flex w={"full"} justifyContent={"space-between"}>
         <Text fontSize={"md"}>{title}</Text>
         <Flex
-          bg="rgba(129, 200, 137, 0.6)"
+          bg="rgba(129, 200, 137, 0.2)"
           alignItems={"center"}
           rounded={"8px"}
           p={2}

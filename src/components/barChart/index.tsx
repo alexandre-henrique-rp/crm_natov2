@@ -53,12 +53,12 @@ export default function BarChart({ lista_tags }: BarChartProps) {
 
   // Definindo as cores personalizadas para as barras
   const colors = [
-    "rgba(255, 99, 132, 0.2)", // Rosa claro
-    "rgba(255, 159, 64, 0.2)", // Laranja claro
-    "rgba(255, 205, 86, 0.2)", // Amarelo claro
-    "rgba(75, 192, 192, 0.2)", // Verde claro
-    "rgba(54, 162, 235, 0.2)", // Azul claro
-    "rgba(153, 102, 255, 0.2)", // Roxo claro
+    "rgb(255, 165, 185)", // Rosa claro
+    "rgb(255, 205, 155)", // Laranja claro
+    "rgb(253, 224, 155)", // Amarelo claro
+    "rgb(177, 255, 255)", // Verde claro
+    "rgb(156, 215, 255)", // Azul claro
+    "rgb(201, 173, 255)", // Roxo claro
   ];
 
   const data = {
@@ -73,6 +73,7 @@ export default function BarChart({ lista_tags }: BarChartProps) {
           .slice(0, finalTags.length)
           .map((color) => color.replace("0.2", "1")), // Ajusta a borda para uma cor mais forte
         borderWidth: 1,
+        barThickness: 80, // Ajuste a largura das barras
       },
     ],
   };
@@ -89,10 +90,19 @@ export default function BarChart({ lista_tags }: BarChartProps) {
           size: 16,
         },
         padding: {
-          bottom: 30,
+          bottom: 15,
         },
       },
       tooltip: {
+        intersect: false,
+        backgroundColor: "#FFFFFF",
+        titleColor: "#000000",
+        bodyColor: "#00713C",
+        borderColor: "#00713C",
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 6,
+        displayColors: false,
         callbacks: {
           label: (context: any) => {
             const descricao = finalTags[context.dataIndex].descricao;
@@ -111,6 +121,9 @@ export default function BarChart({ lista_tags }: BarChartProps) {
     },
     scales: {
       x: {
+        grid: {
+          display: false,
+        },
         display: true,
         title: {
           display: false,
@@ -125,19 +138,17 @@ export default function BarChart({ lista_tags }: BarChartProps) {
         },
       },
     },
+    legend: {
+      display: false, // Remover o ícone de filtro "Quantidade"
+    },
   };
 
   return (
     <Box
-      h="auto"
-      w={"full"}
-      p={5}
-      bg="white"
-      borderRadius="md"
-      boxShadow="md"
-      border={"1px solid #b8b8b8cc"}
+    w="100%" mx="auto" borderRadius="md" p={2}
     >
       <Bar data={data} options={options} />
     </Box>
   );
 }
+
