@@ -4,74 +4,68 @@ import {
   Button,
   Flex,
   IconButton,
+  Img,
   Link,
   Menu,
+  MenuButton,
   MenuItem,
   MenuList,
   useMediaQuery,
 } from "@chakra-ui/react";
-import BotaoNovaSolicita from "../bt_nvsolicita";
 import BotaoSair from "../bt_sair";
 import { useSession } from "next-auth/react";
-import { IoMenuOutline } from "react-icons/io5";
-import BotaoPainelAdm from "../bt_paineladm";
-import BotaoUser from "../bt_user";
-import BotaoHome from "../bt_home";
-import BotaoDashboard from "../bt_dashboard";
-import BotaoFaq from "../bt_faq";
+import { HamburgerIcon } from "@chakra-ui/icons";
+import { HiOutlineLogout } from "react-icons/hi";
+import BotaoMenu from "../bt_menu";
+import BotaoMobileMenu from "../bt_mobile_menu";
 
 export default function BotaoJuncao() {
   const { data: session } = useSession();
   const but = session?.user?.hierarquia;
-  const [isLargerThanTablet] = useMediaQuery("(min-width: 500px)");
 
   return (
     <Flex
-      py={"25px"}
-      justifyContent={"space-evenly"}
-      alignItems={"center"}
+      h={"12vh"}
+      justifyContent={"space-between"}
+      py={3}
       w={"100%"}
-      // h={"5vh"}
       bg={"#00713D"}
-      px={"11rem"}
+      px={20}
     >
-      <Box display={"flex"} gap={"20px"} w={"100%"}>
-        {isLargerThanTablet ? (
-          <>
-            <BotaoHome />
-            <BotaoNovaSolicita />
-            {but === "ADM" && <BotaoPainelAdm />}
-            <BotaoDashboard />
-            <BotaoFaq />
-          </>
-        ) : (
+      <Flex gap={1} w={"60%"}>
+        <Box w={"15%"}>
+          <Img src="/logo.png" alt="Logo" />
+        </Box>
+        <Box display={{ base: "flex", md: "none" }}>
           <Menu>
-            <IconButton
-              icon={<IoMenuOutline />}
-              size="2xl"
+            <MenuButton
+              as={IconButton}
+              aria-label="Options"
+              icon={<HamburgerIcon />}
               variant="outline"
-              border={"none"}
-              color={"white"}
-              aria-label={""}
             />
-            <MenuList bg={"#05927b"}>
-              <MenuItem bg={"transparent"}>
-                <BotaoNovaSolicita renderAsText={true} />
-              </MenuItem>
-              {but === "ADM" && (
-                <>
-                  <MenuItem bg={"transparent"}>
-                    <BotaoPainelAdm renderAsText={true} />
-                  </MenuItem>
-                </>
-              )}
+            <MenuList>
+              <BotaoMobileMenu name="Home" />
+              <BotaoMobileMenu name="Nova Solicitação" />
+              {but === "ADM" && <BotaoMobileMenu name="Painel adm" />}
+              <BotaoMobileMenu name="Dashboard" />
+              <BotaoMobileMenu name="FAQ" />
+              <BotaoMobileMenu name="Sair" />
             </MenuList>
           </Menu>
-        )}
-      </Box>
-      <Box display={"flex"}>
-        {but === "ADM" && <BotaoUser />}
-        <BotaoSair />
+        </Box>
+
+        <Box display={{ base: "none", md: "flex" }} gap={1} w={"85%"}>
+          <BotaoMenu name="Home" />
+          <BotaoMenu name="Nova Solicitação" />
+          {but === "ADM" && <BotaoMenu name="Painel adm" />}
+          <BotaoMenu name="Dashboard" />
+          <BotaoMenu name="FAQ" />
+        </Box>
+      </Flex>
+
+      <Box display={{ base: "none", md: "flex" }}>
+        <BotaoMenu name="Sair" />
       </Box>
     </Flex>
   );
