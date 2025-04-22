@@ -1,33 +1,16 @@
 "use client";
 
-import { Button } from "@chakra-ui/react";
+import { Button, ButtonProps } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 
-interface BotaoCancelarProps {
-  mt?: number | string;
-  alignSelf?: string;
-  colorScheme?: string;
-  variant?: string;
-  size?: string;
-}
-
-export default function BotaoCancelar({
-  mt,
-  alignSelf,
-  colorScheme,
-  variant,
-  size
-}: BotaoCancelarProps) {
+// Agora BotaoCancelar aceita todas as props do Chakra Button normalmente
+export default function BotaoCancelar(props: ButtonProps) {
   const router = useRouter();
 
   return (
-    <Button 
+    <Button
       onClick={() => router.back()}
-      mt={mt}
-      alignSelf={alignSelf}
-      colorScheme={colorScheme}
-      variant={variant}
-      size={size}
+      {...props}
     >
       Cancelar
     </Button>
