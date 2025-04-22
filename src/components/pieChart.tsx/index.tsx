@@ -1,8 +1,9 @@
-'use client';
-import { Box } from "@chakra-ui/react";
+"use client";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js";
 import { Pie } from "react-chartjs-2";
-import ChartDataLabels from 'chartjs-plugin-datalabels'; // Importa o plugin para os rótulos de dados
+import ChartDataLabels from "chartjs-plugin-datalabels"; // Importa o plugin para os rótulos de dados
+import { FaChartPie } from "react-icons/fa6";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title, ChartDataLabels); // Registra o plugin
 
@@ -38,19 +39,22 @@ export default function PieChart({
         position: "top" as const,
       },
       title: {
-        display: true,
+        display: false,
         text: title,
       },
       datalabels: {
         display: true,
-        color: 'white', 
+        color: "white",
         font: {
-          weight: 'bold' as const, 
+          weight: "bold" as const,
           size: 12,
         },
         formatter: (value: number, ctx: any) => {
-          const total = ctx.dataset.data.reduce((acc: number, val: number) => acc + val, 0);
-          const percentage = ((value / total) * 100).toFixed(1); 
+          const total = ctx.dataset.data.reduce(
+            (acc: number, val: number) => acc + val,
+            0
+          );
+          const percentage = ((value / total) * 100).toFixed(1);
           return `${percentage}%`;
         },
       },
@@ -58,16 +62,27 @@ export default function PieChart({
   };
 
   return (
-    <Box
-      w="100%"
-      maxW="280px"
-      h="auto"
-      p={5}
-      bg={"white"}
-      shadow={"md"}
-      borderRadius="md"
+    <Flex
+      border={"1px solid #b8b8b8cc"}
+      shadow={"xl"}
+      rounded={"12px"}
+      p={4}
+      w={"100%"}
+      justifyContent={"space-around"}
     >
-      <Pie data={data} options={options} />
-    </Box>
+      <Flex w={"50%"} gap={2}>
+        <FaChartPie />
+        <Text fontWeight={"bold"}>{title}</Text>
+      </Flex>
+      <Box
+        w={"100%"}
+        p={5}
+        bg={"white"}
+        justifyContent={"center"}
+        alignItems={"center"}
+      >
+        <Pie data={data} options={options} />
+      </Box>
+    </Flex>
   );
 }

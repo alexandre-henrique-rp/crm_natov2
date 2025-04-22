@@ -1,5 +1,5 @@
 "use client";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import {
   Chart as ChartJS,
   LineElement,
@@ -24,12 +24,8 @@ ChartJS.register(
 );
 
 interface LineChartProps {
-  labelTitle: string,
-  labelTitle2: string,
   labels: string[];
   dataValues: number[];
-  dataQuantidades: number;
-  dataMedia: string;
 }
 
 // Função para converter segundos para HH:mm:ss
@@ -43,14 +39,7 @@ function secondsToTime(seconds: number): string {
   )}:${String(secs).padStart(2, "0")}`;
 }
 
-export default function LineChart({
-  labelTitle,
-  labelTitle2,
-  labels,
-  dataValues,
-  dataQuantidades,
-  dataMedia,
-}: LineChartProps) {
+export default function LineChart({ labels, dataValues }: LineChartProps) {
   const data = {
     labels,
     datasets: [
@@ -72,11 +61,20 @@ export default function LineChart({
     responsive: true,
     plugins: {
       legend: {
-        position: "top" as const,
+        display: false,
+        position: "bottom" as const,
       },
       title: {
         display: true,
         text: "Média de Horas por Certificado",
+        position: "top" as const,
+        align: "start" as const,
+        font: {
+          size: 16,
+        },
+        padding: {
+          bottom: 30,
+        },
       },
       tooltip: {
         callbacks: {
@@ -91,7 +89,7 @@ export default function LineChart({
       y: {
         beginAtZero: true,
         title: {
-          display: true,
+          display: false,
           text: "Horas",
         },
         ticks: {
@@ -104,51 +102,16 @@ export default function LineChart({
   };
 
   return (
-    <Flex
-      w="100%"
-      maxW="950px"
+    <Box
       h="auto"
-      gap={2}
+      w={"full"}
+      p={5}
       bg="white"
-      flexDirection={"column"}
+      borderRadius="md"
+      boxShadow="md"
+      border={"1px solid #b8b8b8cc"}
     >
-      <Box
-        display={"flex"}
-        flexDirection={"row"}
-        justifyContent={"space-around"}
-        p={5}
-        bg="white"
-        borderRadius="md"
-        boxShadow="md"
-      >
-        <Flex flexDirection={"row"} gap={1}>
-          <Text fontSize="xl" color={"#00713C"}>
-            {labelTitle}
-          </Text>
-          <Text fontSize="xl" color={"#1D1D1B"}>
-            {dataQuantidades}
-          </Text>
-        </Flex>
-        <Flex flexDirection={"row"} gap={1}>
-          <Text fontSize="xl" color={"#00713C"}>
-            {labelTitle2}
-          </Text>
-          <Text fontSize="xl" color={"#1D1D1B"}>
-            {dataMedia}
-          </Text>
-        </Flex>
-      </Box>
-      <Box
-        w="100%"
-        maxW="950px"
-        h="auto"
-        p={5}
-        bg="white"
-        borderRadius="md"
-        boxShadow="md"
-      >
-        <Line data={data} options={options} />
-      </Box>
-    </Flex>
+      <Line data={data} options={options} />
+    </Box>
   );
 }

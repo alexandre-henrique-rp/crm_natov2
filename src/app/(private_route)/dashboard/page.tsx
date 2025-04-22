@@ -2,24 +2,16 @@ import GetConstrutoras from "@/actions/dashboard/services/getConstrutoras";
 import GetEmpreendimentos from "@/actions/dashboard/services/getEmpreendimentos";
 import GetFinanceiras from "@/actions/dashboard/services/getFinanceiras";
 import BarChart from "@/components/barChart";
+import CardInfoDashboard from "@/components/cardInfoDashboard";
 import DashFiltrado from "@/components/dashFiltrado";
 import LineChart from "@/components/lineChart.tsx";
 import PieChart from "@/components/pieChart.tsx";
-import { auth } from "@/lib/auth_confg";
 import { Flex, VStack, Text, Divider } from "@chakra-ui/react";
-import { Metadata } from "next";
-import { getServerSession } from "next-auth";
-
-// Definir metadata
-export const metadata: Metadata = {
-  title: "DASHBOARD"
-};
+import { BsClipboardCheck } from "react-icons/bs";
+import { FaRegClock } from "react-icons/fa6";
+import { LuClipboardCheck, LuTag } from "react-icons/lu";
 
 export default async function DashBoard() {
-  const session = await getServerSession(auth);
-
-  const user = session?.user;
-
   // Função para buscar dados da API
   const fetchData = async () => {
     const response = await fetch(
@@ -27,15 +19,20 @@ export default async function DashBoard() {
       {
         method: "GET",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        cache: "no-cache"
+        cache: "no-cache",
       }
     );
+    console.log("🚀 ~ fetchData ~ response:", response);
+    if (!response.ok) {
+      console.log("teste");
+    }
     return response.json();
   };
 
   const req = await fetchData();
+  console.log("🚀 ~ DashBoard ~ req:", req);
   const data = req.infosGlobal;
   const tags = req.tags;
   // console.log("🚀 ~ DashBoard ~ tags:", tags)
@@ -124,87 +121,127 @@ export default async function DashBoard() {
   );
 
   return (
-    <Flex
-      w="100%"
-      px={{ base: 2, md: "10rem" }}
-      py={5}
-      flexDir="column"
-      bg="white"
-      align="center"
-      justify="center"
-      minH="100vh"
-    >
-      <VStack spacing={8} p={5} align="stretch" w="100%">
-        <Text
-          fontSize="3xl"
-          fontWeight="bold"
-          color="#00713C"
-          textAlign="center"
-        >
-          Dashboard Global
-        </Text>
+    <>
+      <Flex w={"full"} h={"full"} flexDir={"column"} p={2}>
         <Flex
-          alignItems="flex-start"
-          w="100%"
-          gap={{ base: 4, md: 6 }}
-          flexDir={{ base: "column", md: "row" }}
-          justify="center"
-          flexWrap="wrap" // Permite o wrap dos itens
+          w={"100%"}
+          shadow={"md"}
+          borderBottom={"1px solid #b8b8b8cc"}
+          rounded={"12px"}
+          p={4}
         >
-          {/* Gráfico de Linha com dados convertidos */}
-          <LineChart
-            labelTitle="Quantidade de Certificados:"
-            labelTitle2="Media de Horas/Certificado:"
-            dataQuantidades={totalSolicitacoesGlobal}
-            dataMedia={mediaHorasGlobal}
-            labels={mesAnoLabels}
-            dataValues={MediaHorasConvertida}
+          <Text fontSize={"2xl"} fontWeight={"bold"}>
+            DashBoard Global:
+          </Text>
+        </Flex>
+        <Flex
+          w={"100%"}
+          h={"auto"}
+          gap={"1%"}
+          justifyContent={"space-around"}
+          p={"20px"}
+        >
+          <CardInfoDashboard
+            title={"Total Solicitações"}
+            value={totalSolicitacoesGlobal}
+            icon={<LuClipboardCheck />}
           />
-
-          {/* Gráfico de barra das tags */}
+          <CardInfoDashboard
+            title={"Total Solicitações"}
+            value={totalSolicitacoesGlobal}
+            icon={<FaRegClock />}
+          />
+          <CardInfoDashboard
+            title={"Total Solicitações"}
+            value={totalSolicitacoesGlobal}
+            icon={<LuTag />}
+          />
+        </Flex>
+        <Flex justifyContent={"space-around"} gap={"1%"} p={"1%"}>
+          <LineChart labels={mesAnoLabels} dataValues={MediaHorasConvertida} />
           <BarChart
             lista_tags={lista_tags}
             labelTitle="Quantidade de Tags: "
             dataQuantidades={quantidadeTags}
           />
-
-          {/* Gráficos de Pizza */}
-          <Flex flexDirection="row" gap={4} align="center">
-            <PieChart
-              title="Quantidade de RG e CNH"
-              colors={["#1D1D1B", "#00713C"]}
-              labels={["RG", "CNH"]}
-              dataValues={[totalRG, totalCNH]}
-            />
-            <PieChart
-              title="Video Conferencia e Presencial"
-              colors={["#00713C", "#1D1D1B"]}
-              labels={["Video Conf.", "Presencial"]}
-              dataValues={[totalVideoConferencia, totalInterna]}
-            />
-          </Flex>
         </Flex>
-        <Divider />
-        <Text
-          fontSize="3xl"
-          fontWeight="bold"
-          color="#00713C"
-          textAlign="center"
+        <Flex justifyContent={"space-around"} gap={"1%"} h={"50%"} p={"1%"}>
+          <PieChart
+            title="Quantidade de RG e CNH"
+            colors={["#1D1D1B", "#00713C"]}
+            labels={["RG", "CNH"]}
+            dataValues={[totalRG, totalCNH]}
+          />
+          <PieChart
+            title="Video Conferencia e Presencial"
+            colors={["#00713C", "#1D1D1B"]}
+            labels={["Video Conf.", "Presencial"]}
+            dataValues={[totalVideoConferencia, totalInterna]}
+          />
+        </Flex>
+        <Flex
+          w={"100%"}
+          shadow={"md"}
+          border={"1px solid #b8b8b8cc"}
+          rounded={"12px"}
+          p={4}
         >
-          Dashboard Filtrado
-        </Text>
-        <DashFiltrado
-          construtoras={
-            user?.hierarquia == "ADM" ? construtoras : user?.construtora
-          }
-          financeiras={
-            user?.hierarquia == "ADM" ? financeiras : user?.Financeira
-          }
-          empreendimentos={
-            user?.hierarquia == "ADM" ? empreendimentos : user?.empreendimento
-          }
-        />
-      </VStack>
-    </Flex>
+          <Text fontSize={"2xl"} fontWeight={"bold"}>
+            DashBoard Filtrado:
+          </Text>
+        </Flex>
+      </Flex>
+    </>
+    // <Flex
+    //   w="100%"
+    //   px={{ base: 2, md: "10rem" }}
+    //   py={5}
+    //   flexDir="column"
+    //   bg="white"
+    //   align="center"
+    //   justify="center"
+    //   minH="100vh"
+    // >
+    //   <VStack spacing={8} p={5} align="stretch" w="100%">
+    //     <Text
+    //       fontSize="3xl"
+    //       fontWeight="bold"
+    //       color="#00713C"
+    //       textAlign="center"
+    //     >
+    //       Dashboard Global
+    //     </Text>
+    //     <Flex
+    //       alignItems="flex-start"
+    //       w="100%"
+    //       gap={{ base: 4, md: 6 }}
+    //       flexDir={{ base: "column", md: "row" }}
+    //       justify="center"
+    //       flexWrap="wrap" // Permite o wrap dos itens
+    //     >
+    //       {/* Gráfico de Linha com dados convertidos */}
+
+    //       {/* Gráfico de barra das tags */}
+
+    //       {/* Gráficos de Pizza */}
+    //       <Flex flexDirection="row" gap={4} align="center">
+
+    //       </Flex>
+    //     </Flex>
+    //     <Divider />
+
+    // {/* <DashFiltrado
+    //   construtoras={
+    //     user?.hierarquia == "ADM" ? construtoras : user?.construtora
+    //   }
+    //   financeiras={
+    //     user?.hierarquia == "ADM" ? financeiras : user?.Financeira
+    //   }
+    //   empreendimentos={
+    //     user?.hierarquia == "ADM" ? empreendimentos : user?.empreendimento
+    //   }
+    // /> */}
+    //   </VStack>
+    // </Flex>
   );
 }
