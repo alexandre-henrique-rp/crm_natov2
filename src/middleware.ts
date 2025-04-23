@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GetSessionServer } from "./lib/auth_confg";
 
-const isPlublicRoute = ['login', 'register', 'termos'];
+const isPlublicRoute = ["login", "register", "termos"];
 
 export async function middleware(req: NextRequest) {
   const session = await GetSessionServer();
@@ -14,7 +14,7 @@ export async function middleware(req: NextRequest) {
     }
     return NextResponse.next();
   }
-  if(pathname === "/login") {
+  if (pathname === "/login") {
     if (session) {
       return NextResponse.redirect(new URL("/", req.url));
     }
@@ -30,5 +30,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: "/((?!_next|favicon.ico|public|.*\\..*).*)"
+  matcher: "/((?!_next|favicon.ico|public|.*\\..*).*)",
 };
