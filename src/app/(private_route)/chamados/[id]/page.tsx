@@ -11,28 +11,26 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import { getServerSession } from "next-auth";
-import { auth } from "@/lib/auth_confg";
 import { IoMdDownload } from "react-icons/io";
 import ResponderChamado from "@/components/responderChamado";
 import BotaoIniciarChamado from "@/components/botoes/btn_iniciar_chamado";
 import RespostaChamado from "@/components/resposta";
+import { GetSessionServer } from "@/lib/auth_confg";
 
 type Props = {
   params: { id: string };
 };
 
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const id = params.id;
-  
+
   return {
     title: `Chamado ID: ${id}`,
   };
 }
 
 export default async function EditarChamado({ params }: Props) {
-  const session = await getServerSession(auth);
+  const session = await GetSessionServer();
   const userSession = session?.user;
   const UserSessionId = userSession?.id;
   const userHierarquia = userSession?.hierarquia;
@@ -84,7 +82,7 @@ export default async function EditarChamado({ params }: Props) {
         p={4}
         borderRadius="15px"
         shadow="lg"
-        overflowY={'auto'}
+        overflowY={"auto"}
       >
         <Text
           justifySelf={"flex-start"}
@@ -190,12 +188,20 @@ export default async function EditarChamado({ params }: Props) {
               )}
             </Flex>
           </Flex>
-          <Flex marginTop={4} justifyContent={'center'}>
-            {data.status === 3 ? (<RespostaChamado data={data} session={userHierarquia} />) : <Box hidden></Box>}
+          <Flex marginTop={4} justifyContent={"center"}>
+            {data.status === 3 ? (
+              <RespostaChamado data={data} session={userHierarquia} />
+            ) : (
+              <Box hidden></Box>
+            )}
             {userHierarquia === "ADM" && data.status === 0 ? (
-              <BotaoIniciarChamado id={data.id}/>
+              <BotaoIniciarChamado id={data.id} />
             ) : userHierarquia === "ADM" && data.status !== 3 ? (
-              <ResponderChamado chamadoId={data.id} status={data.status} userId={UserSessionId as number} />
+              <ResponderChamado
+                chamadoId={data.id}
+                status={data.status}
+                userId={UserSessionId as number}
+              />
             ) : null}
           </Flex>
         </Box>
