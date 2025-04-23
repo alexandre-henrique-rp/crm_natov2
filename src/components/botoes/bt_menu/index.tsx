@@ -15,7 +15,6 @@ type BotaoMenuProps = {
 };
 
 export default function BotaoMenu({ name }: BotaoMenuProps) {
-  console.log("🚀 ~ BotaoMenu ~ name:", name)
   const router = useRouter();
   const PathName = usePathname();
   const obj = IconsMenu.find((icon) => icon.label === name);
@@ -23,6 +22,15 @@ export default function BotaoMenu({ name }: BotaoMenuProps) {
     PathName !== "/" && name !== "Home"
       ? PathName.includes(obj?.path || "")
       : false;
+
+  const handleDirection = async () => {
+    if (name === "Sair") {
+      await fetch("/api/auth/logout");
+      router.push("/login");
+      return;
+    }
+    router.push(obj?.path || "");
+  };
   return (
     <Button
       textColor={"white"}
@@ -30,15 +38,7 @@ export default function BotaoMenu({ name }: BotaoMenuProps) {
       size="md"
       fontWeight={"light"}
       leftIcon={obj?.icon}
-      onClick={() => {
-        if (name !== "Sair") {
-          (async () => {
-            await fetch("/api/auth/logout");
-          })();
-          router.push("/login");
-        }
-        router.push(obj?.path || "");
-      }}
+      onClick={handleDirection}
       isActive={isActive}
       px={3}
       _active={{ bg: "white", textColor: "green.500" }}
