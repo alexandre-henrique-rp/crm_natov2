@@ -5,6 +5,8 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { username, password } = body;
+    console.log("🚀 ~ POST ~ username:", username)
+    console.log("🚀 ~ POST ~ password:", password)
     
     const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/auth`;
     const res = await fetch(
@@ -18,6 +20,7 @@ export async function POST(request: Request) {
       }
     );
     const data = await res.json();
+    console.log("🚀 ~ POST ~ data:", data)
     if (!res.ok) {
       return NextResponse.json({message: data.message}, { status: 400 });
     }

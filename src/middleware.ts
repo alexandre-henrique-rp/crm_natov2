@@ -22,7 +22,7 @@ export async function middleware(req: NextRequest) {
   }
 
   if (!session) {
-    if (isPlublicRoute.includes(pathname)) {
+    if (isPlublicRoute) {
       return NextResponse.next();
     }
     return NextResponse.redirect(new URL("/login", req.url));

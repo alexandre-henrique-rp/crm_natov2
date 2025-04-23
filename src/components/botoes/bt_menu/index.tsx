@@ -15,6 +15,7 @@ type BotaoMenuProps = {
 };
 
 export default function BotaoMenu({ name }: BotaoMenuProps) {
+  console.log("🚀 ~ BotaoMenu ~ name:", name)
   const router = useRouter();
   const PathName = usePathname();
   const obj = IconsMenu.find((icon) => icon.label === name);
@@ -31,9 +32,9 @@ export default function BotaoMenu({ name }: BotaoMenuProps) {
       leftIcon={obj?.icon}
       onClick={() => {
         if (name !== "Sair") {
-          // (async () => {
-          //   await fetch("/api/auth/logout");
-          // })();
+          (async () => {
+            await fetch("/api/auth/logout");
+          })();
           router.push("/login");
         }
         router.push(obj?.path || "");
