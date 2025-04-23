@@ -1,46 +1,49 @@
 import { TabelaChamados } from "@/components/tabelaChamados";
-import { auth } from "@/lib/auth_confg";
+import { GetSessionClient, GetSessionServer } from "@/lib/auth_confg";
 import { Flex } from "@chakra-ui/react";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth/next";
-
-export const metadata: Metadata = {
-  title: "CHAMADOS",
-  description: "sistema de suporte",
-};
 
 export default async function ChamadosPage() {
-  const session = await getServerSession(auth);
+  const session: any = await GetSessionServer();
+  const client = await GetSessionClient();
+  console.log("🚀 ~ ChamadosPage ~ client:", client);
   const userHierarquia = session?.user.hierarquia;
+  console.log("🚀 ~ ChamadosPage ~ userHierarquia:", userHierarquia);
 
   const idUser = session?.user.id;
 
   async function isAdm(id: any) {
     if (userHierarquia === "ADM") {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado`, {
-        method: "GET",
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado`,
+        {
+          method: "GET",
           headers: {
-             Authorization: `Bearer ${session?.token}`
+            Authorization: `Bearer ${session?.token}`,
+          },
         }
-      });
+      );
       if (!res.ok) {
         throw new Error(`Erro na requisição: ${res.statusText}`);
       }
 
       const data = await res.json();
-      return data; 
+      return data;
     } else {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/pesquisar?idUser=${id}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${session?.token}`
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/pesquisar?idUser=${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${session?.token}`,
+          },
         }
-      });
-      if(!res.ok){
+      );
+      if (!res.ok) {
         throw new Error(`Erro na requisição: ${res.statusText}`);
       }
       const data = await res.json();
-      return data; 
+      return data;
     }
   }
 

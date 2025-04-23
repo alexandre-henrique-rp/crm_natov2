@@ -1,9 +1,10 @@
 "use server";
 
 import { GetSessionServer } from "@/lib/auth_confg";
+import { SessionServer } from "@/types/session";
 
 export default async function GetConstrutoras() {
-  const session = await GetSessionServer();
+  const session = await GetSessionServer()
 
   if (!session) {
     return null;
