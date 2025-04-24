@@ -1,15 +1,14 @@
-import { BotaoRetorno } from "@/components/botoes/btm_retorno";
-import { GetSessionServer } from "@/lib/auth_confg";
+"use client";
+import { useSession } from "@/hook/useSession";
 import { Box, Text } from "@chakra-ui/react";
 
-interface CardHeaderProps { 
+interface CardHeaderProps {
   SetDados: solictacao.SolicitacaoGetType;
 }
 
-export async function CardHeader({ SetDados }: CardHeaderProps) {
-  const session = await GetSessionServer();
-  const user = session;
-  const input = user?.hierarquia;
+export function CardHeader({ SetDados }: CardHeaderProps) {
+  const session = useSession();
+  const input = session?.hierarquia;
 
   const dataCreated =
     SetDados.createdAt &&
@@ -30,7 +29,6 @@ export async function CardHeader({ SetDados }: CardHeaderProps) {
   return (
     <>
       <Box display="flex" alignItems="center" justifyContent="space-between">
-        <BotaoRetorno rota="/" />
         <Box>
           <Text fontSize={{ base: "sm", md: "md" }}>
             Criado: {`${dataCreated}, ${horaCreated}`}
