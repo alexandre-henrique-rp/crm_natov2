@@ -60,12 +60,12 @@ export default function UsuariosPage() {
     <>
       <Flex
         w={"100%"}
-        minH={"90.9dvh"}
-        px={{ base: 2, md: "10rem" }}
+        // minH={"90.9dvh"}
+        px={{ base: 2, md: 5 }}
         py={5}
         flexDir={"column"}
       >
-        <Flex w={"100%"} justifyContent={"space-around"}>
+        <Flex w={"100%"} justifyContent={"space-between"}>
           <Heading>Usuários</Heading>
           <Link
             href={"/usuarios/cadastrar"}
@@ -86,12 +86,7 @@ export default function UsuariosPage() {
             </Box>
           </Link>
         </Flex>
-        <Divider my={5} />
-        <Box ml={4}>
-          <Text fontSize="25px" fontWeight="bold" color="#333333">
-            USUARIOS CADASTRADOS
-          </Text>
-        </Box>
+        <Divider w={"100%"} borderColor={"gray.400"} my={5} />
         <Box w={"100%"}>
           <UserProvider>
             <Flex w={"100%"} mb={8} justifyContent="center" alignItems="center">

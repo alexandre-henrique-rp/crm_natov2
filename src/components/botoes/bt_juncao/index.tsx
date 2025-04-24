@@ -26,7 +26,7 @@ export default function BotaoJuncao() {
       px={40}
     >
       <Flex gap={10} w={"60%"} alignItems={"center"}>
-        <Box w={"7rem"}>
+        <Box minW={"120px"}>
           <Img src="/SisnatoLogoL.png" alt="Logo" width={"100%"}  />
         </Box>
         <Box display={{ base: "flex", md: "none" }}>
