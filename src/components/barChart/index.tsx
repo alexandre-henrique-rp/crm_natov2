@@ -53,12 +53,12 @@ export default function BarChart({ lista_tags }: BarChartProps) {
 
   // Definindo as cores personalizadas para as barras
   const colors = [
-    "rgba(255, 99, 132, 0.2)", // Rosa claro
-    "rgba(255, 159, 64, 0.2)", // Laranja claro
-    "rgba(255, 205, 86, 0.2)", // Amarelo claro
-    "rgba(75, 192, 192, 0.2)", // Verde claro
-    "rgba(54, 162, 235, 0.2)", // Azul claro
-    "rgba(153, 102, 255, 0.2)", // Roxo claro
+    "rgba(255, 99, 132)", // Rosa claro
+    "rgba(255, 159, 64)", // Laranja claro
+    "rgba(255, 205, 86)", // Amarelo claro
+    "rgba(75, 192, 192)", // Verde claro
+    "rgba(54, 162, 235)", // Azul claro
+    "rgba(153, 102, 255)", // Roxo claro
   ];
 
   const data = {
@@ -93,6 +93,20 @@ export default function BarChart({ lista_tags }: BarChartProps) {
         },
       },
       tooltip: {
+        borderColor: "#00713C", 
+        borderWidth: 2, 
+        titleFont: {
+          size: 14,
+          weight: "bold" as const, 
+          color: "#00713C", 
+        },
+        bodyFont: {
+          size: 12,
+          color: "#333", 
+        },
+        padding: 12, 
+        cornerRadius: 10, 
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", 
         callbacks: {
           label: (context: any) => {
             const descricao = finalTags[context.dataIndex].descricao;
@@ -131,11 +145,14 @@ export default function BarChart({ lista_tags }: BarChartProps) {
     <Box
       h="auto"
       w={"full"}
-      p={5}
+      p={2}
       bg="white"
       borderRadius="md"
       boxShadow="md"
-      border={"1px solid #b8b8b8cc"}
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      _hover={{ boxShadow: "xl" }}      
     >
       <Bar data={data} options={options} />
     </Box>
