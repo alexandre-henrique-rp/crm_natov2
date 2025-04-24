@@ -1,9 +1,11 @@
 import { GetSessionServer } from "@/lib/auth_confg";
 import { NextResponse } from "next/server";
 
-export async function DELETE(request: Request, { params }: any) {
+export async function DELETE(
+  req: Request,
+  context: { params: { id: string } }
+) {
   try {
-    const { id } = params;
     const session = await GetSessionServer();
 
     if (!session) {
@@ -11,28 +13,27 @@ export async function DELETE(request: Request, { params }: any) {
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/delete/${id}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/${context.params.id}`,
       {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${session?.token}`,
         },
       }
     );
 
-    if (!response.ok) {
-      throw new Error("Erro ao deletar chamado");
+    const retornoArquivo = await response.json();
+
+    if (retornoArquivo.error) {
+      throw retornoArquivo.error;
     }
 
     return NextResponse.json(
-      { message: "Chamado deletado com sucesso", data: { response: response } },
+      { data: retornoArquivo, message: "Chamado Fechado com sucesso" },
       { status: 200 }
     );
-  } catch (err: any) {
-    return NextResponse.json(
-      { message: err.message, data: { response: err } },
-      { status: 500 }
-    );
+  } catch (error: any) {
+    console.error("Erro ao Fechar o Chamado:", error);
+    return NextResponse.json(error.message, { status: error.status || 500 });
   }
 }

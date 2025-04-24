@@ -6,9 +6,7 @@ import { Metadata } from "next";
 export default async function ChamadosPage() {
   const session: any = await GetSessionServer();
   const client = await GetSessionClient();
-  console.log("🚀 ~ ChamadosPage ~ client:", client);
   const userHierarquia = session?.user.hierarquia;
-  console.log("🚀 ~ ChamadosPage ~ userHierarquia:", userHierarquia);
 
   const idUser = session?.user.id;
 
@@ -36,6 +34,7 @@ export default async function ChamadosPage() {
           method: "GET",
           headers: {
             Authorization: `Bearer ${session?.token}`,
+            "Content-Type": "application/json",
           },
         }
       );

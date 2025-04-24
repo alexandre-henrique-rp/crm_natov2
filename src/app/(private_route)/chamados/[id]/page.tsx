@@ -45,12 +45,12 @@ export default async function EditarChamado({ params }: Props) {
     }
   );
   const data = await res.json();
+  console.log("🚀 ~ data:", data);
 
   // variaveis do chamado
   const urls = data.images ? data.images : "[]";
-  const url = JSON.parse(urls);
-  const urlView = url.map((item: any) => item.urlView);
-  const urlDownload = url.map((item: any) => item.urlDownload);
+  const urlView = urls.map((item: any) => item.url_view);
+  const urlDownload = urls.map((item: any) => item.url_download);
 
   const color =
     data.status === 0
@@ -102,16 +102,16 @@ export default async function EditarChamado({ params }: Props) {
             <Flex flexDirection={"column"}>
               <Text>Criado por: {user.nome}</Text>
               <Text>
-                Criado em: {new Date(data.createdAt).toLocaleTimeString()},{" "}
-                {new Date(data.createdAt).toLocaleDateString()}
+                Criado em: {new Date(data.createAt).toLocaleTimeString()},{" "}
+                {new Date(data.createAt).toLocaleDateString()}
               </Text>
             </Flex>
             <Flex flexDirection={"column"}>
               <Text>
                 Solicitação ID:{" "}
-                <Link href={`/solicitacoes/${data.solicitacao}`}>
+                <Link href={`/solicitacoes/${data.solicitacaoId}`}>
                   <Badge variant={"solid"} colorScheme="green">
-                    {data.solicitacao}
+                    {data.solicitacaoId}
                   </Badge>
                 </Link>
               </Text>

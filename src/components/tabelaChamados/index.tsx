@@ -64,31 +64,30 @@ export function TabelaChamados({
   };
 
   async function DeleteChamado(id: number) {
-    const req : any = await fetch(`/api/chamado/back/delete/${id}`,{
-      method: 'DELETE',
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const req: any = await fetch(`/api/chamado/back/delete/${id}`, {
+      method: "DELETE",
     });
-    const res = await req.json()
- 
-    if(!req.ok){
+    const res = await req.json();
+
+    if (!req.ok) {
       toast({
-        title: "Erro ao deletar chamado!",
+        title: "Erro ao Fechar chamado!",
         description: res.message,
         status: "error",
         duration: 3000,
         isClosable: true,
       });
-    }else{
+    } else {
       toast({
         title: "Sucesso!",
         description: res.message,
         status: "success",
         duration: 3000,
         isClosable: true,
-      })
-      setTimeout (() => {window.location.reload()}, 1000)
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     }
   }
 
@@ -100,6 +99,8 @@ export function TabelaChamados({
         ? "yellow"
         : chamado.status === 2
         ? "orange"
+        : chamado.status === 4
+        ? "red"
         : "green";
 
     return (
@@ -113,36 +114,44 @@ export function TabelaChamados({
             icon={<IoOpenOutline style={{ fontWeight: "900" }} />}
             onClick={() => router.push(`/chamados/${chamado.id}`)}
           ></IconButton>
-{chamado.status === 2 || chamado.status === 3 ? null : <Popover>
+          {chamado.status === 2 ||
+          chamado.status === 3 ||
+          chamado.status === 4 ? null : (
+            <Popover>
               <PopoverTrigger>
-              <IconButton
-            size={"sm"}
-            m={1}
-            colorScheme="red"
-            aria-label="Excluir"
-            icon={<IoIosTrash style={{ fontWeight: "900" }} />}
-          >
-          </IconButton>
+                <IconButton
+                  size={"sm"}
+                  m={1}
+                  colorScheme="red"
+                  aria-label="Excluir"
+                  icon={<IoIosTrash style={{ fontWeight: "900" }} />}
+                ></IconButton>
               </PopoverTrigger>
               <Portal>
                 <PopoverContent>
                   <PopoverArrow />
                   <PopoverHeader>Tem Certeza que deseja excluir?</PopoverHeader>
-                  <PopoverCloseButton color={"red.500"}/>
+                  <PopoverCloseButton color={"red.500"} />
                   <PopoverBody>
                     <Flex gap={2}>
-                    <Button size={"sm"} colorScheme="red" onClick={() => DeleteChamado(chamado.id)}>Confirmar</Button>
+                      <Button
+                        size={"sm"}
+                        colorScheme="red"
+                        onClick={() => DeleteChamado(chamado.id)}
+                      >
+                        Confirmar
+                      </Button>
                     </Flex>
                   </PopoverBody>
                 </PopoverContent>
               </Portal>
-            </Popover> }
-          
+            </Popover>
+          )}
         </Td>
         <Td>{chamado.id}</Td>
         <Td>
-          <Box>{new Date(chamado.createdAt).toLocaleDateString()}</Box>
-          <Box>{new Date(chamado.createdAt).toLocaleTimeString()}</Box>
+          <Box>{new Date(chamado.createAt).toLocaleDateString()}</Box>
+          <Box>{new Date(chamado.createAt).toLocaleTimeString()}</Box>
         </Td>
         <Td>
           <Link href={`/usuarios/${chamado.idUser}`}>
@@ -151,7 +160,7 @@ export function TabelaChamados({
             </Badge>
           </Link>
         </Td>
-        <Td>{chamado.solicitacao ?? "Não informado"}</Td>
+        <Td>{chamado.solicitacaoId ?? "Não informado"}</Td>
         <Td>
           <Badge variant={"outline"} colorScheme={colorBadge}>
             {getStatusLabel(chamado.status)}
