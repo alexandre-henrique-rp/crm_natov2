@@ -28,33 +28,34 @@ export default function TermosPage() {
   const idUser = Number(session?.id);
 
   useEffect(() => {
-    if (!termosAceitos && idUser) {
-      (async () => {
-        try {
-          const req = await fetch(`api/termo/get/${idUser}`);
-          const res = await req.json();
+    if (session) {
+      if (!termosAceitos && idUser) {
+        (async () => {
+          try {
+            const req = await fetch(`api/termo/get/${idUser}`);
+            const res = await req.json();
 
-          if (!req.ok) {
-            throw new Error(res.message);
-          }
-          if (!res.termos) {
+            if (!req.ok) {
+              throw new Error(res.message);
+            }
+            if (!res.termos) {
+              onOpen();
+            }
+          } catch (error: any) {
+            console.log(error);
             onOpen();
+            toast({
+              title: "Erro!",
+              description: error.message,
+              status: "error",
+              duration: 8000,
+              isClosable: true,
+            });
           }
-        } catch (error: any) {
-          console.log(error);
-          onOpen();
-          toast({
-            title: "Erro!",
-            description: error.message,
-            status: "error",
-            duration: 8000,
-            isClosable: true,
-          });
-        }
-      })();
+        })();
+      }
     }
   }, [onOpen, termosAceitos, idUser, toast]);
-
   const handleCheckboxChange = (e: any) => {
     setCheck(e.target.checked);
   };

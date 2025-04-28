@@ -1,5 +1,5 @@
 import UserCompraProvider from "@/provider/UserCompra";
-import { Alert, AlertIcon, Box, Divider, Flex, Input} from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Button, Divider, Flex, Input } from "@chakra-ui/react";
 
 import { UpdateSolicitacao } from "@/actions/solicitacao/service/update";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
@@ -14,15 +14,22 @@ import { CriarFcweb } from "../botoes/criarFcweb";
 import BtnAlertNow from "../btn_alerta_now";
 import DistratoAlertPrint from "../Distrato_alert_print";
 import BotaoPausar from "../botoes/btn_pausar";
+import BotaoSisapp from "../botoes/bt_sisapp";
+import { cpf } from "cpf-cnpj-validator";
+import { FaNapster } from "react-icons/fa";
+
 
 // const prisma = new PrismaClient();
 type Props = {
   setDadosCard: solictacao.SolicitacaoGetType;
   user: SessionUserType.User;
 };
+
+
 export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
   const HierarquiaUser = user?.hierarquia;
-
+  console.log(setDadosCard);
+  console.log(user);
   const readonly = HierarquiaUser === "ADM" ? false : true;
   return (
     <>
@@ -267,7 +274,7 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
             py={3}
             wrap={"wrap"}
           >
-            <BotaoPausar id={setDadosCard.id} statusPause={setDadosCard.pause} />   
+            <BotaoPausar id={setDadosCard.id} statusPause={setDadosCard.pause} />
             <BtnIniciarAtendimento
               hierarquia={HierarquiaUser}
               status={setDadosCard.statusAtendimento}
@@ -277,7 +284,8 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
             <SaveBtm colorScheme="green" textColor={"black"} size={"sm"} type="submit">
               SALVAR
             </SaveBtm>
-            
+            <BotaoSisapp body={setDadosCard} />
+
             {!setDadosCard.ativo && HierarquiaUser === "ADM" ? (
               <BotaoReativarSolicitacao id={setDadosCard.id} />
             ) : (
