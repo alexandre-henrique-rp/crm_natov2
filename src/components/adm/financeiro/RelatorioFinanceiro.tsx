@@ -1,9 +1,23 @@
 // Componente RelatorioFinanceiro totalmente com Chakra UI
 // Responsivo, didático e sem CSS puro ou classes globais
 import {
-  Box, Flex, Button, Input, Table, Thead, Tbody, Tr, Th, Td, Tag, Text
+  Box,
+  Flex,
+  Button,
+  Input,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Tag,
+  Text,
+  useToast,
+  IconButton,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { IoIosCheckmark, IoIosTrash } from "react-icons/io";
 
 // Dados de exemplo (pode ser substituído por dados reais via props ou fetch)
 const dados = [
@@ -40,9 +54,46 @@ function getStatusTag(status: string) {
   return <Tag colorScheme="blue">Em análise</Tag>;
 }
 
+const HandleDelete = async (id: string) => {
+  try {
+    const response = await fetch(`http://localhost:3000/api/relatorio/${id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) {
+      throw new Error("Erro ao deletar relatório");
+    }
+    return;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+const HandleEdit = async (id: string) => {
+  try {
+    const response = await fetch(`http://localhost:3000/api/relatorio/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "Aprovado",
+      }),
+    });
+    if (!response.ok) {
+      throw new Error("Erro ao editar relatório");
+    }
+    return;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 // Componente principal
 export default function RelatorioFinanceiro() {
   const [busca, setBusca] = useState("");
+  const toast = useToast();
 
   // Filtra os dados pelo nome ou CPF
   const dadosFiltrados = dados.filter(
@@ -51,58 +102,136 @@ export default function RelatorioFinanceiro() {
       item.cpf.replace(/\D/g, "").includes(busca.replace(/\D/g, ""))
   );
 
+  async function DeleteRelatorioFinanceiro(id: string) {
+    try {
+      await HandleDelete(id);
+      toast({
+        title: "Relatório deletado",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Erro ao deletar relatório",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }
+
+  async function EditRelatorioFinanceiro(id: string) {
+    try {
+      await HandleEdit(id);
+      toast({
+        title: "Relatório editado",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Erro ao editar relatório",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }
+
   return (
-    <Box bg="white" borderRadius="lg" p={{ base: 3, md: 6 }} boxShadow="md" w="100%">
+    <Box
+      bg="white"
+      borderRadius="lg"
+      p={{ base: 3, md: 6 }}
+      boxShadow="md"
+      w="100%"
+    >
       {/* Cabeçalho e abas */}
-      <Flex direction={{ base: "column", md: "row" }} justify="space-between" align={{ base: "start", md: "center" }} mb={4} gap={2}>
-        <Text fontSize={{ base: "lg", md: "xl" }} fontWeight="bold">Relatório Financeiro</Text>
-        <Flex gap={2} mt={{ base: 2, md: 0 }}>
-          <Button variant="outline" size="sm">Tipo de Relatório</Button>
-          <Button variant="outline" size="sm">Protocolo</Button>
-          <Button variant="outline" size="sm">Personalizado</Button>
-        </Flex>
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        justify="space-between"
+        align={{ base: "start", md: "center" }}
+        mb={4}
+        gap={2}
+      >
+        <Text fontSize={{ base: "lg", md: "xl" }} fontWeight="bold">
+          Relatório Financeiro
+        </Text>
       </Flex>
       {/* Busca e filtro */}
-      <Flex gap={2} mb={4} align="center" bg="gray.50" borderRadius="md" p={3} flexWrap="wrap">
+      <Flex
+        gap={2}
+        mb={4}
+        align="center"
+        bg="gray.50"
+        borderRadius="md"
+        p={3}
+        flexWrap="wrap"
+      >
         <Input
           placeholder="Buscar..."
           value={busca}
-          onChange={e => setBusca(e.target.value)}
+          onChange={(e) => setBusca(e.target.value)}
           maxW="300px"
           size="sm"
           bg="white"
         />
-        <Button variant="outline" size="sm">Filtrar</Button>
+        <Button variant="outline" size="sm">
+          Filtrar
+        </Button>
       </Flex>
       {/* Tabela responsiva */}
       <Box overflowX="auto">
         <Table size="sm" variant="simple" minW="700px">
           <Thead bg="gray.50">
             <Tr>
-              <Th>#</Th>
               <Th>ID</Th>
-              <Th>Nome</Th>
-              <Th>CPF</Th>
+              <Th>Construtora</Th>
+              <Th>Protocolo</Th>
+              <Th>Valor</Th>
               <Th>Status</Th>
-              <Th>Data aprovação</Th>
               <Th>Data cadastro</Th>
+              <Th>Data pagamento</Th>
+              <Th>Actions</Th>
             </Tr>
           </Thead>
           <Tbody>
             {dadosFiltrados.length === 0 && (
               <Tr>
-                <Td colSpan={7} textAlign="center" color="gray.400">Nenhum resultado encontrado.</Td>
+                <Td colSpan={7} textAlign="center" color="gray.400">
+                  Nenhum resultado encontrado.
+                </Td>
               </Tr>
             )}
-            {dadosFiltrados.map((item, idx) => (
+            {dadosFiltrados.map((item) => (
               <Tr key={item.id} _hover={{ bg: "gray.50" }}>
-                <Td>{idx + 1}</Td>
                 <Td>{item.id}</Td>
                 <Td>{item.nome}</Td>
+                <Td>{item.cpf}</Td>
                 <Td>{item.cpf}</Td>
                 <Td>{getStatusTag(item.status)}</Td>
                 <Td>{item.dataAprovacao || "-"}</Td>
                 <Td>{item.dataCadastro || "-"}</Td>
+                <Td>
+                  <IconButton
+                    aria-label="Deletar relatório"
+                    icon={<IoIosTrash />}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => DeleteRelatorioFinanceiro(item.id)}
+                  />
+                  <IconButton
+                    aria-label="Pg confirmado"
+                    icon={<IoIosCheckmark />}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => EditRelatorioFinanceiro(item.id)}
+                  />
+                </Td>
               </Tr>
             ))}
           </Tbody>
