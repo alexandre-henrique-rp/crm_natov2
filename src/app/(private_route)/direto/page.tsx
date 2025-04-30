@@ -1,5 +1,5 @@
 import { BugReport } from "@/components/bug";
-import { FilterRoute } from "@/components/filter/filtro_route";
+import { FilterRouteDireto } from "@/components/filter/filter_router_direto";
 import ModalPrimeAsses from "@/components/prime_asses";
 import TermosPage from "@/components/termos";
 import { Box, Flex } from "@chakra-ui/react";
@@ -29,7 +29,7 @@ export default async function HomePage() {
         justifyContent="space-between"
       >
         <Box>
-          <FilterRoute />
+          <FilterRouteDireto />
         </Box>
       </Box>
     </Flex>

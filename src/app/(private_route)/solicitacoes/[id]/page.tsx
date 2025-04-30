@@ -16,10 +16,13 @@ const Requestes = async (id: string) => {
         Authorization: `Bearer ${session?.token}`
       }
     });
+    console.log("🚀 ~ Requestes ~ request:", request);
+    const data = await request.json();
+    console.log("🚀 ~ Requestes ~ data:", data);
+
     if (!request.ok) {
       throw new Error("Erro");
     }
-    const data = await request.json();
     // Garante que o objeto seja serializável e plain object
     return JSON.parse(JSON.stringify(data));
   } catch (error) {
