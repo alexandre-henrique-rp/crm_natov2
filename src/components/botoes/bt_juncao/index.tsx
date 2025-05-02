@@ -54,6 +54,7 @@ export default function BotaoJuncao() {
           {but === "ADM" && <BotaoMenu name="Painel adm" />}
           <BotaoMenu name="Dashboard" />
           <BotaoMenu name="FAQ" />
+          <BotaoMenu name="Direto" />
         </Box>
       </Flex>
 

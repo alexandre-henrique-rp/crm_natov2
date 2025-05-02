@@ -58,6 +58,7 @@ export async function GetSessionServer(): Promise<SessionServer | null> {
   }
   const data: any = await OpenSessionToken(token.value);
   return data;
+  
 }
 
 export async function DeleteSession() {
