@@ -12,7 +12,8 @@ type BotaoMenuProps = {
     | "Nova Solicitação"
     | "Dashboard"
     | "FAQ"
-    | "Sair";
+    | "Sair"
+    | "Direto";
 };
 
 export default function BotaoMenu({ name }: BotaoMenuProps) {

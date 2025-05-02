@@ -7,7 +7,7 @@ import CardListAlertCliente from "@/components/card_list_alert_cliente";
 
 const Requestes = async (id: string) => {
   try {
-    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/solicitacao/${id}`;
+      const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/direto/${id}`;
     const session = await GetSessionServer();
     const request = await fetch(url, {
       method: "GET",
@@ -16,10 +16,9 @@ const Requestes = async (id: string) => {
         Authorization: `Bearer ${session?.token}`
       }
     });
-  
+    console.log("🚀 ~ Requestes ~ request:", request);
     const data = await request.json();
-  
-    
+    console.log("🚀 ~ Requestes ~ data:", data);
 
     if (!request.ok) {
       throw new Error("Erro");

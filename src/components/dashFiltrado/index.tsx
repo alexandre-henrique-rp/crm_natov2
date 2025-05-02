@@ -28,13 +28,11 @@ export default function DashFiltrado({
 }: DashFiltradoProps) {
   const [dataInicio, setDataInicio] = useState<string | null>(null);
   const [dataFim, setDataFim] = useState<string | null>(null);
-  // const [mes, setMes] = useState<string | null>(null);
-  // const [ano, setAno] = useState<string | null>(null);
   const [construtora, setConstrutora] = useState<string | null>(null);
   const [empreedimento, setEmpreendimento] = useState<string | null>(null);
   const [financeiro, setFinanceira] = useState<string | null>(null);
   const [dados, setDados] = useState<any | null>(null);
-  const session= useSession();
+  const session = useSession();
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
@@ -52,12 +50,11 @@ export default function DashFiltrado({
     setEmpreendimento(null);
     setFinanceira(null);
   }
+
   const handleSubmit = async () => {
     setDados(null);
     setLoading(true);
-    if (
-      !construtora
-    ) {
+    if (!construtora) {
       toast({
         title: "Erro no Filtro",
         description: `Selecione uma Construtora`,
@@ -78,9 +75,10 @@ export default function DashFiltrado({
       empreedimento,
       financeiro
     };
+
     try {
       const req = await fetch(
-        "https://dashboard.redebrasilrp.com.br/get/infos/search",
+        `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/dashboard/get/infos/search`,
         {
           method: "POST",
           headers: {
@@ -104,8 +102,7 @@ export default function DashFiltrado({
         return;
       } else {
         const result = await req.json();
-
-        if(result.error) {
+        if (result.error) {
           toast({
             title: "Erro",
             description: result.message,
@@ -117,10 +114,9 @@ export default function DashFiltrado({
           nullValues();
           setDados(null);
           setLoading(false);
-        }else{
+        } else {
           setLoading(false);
           setDados(result);
-  
           toast({
             title: "Sucesso!",
             description: "Dados filtrados com sucesso.",
@@ -134,8 +130,7 @@ export default function DashFiltrado({
     } catch (error) {
       toast({
         title: "Erro no Servidor",
-        description:
-          "Ocorreu um erro ao tentar buscar os dados. Tente novamente mais tarde.",
+        description: "Ocorreu um erro ao tentar buscar os dados. Tente novamente mais tarde.",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -152,15 +147,10 @@ export default function DashFiltrado({
       {/* filtro apenas para adm */}
       {hierarquia == "ADM" && (
         <>
-          <Box display={"flex"} justifyContent={"center"} gap={2} w={"100%"}>
-          <Input placeholder='Select Date and Time' width={"10%"} size='md' type='date' onChange={(e) => setDataInicio(e.target.value)}/>
-          <Input placeholder='Select Date and Time' w={'10%'} size='md' type='date' onChange={(e) => setDataFim(e.target.value)}/>
-
-            <Select
-              w={"200px"}
-              value={construtora || ""}
-              onChange={(e) => setConstrutora(e.target.value || null)}
-            >
+          <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} gap={4} w={"full"}>
+            <Input placeholder='Select Date and Time' width={"fit-content"} size='md' type='date' onChange={(e) => setDataInicio(e.target.value)} />
+            <Input placeholder='Select Date and Time' w={'fit-content'} size='md' type='date' onChange={(e) => setDataFim(e.target.value)} />
+            <Select w={"200px"} value={construtora || ""} onChange={(e) => setConstrutora(e.target.value || null)}>
               <option value="">Construtora</option>
               {construtoras?.map((construtora: any) => (
                 <option key={construtora.id} value={construtora.id}>
@@ -168,42 +158,24 @@ export default function DashFiltrado({
                 </option>
               ))}
             </Select>
-            <Select
-              w={"200px"}
-              placeholder="Empreendimento"
-              onChange={(e) => setEmpreendimento(e.target.value)}
-            >
+            <Select w={"200px"} placeholder="Empreendimento" onChange={(e) => setEmpreendimento(e.target.value)}>
               {empreendimentos?.map((empreendimento: any) => (
                 <option key={empreendimento.id} value={empreendimento.id}>
                   {empreendimento.nome}
                 </option>
               ))}
             </Select>
-            <Select
-              w={"200px"}
-              placeholder="Financeira"
-              onChange={(e) => setFinanceira(e.target.value)}
-            >
+            <Select w={"200px"} placeholder="Financeira" onChange={(e) => setFinanceira(e.target.value)}>
               {financeiras?.map((financeira: any) => (
                 <option key={financeira.id} value={financeira.id}>
                   {financeira.fantasia}
                 </option>
               ))}
             </Select>
-            <Button
-              shadow={"md"}
-              size={"sm"}
-              colorScheme={"teal"}
-              onClick={handleSubmit}
-            >
+            <Button shadow={"md"} size={"sm"} colorScheme={"teal"} onClick={handleSubmit}>
               Filtrar
             </Button>
-            <Button
-              shadow={"md"}
-              size={"sm"}
-              colorScheme={"blue"}
-              onClick={handleLimpar}
-            >
+            <Button shadow={"md"} size={"sm"} colorScheme={"blue"} onClick={handleLimpar}>
               Limpar
             </Button>
           </Box>
@@ -214,13 +186,9 @@ export default function DashFiltrado({
       {hierarquia !== "ADM" && (
         <>
           <Box display={"flex"} justifyContent={"center"} gap={2} w={"100%"}>
-          <Input placeholder='Select Date and Time' width={"10%"} size='md' type='date' onChange={(e) => setDataInicio(e.target.value)}/>
-          <Input placeholder='Select Date and Time' w={'10%'} size='md' type='date' onChange={(e) => setDataFim(e.target.value)}/>
-            <Select
-              w={"200px"}
-              value={construtora || ""}
-              onChange={(e) => setConstrutora(e.target.value || null)}
-            >
+            <Input placeholder='Select Date and Time' width={"fit-content"} size='md' type='date' onChange={(e) => setDataInicio(e.target.value)} />
+            <Input placeholder='Select Date and Time' w={'fit-content'} size='md' type='date' onChange={(e) => setDataFim(e.target.value)} />
+            <Select w={"200px"} value={construtora || ""} onChange={(e) => setConstrutora(e.target.value || null)}>
               <option value="">Construtora</option>
               {construtoras?.map((construtora: any) => (
                 <option key={construtora.id} value={construtora.id}>
@@ -228,11 +196,7 @@ export default function DashFiltrado({
                 </option>
               ))}
             </Select>
-            <Select
-              w={"200px"}
-              value={empreedimento || ""}
-              onChange={(e) => setEmpreendimento(e.target.value || null)}
-            >
+            <Select w={"200px"} value={empreedimento || ""} onChange={(e) => setEmpreendimento(e.target.value || null)}>
               <option value="">Empreendimento</option>
               {empreendimentos?.map((empreendimento: any) => (
                 <option key={empreendimento.id} value={empreendimento.id}>
@@ -240,27 +204,10 @@ export default function DashFiltrado({
                 </option>
               ))}
             </Select>
-            {/* <Select w={"200px"} placeholder="Financeira" onChange={(e) => setFinanceira(e.target.value)}>
-          {financeiras?.map((financeira: any) => (
-            <option key={financeira.id} value={financeira.id}>
-              {financeira.fantasia}
-            </option>
-          ))}
-        </Select> */}
-            <Button
-              shadow={"md"}
-              size={"sm"}
-              colorScheme={"teal"}
-              onClick={handleSubmit}
-            >
+            <Button shadow={"md"} size={"sm"} colorScheme={"teal"} onClick={handleSubmit}>
               Filtrar
             </Button>
-            <Button
-              shadow={"md"}
-              size={"sm"}
-              colorScheme={"blue"}
-              onClick={handleLimpar}
-            >
+            <Button shadow={"md"} size={"sm"} colorScheme={"blue"} onClick={handleLimpar}>
               Limpar
             </Button>
           </Box>
@@ -315,7 +262,7 @@ export default function DashFiltrado({
           </>
         ) : null}
         <Divider />
-
+        
         {/* Gráficos de Pizza */}
         {dados ? (
           <Flex

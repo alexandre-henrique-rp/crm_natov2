@@ -1,3 +1,4 @@
+import { layout } from "@chakra-ui/react";
 import { FaRegQuestionCircle } from "react-icons/fa";
 import { FiBarChart, FiFilePlus, FiHome, FiInfo, FiLogOut, FiSettings } from "react-icons/fi";
 import { LuLayoutDashboard } from "react-icons/lu";
@@ -33,4 +34,9 @@ export const IconsMenu = [
     path: "/sair",
     icon: <FiLogOut />,
   },
+  {
+    label: "Direto",
+    path: "/direto",
+    icon: <FiInfo />,
+  }
 ];

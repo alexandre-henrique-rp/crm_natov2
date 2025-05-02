@@ -6,8 +6,7 @@ import CardInfoDashboard from "@/components/cardInfoDashboard";
 import DashFiltrado from "@/components/dashFiltrado";
 import LineChart from "@/components/lineChart.tsx";
 import PieChart from "@/components/pieChart.tsx";
-import { Flex, VStack, Text, Divider } from "@chakra-ui/react";
-import { BsClipboardCheck } from "react-icons/bs";
+import { Flex } from "@chakra-ui/react";
 import { FaRegClock } from "react-icons/fa6";
 import { LuClipboardCheck, LuTag } from "react-icons/lu";
 
@@ -15,7 +14,7 @@ export default async function DashBoard() {
   // Função para buscar dados da API
   const fetchData = async () => {
     const response = await fetch(
-      "https://dashboard.redebrasilrp.com.br/bot/atualiza/infos/global",
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/dashboard`,
       {
         method: "GET",
         headers: {
@@ -33,7 +32,7 @@ export default async function DashBoard() {
 
   const req = await fetchData();
   console.log("🚀 ~ DashBoard ~ req:", req);
-  const data = req.infosGlobal;
+  const data = req.contagem;
   const tags = req.tags;
   // console.log("🚀 ~ DashBoard ~ tags:", tags)
 
@@ -125,17 +124,6 @@ export default async function DashBoard() {
       <Flex w={"full"} h={"full"} flexDir={"column"} p={2}>
         <Flex
           w={"100%"}
-          shadow={"md"}
-          borderBottom={"1px solid #b8b8b8cc"}
-          rounded={"12px"}
-          p={4}
-        >
-          <Text fontSize={"2xl"} fontWeight={"bold"}>
-            DashBoard Global:
-          </Text>
-        </Flex>
-        <Flex
-          w={"100%"}
           h={"auto"}
           gap={"1%"}
           justifyContent={"space-around"}
@@ -181,14 +169,23 @@ export default async function DashBoard() {
         </Flex>
         <Flex
           w={"100%"}
-          shadow={"md"}
-          border={"1px solid #b8b8b8cc"}
+          
           rounded={"12px"}
           p={4}
+          justifyContent={"center"}
+          alignItems={"center"}
         >
-          <Text fontSize={"2xl"} fontWeight={"bold"}>
-            DashBoard Filtrado:
-          </Text>
+          <DashFiltrado
+            construtoras={
+              construtoras
+            }
+            financeiras={
+              financeiras
+            }
+            empreendimentos={
+              empreendimentos
+            }
+          />
         </Flex>
       </Flex>
     </>

@@ -1,70 +1,75 @@
 "use client";
-import useUserCompraContext from "@/hook/useUserCompraContext";
 import { Select, SelectProps } from "@chakra-ui/react";
-import { useSession } from "@/hook/useSession";
-import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
+import { useEffect, useState } from "react";
 
-type SelectEmpreedimentoProps = SelectProps;
+import useUserCompraContext from "@/hook/useUserCompraContext";
+import { useSession } from "@/hook/useSession";
 
-export default function SelectEmpreedimento({
-  ...props
-}: SelectEmpreedimentoProps) {
-  const [Data, setData] = useState<any>([]);
-  const [Loading, setLoading] = useState<boolean>(false);
-  const session = useSession();
-  const user = session;
+type Empreendimento = { id: number; nome: string };
+
+export default function SelectEmpreendimento(props: SelectProps) {
+  const { ContrutoraCX, setEmpreedimentoCX } = useUserCompraContext();
+  const user = useSession();
   const hierarquia = user?.hierarquia;
 
-  const { ContrutoraCX, setEmpreedimentoCX } = useUserCompraContext();
+  const [data, setData] = useState<Empreendimento[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (hierarquia === "ADM") {
-      setLoading(true);
-      if (ContrutoraCX > 0) {
-        (async () => {
-          const req = await fetch(
-            `/api/empreendimento/getall/filter/${ContrutoraCX}`
-          );
-          const res = await req.json();
-          setData(res);
+    let ignore = false;
 
-          setLoading(false);
-        })();
+    async function fetchEmpreendimentos() {
+      setLoading(true);
+      try {
+        let lista: Empreendimento[] = [];
+
+        if (hierarquia === "ADM") {
+    
+          const url =
+            ContrutoraCX > 0
+              ? `/api/empreendimento/getall/filter/${ContrutoraCX}`
+              : `/api/empreendimento/getall`;
+          const res = await fetch(url);
+          lista = await res.json();
+        } else if (user?.empreendimento) {
+        
+          lista = Array.isArray(user.empreendimento)
+            ? user.empreendimento
+            : [user.empreendimento];
+        }
+
+        if (!ignore) setData(lista);
+      } catch (err) {
+        console.error("Erro ao carregar empreendimentos:", err);
+        if (!ignore) setData([]);
+      } finally {
+        if (!ignore) setLoading(false);
       }
     }
-  }, [ContrutoraCX, hierarquia]);
 
-  useEffect(() => {
-    if (hierarquia === "ADM") {
-      (async () => {
-        const req = await fetch(`/api/empreendimento/getall`);
-        const res = await req.json();
-        setData(res);
-      })();
-    } else {
-      const empreedimento = user?.empreendimento;
-      setData(empreedimento);
-    }
-  }, [hierarquia, user?.empreendimento]);
+    fetchEmpreendimentos();
+    return () => {
+      ignore = true;
+    };
+  }, [hierarquia, ContrutoraCX, user?.empreendimento]);
+
+  if (loading) return <BeatLoader color="#36d7b7" />;
+  if (!data.length) return null; 
 
   return (
-    <>
-      {Loading && <BeatLoader color="#36d7b7" />}
-      {!Loading && (
-        <Select
-          {...props}
-          name="empreendimento"
-          placeholder="Selecione uma empreendimento"
-          onChange={(e) => setEmpreedimentoCX(Number(e.target.value))}
-        >
-          {Data.map((item: any) => (
-            <option key={item.id} value={item.id}>
-              {item.nome}
-            </option>
-          ))}
-        </Select>
-      )}
-    </>
+    <Select
+      {...props}
+      name="empreendimento"
+      placeholder="Selecione um empreendimento"
+      onChange={(e) => setEmpreedimentoCX(Number(e.target.value))}
+    >
+      {data.map((item) => (
+        <option key={item.id} value={item.id}>
+          {item.nome}
+        </option>
+      ))}
+    </Select>
   );
 }
+
