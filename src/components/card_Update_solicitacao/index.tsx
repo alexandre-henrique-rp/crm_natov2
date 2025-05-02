@@ -48,11 +48,11 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
           <UserCompraProvider>
             <Box hidden>
               <Input value={setDadosCard.id} name="id_cliente" readOnly />
-              {/* <Input
+              <Input
                 value={setDadosCard.ativo.toString()}
                 name="ativo"
                 readOnly
-              /> */}
+              />
             </Box>
             <Flex flexDir={"column"} gap={6} w={"100%"} h={"100%"} py={10}>
               <Flex
@@ -65,13 +65,13 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                   CPF={setDadosCard?.cpf}
                   w={{ base: "100%", md: "10rem" }}
                 />
-                {/* <input
+                <input
                   type="text"
                   hidden
                   value={setDadosCard.ativo.toString()}
                   readOnly
                   name="StatusAtivo"
-                /> */}
+                />
                 <CardCreateUpdate.GridName
                   Nome={setDadosCard.nome}
                   readonly={readonly}

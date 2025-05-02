@@ -21,9 +21,14 @@ export async function POST(request: Request) {
         );
 
         if (!response.ok) {
-            throw new Error("Erro ao criar o registro");
+            const text = await response.text();
+            console.error("Strapi error:", text);
+            return new NextResponse(
+                `Erro ao criar o registro: ${text}`,
+                { status: response.status }
+            );
         }
-        
+
         const retorno = await response.json();
         return NextResponse.json(
             {

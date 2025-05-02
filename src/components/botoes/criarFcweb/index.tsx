@@ -32,33 +32,43 @@ export function CriarFcweb({ Id, user }: CriarFcwebProps) {
     e.preventDefault();
     onClose();
     setLoading(true);
+    console.log("🚀 ~ handleSubmit ~ response: taok");
     try {
-      
       const response = await fetch("/api/fcweb", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: Id }),
       });
-    //   const json = await response.json();
-      if (response.ok) {
+
+      if (!response.ok) {
+
+        const errorText = await response.text();
         toast({
-          title: "Sucesso!",
-          description: "FCWEB criado com sucesso!",
-          status: "success",
-          duration: 9000,
+          title: "Erro ao criar FCWEB",
+          description: errorText,
+          status: "error",
+          duration: 6000,
           isClosable: true,
         });
+        return;
       }
-    //   setData(json);
-    } catch (error) {
+
+
+      const json = await response.json();
+      toast({
+        title: "Sucesso!",
+        description: json.message,
+        status: "success",
+        duration: 6000,
+        isClosable: true,
+      });
+    } catch (error: any) {
       console.error(error);
       toast({
-        title: "Erro!",
-        description: "Ocorreu um erro ao criar o FCWEB!",
+        title: "Erro inesperado",
+        description: error.message || "Verifique o console",
         status: "error",
-        duration: 9000,
+        duration: 6000,
         isClosable: true,
       });
     } finally {

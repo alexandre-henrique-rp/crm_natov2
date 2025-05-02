@@ -8,7 +8,7 @@ import { ChangeEvent, createContext, useState } from "react";
 export const DataContext = createContext({
   Data: "",
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  setData: (value: string) => {}
+  setData: (value: string) => { }
 });
 
 interface InputUpdateCnhProps extends InputProps {
@@ -74,9 +74,9 @@ export default function InputUpdateCnh({
           accept=".jpg, .png, .pdf"
           onChange={handleFileChange}
         />
-        <Box hidden >
+        <Box hidden>
           <Input
-            value={Data ? Data : Url}
+            value={Data || Url || ""}
             name={`update_${tag}`}
             readOnly
           />
