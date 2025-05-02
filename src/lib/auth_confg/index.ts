@@ -17,13 +17,13 @@ export async function CreateSessionServer(payload = {}) {
     .setExpirationTime("4h")
     .sign(secret);
 
-    const { exp } = await OpenSessionToken(jwt);
+  const { exp } = await OpenSessionToken(jwt);
 
-    cookies().set("session-token", jwt, {
-      expires: (exp as number)*1000,
-      path: "/",
-      httpOnly: true,
-    });
+  cookies().set("session-token", jwt, {
+    expires: (exp as number) * 1000,
+    path: "/",
+    httpOnly: true,
+  });
 }
 
 export async function CreateSessionClient(payload = {}) {
@@ -34,12 +34,12 @@ export async function CreateSessionClient(payload = {}) {
     .setExpirationTime("4h")
     .sign(secret);
 
-    const { exp } = await OpenSessionToken(jwt);
+  const { exp } = await OpenSessionToken(jwt);
 
-    cookies().set("session", jwt, {
-      expires: (exp as number)*1000,
-      path: "/",
-    });
+  cookies().set("session", jwt, {
+    expires: (exp as number) * 1000,
+    path: "/",
+  });
 }
 
 export async function GetSessionClient() {
@@ -56,7 +56,7 @@ export async function GetSessionServer(): Promise<SessionServer | null> {
   if (!token) {
     return null;
   }
-  const data = await OpenSessionToken(token.value);
+  const data: any = await OpenSessionToken(token.value);
   return data;
 }
 

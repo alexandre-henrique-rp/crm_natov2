@@ -21,10 +21,9 @@ type Props = {
   params: { id: string };
 };
 
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const id = params.id;
-  
+
   return {
     title: `Chamado ID: ${id}`,
   };
@@ -46,12 +45,12 @@ export default async function EditarChamado({ params }: Props) {
     }
   );
   const data = await res.json();
+  console.log("🚀 ~ data:", data);
 
   // variaveis do chamado
   const urls = data.images ? data.images : "[]";
-  const url = JSON.parse(urls);
-  const urlView = url.map((item: any) => item.urlView);
-  const urlDownload = url.map((item: any) => item.urlDownload);
+  const urlView = urls.map((item: any) => item.url_view);
+  const urlDownload = urls.map((item: any) => item.url_download);
 
   const color =
     data.status === 0
@@ -83,7 +82,7 @@ export default async function EditarChamado({ params }: Props) {
         p={4}
         borderRadius="15px"
         shadow="lg"
-        overflowY={'auto'}
+        overflowY={"auto"}
       >
         <Text
           justifySelf={"flex-start"}
@@ -103,16 +102,16 @@ export default async function EditarChamado({ params }: Props) {
             <Flex flexDirection={"column"}>
               <Text>Criado por: {user.nome}</Text>
               <Text>
-                Criado em: {new Date(data.createdAt).toLocaleTimeString()},{" "}
-                {new Date(data.createdAt).toLocaleDateString()}
+                Criado em: {new Date(data.createAt).toLocaleTimeString()},{" "}
+                {new Date(data.createAt).toLocaleDateString()}
               </Text>
             </Flex>
             <Flex flexDirection={"column"}>
               <Text>
                 Solicitação ID:{" "}
-                <Link href={`/solicitacoes/${data.solicitacao}`}>
+                <Link href={`/solicitacoes/${data.solicitacaoId}`}>
                   <Badge variant={"solid"} colorScheme="green">
-                    {data.solicitacao}
+                    {data.solicitacaoId}
                   </Badge>
                 </Link>
               </Text>
@@ -189,12 +188,20 @@ export default async function EditarChamado({ params }: Props) {
               )}
             </Flex>
           </Flex>
-          <Flex marginTop={4} justifyContent={'center'}>
-            {data.status === 3 ? (<RespostaChamado data={data} session={userHierarquia} />) : <Box hidden></Box>}
+          <Flex marginTop={4} justifyContent={"center"}>
+            {data.status === 3 ? (
+              <RespostaChamado data={data} session={userHierarquia} />
+            ) : (
+              <Box hidden></Box>
+            )}
             {userHierarquia === "ADM" && data.status === 0 ? (
-              <BotaoIniciarChamado id={data.id}/>
+              <BotaoIniciarChamado id={data.id} />
             ) : userHierarquia === "ADM" && data.status !== 3 ? (
-              <ResponderChamado chamadoId={data.id} status={data.status} userId={UserSessionId as number} />
+              <ResponderChamado
+                chamadoId={data.id}
+                status={data.status}
+                userId={UserSessionId as number}
+              />
             ) : null}
           </Flex>
         </Box>

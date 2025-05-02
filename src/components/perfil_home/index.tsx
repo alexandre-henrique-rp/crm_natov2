@@ -12,8 +12,7 @@ import { useSession } from "@/hook/useSession";
 export default function PerfilHome() {
   const [IdEmpreedimento, setIdEmpreedimento] = useState(0);
   const [IdConstrutora, setIdConstrutora] = useState(0);
-  const session = useSession();
-  const user = session;
+  const user = useSession();
 
   //   setIdEmpreedimento(id);
   // };
@@ -57,10 +56,10 @@ export default function PerfilHome() {
                 <SelectComponent
                   SetValue={user.construtora.map((item) => ({
                     id: item.id,
-                    nome: item.fantasia
+                    nome: item.fantasia,
                   }))}
                   onValue={SetIdConstrutora}
-                  hierarquia={session?.hierarquia}
+                  hierarquia={user?.hierarquia}
                   tag={""}
                   DefaultValue={IdConstrutora}
                 />

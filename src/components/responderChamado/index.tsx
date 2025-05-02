@@ -13,7 +13,6 @@ import {
   useBreakpointValue,
   useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useState } from "react";
 import BotaoChamadoNivelDois from "../botoes/btn_chamado_nivel_dois";
 
@@ -26,14 +25,11 @@ interface ResponderChamadoProps {
 export default function ResponderChamado({
   chamadoId,
   userId,
-  status
+  status,
 }: ResponderChamadoProps) {
   const [resposta, setResposta] = useState<string>("");
   const [files, setFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-  const [urlFinal, setUrlFinal] = useState<
-    { urlDownload: string; urlView: string }[]
-  >([]);
 
   const [fileName, setFileName] = useState<string[]>([]);
 
@@ -49,58 +45,8 @@ export default function ResponderChamado({
     handleFiles(droppedFiles);
   };
 
-  const handleFiles = async (uploadedFiles: FileList) => {
+  const handleFiles = (uploadedFiles: FileList) => {
     const filesArray = Array.from(uploadedFiles);
-
-    for (const file of filesArray) {
-      if (
-        file.type === "application/pdf" ||
-        file.type === "image/jpeg" ||
-        file.type === "image/webp" ||
-        file.type === "image/png"
-      ) {
-        const formData = new FormData();
-        formData.append("file", file);
-
-        try {
-          const response = await axios.post(`/api/chamado/post`, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-          if (response.status === 200) {
-            const url = response.data.data.url;
-            const ulrView = response.data.data.viewUrl;
-            const urlFileName = response.data.data.filename;
-            const urlObj = {
-              urlDownload: url,
-              urlView: ulrView,
-              urlFileName: urlFileName,
-            };
-
-            const teste = fileName;
-            teste.push(urlFileName);
-            setFileName(teste);
-            setUrlFinal((prev) => [...prev, urlObj]);
-
-            toast({
-              title: "Arquivo salvo",
-              status: "success",
-              duration: 3000,
-              isClosable: true,
-            });
-          }
-        } catch (error) {
-          console.error(error);
-          toast({
-            title: "Erro ao salvar arquivo",
-            status: "error",
-            duration: 3000,
-            isClosable: true,
-          });
-        }
-      }
-    }
 
     const newImagePreviews = filesArray
       .filter((file) => file.type.startsWith("image/"))
@@ -119,40 +65,6 @@ export default function ResponderChamado({
     const newImagePreviews = imagePreviews.filter((_, i) => i !== index);
     setFiles(newFiles);
     setImagePreviews(newImagePreviews);
-    handleDeleteImage(index, name, event);
-  };
-
-  const handleDeleteImage = async (
-    index: number,
-    fileName: string,
-    event: React.MouseEvent
-  ) => {
-    event.stopPropagation();
-    const delImage = await axios(`/api/chamado/delete`, {
-      method: "DELETE",
-      data: {
-        image: fileName,
-      },
-    });
-    if (delImage.status === 200) {
-      const newUrlFinal = urlFinal.filter((_, i) => i !== index);
-      setUrlFinal(newUrlFinal);
-      toast({
-        title: "Sucesso",
-        description: "Imagem deletada com sucesso",
-        status: "success",
-        duration: 9000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "Erro",
-        description: "Erro ao deletar imagem",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-    }
   };
 
   const handleEnviarResposta = async () => {
@@ -167,21 +79,24 @@ export default function ResponderChamado({
       return;
     }
 
-    const data = {
-      id: chamadoId,
-      idResposta: userId,
-      status: 3,
-      ...(resposta && { resposta }),
-      ...(urlFinal.length > 0 && { images_adm: urlFinal }),
-    };
-    
+    const formData = new FormData();
+
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    formData.append("id", String(chamadoId));
+    formData.append("idResposta", String(userId));
+    formData.append("status", "3");
+
+    if (resposta) {
+      formData.append("resposta", resposta);
+    }
+
     try {
       const response = await fetch("/api/chamado/back/put", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        method: "PATCH",
+        body: formData,
       });
 
       if (response.ok) {
@@ -292,7 +207,7 @@ export default function ResponderChamado({
       </Box>
 
       <Flex gap={3} justify="flex-end">
-        <BotaoChamadoNivelDois id={chamadoId } status={status}/>
+        <BotaoChamadoNivelDois id={chamadoId} status={status} />
         <Button colorScheme="green" size={"sm"} onClick={handleEnviarResposta}>
           Enviar Resposta
         </Button>

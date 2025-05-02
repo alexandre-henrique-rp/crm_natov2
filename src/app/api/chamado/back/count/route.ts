@@ -1,3 +1,4 @@
+"use server";
 import { GetSessionServer } from "@/lib/auth_confg";
 import { NextResponse } from "next/server";
 
@@ -26,6 +27,7 @@ export async function GET() {
       return new NextResponse(dataRetorno, { status: 200 });
     }
     const data = await req.json();
+    console.log("🚀 ~ GET ~ data:", data);
 
     return NextResponse.json(data, { status: 200 });
   } catch (err: any) {

@@ -5,7 +5,7 @@ import { useSession } from "@/hook/useSession";
 import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 
-type SelectEmpreedimentoProps = SelectProps
+type SelectEmpreedimentoProps = SelectProps;
 
 export default function SelectEmpreedimento({
   ...props
@@ -18,32 +18,30 @@ export default function SelectEmpreedimento({
 
   const { ContrutoraCX, setEmpreedimentoCX } = useUserCompraContext();
 
-   useEffect(() => {
-     if (hierarquia === "ADM") {
-       setLoading(true);
-       if (ContrutoraCX > 0) {
-         (async () => {
-           const req = await fetch(
-             `/api/empreendimento/getall/filter/${ContrutoraCX}`
-           );
-           const res = await req.json();
-           setData(res);
-
-           setLoading(false);
-         })();
-       }
-     }
-   }, [ContrutoraCX, hierarquia]);
-
   useEffect(() => {
     if (hierarquia === "ADM") {
+      setLoading(true);
+      if (ContrutoraCX > 0) {
         (async () => {
           const req = await fetch(
-            `/api/empreendimento/getall`
+            `/api/empreendimento/getall/filter/${ContrutoraCX}`
           );
           const res = await req.json();
           setData(res);
+
+          setLoading(false);
         })();
+      }
+    }
+  }, [ContrutoraCX, hierarquia]);
+
+  useEffect(() => {
+    if (hierarquia === "ADM") {
+      (async () => {
+        const req = await fetch(`/api/empreendimento/getall`);
+        const res = await req.json();
+        setData(res);
+      })();
     } else {
       const empreedimento = user?.empreendimento;
       setData(empreedimento);

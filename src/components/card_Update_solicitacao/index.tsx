@@ -1,10 +1,11 @@
 import UserCompraProvider from "@/provider/UserCompra";
-import { Alert, AlertIcon, Box, Divider, Flex, Input} from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Divider, Flex, Input } from "@chakra-ui/react";
 
 import { UpdateSolicitacao } from "@/actions/solicitacao/service/update";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import { ResendSms } from "@/implementes/cardCreateUpdate/butons/resendSms";
 import { SaveBtm } from "@/implementes/cardCreateUpdate/butons/saveBtm";
+
 import { AuthUser } from "@/types/session";
 import { BtCreateAlertCliente } from "../botoes/bt_create_alert_cliente";
 import CreateChamado from "../botoes/btn_chamado";
@@ -14,10 +15,13 @@ import { CriarFcweb } from "../botoes/criarFcweb";
 import BtnAlertNow from "../btn_alerta_now";
 import DistratoAlertPrint from "../Distrato_alert_print";
 import BotaoPausar from "../botoes/btn_pausar";
+import { SessionClient } from "@/types/session";
 
 type Props = {
   setDadosCard: solictacao.SolicitacaoGetType;
+
   user: AuthUser;
+
 };
 export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
   const HierarquiaUser = user?.hierarquia;
@@ -253,9 +257,10 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                 user={user}
               />
             )}
-            {setDadosCard.ativo && HierarquiaUser === "ADM" && <ResendSms id={setDadosCard.id} />}
+            {setDadosCard.ativo && HierarquiaUser === "ADM" && (
+              <ResendSms id={setDadosCard.id} />
+            )}
             <CreateChamado id={setDadosCard.id} />
-
           </Flex>
           <Flex
             w={"100%"}
@@ -266,17 +271,25 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
             py={3}
             wrap={"wrap"}
           >
-            <BotaoPausar id={setDadosCard.id} statusPause={setDadosCard.pause} />   
+            <BotaoPausar
+              id={setDadosCard.id}
+              statusPause={setDadosCard.pause}
+            />
             <BtnIniciarAtendimento
               hierarquia={HierarquiaUser}
               status={setDadosCard.statusAtendimento}
               aprovacao={setDadosCard.andamento}
               id={setDadosCard.id}
             />
-            <SaveBtm colorScheme="green" textColor={"black"} size={"sm"} type="submit">
+            <SaveBtm
+              colorScheme="green"
+              textColor={"black"}
+              size={"sm"}
+              type="submit"
+            >
               SALVAR
             </SaveBtm>
-            
+
             {!setDadosCard.ativo && HierarquiaUser === "ADM" ? (
               <BotaoReativarSolicitacao id={setDadosCard.id} />
             ) : (
