@@ -13,7 +13,7 @@ import {
 import { useState } from "react";
 import PieChart from "../pieChart.tsx";
 import DoughnutChart from "../doughnutChart";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hook/useSession";
 
 interface DashFiltradoProps {
   construtoras: any;
@@ -34,11 +34,11 @@ export default function DashFiltrado({
   const [empreedimento, setEmpreendimento] = useState<string | null>(null);
   const [financeiro, setFinanceira] = useState<string | null>(null);
   const [dados, setDados] = useState<any | null>(null);
-  const { data: session } = useSession();
+  const session= useSession();
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
-  const hierarquia = session?.user?.hierarquia;
+  const hierarquia = session?.hierarquia;
 
   const handleLimpar = async () => {
     nullValues();

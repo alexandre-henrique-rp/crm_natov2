@@ -1,11 +1,11 @@
 "use server";
 
-import { auth } from "@/lib/auth_confg";
-import { getServerSession } from "next-auth";
+import { GetSessionServer } from "@/lib/auth_confg";
+import { NextResponse } from "next/server";
 
 export async function DesativarEmpreendimento(id: string) {
 
-  const session = await getServerSession(auth);
+  const session = await GetSessionServer();
 
   if (!session) {
     return { error: true, message: "Unauthorized" };

@@ -1,6 +1,5 @@
 "use client";
 import useUserCompraContext from "@/hook/useUserCompraContext";
-import { SessionUserType } from "@/types/next-auth";
 import {
   Box,
   Button,
@@ -12,7 +11,7 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
-  Select,
+  Select, 
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
@@ -23,7 +22,7 @@ import { FaPlus } from "react-icons/fa6";
 interface DropCorretorProps {
   value: number;
   Id: number;
-  user: SessionUserType.User;
+  user: any;
 }
 
 export default function DropCorretor({ value, Id, user }: DropCorretorProps) {

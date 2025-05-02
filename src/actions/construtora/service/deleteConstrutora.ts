@@ -1,14 +1,13 @@
 "use server";
-
-import { auth } from "@/lib/auth_confg";
-import { getServerSession } from "next-auth";
+import { GetSessionServer } from "@/lib/auth_confg";
+import { NextResponse } from "next/server";
 
 export default async function DeleteConstrutora(id: number) {
 
-  const session = await getServerSession(auth);
+  const session = await GetSessionServer();
 
   if (!session) {
-    return { error: true, message: "Unauthorized" };
+    return NextResponse.json({message: "Unauthorized"}, { status: 401 });
   }
 
   const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/construtoras/${id}`, {

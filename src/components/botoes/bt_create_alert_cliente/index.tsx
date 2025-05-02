@@ -1,7 +1,7 @@
 "use client";
 
 import useAlertContext from "@/hook/useAlertContext";
-import { SessionUserType } from "@/types/next-auth";
+import { AuthUser } from "@/types/session";
 import {
   Button,
   FormControl,
@@ -23,7 +23,7 @@ import { BeatLoader } from "react-spinners";
 
 interface BtCreateAlertClienteProps {
   DataSolicitacao: solictacao.SolicitacaoGetType;
-  user: SessionUserType.User;
+  user: AuthUser;
 }
 
 export function BtCreateAlertCliente({

@@ -1,9 +1,11 @@
-import { auth } from "@/lib/auth_confg";
-import { getServerSession } from "next-auth";
+
+"use server";
+
+import { GetSessionServer } from "@/lib/auth_confg";
 
 export default async function GetAllEmpreendimento(){
 
-    const session = await getServerSession(auth);
+    const session = await GetSessionServer();
 
     const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/empreendimento`, {
         method: "GET",

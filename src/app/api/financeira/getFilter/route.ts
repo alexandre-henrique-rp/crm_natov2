@@ -1,10 +1,11 @@
+import { GetSessionServer } from "@/lib/auth_confg";
 import { NextRequest, NextResponse } from "next/server";
 
 
 
 export async function GET(request: NextRequest) {
     try {
-        const session = await getServerSession(auth)
+        const session = await GetSessionServer()
         const { searchParams } = new URL(request.url);
         const FinanceiroId = searchParams.get("financeiro")
         const ConstrutoraId = searchParams.get("construtora")

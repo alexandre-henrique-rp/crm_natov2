@@ -22,7 +22,7 @@ export default function CardGridConstrutoraEmail({
   DataSolicitacao,
   type,
   ...props
-}: CardGridConstrutoraEmailProps): JSX.Element {
+}: CardGridConstrutoraEmailProps) {
   return (
     <>
       <Box {...props}>

@@ -1,6 +1,5 @@
 "use client";
 import useUserCompraContext from "@/hook/useUserCompraContext";
-import { SessionUserType } from "@/types/next-auth";
 import {
   Box,
   Button,
@@ -24,7 +23,7 @@ import { BeatLoader } from "react-spinners";
 interface DropConstrutoraProps {
   value: number;
   Id: number;
-  user: SessionUserType.User;
+  user: any;
 }
 
 export default function DropConstrutora({ value, Id, user }: DropConstrutoraProps) {

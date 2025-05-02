@@ -1,12 +1,12 @@
-import { auth } from "@/lib/auth_confg";
-import { getServerSession } from "next-auth";
+import { GetSessionServer } from "@/lib/auth_confg";
+import { NextResponse } from "next/server";
 
 export default async function GetCorretorByConstrutora(id: number) {
 
-    const session = await getServerSession(auth);
+    const session = await GetSessionServer();
 
     if(!session){
-        return { error: true, message: "Unauthorized" };
+        return NextResponse.json({message: "Unauthorized"}, { status: 401 });
     }
 
     const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/construtora/${id}`, {
@@ -18,11 +18,11 @@ export default async function GetCorretorByConstrutora(id: number) {
     })
     
     if(!req.ok){
-        return { error: true, message: "ERRO Ao buscar construtoras" };
+        return NextResponse.json({message: "ERRO Ao buscar construtoras"}, { status: 401 });
     }
 
     const res = await req.json();
 
-    return { error: false, message: 'Sucesso', data: res }
+    return NextResponse.json({ error: false, message: 'Sucesso', data: res }, { status: 200 });
     
 }

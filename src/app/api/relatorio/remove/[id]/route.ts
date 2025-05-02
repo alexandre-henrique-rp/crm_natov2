@@ -1,4 +1,4 @@
-import { GetSessionServer } from "@/lib/auth_confg";
+import { DeleteSession, GetSessionServer } from "@/lib/auth_confg";
 import { NextResponse } from "next/server";
 
 export async function DELETE(
@@ -6,15 +6,13 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
     const session = await GetSessionServer();
-
     if (!session) {
+      await DeleteSession();
       return new NextResponse("Unauthorized", { status: 401 });
     }
-
-    const reqest = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/financeiro/${id}`,
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/relatorio/${params.id}`,
       {
         method: "DELETE",
         headers: {
@@ -23,13 +21,12 @@ export async function DELETE(
         },
       }
     );
-
-    const data = await reqest.json();
-    if (!reqest.ok) {
-      return new NextResponse("Invalid credentials", { status: 401 });
+    const data = await response.text();
+    if (!response.ok) {
+      throw new Error("Erro ao excluir relatório");
     }
     return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
-    return NextResponse.json({ error: error }, { status: 500 });
+    return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }

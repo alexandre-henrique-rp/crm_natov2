@@ -1,18 +1,17 @@
 import { Box, BoxProps, FormLabel, Text } from "@chakra-ui/react";
 import DropEmpreendimento from "../dropdow/dropEmpreendimento";
 import SelectEmpreedimento from "../dropdow/selectEmpreedimento";
-import { SessionUserType } from "@/types/next-auth";
 
 interface CardGridEmpreedimentoProps extends BoxProps {
   DataSolicitacao: solictacao.SolicitacaoGetType;
-  user: SessionUserType.User;
+  user: any;
 }
 
 export default function CardGridEmpreedimentoCliente({
   DataSolicitacao,
   user,
   ...props
-}: CardGridEmpreedimentoProps): JSX.Element {
+}: CardGridEmpreedimentoProps) {
   return (
     <>
       <Box {...props}>

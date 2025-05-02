@@ -20,7 +20,7 @@ export default function CardGridRegisterEmail({
   type,
   readonly,
   ...props
-}: CardGridEmailProps): JSX.Element {
+}: CardGridEmailProps) {
   return (
     <>
       <Box {...props}>

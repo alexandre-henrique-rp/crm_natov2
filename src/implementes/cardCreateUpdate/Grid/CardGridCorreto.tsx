@@ -1,11 +1,10 @@
 import { Box, BoxProps, FormLabel, Text } from "@chakra-ui/react";
 import SelectCorretor from "../dropdow/selectCorretor";
 import DropCorretor from "../dropdow/dropCorretor";
-import { SessionUserType } from "@/types/next-auth";
 
 interface CardGridCorretorProps extends BoxProps {
   DataSolicitacao: solictacao.SolicitacaoGetType;
-  user: SessionUserType.User;
+  user: any;
 }
 
 export default async function CardGridCorretor({

@@ -1,3 +1,6 @@
+
+"use server";
+
 import { GetSessionServer } from "@/lib/auth_confg";
 
 export default async function GetFinanceiras() {

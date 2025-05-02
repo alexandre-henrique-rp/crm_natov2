@@ -18,13 +18,14 @@ import {
   Select,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
+
 import React from "react";
 import { useEffect, useState } from "react";
+import {useSession} from "@/hook/useSession";
 
 export default function CreateAlertGeral() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { data: session } = useSession();
+  const session = useSession();
   const [DataFinanceiro, setDataFinanceiro] = useState<any>([]);
   const [DataConstrutora, setDataConstrutora] = useState<any>([]);
   const [DataEmpreendimento, setDataEmpreendimento] = useState<any>([]);
@@ -32,7 +33,7 @@ export default function CreateAlertGeral() {
   const [Construtora, setConstrutora] = useState<number>(0);
   const [Empreendimento, setEmpreendimento] = useState<number>(0);
 
-  const user = session?.user;
+  const user = session;
 
   const Handle = async () => {
     const reqest = await fetch(

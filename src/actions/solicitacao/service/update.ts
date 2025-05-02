@@ -18,7 +18,7 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
   console.log("🚀 ~ UpdateSolicitacao ~ id:", id)
   const Ativo = data.get("StatusAtivo") === "true" ? true : false;
   const corretor = Number(data.get("corretor")) || 0;
-  const hierarquia = session?.hierarquia;
+  const hierarquia = session?.user?.hierarquia;
   const avaliar = !Ativo && corretor > 0 && hierarquia === "ADM" ? true : false;
   const Avaliar2 =
     !Ativo && corretor > 0 && hierarquia !== "ADM" ? true : false;
@@ -30,15 +30,15 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
   const Dados = {
     ...(Ativo && { ativo: Ativo }),
     ...(Ativo &&
-      session?.hierarquia !== "ADM" && {
-        corretor: Number(session.id)
+      session?.user?.hierarquia !== "ADM" && {
+        corretor: Number(session.user.id)
       }),
     ...(Avaliar2 && {
-      corretor: Number(session.id),
+      corretor: Number(session.user.id),
       ativo: true
     }),
     ...(Ativo &&
-      session?.hierarquia === "ADM" && {
+      session?.user?.hierarquia === "ADM" && {
         corretor: Number(data.get("corretor"))
       }),
     ...(avaliar && {

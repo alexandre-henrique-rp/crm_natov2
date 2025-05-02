@@ -6,6 +6,7 @@ import { Metadata } from "next";
 export default async function ChamadosPage() {
   const session: any = await GetSessionServer();
   const client = await GetSessionClient();
+
   const userHierarquia = session?.user.hierarquia;
 
   const idUser = session?.user.id;
