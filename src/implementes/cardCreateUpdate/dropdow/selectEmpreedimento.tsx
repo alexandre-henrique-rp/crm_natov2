@@ -7,53 +7,55 @@ import useUserCompraContext from "@/hook/useUserCompraContext";
 import { useSession } from "@/hook/useSession";
 
 type Empreendimento = { id: number; nome: string };
-type SelectEmpreendimentoProps = SelectProps;
 
-export default function SelectEmpreendimento(props: SelectEmpreendimentoProps) {
+export default function SelectEmpreendimento(props: SelectProps) {
   const { ContrutoraCX, setEmpreedimentoCX } = useUserCompraContext();
-
-  const user = useSession();              
+  const user = useSession();
   const hierarquia = user?.hierarquia;
 
   const [data, setData] = useState<Empreendimento[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    let ignore = false;                  
+    let ignore = false;
 
-    async function load() {
+    async function fetchEmpreendimentos() {
       setLoading(true);
+      try {
+        let lista: Empreendimento[] = [];
 
+        if (hierarquia === "ADM") {
+    
+          const url =
+            ContrutoraCX > 0
+              ? `/api/empreendimento/getall/filter/${ContrutoraCX}`
+              : `/api/empreendimento/getall`;
+          const res = await fetch(url);
+          lista = await res.json();
+        } else if (user?.empreendimento) {
+        
+          lista = Array.isArray(user.empreendimento)
+            ? user.empreendimento
+            : [user.empreendimento];
+        }
 
-      if (hierarquia === "ADM" && ContrutoraCX > 0) {
-        const res = await (await fetch(
-          `/api/empreendimento/getall/filter/${ContrutoraCX}`
-        )).json();
-        if (!ignore) setData(res);
+        if (!ignore) setData(lista);
+      } catch (err) {
+        console.error("Erro ao carregar empreendimentos:", err);
+        if (!ignore) setData([]);
+      } finally {
+        if (!ignore) setLoading(false);
       }
-
-      else if (hierarquia === "ADM") {
-        const res = await (await fetch(`/api/empreendimento/getall`)).json();
-        if (!ignore) setData(res);
-      }
- 
-      else if (user?.empreendimento) {
-  
-        const lista = Array.isArray(user.empreendimento)
-          ? user.empreendimento
-          : [user.empreendimento];
-        if (!ignore) setData(lista as Empreendimento[]);
-      } else if (!ignore) {
-        setData([]);                     
-      }
-
-      if (!ignore) setLoading(false);
     }
 
-    load();
-    return () => { ignore = true; };    
+    fetchEmpreendimentos();
+    return () => {
+      ignore = true;
+    };
   }, [hierarquia, ContrutoraCX, user?.empreendimento]);
+
   if (loading) return <BeatLoader color="#36d7b7" />;
+  if (!data.length) return null; 
 
   return (
     <Select
@@ -61,7 +63,6 @@ export default function SelectEmpreendimento(props: SelectEmpreendimentoProps) {
       name="empreendimento"
       placeholder="Selecione um empreendimento"
       onChange={(e) => setEmpreedimentoCX(Number(e.target.value))}
-      isDisabled={!data.length}
     >
       {data.map((item) => (
         <option key={item.id} value={item.id}>
@@ -71,3 +72,4 @@ export default function SelectEmpreendimento(props: SelectEmpreendimentoProps) {
     </Select>
   );
 }
+

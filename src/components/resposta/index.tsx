@@ -17,8 +17,8 @@ import React, { useEffect, useState } from "react";
 import { IoMdDownload } from "react-icons/io";
 
 interface ImageData {
-  urlView: string;
-  urlDownload: string;
+  url_download: string;
+  url_view: string;
 }
 interface RespostaChamadoProps {
   data: {
@@ -38,9 +38,9 @@ export default function RespostaChamado({
   const [mostrarResposta, setMostrarResposta] = useState(false);
 
   // Parse image URLs safely
-  const urls: ImageData[] = data.images_adm ? JSON.parse(data.images_adm) : [];
-  const urlsView = urls.map((item) => item.urlView);
-  const urlsDownload = urls.map((item) => item.urlDownload);
+  const urls: ImageData[] = data.images_adm ? (data.images_adm as any) : [];
+  const urlsView = urls.map((item) => item.url_download);
+  const urlsDownload = urls.map((item) => item.url_view);
 
   useEffect(() => {
     const fetchUserResposta = async () => {
@@ -160,8 +160,6 @@ export default function RespostaChamado({
           />
         </Button>
         {mostrarResposta && renderResponseContent()}
-
-        
       </Flex>
     </>
   );
