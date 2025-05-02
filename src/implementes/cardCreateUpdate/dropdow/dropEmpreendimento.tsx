@@ -1,6 +1,5 @@
 "use client";
 import useUserCompraContext from "@/hook/useUserCompraContext";
-import { SessionUserType } from "@/types/next-auth";
 import {
   Box,
   Button,
@@ -23,7 +22,7 @@ import { BeatLoader } from "react-spinners";
 interface DropEmpreendimentoProps {
   value: number;
   id: number;
-  user: SessionUserType.User;
+  user: any;
 }
 export default function DropEmpreendimento({
   value,

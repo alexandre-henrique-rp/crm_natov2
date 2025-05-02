@@ -27,7 +27,7 @@ export async function GET() {
       .filter((alert: any) => alert.status === true)
       .filter(
         (alert: any) =>
-          alert.corretor === session?.id || alert.corretor === null
+          alert.corretor === session?.user?.id || alert.corretor === null
       );
 
     return NextResponse.json(filterData, { status: 200 });

@@ -2,7 +2,7 @@
 
 import { GetSessionServer } from "@/lib/auth_confg";
 
-export default async function GetSuporteById(id: number) {
+export async function GetSuporteById(id: number) {
 
   const session = await GetSessionServer();
 

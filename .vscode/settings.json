@@ -160,6 +160,7 @@
     "geist",
     "getall",
     "getallid",
+    "getone",
     "getpgid",
     "gina",
     "Googleforms",

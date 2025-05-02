@@ -1,9 +1,10 @@
-import { auth } from "@/lib/auth_confg";
-import { getServerSession } from "next-auth";
+"use server";
+
+import { GetSessionServer } from "@/lib/auth_confg";
 
 export async function GetFinanceiraById(id: number){
 
-    const session = await getServerSession(auth);
+    const session = await GetSessionServer();
 
     if(!session){
         return { error: true, message: "Unauthorized", status: 401 };

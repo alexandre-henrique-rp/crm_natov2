@@ -11,12 +11,11 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import { getServerSession } from "next-auth";
-import { auth } from "@/lib/auth_confg";
 import { IoMdDownload } from "react-icons/io";
 import ResponderChamado from "@/components/responderChamado";
 import BotaoIniciarChamado from "@/components/botoes/btn_iniciar_chamado";
 import RespostaChamado from "@/components/resposta";
+import { GetSessionServer } from "@/lib/auth_confg";
 
 type Props = {
   params: { id: string };
@@ -32,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function EditarChamado({ params }: Props) {
-  const session = await getServerSession(auth);
+  const session = await GetSessionServer();
   const userSession = session?.user;
   const UserSessionId = userSession?.id;
   const userHierarquia = userSession?.hierarquia;

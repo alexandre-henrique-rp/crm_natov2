@@ -1,5 +1,4 @@
 "use client";
-import { SessionUserType } from "@/types/next-auth";
 import {
   Box,
   Button,
@@ -22,7 +21,7 @@ import { BeatLoader } from "react-spinners";
 interface DropFinanceiroProps {
   value: number;
   Id: number;
-  user: SessionUserType.User;
+  user: any;
 }
 export default function DropFinanceiro({ value, Id, user }: DropFinanceiroProps) {
   const hierarquia = user.hierarquia;

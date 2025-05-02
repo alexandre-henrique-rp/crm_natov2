@@ -1,3 +1,4 @@
+import { GetSessionServer } from "@/lib/auth_confg";
 import { NextResponse } from "next/server";
 
 export async function PUT(
@@ -14,19 +15,19 @@ export async function PUT(
     if (!session) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-    // const response = await fetch(
-    //   `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/reset_password/${id}`,
-    //   {
-    //     method: "PATCH",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${session?.token}`,
-    //     },
-    //     body: JSON.stringify(data),
-    //   }
-    // );
-    // const retorno = await response.json();
-    // return NextResponse.json(retorno, { status: 200 });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/reset_password/${id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.token}`,
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    const retorno = await response.json();
+    return NextResponse.json(retorno, { status: 200 });
   } catch (error) {
     return NextResponse.json(error, { status: 500 });
   }

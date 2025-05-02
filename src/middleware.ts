@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GetSessionServer } from "./lib/auth_confg";
 
-const isPlublicRoute = ["login", "register", "termos"];
+const publicRoutes = ["/login", "/suportefaq", "/termos/privacidade", "/termos/uso", "/api/auth", "/api/auth/logout"];
 
 export async function middleware(req: NextRequest) {
   const session = await GetSessionServer();
-
+  
   const { pathname } = req.nextUrl;
+  const isPublicRoute = publicRoutes.includes(pathname);
+
+  if (!session) {
+    if (isPublicRoute) {
+      return NextResponse.next();
+    }
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
 
   if (pathname === "/") {
     if (!session) {
@@ -21,12 +29,6 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (!session) {
-    if (isPlublicRoute) {
-      return NextResponse.next();
-    }
-    return NextResponse.redirect(new URL("/login", req.url));
-  }
 }
 
 export const config = {

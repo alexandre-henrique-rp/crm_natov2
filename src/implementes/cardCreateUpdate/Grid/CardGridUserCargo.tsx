@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, BoxProps, FormLabel } from "@chakra-ui/react";
 import { SelectUserCargo } from "../dropdow/selectUserCargo";
 

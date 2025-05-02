@@ -1,11 +1,10 @@
 "use server";
 
-import { auth } from "@/lib/auth_confg";
-import { getServerSession } from "next-auth";
+import { GetSessionServer } from "@/lib/auth_confg";
 import { redirect } from "next/navigation";
 
 export async function CreateEmpreendimento(_: any, data: FormData) {
-  const session = await getServerSession(auth);
+  const session = await GetSessionServer();
 
   if (!session) {
     return { status: 401, message: "Unauthorized", error: true };

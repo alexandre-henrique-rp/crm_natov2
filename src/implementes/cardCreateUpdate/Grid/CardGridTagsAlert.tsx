@@ -1,9 +1,8 @@
 import { Box, BoxProps, FormLabel } from "@chakra-ui/react";
 import { SelectTagsAlerta } from "../dropdow/selectTagsAlerta";
-import { SessionUserType } from "@/types/next-auth";
 interface CardGridTagsAlertProps extends BoxProps {
   ID: number;
-  user: SessionUserType.User;
+  user: any;
 }
 
 export async function CardGridTagsAlert({

@@ -1,8 +1,7 @@
 import { TabelaChamados } from "@/components/tabelaChamados";
-import { auth } from "@/lib/auth_confg";
 import { Flex } from "@chakra-ui/react";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth/next";
+import { GetSessionServer } from "@/lib/auth_confg";
 
 export const metadata: Metadata = {
   title: "CHAMADOS",
@@ -10,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ChamadosPage() {
-  const session = await getServerSession(auth);
+  const session = await GetSessionServer();
   const userHierarquia = session?.user.hierarquia;
 
   const idUser = session?.user.id;

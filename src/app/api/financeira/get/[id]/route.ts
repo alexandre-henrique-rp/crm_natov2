@@ -1,5 +1,4 @@
 import { GetSessionServer } from "@/lib/auth_confg";
-"use server";
 import { NextResponse } from "next/server";
 
 export async function GET(
