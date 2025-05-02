@@ -32,23 +32,7 @@ function getStatusTag(status: number) {
   return <Tag colorScheme="blue">Em análise</Tag>;
 }
 
-const HandleGeneratePdf = async (protocolo: string) => {
-  try {
-    const response = await fetch(
-      `http://localhost:3000/api/relatorio/${protocolo}/pdf`,
-      {
-        method: "GET",
-      }
-    );
-    if (!response.ok) {
-      throw new Error("Erro ao gerar relatório PDF");
-    }
-    return;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+
 
 interface RelatorioFinanceiroItem {
   construtora: {
@@ -67,8 +51,13 @@ interface RelatorioFinanceiroItem {
   createAt: Date | string;
 }
 
+interface Props {
+  onAtualizar: () => void;
+  // ...outras props
+}
+
 // Componente principal
-export default function RelatorioFinanceiro() {
+export default function RelatorioFinanceiro({onAtualizar}: Props) {
   const [busca, setBusca] = useState("");
   const [dados, setDados] = useState<RelatorioFinanceiroItem[]>([]);
   const toast = useToast();
@@ -103,8 +92,11 @@ export default function RelatorioFinanceiro() {
   };
 
   //Filtra os dados pelo nome ou cnpj
-  const dadosFiltrados = dados.filter(
-    (item) =>
+  const dadosFiltrados = async () => {
+    if (!busca) {
+      HandlePesquisa();
+    }
+    const filtro = dados.filter((item) => {
       item.construtora.fantasia?.toLowerCase().includes(busca.toLowerCase()) ||
       item.construtora.razaosocial
         ?.toLowerCase()
@@ -112,7 +104,9 @@ export default function RelatorioFinanceiro() {
       item.construtora.cnpj
         ?.replace(/\D/g, "")
         .includes(busca.replace(/\D/g, ""))
-  );
+    })
+    setDados(filtro);
+  };
 
   const HandleDelete = async (id: number) => {
     try {
@@ -132,11 +126,44 @@ export default function RelatorioFinanceiro() {
         duration: 3000,
         isClosable: true,
       });
+      onAtualizar();
       HandlePesquisa();
     } catch (error: any) {
       console.error(error.message);
       toast({
         title: error.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const HandleDownload = async (protocolo: string, type: string) => {
+    try {
+      const Url =
+        type === "pdf"
+          ? `/api/relatorio/doc/${protocolo}/pdf`
+          : `/api/relatorio/doc/${protocolo}/xlsx`;
+      const response = await fetch(Url);
+      if (!response.ok) {
+        throw new Error("Erro ao gerar relatório");
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+  
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = type === "pdf" ? "relatorio.pdf" : "relatorio.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      return;
+    } catch (error: any) {
+      toast({
+        title: "Erro ao gerar relatório",
+        description: error.message,
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -179,7 +206,7 @@ export default function RelatorioFinanceiro() {
     try {
       const response = await fetch(`/api/relatorio/update/${id}`, {
         method: "PUT",
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           situacao_pg: 2,
           dt_pg: new Date(),
         }),
@@ -193,11 +220,13 @@ export default function RelatorioFinanceiro() {
       }
       toast({
         title: "Pagamento confirmado com sucesso!",
-        description: "Agora esse cobrança esta com status de pagamento concluído, e sera retirado da lista de cobranças em aberto.",
+        description:
+          "Agora esse cobrança esta com status de pagamento concluído, e sera retirado da lista de cobranças em aberto.",
         status: "success",
         duration: 6000,
         isClosable: true,
       });
+      onAtualizar();
       HandlePesquisa();
     } catch (error: any) {
       console.log(error);
@@ -209,6 +238,36 @@ export default function RelatorioFinanceiro() {
       });
     }
   };
+
+  const HandleBuscaDetalhada = async () => {
+    try {
+      const req = await fetch(`/api/relatorio/pesquisa`, {
+        method: "POST",
+        body: JSON.stringify({
+          pesquisa: busca,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await req.json();
+      if (!req.ok) {
+        throw new Error(data.message);
+      }
+      setDados(data);
+      
+    } catch (error: any) {
+      console.log(error);
+      toast({
+        title: error.message,
+        status: "error",
+        duration: 6000,
+        isClosable: true,
+      });
+      HandlePesquisa();
+      setBusca("");
+    }
+  }
 
   return (
     <Box
@@ -248,7 +307,7 @@ export default function RelatorioFinanceiro() {
           size="sm"
           bg="white"
         />
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" onClick={dadosFiltrados}>
           Filtrar
         </Button>
       </Flex>
@@ -269,14 +328,26 @@ export default function RelatorioFinanceiro() {
             </Tr>
           </Thead>
           <Tbody>
-            {dadosFiltrados.length === 0 && (
+            {dados.length === 0 && busca && (
               <Tr>
-                <Td colSpan={7} textAlign="center" color="gray.400">
+                <Td colSpan={12} textAlign="center" color="gray.400" py={12}>
+                  <Flex justifyContent="center" alignItems="center" gap={2} w="100%" flexDir="column">
+                    <Text>Nenhum resultado encontrado. Você quer uma busca detalhada?</Text>
+                    <Button bg="blue.500" color="white" variant="outline" size="sm" onClick={HandleBuscaDetalhada}>
+                      Buscar
+                    </Button>
+                  </Flex>
+                </Td>
+              </Tr>
+            )}
+            {dados.length === 0 && !busca && (
+              <Tr>
+                <Td colSpan={12} textAlign="center" color="gray.400" py={12}>
                   Nenhum resultado encontrado.
                 </Td>
               </Tr>
             )}
-            {dadosFiltrados.map((item) => (
+            {dados.map((item) => (
               <Tr key={item.id} _hover={{ bg: "gray.50" }}>
                 <Td>{item.id}</Td>
                 <Td>
@@ -327,7 +398,7 @@ export default function RelatorioFinanceiro() {
                       bg="green.100"
                       variant="ghost"
                       size="sm"
-                      // onClick={() => DeleteRelatorioFinanceiro(item.id)}
+                      onClick={async () => HandleDownload(item.protocolo, "pdf")}
                     />
                   </Tooltip>
                   <Tooltip
@@ -342,7 +413,7 @@ export default function RelatorioFinanceiro() {
                       bg="green.100"
                       variant="ghost"
                       size="sm"
-                      // onClick={() => DeleteRelatorioFinanceiro(item.id)}
+                      onClick={() => HandleDownload(item.protocolo, "xlsx")}
                     />
                   </Tooltip>
                   <Tooltip
