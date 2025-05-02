@@ -30,9 +30,7 @@ export const FilterRouteDireto = () => {
           "Content-Type": "application/json"
         },
       });
-      console.log(req);
       const data = await req.json();
-      console.log("tamoindtamoindo", data);
     })();
   }, []);
 
@@ -49,9 +47,6 @@ export const FilterRouteDireto = () => {
       }
       if (DataFilter.andamento) {
         Filter += `andamento=${DataFilter.andamento}&`;
-      }
-      if (DataFilter.construtora > 0) {
-        Filter += `construtora=${DataFilter.construtora}&`;
       }
       if (DataFilter.empreendimento > 0) {
         Filter += `empreedimento=${DataFilter.empreendimento}&`;

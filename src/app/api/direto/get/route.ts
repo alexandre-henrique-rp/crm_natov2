@@ -21,6 +21,7 @@ export async function GET(req: Request) {
       return NextResponse.json('Upstream error', { status: resp.status });
     }
     const payload = await resp.json();
+   
     return NextResponse.json(
       {
         data: payload,        
@@ -29,8 +30,8 @@ export async function GET(req: Request) {
       },
       { status: 200 }
     );
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     return NextResponse.json('Internal error', { status: 500 });
   }
 }

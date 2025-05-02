@@ -5,7 +5,7 @@ import { UpdateSolicitacao } from "@/actions/solicitacao/service/update";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import { ResendSms } from "@/implementes/cardCreateUpdate/butons/resendSms";
 import { SaveBtm } from "@/implementes/cardCreateUpdate/butons/saveBtm";
-import { AuthUser } from "@/types/session";
+import { SessionUserType } from "@/types/next-auth";
 import { BtCreateAlertCliente } from "../botoes/bt_create_alert_cliente";
 import CreateChamado from "../botoes/btn_chamado";
 import BtnIniciarAtendimento from "../botoes/btn_iniciar_atendimento";
@@ -19,33 +19,30 @@ import { cpf } from "cpf-cnpj-validator";
 import { FaNapster } from "react-icons/fa";
 
 
+// const prisma = new PrismaClient();
 type Props = {
   setDadosCard: solictacao.SolicitacaoGetType;
-  user: AuthUser;
+  user: SessionUserType.User;
 };
 
 
-export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
+export async function CardUpdateDireto({ setDadosCard, user }: Props) {
   const HierarquiaUser = user?.hierarquia;
   const readonly = HierarquiaUser === "ADM" ? false : true;
-
-  const { construtora } = setDadosCard;
-
   return (
     <>
       <CardCreateUpdate.Root>
         <CardCreateUpdate.Headers SetDados={setDadosCard} />
         <Divider borderColor="#00713D" my={4} />
-
         <CardCreateUpdate.Form action={UpdateSolicitacao}>
           <UserCompraProvider>
             <Box hidden>
               <Input value={setDadosCard.id} name="id_cliente" readOnly />
-              {/* <Input
+              <Input
                 value={setDadosCard.ativo.toString()}
                 name="ativo"
                 readOnly
-              /> */}
+              />
             </Box>
             <Flex flexDir={"column"} gap={6} w={"100%"} h={"100%"} py={10}>
               <Flex
@@ -58,13 +55,13 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                   CPF={setDadosCard?.cpf}
                   w={{ base: "100%", md: "10rem" }}
                 />
-                {/* <input
+                <input
                   type="text"
                   hidden
                   value={setDadosCard.ativo.toString()}
                   readOnly
                   name="StatusAtivo"
-                /> */}
+                />
                 <CardCreateUpdate.GridName
                   Nome={setDadosCard.nome}
                   readonly={readonly}
@@ -104,13 +101,6 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                   w={{ base: "100%", md: "10rem" }}
                   readonly={readonly}
                 />
-                {construtora && (
-                  <CardCreateUpdate.GridConstrutora
-                    user={user}
-                    DataSolicitacao={setDadosCard}
-                    w={{ base: "100%", md: "12rem" }}
-                  />
-                )}
               </Flex>
               <Flex
                 flexDir={{ base: "column", md: "row" }}
@@ -119,11 +109,6 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                 px={4}
                 justifyContent={{ base: "center", md: "space-between" }}
               >
-                <CardCreateUpdate.GridEmpreedimentoCL
-                  user={user}
-                  DataSolicitacao={setDadosCard}
-                  w={{ base: "100%", md: "16rem" }}
-                />
                 <CardCreateUpdate.GridFinanceiraCl
                   user={user}
                   DataSolicitacao={setDadosCard}
@@ -186,10 +171,10 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                   Hierarquia={!HierarquiaUser ? "USER" : HierarquiaUser}
                 />
               </Flex>
-              {construtora?.id === 5 && (
+              {setDadosCard.construtora.id === 5 ? (
                 <Box>
                   <Alert
-                    justifyContent="space-between"
+                    justifyContent={"space-between"}
                     status="warning"
                     variant="left-accent"
                   >
@@ -197,7 +182,7 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                     Apenas para clientes presentes no Plantão de Venda.
                     <BtnAlertNow
                       id={setDadosCard.id}
-                      andamento={setDadosCard.andamento}
+                      andamento={setDadosCard.Andamento}
                       ativo={setDadosCard.ativo}
                       distrato={setDadosCard.distrato}
                       construtora={setDadosCard.construtora}
@@ -205,6 +190,8 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                     />
                   </Alert>
                 </Box>
+              ) : (
+                <Box hidden></Box>
               )}
               <Flex
                 flexDir={{ base: "column", md: "row" }}
@@ -279,7 +266,7 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
             <BtnIniciarAtendimento
               hierarquia={HierarquiaUser}
               status={setDadosCard.statusAtendimento}
-              aprovacao={setDadosCard.andamento}
+              aprovacao={setDadosCard.Andamento}
               id={setDadosCard.id}
             />
             <SaveBtm colorScheme="green" textColor={"black"} size={"sm"} type="submit">

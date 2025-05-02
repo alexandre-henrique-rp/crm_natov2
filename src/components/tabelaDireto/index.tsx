@@ -91,7 +91,7 @@ export function TabelaDireto({
   };
 
   const tabela = ClientData.map((item) => {
-    const fantasia = item.construtora?.fantasia;
+    
 
     const ano = item.dt_agendamento?.split("-")[0];
     const mes = item.dt_agendamento?.split("-")[1];
@@ -134,11 +134,7 @@ export function TabelaDireto({
         ? "white"
         : "black";
 
-    const regexAssinado = new RegExp("\\bAssinado\\b");
-    const AssDocAss = regexAssinado.test(item.ass_doc);
-
-    const regexExpirado = new RegExp("\\bexpirado\\b");
-    const AssDocExp = regexExpirado.test(item.ass_doc);
+   
     return (
       <Tr key={item.id} bg={colors} color={fontColor}>
         <Td>
@@ -249,7 +245,7 @@ export function TabelaDireto({
           </Tooltip>
         </Td>
         <Td>{item.ativo && downTimeInDays(item)}</Td>
-        {user?.hierarquia === "ADM" && <Td>{fantasia}</Td>}
+    
       </Tr>
     );
   });
