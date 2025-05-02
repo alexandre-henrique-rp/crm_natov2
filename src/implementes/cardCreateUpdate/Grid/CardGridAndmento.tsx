@@ -8,7 +8,7 @@ export default function CardGridAndamento({
   DataSolicitacao,
   ...props
 }: CardGridUpdateCnhProps) {
-  const Andamento = DataSolicitacao.Andamento;
+  const Andamento = DataSolicitacao.andamento;
   const dtAgendamento =
     DataSolicitacao.dt_agendamento &&
     DataSolicitacao.dt_agendamento.split("T")[0];

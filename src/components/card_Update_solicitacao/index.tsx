@@ -5,7 +5,7 @@ import { UpdateSolicitacao } from "@/actions/solicitacao/service/update";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import { ResendSms } from "@/implementes/cardCreateUpdate/butons/resendSms";
 import { SaveBtm } from "@/implementes/cardCreateUpdate/butons/saveBtm";
-import { SessionUserType } from "@/types/next-auth";
+import { AuthUser } from "@/types/session";
 import { BtCreateAlertCliente } from "../botoes/bt_create_alert_cliente";
 import CreateChamado from "../botoes/btn_chamado";
 import BtnIniciarAtendimento from "../botoes/btn_iniciar_atendimento";
@@ -19,10 +19,9 @@ import { cpf } from "cpf-cnpj-validator";
 import { FaNapster } from "react-icons/fa";
 
 
-// const prisma = new PrismaClient();
 type Props = {
   setDadosCard: solictacao.SolicitacaoGetType;
-  user: SessionUserType.User;
+  user: AuthUser;
 };
 
 
@@ -194,7 +193,7 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                     Apenas para clientes presentes no Plantão de Venda.
                     <BtnAlertNow
                       id={setDadosCard.id}
-                      andamento={setDadosCard.Andamento}
+                      andamento={setDadosCard.andamento}
                       ativo={setDadosCard.ativo}
                       distrato={setDadosCard.distrato}
                       construtora={setDadosCard.construtora}
@@ -278,7 +277,7 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
             <BtnIniciarAtendimento
               hierarquia={HierarquiaUser}
               status={setDadosCard.statusAtendimento}
-              aprovacao={setDadosCard.Andamento}
+              aprovacao={setDadosCard.andamento}
               id={setDadosCard.id}
             />
             <SaveBtm colorScheme="green" textColor={"black"} size={"sm"} type="submit">

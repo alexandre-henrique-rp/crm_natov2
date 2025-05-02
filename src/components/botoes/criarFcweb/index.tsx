@@ -1,6 +1,5 @@
 "use client";
 
-import { SessionUserType } from "@/types/next-auth";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -14,10 +13,11 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import React, { FormEventHandler, useState, useRef } from "react";
+import { AuthUser } from "@/types/session";
 
 interface CriarFcwebProps {
   Id: number;
-  user: SessionUserType.User;
+  user: AuthUser;
 }
 
 export function CriarFcweb({ Id, user }: CriarFcwebProps) {

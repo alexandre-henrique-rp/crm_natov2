@@ -3,8 +3,8 @@
 import { createSuportAlert } from "@/actions/solicitacoes/service/createUpdateService";
 import DeleteImgSuporte from "@/actions/solicitacoes/service/deleteImgSuporte";
 import DeleteSuporte from "@/actions/solicitacoes/service/deleteSuporte";
-import GetAllSuporteId from "@/actions/solicitacoes/service/getAllSuporteId";
-import GetSuporteById from "@/actions/solicitacoes/service/getSuporteId";
+import { GetAllSuporteId } from "@/actions/solicitacoes/service/getAllSuporteId";
+import { GetSuporteById } from "@/actions/solicitacoes/service/getSuporteId";
 import UpdateService from "@/actions/solicitacoes/service/updateService";
 import { SuporteTagsOptions } from "@/data/suporte";
 import {

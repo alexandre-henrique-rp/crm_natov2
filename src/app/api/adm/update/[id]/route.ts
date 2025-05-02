@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { GetSessionServer } from "@/lib/auth_confg";
 
-const prisma = new PrismaClient();
-
+// Rota para atualizar um registro de solicitação usando apenas o Strapi (sem Prisma)
+// Essa rota utiliza o Strapi como fonte de dados, realizando a atualização de registros via fetch.
+// A instância do Prisma Client foi removida, pois não é necessária para essa implementação.
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
@@ -13,22 +14,23 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       return new NextResponse("Unauthorized", { status: 401 });
     }
     
-    const retorno = await prisma.nato_relatorio_financeiro.update({
-      where: {
-        id: Number(id)
+    // Envia os dados para o Strapi
+    const retorno = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/solicitacao/update/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.token}`
       },
-      data: {
-        ...data
-      }
+      body: JSON.stringify(data)
     });
 
-    await prisma.$disconnect();
+    const res = await retorno.json();
 
     return NextResponse.json(
       {
         error: false,
         message: "Registro criado com sucesso",
-        data: { response: retorno }
+        data: { response: res }
       },
       { status: 200 }
     );

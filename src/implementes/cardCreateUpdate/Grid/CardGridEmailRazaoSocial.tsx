@@ -22,7 +22,7 @@ export default function CardGridEmailRazaoSocial({
   DataSolicitacao,
   type,
   ...props
-}: CardGridEmailRazaoSocialProps): JSX.Element {
+}: CardGridEmailRazaoSocialProps) {
   return (
     <>
       <Box {...props}>

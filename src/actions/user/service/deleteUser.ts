@@ -2,8 +2,6 @@
 
 import { GetSessionServer } from "@/lib/auth_confg";
 
-
-
 export async function DeleteUser(id: number){
 
     const session = await GetSessionServer();

@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, BoxProps, FormLabel } from "@chakra-ui/react";
 import { SelectUserEmpreendimento } from "../dropdow/selectUserEmpreendimento";
 
@@ -13,7 +12,7 @@ export function CardGridUserEmpreedimento({
   return (
     <>
       <Box {...props}>
-        <FormLabel fontSize="sm" fontWeight="md" m={0}>
+        <FormLabel fontSize="sm" fontWeight="md" m={0}> 
           Empreendimento
         </FormLabel>
         <SelectUserEmpreendimento setValue={UserEmpreedimento} />

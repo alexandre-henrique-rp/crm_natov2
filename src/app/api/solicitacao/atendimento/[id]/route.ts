@@ -9,7 +9,7 @@ export async function PUT(
     const { id } = params;
     const session = await GetSessionServer();
     if (!session) {
-      return { error: true, message: "Unauthorized", status: 401 };
+      return NextResponse.json({ error: true, message: "Unauthorized"}, { status: 401 });
     }
 
     const req = await fetch(
@@ -30,7 +30,7 @@ export async function PUT(
     }
 
     return NextResponse.json(res, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ error: error }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }

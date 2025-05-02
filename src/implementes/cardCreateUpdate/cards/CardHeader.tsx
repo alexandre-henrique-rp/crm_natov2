@@ -3,7 +3,7 @@ import { useSession } from "@/hook/useSession";
 import { Box, Text } from "@chakra-ui/react";
 
 interface CardHeaderProps {
-  SetDados: solictacao.SolicitacaoGetType;
+  SetDados: any;
 }
 
 export function CardHeader({ SetDados }: CardHeaderProps) {

@@ -1,6 +1,5 @@
 "use server";
-import { auth } from "@/lib/auth_confg";
-import { getServerSession } from "next-auth";
+import { GetSessionServer } from "@/lib/auth_confg";
 import { redirect } from "next/navigation";
 
 export default async function UpdateConstrutora(_: any, data: FormData) {
@@ -17,7 +16,7 @@ export default async function UpdateConstrutora(_: any, data: FormData) {
     fantasia: fantasia,
   };
 
-  const session = await getServerSession(auth);
+  const session = await GetSessionServer();
 
   if (!session) {
     return {
