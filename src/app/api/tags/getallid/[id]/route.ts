@@ -14,20 +14,19 @@ export async function GET(
     }
 
     const reqest = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/tags/solicitacao/${id}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/tag/solicitacao/${id}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.token}`
-        }
+          Authorization: `Bearer ${session?.token}`,
+        },
       }
     );
 
     if (!reqest.ok) {
       return new NextResponse("Invalid credentials", { status: 401 });
     }
-
     const data = await reqest.json();
 
     return NextResponse.json(data, { status: 200 });
