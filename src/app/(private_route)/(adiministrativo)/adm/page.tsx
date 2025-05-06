@@ -1,9 +1,12 @@
 "use client";
 import Loading from "@/app/loading";
+import Alertas from "@/components/adm/alertas";
 import CardAdmUsuario from "@/components/adm/card";
+
 import RelatorioFinanceiro from "@/components/adm/financeiro/RelatorioFinanceiro";
+import ModalAddAlerta from "@/components/adm/modal/add_alerta";
 import ModalAddCobranca from "@/components/adm/modal/add_cobranca";
-import { Box, Button, Flex, Heading, useToast } from "@chakra-ui/react";
+import { Box, Flex, Heading, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { LuBuilding, LuDollarSign, LuFileText, LuUsers } from "react-icons/lu";
 
@@ -61,8 +64,7 @@ export default async function PainelAdministrativo() {
             </Box>
             <Flex w={"100%"} py={8} justifyContent={"flex-end"} gap={2}>
               <ModalAddCobranca />
-              
-              <Button>Alerta Geral</Button>
+              <ModalAddAlerta />
             </Flex>
             <Flex flexDirection={"column"} gap={10} pt={3}>
               <Flex w={"100%"} justifyContent={"space-between"} gap={2}>
@@ -88,8 +90,11 @@ export default async function PainelAdministrativo() {
                 />
               </Flex>
               <Flex w={"100%"} justifyContent={"space-between"} gap={2}>
-                <Box w={"100%"}>
+                <Box w={"70%"}>
                   <RelatorioFinanceiro onAtualizar={fetchDados} />
+                </Box>
+                <Box w={"30%"}>
+                  <Alertas />
                 </Box>
               </Flex>
             </Flex>

@@ -1,31 +1,30 @@
 import { GetSessionServer } from "@/lib/auth_confg";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+
+
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
     const session = await GetSessionServer();
     if (!session)
     {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-    const body = await request.json();
-    console.log("🚀 ~ POST ~ body:", body)
+    const id = params.id;
 
-    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/system-message`;
+    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/system-message/${id}`;
     const post = await fetch(url, {
-      method: "POST",
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session?.token}`,
       },
-      body: JSON.stringify(body),
     });
-    const data = await post.json();
-    console.log("🚀 ~ POST ~ data:", data)
+    const data = await post.blob();
 
     if (!post.ok)
       return NextResponse.json(
-        { message: data.message },
+        { message: "Erro ao deletar alerta" },
         { status: post.status }
       );
 
