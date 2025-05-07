@@ -6,8 +6,20 @@ import BotaoCancelar from "@/components/botoes/btn_cancelar";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import ContrutoraProvider from "@/provider/ConstrutoraProvider";
 import { Box, Button, Divider, Flex, Heading, Spacer } from "@chakra-ui/react";
+import { useSession } from "@/hook/useSession";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CadastrarFinanceira() {
+  const session = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if(session && session.hierarquia !== "ADM") {
+      router.push("/");
+    }
+  }, []);
+
   return (
     <>
       <Flex

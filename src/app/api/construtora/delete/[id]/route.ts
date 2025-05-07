@@ -24,11 +24,12 @@ export async function DELETE(
         },
       }
     );
-
-    if (!request) {
+    if (!request.ok) {
+      const res = await request.json();
+      console.log("🚀 ~ res:", res)
       return NextResponse.json(
-        { message: "Construtora inexistente" },
-        { status: 404 }
+        { message: res.message },
+        { status: request.status }
       );
     }
 

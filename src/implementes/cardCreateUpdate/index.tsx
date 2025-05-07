@@ -47,6 +47,7 @@ import CardGridConstrutoraEmail from "./Grid/CardGridConstrutoraEmail";
 import CardGridConstrutoraFantasia from "./Grid/CardGridConstrutoraFantasia";
 import { CardGridSuport } from "./Grid/CardGridSuport";
 import { CardGridFinanceiraConstrutora } from "./Grid/CardGridFinanceiraConstrutora";
+import CardGridValorcert from "./Grid/cardGridValorcert";
 
 /**
  * @name CardCreateUpdate
@@ -132,4 +133,5 @@ export const CardCreateUpdate = {
   GridConstrutoraEmail: CardGridConstrutoraEmail,
   GridConstrutoraFantasia: CardGridConstrutoraFantasia,
   GridSuporte: CardGridSuport,
+  GridValorcert: CardGridValorcert,
 };

@@ -1,7 +1,9 @@
 "use client";
 import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 import { CardUpdateConstrutora } from "@/components/card_UpdateConstrutora";
+import { useSession } from "@/hook/useSession";
 import { Box, Divider, Flex, Heading } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -11,8 +13,13 @@ type Props = {
 export default function ConstrutoraById({ params }: Props) {
   const id = Number(params.id);
   const [data, setData] = useState({});
+  const session = useSession();
+  const router = useRouter();
 
   useEffect(() => {
+    if(session && session.hierarquia !== "ADM") {
+      router.push("/");
+    }
     fetchConstrutora(id);
   }, [id]);
 

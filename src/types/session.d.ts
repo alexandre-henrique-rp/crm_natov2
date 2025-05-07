@@ -13,6 +13,7 @@ export interface Financeira {
   fantasia: string;
 }
 
+
 export interface AuthUser {
   Financeira: Financeira[];
   id: number;
@@ -20,7 +21,7 @@ export interface AuthUser {
   construtora: Construtora[];
   telefone: string;
   empreendimento: Empreendimento[];
-  hierarquia: string;
+  hierarquia: "ADM" | "CCA" | "GRT" | "CONST" | "USER";
   cargo: string;
   reset_password: boolean;
   termos: boolean;

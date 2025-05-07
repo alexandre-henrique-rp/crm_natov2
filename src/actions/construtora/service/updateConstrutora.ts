@@ -8,13 +8,17 @@ export default async function UpdateConstrutora(_: any, data: FormData) {
   const tel = data.get("telefoneSemMask") as string;
   const email = data.get("email") as string;
   const fantasia = data.get("fantasia") as string;
+  const valor_cert = data.get("valorCert") as string;
+  console.log("🚀 ~ UpdateConstrutora ~ valor_cert:", data)
 
   const body = {
     razaosocial: razaoSocial,
     tel: tel,
     email: email,
     fantasia: fantasia,
+    valor_cert: Number(valor_cert),
   };
+  console.log("🚀 ~ UpdateConstrutora ~ body:", body)
 
   const session = await GetSessionServer();
 
@@ -43,7 +47,7 @@ export default async function UpdateConstrutora(_: any, data: FormData) {
   if (!req.ok) {
     return {
       error: true,
-      message: "ERRO ao atualizar a construtoras",
+      message: res.message,
       data: null,
     };
   }

@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { FaCopy } from "react-icons/fa6";
 import { mask } from "remask";
@@ -14,8 +14,7 @@ interface TypeConstrutora {
 export default function Construtora({ data }: TypeConstrutora) {
   return (
     <Flex gap={4} flexWrap={"wrap"}>
-      {data.map((c: any) =>
-        c.status ? (
+      {data.map((c: any) =>(
           <Box
             key={c.id}
             border="3px solid #E8E8E8"
@@ -51,18 +50,18 @@ export default function Construtora({ data }: TypeConstrutora) {
                   size={"xs"}
                   bg={"blue.500"}
                   color={"white"}
-                  value={c.tel as string}
+                  value={c.telefone as string}
                   label="Telefone"
                 />
               </Flex>
             </Flex>
             <Flex mt={3} gap={2} w="100%" justifyContent="space-between">
-              <BtmConstrutoraListUser data={c.corretores} />
+              <BtmConstrutoraListUser data={c?.colaboradores} />
               <BtnEditarConstrutora id={c.id} />
               <BtmExcluirConstrutora id={c.id} status={c.status} />
             </Flex>
           </Box>
-        ) : null
+        )
       )}
     </Flex>
   );

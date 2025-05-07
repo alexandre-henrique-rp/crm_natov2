@@ -6,6 +6,7 @@ import CardAdmUsuario from "@/components/adm/card";
 import RelatorioFinanceiro from "@/components/adm/financeiro/RelatorioFinanceiro";
 import ModalAddAlerta from "@/components/adm/modal/add_alerta";
 import ModalAddCobranca from "@/components/adm/modal/add_cobranca";
+import { useSession } from "@/hook/useSession";
 import { Box, Flex, Heading, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { LuBuilding, LuDollarSign, LuFileText, LuUsers } from "react-icons/lu";
@@ -21,6 +22,7 @@ export default async function PainelAdministrativo() {
   const [dados, setDados] = useState<RelatorioType | null>(null);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
+  const session = useSession();
 
   useEffect(() => {
     if (!dados) {
@@ -52,7 +54,6 @@ export default async function PainelAdministrativo() {
   if (loading) {
     return <Loading />;
   }
-  //TODO: Adicionar modal de alerta geral
 
   return (
     <>
@@ -66,38 +67,42 @@ export default async function PainelAdministrativo() {
               <ModalAddCobranca />
               <ModalAddAlerta />
             </Flex>
-            <Flex flexDirection={"column"} gap={10} pt={3}>
-              <Flex w={"100%"} justifyContent={"space-between"} gap={2}>
-                <CardAdmUsuario
-                  count={dados.usuarios}
-                  title={"Usuários"}
-                  icon={<LuUsers size={24} />}
-                />
-                <CardAdmUsuario
-                  count={dados.construtoras}
-                  title={"Construtoras"}
-                  icon={<LuBuilding size={24} />}
-                />
-                <CardAdmUsuario
-                  count={dados.cobrancas_aberto}
-                  title={"Cobranças em Aberto"}
-                  icon={<LuDollarSign size={24} />}
-                />
-                <CardAdmUsuario
-                  count={dados.relatorios}
-                  title={"Relatórios Gerados"}
-                  icon={<LuFileText size={24} />}
-                />
-              </Flex>
-              <Flex w={"100%"} justifyContent={"space-between"} gap={2}>
-                <Box w={"70%"}>
-                  <RelatorioFinanceiro onAtualizar={fetchDados} />
-                </Box>
-                <Box w={"30%"}>
-                  <Alertas />
-                </Box>
-              </Flex>
-            </Flex>
+            {session?.hierarquia === "ADM" && (
+              <>
+                <Flex flexDirection={"column"} gap={10} pt={3}>
+                  <Flex w={"100%"} justifyContent={"space-between"} gap={2}>
+                    <CardAdmUsuario
+                      count={dados.usuarios}
+                      title={"Usuários"}
+                      icon={<LuUsers size={24} />}
+                    />
+                    <CardAdmUsuario
+                      count={dados.construtoras}
+                      title={"Construtoras"}
+                      icon={<LuBuilding size={24} />}
+                    />
+                    <CardAdmUsuario
+                      count={dados.cobrancas_aberto}
+                      title={"Cobranças em Aberto"}
+                      icon={<LuDollarSign size={24} />}
+                    />
+                    <CardAdmUsuario
+                      count={dados.relatorios}
+                      title={"Relatórios Gerados"}
+                      icon={<LuFileText size={24} />}
+                    />
+                  </Flex>
+                  <Flex w={"100%"} justifyContent={"space-between"} gap={2}>
+                    <Box w={"70%"}>
+                      <RelatorioFinanceiro onAtualizar={fetchDados} />
+                    </Box>
+                    <Box w={"30%"}>
+                      <Alertas />
+                    </Box>
+                  </Flex>
+                </Flex>
+              </>
+            )}
           </Box>
         </Box>
       )}
