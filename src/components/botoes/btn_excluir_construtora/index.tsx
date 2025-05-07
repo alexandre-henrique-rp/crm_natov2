@@ -31,13 +31,16 @@ export default function BtmExcluirConstrutora({
 
   const handleExcluir = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    try {
+      const response = await fetch(`/api/construtora/delete/${id}`, {
+        method: "DELETE",
+      });
 
-    const response = await fetch(`/api/construtora/delete/${id}`, {
-      method: "DELETE",
-    });
+      const res = await response.json();
 
-    const res = await response.json();
-    if (response.ok) {
+      if (!response.ok) {
+        throw new Error(res.message);
+      }
       toast({
         title: "Sucesso!",
         description: "Construtora excluído com sucesso!",
@@ -46,18 +49,17 @@ export default function BtmExcluirConstrutora({
         isClosable: true,
       });
 
-      onClose();
       route.refresh();
-    } else {
+      onClose();
+    } catch (error: any) {
+      onClose();
       toast({
         title: "Erro!",
-        description: res,
+        description: error.message,
         status: "error",
         duration: 9000,
         isClosable: true,
       });
-
-      onClose();
     }
   };
 

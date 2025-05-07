@@ -54,6 +54,9 @@ import CardGridStatusPgto from "./Grid/CardGridStatusPgto";
 import CardGridTxid from "./Grid/CardGridTxid";
 import CardGridValorCd from "./Grid/CardGridValorcd";
 
+        
+import CardGridValorcert from "./Grid/cardGridValorcert";
+
 /**
  * @name CardCreateUpdate
  * @description Componente que renderiza o card de criação e atualização de um registro
@@ -144,4 +147,5 @@ export const CardCreateUpdate = {
   GridConstrutoraEmail: CardGridConstrutoraEmail,
   GridConstrutoraFantasia: CardGridConstrutoraFantasia,
   GridSuporte: CardGridSuport,
+  GridValorcert: CardGridValorcert,
 };

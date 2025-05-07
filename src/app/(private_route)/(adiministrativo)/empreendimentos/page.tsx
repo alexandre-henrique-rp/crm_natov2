@@ -1,6 +1,7 @@
 "use client";
 import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 import Empreendimentos from "@/components/empreendimentoCard";
+import { useSession } from "@/hook/useSession";
 import {
   Box,
   Divider,
@@ -15,6 +16,8 @@ import { useEffect, useState } from "react";
 export default function EmpreendimentoPage() {
   const [empreendimentos, setEmpreendimentos] = useState([]);
   const toast = useToast();
+  const session = useSession();
+  console.log("🚀 ~ EmpreendimentoPage ~ session:", session)
 
   useEffect(() => {
     fetchEmpreendimentos();

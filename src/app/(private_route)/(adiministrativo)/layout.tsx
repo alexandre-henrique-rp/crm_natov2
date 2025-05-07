@@ -1,4 +1,5 @@
 import BotaoAdm from "@/components/botoes/bt_adm";
+import { GetSessionServer } from "@/lib/auth_confg";
 import { Box, Divider, Flex, Text } from "@chakra-ui/react";
 import { Metadata } from "next";
 
@@ -11,6 +12,7 @@ export default async function PainelAdmLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const session = await GetSessionServer();
   return (
     <>
       <Flex
@@ -22,7 +24,12 @@ export default async function PainelAdmLayout({
         justifyContent={"space-between"}
         flexDir={{ base: "column", md: "row" }}
       >
-        <Flex w={{ base: "100%", md: "10%" }} minW={"10%"} h={"100%"} flexDir={"column"}>
+        <Flex
+          w={{ base: "100%", md: "10%" }}
+          minW={"10%"}
+          h={"100%"}
+          flexDir={"column"}
+        >
           <Box w={"100%"}>
             <Text color={"gray.400"} fontSize={"xl"} textAlign={"center"}>
               Gerenciamento
@@ -42,12 +49,15 @@ export default async function PainelAdmLayout({
             justifyContent={{ base: "center", md: "normal" }}
             alignItems={{ base: "center", md: "normal" }}
           >
-            <BotaoAdm name={"Home"} />
-            <BotaoAdm name={"Painel"} />
             <BotaoAdm name={"Usuarios"} />
             <BotaoAdm name={"Empreendimentos"} />
-            <BotaoAdm name={"Construtora"} />
-            <BotaoAdm name={"CCAs"} />
+
+            {session?.user.hierarquia === "ADM" && (
+              <>
+                <BotaoAdm name={"Construtora"} />
+                <BotaoAdm name={"CCAs"} />
+              </>
+            )}
           </Flex>
         </Flex>
         <Flex w={{ base: "100%", md: "90%" }} minW={"90%"} h={"100%"}>
