@@ -1,42 +1,45 @@
-import { Box, BoxProps, FormLabel } from "@chakra-ui/react";
+import { Box, BoxProps, FormLabel, Text } from "@chakra-ui/react";
 import InputEmail from "../imputs/inpuEmail";
-
-interface CardGridEmailProps extends BoxProps {
-  DataSolicitacao?: solictacao.SolicitacaoGetType;
-  type?: string;
+interface CardGridRegisterEmailProps extends BoxProps {
+  email?: string;
+  type?: "register" | "confirm";
   readonly?: boolean;
 }
 
-/**
- * Card component for registering a new email or confirming an existing one.
- * @prop {solictacao.SolicitacaoGetType} DataSolicitacao - The data of the
- *   solicitacao.
- * @prop {string} type - The type of the card, either "register" or "confirm".
- * @prop {BoxProps} props - The props of the Box component.
- * @returns {JSX.Element} The JSX element for the card.
- */
 export default function CardGridRegisterEmail({
-  DataSolicitacao,
-  type,
+  email,
+  type = "register",
   readonly,
   ...props
-}: CardGridEmailProps) {
+}: CardGridRegisterEmailProps) {
   return (
-    <>
-      <Box {...props}>
-        <FormLabel fontSize="sm" fontWeight="md" m={0}>
-          {type === "confirm" ? "Confirmar Email" : "Email"}
-        </FormLabel>
+    <Box {...props}>
+      <FormLabel fontSize="sm" fontWeight="md" m={0}>
+        {type === "confirm" ? "Confirmar Email" : "Email"}
+      </FormLabel>
+
+      {readonly ? (
+        // Modo só leitura: mostra o email como texto
+        <Text
+          px={1}
+          py={2}
+          bg="gray.100"
+          textColor="GrayText"
+          borderBottom="1px solid #A0AEC0"
+        >
+          {email}
+        </Text>
+      ) : (
+        // Modo edição: usa o seu InputEmail, inicializado com o valor
         <InputEmail
-          setValueEmail={DataSolicitacao?.email}
           name={type === "confirm" ? "confirmEmail" : "email"}
+          setValueEmail={email}
           variant="flushed"
           px={1}
-          bg={"gray.100"}
-          borderColor={"gray.400"}
-          readonly={readonly}
+          bg="gray.100"
+          borderColor="gray.400"
         />
-      </Box>
-    </>
+      )}
+    </Box>
   );
 }

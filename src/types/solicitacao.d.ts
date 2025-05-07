@@ -29,6 +29,12 @@ declare namespace solictacao {
    *
    */
   interface SolicitacaoGetType {
+    pixCopiaECola: any;
+    qrcode: any;
+    txid: any;
+    valorcd: any;
+    imagemQrcode: any;
+    status_pgto: any;
     filter(): unknown;
     nato_user: any;
     id: number;

@@ -21,7 +21,6 @@ const Requestes = async (id: string) => {
       console.error("Requestes status:", res.status);
       return null;
     }
-
     const data = await res.json();
     return JSON.parse(JSON.stringify(data));
   } catch (err) {

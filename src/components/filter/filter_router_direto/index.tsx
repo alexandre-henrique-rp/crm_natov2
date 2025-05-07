@@ -30,7 +30,10 @@ export const FilterRouteDireto = () => {
           "Content-Type": "application/json"
         },
       });
+      console.log(req);
       const data = await req.json();
+      console.log(data);
+
     })();
   }, []);
 
@@ -39,6 +42,7 @@ export const FilterRouteDireto = () => {
   };
 
   useEffect(() => {
+    
     (async () => {
       setLoad(true);
       let Filter = "";

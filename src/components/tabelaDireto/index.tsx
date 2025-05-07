@@ -32,6 +32,7 @@ import { ImClock } from "react-icons/im";
 import { IoIosArrowForward } from "react-icons/io";
 import { FiAlertTriangle } from "react-icons/fi";
 import { BotoesFunction } from "../botoes/bt_group_function";
+import { BotoesFunctionDireto } from "../botoes/bt_group_functionDireto";
 interface TabelaProps {
   ClientData: solictacao.SolicitacaoGetType[];
   total: number | null;
@@ -211,7 +212,7 @@ export function TabelaDireto({
             ) : (
               <Box ms={10}></Box>
             )}
-            <BotoesFunction
+            <BotoesFunctionDireto
               id={item.id}
               distrato={item.distrato ? true : false}
               exclude={!item.ativo ? true : false}

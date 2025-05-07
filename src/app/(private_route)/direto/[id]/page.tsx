@@ -2,8 +2,8 @@ import { Flex } from "@chakra-ui/react";
 import { GetSessionServer } from "@/lib/auth_confg";
 import { Metadata } from "next";
 import AlertProvider from "@/provider/AlertProvider";
-import { CardUpdateSolicitacao } from "@/components/card_Update_solicitacao";
 import CardListAlertCliente from "@/components/card_list_alert_cliente";
+import { CardUpdateDireto } from "@/components/card_Update_direto";
 
 const Requestes = async (id: string) => {
   try {
@@ -16,14 +16,13 @@ const Requestes = async (id: string) => {
         Authorization: `Bearer ${session?.token}`
       }
     });
-    console.log("🚀 ~ Requestes ~ request:", request);
+    
     const data = await request.json();
-    console.log("🚀 ~ Requestes ~ data:", data);
+    console.log("🚀 ~ file: page.tsx:20 ~ Requestes ~ data:", data)
 
     if (!request.ok) {
       throw new Error("Erro");
     }
-    // Garante que o objeto seja serializável e plain object
     return JSON.parse(JSON.stringify(data));
   } catch (error) {
     console.log(error);
@@ -106,7 +105,7 @@ export default async function perfilPage({
               p={4}
             >
               <AlertProvider>
-                <CardUpdateSolicitacao setDadosCard={data} user={user} />
+                <CardUpdateDireto setDadosCard={data} user={user} />
                 <CardListAlertCliente
                   Id={Number(id)}
                   DataAlert={dataAlert}
