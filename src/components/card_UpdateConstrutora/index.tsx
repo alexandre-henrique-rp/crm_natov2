@@ -1,4 +1,4 @@
-import { Flex, Spacer, Divider, Button } from "@chakra-ui/react";
+import { Flex, Spacer, Divider, Button, Input } from "@chakra-ui/react";
 import React from "react";
 import ContrutoraProvider from "@/provider/ConstrutoraProvider";
 import UpdateConstrutora from "@/actions/construtora/service/updateConstrutora";
@@ -35,6 +35,10 @@ export async function CardUpdateConstrutora({ id, setConstrutoraCard }: Props) {
             />
             <CardCreateUpdate.GridConstrutoraFantasia
               Fantasia={setConstrutoraCard?.fantasia}
+              w={"25rem"}
+            />
+            <CardCreateUpdate.GridValorcert
+              valor_cert={setConstrutoraCard?.valor_cert}
               w={"25rem"}
             />
           </ContrutoraProvider>

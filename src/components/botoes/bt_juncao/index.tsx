@@ -12,10 +12,22 @@ import {
 import { HamburgerIcon } from "@chakra-ui/icons";
 import BotaoMenu from "../bt_menu";
 import BotaoMobileMenu from "../bt_mobile_menu";
+import { useEffect, useState } from "react";
 
 export default function BotaoJuncao() {
+  const [admin, setAdmin] = useState(false);
   const session = useSession();
-  const but = session?.hierarquia;
+  console.log("🚀 ~ BotaoJuncao ~ but:", session?.hierarquia)
+  useEffect(() => {
+   if (session) {
+    if (session?.hierarquia === "ADM") {
+    setAdmin(true);
+    }
+    if (session?.hierarquia === "GRT") {
+    setAdmin(true);
+    }
+   }
+  }, [session]);
 
   return (
     <Flex
@@ -40,7 +52,7 @@ export default function BotaoJuncao() {
             <MenuList>
               <BotaoMobileMenu name="Home" />
               <BotaoMobileMenu name="Nova Solicitação" />
-              {but === "ADM" && <BotaoMobileMenu name="Painel adm" />}
+              {admin && <BotaoMobileMenu name="Painel adm" />}
               <BotaoMobileMenu name="Dashboard" />
               <BotaoMobileMenu name="FAQ" />
               <BotaoMobileMenu name="Sair" />
@@ -51,7 +63,7 @@ export default function BotaoJuncao() {
         <Box display={{ base: "none", md: "flex" }} gap={1} w={"85%"}>
           <BotaoMenu name="Home" />
           <BotaoMenu name="Nova Solicitação" />
-          {but === "ADM" && <BotaoMenu name="Painel adm" />}
+          {admin && <BotaoMenu name="Painel adm" />}
           <BotaoMenu name="Dashboard" />
           <BotaoMenu name="FAQ" />
           <BotaoMenu name="Direto" />

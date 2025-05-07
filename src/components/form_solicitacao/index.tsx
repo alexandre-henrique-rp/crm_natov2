@@ -208,17 +208,25 @@ export default function SolicitacaoForm({
     }
   };
 
-  if (user?.empreendimento.length === 1 && !empreendimento) {
-    setempreendimento(user.empreendimento[0].id);
-  }
+  // Corrigido: atualização de estados com useEffect para evitar loop infinito
+  useEffect(() => {
+    if (user?.empreendimento.length === 1 && !empreendimento) {
+      setempreendimento(user.empreendimento[0].id);
+    }
+  }, [user, empreendimento]);
 
-  if (user?.construtora.length === 1 && !ConstrutoraID) {
-    setConstrutoraID(user.construtora[0].id);
-  }
+  useEffect(() => {
+    if (user?.construtora.length === 1 && !ConstrutoraID) {
+      setConstrutoraID(user.construtora[0].id);
+    }
+  }, [user, ConstrutoraID]);
 
-  if (user?.Financeira?.length === 1 && !FinanceiraID) {
-    setFinanceiraID(user.Financeira[0].id);
-  }
+  useEffect(() => {
+    if (user?.Financeira?.length === 1 && !FinanceiraID) {
+      setFinanceiraID(user.Financeira[0].id);
+    }
+  }, [user, FinanceiraID]);
+
 
   const handleCpfChange = (cpf: string) => {
     setCpf(cpf);
@@ -507,7 +515,7 @@ export default function SolicitacaoForm({
             />
           </Box>
         )}
-        {user?.hierarquia === "CONT" && (
+        {user?.hierarquia === "CONST" && (
           <Box>
             <FormLabel>Corretor</FormLabel>
             <SelectCorretor

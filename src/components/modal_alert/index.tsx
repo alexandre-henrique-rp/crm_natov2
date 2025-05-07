@@ -28,8 +28,8 @@ export const ModalComponent = () => {
     if (!Requests) {
       (async () => {
         const request = await fetch("/api/alerts/geral");
-        const response = await request.json();
         if (request.ok) {
+          const response = await request.json();
           setShowButton(true);
           setAlerts(response);
           setRequests(true);
@@ -37,6 +37,7 @@ export const ModalComponent = () => {
       })();
     }
   }, [Requests, alerts]);
+
 
   const OverlayTwo = () => (
     <ModalOverlay

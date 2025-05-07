@@ -1,0 +1,116 @@
+import {
+  Box,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Divider,
+  Flex,
+  Heading,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+
+export default function Alertas() {
+  const [alertas, setAlertas] = useState([]);
+  const toast = useToast();
+
+  useEffect(() => {
+    fetchAlertas();
+  }, []);
+
+  const fetchAlertas = async () => {
+    try {
+      const req = await fetch("/api/alerts/geral/findAll");
+      const data = await req.json();
+      setAlertas(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const HandleDelete = async (id: number) => {
+    try {
+      const req = await fetch(`/api/alerts/geral/delete/${id}`, {
+        method: "DELETE",
+      });
+      const data = await req.json();
+      if (!req.ok) {
+        throw new Error(data.message);
+      }
+      toast({
+        title: "Alerta removido com sucesso!",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      fetchAlertas();
+    } catch (error: any) {
+      console.log(error);
+      toast({
+        title: "Erro ao remover alerta",
+        status: error.message,
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  return (
+    <>
+      <Box
+        bg="white"
+        borderRadius="lg"
+        p={{ base: 3, md: 6 }}
+        boxShadow="md"
+        w="100%"
+      >
+        <Text fontSize={{ base: "lg", md: "xl" }} fontWeight="bold">
+          Alertas Gerais
+        </Text>
+        <Divider borderColor="gray.300" my={2} />
+        <Flex h={"19.5rem"} overflowY="auto" flexDirection="column" gap={3}>
+          {alertas.map((alerta: any) => (
+            <Card
+              direction="row"
+              key={alerta.id}
+              border="1px solid"
+              borderColor="gray.300"
+              borderRadius="xl"
+              boxShadow="lg"
+              p={2}
+              alignItems="center"
+            >
+              <CardHeader>
+                <Heading size="md">{alerta.tipo}</Heading>
+              </CardHeader>
+              <CardBody>
+                <Text>
+                  {alerta.message} -{" "}
+                  {alerta.createAt
+                    .toString()
+                    .split("T")[0]
+                    .split("-")
+                    .reverse()
+                    .join("/")}{" "}
+                  às {alerta.createAt.toString().split("T")[1].split(".")[0]}
+                </Text>
+              </CardBody>
+              <CardFooter>
+                <Button
+                  colorScheme="red"
+                  size="xs"
+                  onClick={() => HandleDelete(alerta.id)}
+                >
+                  Remover
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </Flex>
+      </Box>
+    </>
+  );
+}

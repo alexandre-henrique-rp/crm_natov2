@@ -1,7 +1,7 @@
 "use client";
 
 import useEmpreendimentoContext from "@/hook/useEmpreendimentoContext";
-import { Flex, Select, SelectProps } from "@chakra-ui/react";
+import { Flex, Select, SelectProps, useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 interface SelectUserConstrutoraProps extends SelectProps {
@@ -14,18 +14,20 @@ export function SelectEmpreendimentoConstrutora({
 }: SelectUserConstrutoraProps) {
   const [Construtora, setConstrutora] = useState<number | any>();
   const [ConstrutoraData, setConstrutoraData] = useState<
-    {
-      id: number;
-      cnpj: string;
-      razaosocial: string;
-      tel: string | null;
-      email: string | null;
-      atividade: string | null;
-      fantasia: string | null;
-    }[]
+  {
+    id: number;
+    cnpj: string;
+    razaosocial: string;
+    tel: string | null;
+    email: string | null;
+    atividade: string | null;
+    fantasia: string | null;
+  }[]
   >([]);
+  const toast = useToast();
+  
   const { setConstrutoraTag } = useEmpreendimentoContext();
-
+  
   function handleConstrutoraChange(selectedId: number) {
     const selectedConstrutora = ConstrutoraData.find(
       (construtora) => construtora.id === selectedId
@@ -37,26 +39,32 @@ export function SelectEmpreendimentoConstrutora({
     }
   }
 
-  useEffect(() => {
-    const getConstrutora = async () => {
+  const getConstrutora = async () => {
+    try {
       const req = await fetch("/api/construtora/getall");
       const res = await req.json();
-      if (!req.ok) {
-        const data = res.message;
-        if (data) {
-          setConstrutoraData(data);
-        }
-      } else {
-        return { status: 500, message: "error", data: null };
-      }
-    };
+      setConstrutoraData(res);
+      
+    } catch (error: any) {
+      console.log("🚀 ~ getConstrutora ~ error:", error)
+      toast({
+        title: "Erro",
+        description: error.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+  
+  useEffect(() => {
     getConstrutora();
 
     if (setValue) {
       setConstrutora(setValue);
     }
   }, [setValue]);
-
+  
   return (
     <>
       <Flex gap={2}>
