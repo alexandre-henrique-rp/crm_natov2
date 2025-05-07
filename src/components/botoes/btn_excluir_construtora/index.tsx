@@ -35,13 +35,11 @@ export default function BtmExcluirConstrutora({
       const response = await fetch(`/api/construtora/delete/${id}`, {
         method: "DELETE",
       });
-  
+
       const res = await response.json();
-      console.log("🚀 ~ handleExcluir ~ res:", res)
-      console.log("🚀 ~ handleExcluir ~ response:", response.ok)
 
       if (!response.ok) {
-       throw new Error(res.message);
+        throw new Error(res.message);
       }
       toast({
         title: "Sucesso!",

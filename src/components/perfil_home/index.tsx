@@ -3,7 +3,7 @@
 import { Flex, Box, Text } from "@chakra-ui/react";
 import TextHome from "./text";
 
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Importando useEffect para atualizar estados de forma segura
 import { SelectComponent } from "../select";
 import { ModalComponent } from "../modal_alert";
 import BotaoPageChamados from "../botoes/btn_page_chamados";
@@ -19,12 +19,19 @@ export default function PerfilHome() {
   const SetIdConstrutora = (id: number) => {
     setIdConstrutora(id);
   };
-  if (user?.construtora?.length === 1 && !IdConstrutora) {
-    setIdConstrutora(user.construtora[0].id);
-  }
-  if (user?.empreendimento.length === 1 && !IdEmpreedimento) {
-    setIdEmpreedimento(user.empreendimento[0].id);
-  }
+  // Corrigido: atualização de estados com useEffect para evitar loop infinito
+  useEffect(() => {
+    if (user?.construtora?.length === 1 && !IdConstrutora) {
+      setIdConstrutora(user.construtora[0].id);
+    }
+  }, [user, IdConstrutora]);
+
+  useEffect(() => {
+    if (user?.empreendimento.length === 1 && !IdEmpreedimento) {
+      setIdEmpreedimento(user.empreendimento[0].id);
+    }
+  }, [user, IdEmpreedimento]);
+
   return (
     <>
       {!user && null}

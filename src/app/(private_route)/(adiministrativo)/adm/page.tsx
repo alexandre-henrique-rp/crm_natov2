@@ -63,12 +63,12 @@ export default async function PainelAdministrativo() {
             <Box w={"100%"}>
               <Heading>Painel Administrativo</Heading>
             </Box>
-            <Flex w={"100%"} py={8} justifyContent={"flex-end"} gap={2}>
-              <ModalAddCobranca />
-              <ModalAddAlerta />
-            </Flex>
             {session?.hierarquia === "ADM" && (
               <>
+                <Flex w={"100%"} py={8} justifyContent={"flex-end"} gap={2}>
+                  <ModalAddCobranca />
+                  <ModalAddAlerta />
+                </Flex>
                 <Flex flexDirection={"column"} gap={10} pt={3}>
                   <Flex w={"100%"} justifyContent={"space-between"} gap={2}>
                     <CardAdmUsuario

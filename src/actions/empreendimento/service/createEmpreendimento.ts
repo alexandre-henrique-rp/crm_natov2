@@ -34,6 +34,14 @@ export async function CreateEmpreendimento(_: any, data: FormData) {
     tag: tag,
   };
 
+  if (!construtora || !nome || !cidade || !uf || !financeiro) {
+    return {
+      error: true,
+      message: `Dados das colunas ${!construtora ? "Construtora" : ""} ${!nome ? "Nome" : ""} ${!cidade ? "Cidade" : ""} ${!uf ? "UF" : ""} ${!financeiro ? "Financeira" : ""} são obrigatórios`,
+      data: null,
+    };
+  }
+
   const req = await fetch(
     `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/empreendimento`,
     {
@@ -47,6 +55,20 @@ export async function CreateEmpreendimento(_: any, data: FormData) {
   );
 
   const res = await req.json();
+
+  if (session?.user?.hierarquia === "GRT") {
+    await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/${session?.user.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.token}`,
+      },
+      body: JSON.stringify({
+        empreendimento: [...session?.user.empreendimento, res.id]
+      }),
+    });
+    console.log("🚀 ~ CreateEmpreendimento ~ res:", res)
+  }
 
   if (!req.ok) {
     return { error: true, message: res.message, data: null, status: 500 };

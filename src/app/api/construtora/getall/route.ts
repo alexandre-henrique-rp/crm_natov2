@@ -20,7 +20,6 @@ export async function GET() {
       }
     );
     const data = await request.json();
-   
     if (!request.ok) {
       throw new Error(data.message);
     }
