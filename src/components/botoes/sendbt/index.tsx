@@ -1,23 +1,17 @@
-/*
-  File: src/components/PatchButton.tsx
-  Client Component: sends given body via PATCH to /api/direto/patch
-*/
-
 "use client";
 
 import React, { useState } from "react";
 import { Button, ButtonProps, useToast } from "@chakra-ui/react";
 
 interface PatchButtonProps extends Omit<ButtonProps, "onClick"> {
-  /** JSON payload to be sent in the PATCH request */
   body: Record<string, any>;
-  /** Optional callback for successful response */
+  id: string | number;
   onSuccess?: (data: any) => void;
-  /** Optional callback for error response */
   onError?: (error: any) => void;
 }
 
 export default function PatchButton({
+  id,
   body,
   onSuccess,
   onError,
@@ -30,31 +24,39 @@ export default function PatchButton({
   const handleClick = async () => {
     setLoading(true);
     try {
-        const res = await fetch("/api/direto/patch", {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-        });
-      const data = await res.json();
-      if (!res.ok) throw data;
+      const res = await fetch(`/api/direto/patch/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const dataText = await res.text();
+      let data: any;
+      try {
+        data = JSON.parse(dataText);
+      } catch {
+        data = dataText;
+      }
+
+      if (!res.ok) {
+        throw { status: res.status, body: data };
+      }
 
       toast({
         title: "Sucesso",
-        description: "Operação concluída com sucesso.",
+        description: "Atualizado com sucesso.",
         status: "success",
         duration: 3000,
         isClosable: true,
       });
-
       onSuccess?.(data);
-    } catch (error) {
-        console.log("🚀 ~ handleClick ~ body:", body);
-      console.error("Erro no PATCH:", error);
+    } catch (error: any) {
+      console.error("Erro PATCH:", error);
       toast({
         title: "Erro",
-        description: error?.message || "Falha ao realizar operação.",
+        description: error?.body?.message || "Falha ao atualizar dados.",
         status: "error",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
       onError?.(error);

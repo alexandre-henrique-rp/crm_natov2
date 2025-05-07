@@ -18,7 +18,7 @@ const Requestes = async (id: string) => {
     });
     
     const data = await request.json();
-    console.log("🚀 ~ file: page.tsx:20 ~ Requestes ~ data:", data)
+   
 
     if (!request.ok) {
       throw new Error("Erro");

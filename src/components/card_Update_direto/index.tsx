@@ -1,3 +1,4 @@
+"use client"
 
 import UserCompraProvider from "@/provider/UserCompra";
 import { Alert, AlertIcon, Box, Button, Divider, Flex, FormControl, FormLabel, Grid, Input } from "@chakra-ui/react";
@@ -27,7 +28,7 @@ export function CardUpdateDireto({ setDadosCard, user }: Props) {
   const readonly = HierarquiaUser === "ADM" ? false : true;
   const { construtora } = setDadosCard;
   // não essta recebendo o financeira
-  setDadosCard.financeiro = 1
+
 
   const body = {
     nome: setDadosCard.nome,
@@ -40,7 +41,7 @@ export function CardUpdateDireto({ setDadosCard, user }: Props) {
         : new Date(setDadosCard.dt_nascimento)
           .toISOString()
           .split("T")[0],
-    financeiro: setDadosCard.financeiro.id,
+    financeiro: 5,
     pixCopiaECola: setDadosCard.pixCopiaECola,
     qrcode: setDadosCard.qrcode,
     txid: setDadosCard.txid,
@@ -50,7 +51,6 @@ export function CardUpdateDireto({ setDadosCard, user }: Props) {
   }
 
 
-  console.log(body)
   return (
     <>
       <CardCreateUpdate.Root>
@@ -181,7 +181,6 @@ export function CardUpdateDireto({ setDadosCard, user }: Props) {
                 />
               </Flex>
               <Box px={4} mt={6}>
-                {/* Cabeçalho opcional para a seção */}
                 <FormLabel fontSize="sm" fontWeight="md" mb={2}>
                   Detalhes de Pagamento
                 </FormLabel>
@@ -386,7 +385,14 @@ export function CardUpdateDireto({ setDadosCard, user }: Props) {
               aprovacao={setDadosCard.andamento}
               id={setDadosCard.id}
             />
-            <PatchButton body={body} />
+            <PatchButton
+              id={setDadosCard.id}
+              body={ body}
+              colorScheme="blue"
+              size="sm"
+            >
+              Atualizar Direto
+            </PatchButton>
 
             {!setDadosCard.ativo && HierarquiaUser === "ADM" ? (
               <BotaoReativarSolicitacao id={setDadosCard.id} />
