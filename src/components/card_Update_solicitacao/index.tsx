@@ -26,10 +26,10 @@ import { SessionClient } from "@/types/session";
 
 type Props = {
   setDadosCard: solictacao.SolicitacaoGetType;
-
   user: AuthUser;
-
 };
+
+
 
 
 export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
@@ -38,6 +38,8 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
 
   const { construtora } = setDadosCard;
 
+  console.log("setDadosCard", setDadosCard);
+  console.log("user", user);
   return (
     <>
       <CardCreateUpdate.Root>
@@ -221,8 +223,10 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
               >
                 <CardCreateUpdate.GridObs
                   DataSolicitacao={setDadosCard}
-                  w={"100%"}
+                  UsuarioLogado={user} 
+                  w="100%"
                 />
+
               </Flex>
               <Flex w={"100%"}>
                 {setDadosCard.distrato && setDadosCard.ativo && (

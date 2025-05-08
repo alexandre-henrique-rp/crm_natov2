@@ -77,14 +77,13 @@ export default async function perfilPage({ params }: Props) {
   const session = await GetSessionServer();
   const user = session?.user;
 
-  // 1) Busca dados da solicitação
+  
   const data = await Requestes(id);
   if (!data) {
-    // Se não encontrou, renderiza 404
+   
     notFound();
   }
 
-  // 2) Busca alertas (pode ser null, mas sem throw)
   const dataAlert = await RequestAlert(id);
 
   return (
