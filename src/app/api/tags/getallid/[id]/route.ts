@@ -19,15 +19,14 @@ export async function GET(
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.token}`
-        }
+          Authorization: `Bearer ${session?.token}`,
+        },
       }
     );
 
     if (!reqest.ok) {
       return new NextResponse("Invalid credentials", { status: 401 });
     }
-
     const data = await reqest.json();
 
     return NextResponse.json(data, { status: 200 });
