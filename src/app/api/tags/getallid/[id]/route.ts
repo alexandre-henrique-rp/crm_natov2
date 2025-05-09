@@ -14,7 +14,7 @@ export async function GET(
     }
 
     const reqest = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/tags/solicitacao/${id}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/tag/solicitacao/${id}`,
       {
         method: "GET",
         headers: {

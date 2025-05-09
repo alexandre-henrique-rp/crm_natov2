@@ -1,11 +1,11 @@
+"use client"
 
 import UserCompraProvider from "@/provider/UserCompra";
-import { Alert, AlertIcon, Box, Button, Divider, Flex, Input } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Button, Divider, Flex, FormControl, FormLabel, Grid, Input } from "@chakra-ui/react";
 import { UpdateSolicitacao } from "@/actions/solicitacao/service/update";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import { ResendSms } from "@/implementes/cardCreateUpdate/butons/resendSms";
-import { SaveBtm } from "@/implementes/cardCreateUpdate/butons/saveBtm";
-import { SessionUserType } from "@/types/next-auth";
+import { AuthUser } from "@/types/session";
 import { BtCreateAlertCliente } from "../botoes/bt_create_alert_cliente";
 import CreateChamado from "../botoes/btn_chamado";
 import BtnIniciarAtendimento from "../botoes/btn_iniciar_atendimento";
@@ -14,26 +14,49 @@ import { CriarFcweb } from "../botoes/criarFcweb";
 import BtnAlertNow from "../btn_alerta_now";
 import DistratoAlertPrint from "../Distrato_alert_print";
 import BotaoPausar from "../botoes/btn_pausar";
-import BotaoSisapp from "../botoes/bt_sisapp";
-import { cpf } from "cpf-cnpj-validator";
-import { FaNapster } from "react-icons/fa";
+import PatchButton from "../botoes/sendbt";
 
 
-// const prisma = new PrismaClient();
 type Props = {
   setDadosCard: solictacao.SolicitacaoGetType;
-  user: SessionUserType.User;
+  user: AuthUser;
 };
 
 
-export async function CardUpdateDireto({ setDadosCard, user }: Props) {
+export function CardUpdateDireto({ setDadosCard, user }: Props) {
   const HierarquiaUser = user?.hierarquia;
   const readonly = HierarquiaUser === "ADM" ? false : true;
+  const { construtora } = setDadosCard;
+  // não essta recebendo o financeira
+
+
+  const body = {
+    nome: setDadosCard.nome,
+    cpf: setDadosCard.cpf,
+    telefone: setDadosCard.telefone,
+    email: setDadosCard.email,
+    dt_nascimento:
+      typeof setDadosCard.dt_nascimento === "string"
+        ? setDadosCard.dt_nascimento
+        : new Date(setDadosCard.dt_nascimento)
+          .toISOString()
+          .split("T")[0],
+    financeiro: 5,
+    pixCopiaECola: setDadosCard.pixCopiaECola,
+    qrcode: setDadosCard.qrcode,
+    txid: setDadosCard.txid,
+    valorcd: setDadosCard.valorcd,
+    imagemQrcode: setDadosCard.imagemQrcode,
+    status_pgto: setDadosCard.status_pgto,
+  }
+
+
   return (
     <>
       <CardCreateUpdate.Root>
         <CardCreateUpdate.Headers SetDados={setDadosCard} />
         <Divider borderColor="#00713D" my={4} />
+
         <CardCreateUpdate.Form action={UpdateSolicitacao}>
           <UserCompraProvider>
             <Box hidden>
@@ -83,24 +106,33 @@ export async function CardUpdateDireto({ setDadosCard, user }: Props) {
                 px={4}
                 justifyContent={{ base: "center", md: "space-between" }}
               >
-                <CardCreateUpdate.GridEmail
-                  type="register"
-                  DataSolicitacao={setDadosCard}
-                  w={{ base: "100%", md: "25rem" }}
-                  readonly={readonly}
-                />
+
                 <CardCreateUpdate.GridTel
                   index={1}
                   DataSolicitacao={setDadosCard.telefone}
                   w={{ base: "100%", md: "10rem" }}
                   readonly={readonly}
                 />
+                <CardCreateUpdate.GridEmail
+                  email={setDadosCard.email}
+                  type="register"
+                  readonly={readonly}
+                  w={{ base: "100%", md: "25rem" }}
+                />
+
                 <CardCreateUpdate.GridTel
                   index={2}
                   DataSolicitacao={setDadosCard.telefone2}
                   w={{ base: "100%", md: "10rem" }}
                   readonly={readonly}
                 />
+                {construtora && (
+                  <CardCreateUpdate.GridConstrutora
+                    user={user}
+                    DataSolicitacao={setDadosCard}
+                    w={{ base: "100%", md: "12rem" }}
+                  />
+                )}
               </Flex>
               <Flex
                 flexDir={{ base: "column", md: "row" }}
@@ -109,6 +141,11 @@ export async function CardUpdateDireto({ setDadosCard, user }: Props) {
                 px={4}
                 justifyContent={{ base: "center", md: "space-between" }}
               >
+                <CardCreateUpdate.GridEmpreedimentoCL
+                  user={user}
+                  DataSolicitacao={setDadosCard}
+                  w={{ base: "100%", md: "16rem" }}
+                />
                 <CardCreateUpdate.GridFinanceiraCl
                   user={user}
                   DataSolicitacao={setDadosCard}
@@ -143,7 +180,82 @@ export async function CardUpdateDireto({ setDadosCard, user }: Props) {
                   w={{ base: "100%", md: "16rem" }}
                 />
               </Flex>
+              <Box px={4} mt={6}>
+                <FormLabel fontSize="sm" fontWeight="md" mb={2}>
+                  Detalhes de Pagamento
+                </FormLabel>
 
+                <Grid
+                  templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
+                  gap={4}
+                >
+                  <FormControl>
+                    <FormLabel fontSize="xs" color="gray.600">
+                      Pix Copia & Cola
+                    </FormLabel>
+                    <Input
+                      name="pixCopiaECola"
+                      value={setDadosCard.pixCopiaECola}
+                      isReadOnly={readonly}
+                      size="sm"
+                      bg="gray.100"
+                    />
+                  </FormControl>
+
+                  <FormControl>
+                    <FormLabel fontSize="xs" color="gray.600">
+                      QR Code
+                    </FormLabel>
+                    <Input
+                      name="qrcode"
+                      value={setDadosCard.qrcode}
+                      isReadOnly={readonly}
+                      size="sm"
+                      bg="gray.100"
+                    />
+                  </FormControl>
+
+                  <FormControl>
+                    <FormLabel fontSize="xs" color="gray.600">
+                      TXID
+                    </FormLabel>
+                    <Input
+                      name="txid"
+                      value={setDadosCard.txid}
+                      isReadOnly={readonly}
+                      size="sm"
+                      bg="gray.100"
+                    />
+                  </FormControl>
+
+                  <FormControl>
+                    <FormLabel fontSize="xs" color="gray.600">
+                      Valor (R$)
+                    </FormLabel>
+                    <Input
+                      name="valorcd"
+                      type="number"
+                      value={String(setDadosCard.valorcd)}
+                      isReadOnly={readonly}
+                      size="sm"
+                      bg="gray.100"
+                    />
+                  </FormControl>
+
+                  <FormControl>
+                    <FormLabel fontSize="xs" color="gray.600">
+                      Status Pagamento
+                    </FormLabel>
+                    <Input
+                      name="status_pgto"
+                      value={setDadosCard.status_pgto}
+                      isReadOnly={readonly}
+                      size="sm"
+                      bg="gray.100"
+                    />
+                  </FormControl>
+                </Grid>
+              </Box>
               <Box>
                 <Alert status="info" variant="left-accent">
                   <AlertIcon />
@@ -171,10 +283,10 @@ export async function CardUpdateDireto({ setDadosCard, user }: Props) {
                   Hierarquia={!HierarquiaUser ? "USER" : HierarquiaUser}
                 />
               </Flex>
-              {setDadosCard.construtora.id === 5 ? (
+              {construtora?.id === 5 && (
                 <Box>
                   <Alert
-                    justifyContent={"space-between"}
+                    justifyContent="space-between"
                     status="warning"
                     variant="left-accent"
                   >
@@ -182,7 +294,7 @@ export async function CardUpdateDireto({ setDadosCard, user }: Props) {
                     Apenas para clientes presentes no Plantão de Venda.
                     <BtnAlertNow
                       id={setDadosCard.id}
-                      andamento={setDadosCard.Andamento}
+                      andamento={setDadosCard.andamento}
                       ativo={setDadosCard.ativo}
                       distrato={setDadosCard.distrato}
                       construtora={setDadosCard.construtora}
@@ -190,8 +302,6 @@ export async function CardUpdateDireto({ setDadosCard, user }: Props) {
                     />
                   </Alert>
                 </Box>
-              ) : (
-                <Box hidden></Box>
               )}
               <Flex
                 flexDir={{ base: "column", md: "row" }}
@@ -249,9 +359,10 @@ export async function CardUpdateDireto({ setDadosCard, user }: Props) {
                 user={user}
               />
             )}
-            {setDadosCard.ativo && HierarquiaUser === "ADM" && <ResendSms id={setDadosCard.id} />}
+            {setDadosCard.ativo && HierarquiaUser === "ADM" && (
+              <ResendSms id={setDadosCard.id} />
+            )}
             <CreateChamado id={setDadosCard.id} />
-
           </Flex>
           <Flex
             w={"100%"}
@@ -262,17 +373,26 @@ export async function CardUpdateDireto({ setDadosCard, user }: Props) {
             py={3}
             wrap={"wrap"}
           >
-            <BotaoPausar id={setDadosCard.id} statusPause={setDadosCard.pause} />
+
+            <BotaoPausar
+              id={setDadosCard.id}
+              statusPause={setDadosCard.pause}
+            />
+
             <BtnIniciarAtendimento
               hierarquia={HierarquiaUser}
               status={setDadosCard.statusAtendimento}
-              aprovacao={setDadosCard.Andamento}
+              aprovacao={setDadosCard.andamento}
               id={setDadosCard.id}
             />
-            <SaveBtm colorScheme="green" textColor={"black"} size={"sm"} type="submit">
-              SALVAR
-            </SaveBtm>
-            <BotaoSisapp body={setDadosCard} />
+            <PatchButton
+              id={setDadosCard.id}
+              body={ body}
+              colorScheme="blue"
+              size="sm"
+            >
+              Atualizar Direto
+            </PatchButton>
 
             {!setDadosCard.ativo && HierarquiaUser === "ADM" ? (
               <BotaoReativarSolicitacao id={setDadosCard.id} />

@@ -2,7 +2,8 @@
 
 import { GetSessionServer } from "@/lib/auth_confg";
 
-export async function UpdateSolicitacao(_: any, data: FormData) {
+export async function UpdateSolicitacaoDireto(_: any, data: FormData) {
+
   const session = await GetSessionServer();
   if (!session) {
     return {
@@ -11,16 +12,14 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
       data: null
     };
   }
-  // console.log(data);
+
 
   const id = Number(data.get("id_cliente"));
-  console.log("🚀 ~ UpdateSolicitacao ~ id:", id)
   const Ativo = data.get("StatusAtivo") === "true" ? true : false;
-  const corretor = Number(data.get("corretor")) || 0;
   const hierarquia = session?.user?.hierarquia;
-  const avaliar = !Ativo && corretor > 0 && hierarquia === "ADM" ? true : false;
+  const avaliar = !Ativo  && hierarquia === "ADM" ? true : false;
   const Avaliar2 =
-    !Ativo && corretor > 0 && hierarquia !== "ADM" ? true : false;
+    !Ativo && hierarquia !== "ADM" ? true : false;
 
   const TagsArray = data.get("Tags") as any;
   await PostTags(TagsArray, id);
@@ -58,9 +57,7 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
     ...(data.get("empreendimento") && {
       empreedimento: Number(data.get("empreendimento"))
     }),
-    ...(data.get("construtora") && {
-      construtora: Number(data.get("construtora"))
-    }),
+    
     ...(data.get("financeiro") && {
       financeiro: Number(data.get("financeiro"))
     }),
@@ -76,11 +73,11 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
     }),
     ...(data.get("Relacionamento") && { rela_quest: true })
   };
-
+  
   const request = await fetch(
-    `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/solicitacao/update/${id}`,
+    `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/direto/${id}`,
     {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session?.token}`
@@ -88,6 +85,8 @@ export async function UpdateSolicitacao(_: any, data: FormData) {
       body: JSON.stringify(Dados)
     }
   );
+
+  
 
   if (request.ok) {
     const response = await request.json();

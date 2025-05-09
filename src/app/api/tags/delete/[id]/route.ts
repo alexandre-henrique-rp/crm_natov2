@@ -15,7 +15,7 @@ export async function DELETE(
     }
 
     const reqest = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/tags/${id}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/tag/${id}`,
       {
         method: "DELETE",
         headers: {

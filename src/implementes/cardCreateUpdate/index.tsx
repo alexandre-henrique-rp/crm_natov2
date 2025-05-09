@@ -47,6 +47,14 @@ import CardGridConstrutoraEmail from "./Grid/CardGridConstrutoraEmail";
 import CardGridConstrutoraFantasia from "./Grid/CardGridConstrutoraFantasia";
 import { CardGridSuport } from "./Grid/CardGridSuport";
 import { CardGridFinanceiraConstrutora } from "./Grid/CardGridFinanceiraConstrutora";
+import CardGridPixCopiaECola from "./Grid/CardGridCopiaECola";
+import CardGridImagemQrcode from "./Grid/CardGridQrcode";
+import CardGridQrcode from "./Grid/CardGridQrcodeprops";
+import CardGridStatusPgto from "./Grid/CardGridStatusPgto";
+import CardGridTxid from "./Grid/CardGridTxid";
+import CardGridValorCd from "./Grid/CardGridValorcd";
+
+        
 import CardGridValorcert from "./Grid/cardGridValorcert";
 
 /**
@@ -111,6 +119,12 @@ export const CardCreateUpdate = {
   GridUserHierarquia: CardGridUserHierarquia,
   GridUserSenha: CardGridUserSenha,
   GridUserConfirSenha: CardGridUserConfirSenha,
+  GridPixCopiaECola: CardGridPixCopiaECola,
+  GridQrcode: CardGridQrcode,
+  GridTxid: CardGridTxid,
+  GridValorCd: CardGridValorCd,
+  GridImagemQrcode: CardGridImagemQrcode,
+  GridStatusPgto: CardGridStatusPgto,
   // Financeira Cadastro
   GridCnpj: CardGridCnpj,
   GridRazaoSocial: CardGridRazaoSocial,
