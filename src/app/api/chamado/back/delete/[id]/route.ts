@@ -11,9 +11,13 @@ export async function DELETE(
     if (!session) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+    const id = context.params.id;
+    if (!id) {
+      return NextResponse.json({ message: "ID do chamado não fornecido" }, { status: 400 });
+    }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/${context.params.id}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado/${id}`,
       {
         method: "DELETE",
         headers: {

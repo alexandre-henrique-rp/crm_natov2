@@ -2,7 +2,8 @@ import { BugReport } from "@/components/bug";
 import { FilterRoute } from "@/components/filter/filtro_route";
 import PerfilHome from "@/components/perfil_home";
 import ModalPrimeAsses from "@/components/prime_asses";
-import TermosPage from "@/components/termos";
+import ModalTermos from "@/components/termos";
+import { GetSessionServer } from "@/lib/auth_confg";
 import { Box, Flex } from "@chakra-ui/react";
 import { Metadata } from "next";
 
@@ -12,6 +13,8 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
+  const session = await GetSessionServer();
+  
   return (
     <Flex
       minH="100vh"
@@ -20,18 +23,18 @@ export default async function HomePage() {
       bg="#F8F8F8"
       py="2rem"
     >
-      <ModalPrimeAsses />
-      <TermosPage />
+      <ModalPrimeAsses session={session} />
+      <ModalTermos session={session} />
       <Box
         w={{ base: "98%", xl: "80%" }}
         justifyContent="space-between"
       >
         <BugReport />
         <Box justifyContent="center" alignItems="center">
-          <PerfilHome />
+          <PerfilHome session={session} />
         </Box>
         <Box>
-          <FilterRoute />
+          <FilterRoute session={session} />
         </Box>
       </Box>
     </Flex>

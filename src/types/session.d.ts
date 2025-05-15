@@ -13,16 +13,33 @@ export interface Financeira {
   fantasia: string;
 }
 
+export interface UserRoler {
+  adm?: boolean;
+  now?: boolean;
+  user?: boolean;
+  alert?: boolean;
+  direto?: boolean;
+  chamado?: boolean;
+  finaceiro?: boolean;
+  construtora?: boolean;
+  lista_const?: boolean;
+  lista_empre?: boolean;
+  solicitacao?: boolean;
+  lista_finace?: boolean;
+  empreendimento?: boolean;
+  relatorio?: boolean;
+}
 
 export interface AuthUser {
   Financeira: Financeira[];
   id: number;
-  name: string;
+  nome: string;
   construtora: Construtora[];
   telefone: string;
   empreendimento: Empreendimento[];
   hierarquia: "ADM" | "CCA" | "GRT" | "CONST" | "USER";
   cargo: string;
+  role: UserRoler;
   reset_password: boolean;
   termos: boolean;
 }

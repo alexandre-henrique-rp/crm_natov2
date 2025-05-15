@@ -8,6 +8,7 @@ export async function PUT(
   try {
     const { id } = params;
     const body = await request.json();
+    console.log("🚀 ~ body:", body)
 
     const session = await GetSessionServer();
 

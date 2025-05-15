@@ -4,6 +4,7 @@ import { FiltroComponent } from "../filtro_geral";
 import { Box, CircularProgress, Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Tabela } from "../../tabela";
+import { SessionServer } from "@/types/session";
 interface FiltroData {
   id: number | null;
   nome: string;
@@ -12,8 +13,11 @@ interface FiltroData {
   construtora: number;
   financeira: number;
 }
+interface Props {
+  session: SessionServer | null;
+}
 
-export const FilterRoute = () => {
+export const FilterRoute = ({ session }: Props) => {
   const [DataFilter, setDataFilter] = useState<FiltroData>({} as FiltroData);
   const [Dados, setDados] = useState<solictacao.SolicitacaoGetType[]>(
     [] as any
@@ -116,7 +120,7 @@ export const FilterRoute = () => {
   return (
     <>
       <Box w="100%" py={5}>
-        <FiltroComponent onData={handleFilter} />
+        <FiltroComponent onData={handleFilter} session={session} />
       </Box>
       <Flex justifyContent="center" alignItems="center">
         <Tabela
@@ -124,6 +128,7 @@ export const FilterRoute = () => {
           AtualPage={PagAtual}
           SetVewPage={NewPageFunction}
           total={Total}
+          session={session}
         />
       </Flex>
     </>

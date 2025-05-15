@@ -1,3 +1,9 @@
+{{
+}}
+export const dynamic = 'force-dynamic';
+{{
+}}
+
 import GetConstrutoras from "@/actions/dashboard/services/getConstrutoras";
 import GetEmpreendimentos from "@/actions/dashboard/services/getEmpreendimentos";
 import GetFinanceiras from "@/actions/dashboard/services/getFinanceiras";
@@ -169,7 +175,7 @@ export default async function DashBoard() {
         </Flex>
         <Flex
           w={"100%"}
-          
+          // bg={"#00713C"}
           rounded={"12px"}
           p={4}
           justifyContent={"center"}

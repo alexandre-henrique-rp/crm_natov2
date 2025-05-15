@@ -18,7 +18,7 @@ interface RelatorioType {
   cobrancas_aberto: string;
 }
 
-export default async function PainelAdministrativo() {
+export default function PainelAdministrativo() {
   const [dados, setDados] = useState<RelatorioType | null>(null);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
@@ -35,7 +35,6 @@ export default async function PainelAdministrativo() {
     try {
       const req = await fetch("/api/relatorio/getall");
       const res = await req.json();
-      console.log("🚀 ~ fetchDados ~ res:", res);
       setDados(res);
     } catch (error) {
       console.error(error);
@@ -63,7 +62,7 @@ export default async function PainelAdministrativo() {
             <Box w={"100%"}>
               <Heading>Painel Administrativo</Heading>
             </Box>
-            {session?.hierarquia === "ADM" && (
+            {session?.role.relatorio && (
               <>
                 <Flex w={"100%"} py={8} justifyContent={"flex-end"} gap={2}>
                   <ModalAddCobranca />

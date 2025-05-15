@@ -97,7 +97,7 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
               >
                 <CardCreateUpdate.GridEmail
                   type="register"
-                  DataSolicitacao={setDadosCard}
+                  email={setDadosCard.email}
                   w={{ base: "100%", md: "25rem" }}
                   readonly={readonly}
                 />
@@ -265,7 +265,7 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
               <CardCreateUpdate.GridDistrato Id={setDadosCard.id} User={user} />
             )}
             {!setDadosCard.id_fcw && setDadosCard.ativo && (
-              <CriarFcweb Id={setDadosCard.id} user={user} />
+              <CriarFcweb Dados={setDadosCard} user={user} />
             )}
             {setDadosCard.ativo && (
               <BtCreateAlertCliente

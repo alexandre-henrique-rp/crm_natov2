@@ -15,12 +15,13 @@ import { useRouter } from "next/navigation";
 import React, { FormEventHandler, useState, useRef } from "react";
 import { AuthUser } from "@/types/session";
 
+
 interface CriarFcwebProps {
-  Id: number;
+  Dados: solictacao.SolicitacaoGetType;
   user: AuthUser;
 }
 
-export function CriarFcweb({ Id, user }: CriarFcwebProps) {
+export function CriarFcweb({ Dados, user }: CriarFcwebProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [Loading, setLoading] = useState(false);
@@ -32,16 +33,30 @@ export function CriarFcweb({ Id, user }: CriarFcwebProps) {
     e.preventDefault();
     onClose();
     setLoading(true);
-    console.log("🚀 ~ handleSubmit ~ response: taok");
     try {
       const response = await fetch("/api/fcweb", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: Id }),
+        body: JSON.stringify({
+          s_alerta: "ATIVADO",
+          referencia: `${new Date().toISOString().split("T")[0].split("-").reverse().join("-")}.${new Date().toLocaleTimeString()}`,
+          unidade: "1",
+          criou_fc: "API",
+          cpf: Dados?.cpf,
+          nome: Dados?.nome,
+          contador: "NATO_",
+          obscont:
+            `Criado Por: ${user?.nome} - Empreendimento: ${Dados?.empreedimento.nome} - vendedor: ${Dados?.corretor.nome} - ( ${new Date().toLocaleDateString('pt-BR') } ${new Date().toLocaleTimeString('pt-BR')} )`,
+          tipocd: "A3PF Bird5000",
+          valorcd: Dados?.valorcd,
+          formapgto: "PENDURA",
+          telefone: Dados?.telefone,
+          email: Dados?.email,
+          dtnascimento: Dados?.dt_nascimento,
+        }),
       });
 
       if (!response.ok) {
-
         const errorText = await response.text();
         toast({
           title: "Erro ao criar FCWEB",
@@ -52,7 +67,6 @@ export function CriarFcweb({ Id, user }: CriarFcwebProps) {
         });
         return;
       }
-
 
       const json = await response.json();
       toast({
@@ -81,7 +95,12 @@ export function CriarFcweb({ Id, user }: CriarFcwebProps) {
     <>
       {hierarquia === "ADM" && (
         <>
-          <Button colorScheme="cyan" size={'sm'} isLoading={Loading} onClick={onOpen}>
+          <Button
+            colorScheme="cyan"
+            size={"sm"}
+            isLoading={Loading}
+            onClick={onOpen}
+          >
             Criar FCWEB
           </Button>
           <AlertDialog

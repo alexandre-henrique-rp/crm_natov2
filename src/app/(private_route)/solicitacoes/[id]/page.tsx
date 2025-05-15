@@ -41,9 +41,6 @@ const RequestAlert = async (id: string) => {
         Authorization: `Bearer ${session?.token}`
       },
       cache: "no-store",
-      next: {
-        tags: ["get_Alert"]
-      }
     });
     if (!request.ok) {
       console.error("RequestAlert status:", request.status);

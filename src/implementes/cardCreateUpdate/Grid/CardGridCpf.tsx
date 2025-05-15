@@ -7,8 +7,11 @@ interface CardGridCpfProps extends BoxProps {
   idUser?: number;
 }
 
-
-export default async function CardGridCpf({idUser, CPF, ...props }: CardGridCpfProps) {
+export default async function CardGridCpf({
+  idUser,
+  CPF,
+  ...props
+}: CardGridCpfProps) {
   return (
     <>
       <Box {...props}>
@@ -16,17 +19,26 @@ export default async function CardGridCpf({idUser, CPF, ...props }: CardGridCpfP
           CPF
         </FormLabel>
         {CPF && (
-          <><Text px={1} py={2} textColor={"GrayText"} bg={"gray.100"} borderBottom={"1px solid #A0AEC0"}>
-            {CPF}
-          </Text>
-          <InputCpf hidden
+          <>
+            <Text
+              hidden
+              px={1}
+              py={2}
+              textColor={"GrayText"}
+              bg={"gray.100"}
+              borderBottom={"1px solid #A0AEC0"}
+            >
+              {CPF}
+            </Text>
+            <InputCpf
               variant="flushed"
               setValueCpf={CPF}
               px={1}
               bg={"gray.100"}
               borderColor={"gray.400"}
               maxLength={14}
-               /></>
+            />
+          </>
         )}
         {!CPF && (
           <InputCpf
@@ -42,7 +54,6 @@ export default async function CardGridCpf({idUser, CPF, ...props }: CardGridCpfP
       <Box hidden>
         <Input name="id" value={idUser} readOnly />
       </Box>
-      
     </>
   );
 }

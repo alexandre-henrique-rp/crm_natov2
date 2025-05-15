@@ -33,11 +33,13 @@ import { IoIosArrowForward } from "react-icons/io";
 import { FiAlertTriangle } from "react-icons/fi";
 import { BotoesFunction } from "../botoes/bt_group_function";
 import { BotoesFunctionDireto } from "../botoes/bt_group_functionDireto";
+import { SessionServer } from "@/types/session";
 interface TabelaProps {
   ClientData: solictacao.SolicitacaoGetType[];
   total: number | null;
   AtualPage: number;
   SetVewPage: (page: number) => any;
+  session: SessionServer | null;
 }
 
 const rgbBlink = keyframes`
@@ -53,9 +55,9 @@ export function TabelaDireto({
   total,
   AtualPage,
   SetVewPage,
+  session,
 }: TabelaProps) {
   const [SelectPage, setSelectPage] = useState(1);
-  const session = useSession();
   const user = session;
 
   useEffect(() => {
@@ -115,16 +117,16 @@ export function TabelaDireto({
 
     const colors = !item.ativo
       ? "red.400"
-      : item.distrato && user?.hierarquia === "ADM"
+      : item.distrato && session?.user?.hierarquia === "ADM"
       ? "gray.600"
-      : item.distrato && user?.hierarquia === "CONST"
+      : item.distrato && session?.user?.hierarquia === "CONST"
       ? "gray.600"
-      : item.distrato && user?.hierarquia === "GRT"
+      : item.distrato && session?.user?.hierarquia === "GRT"
       ? "gray.600"
       : item.alertanow &&
         !["EMITIDO", "REVOGADO", "APROVADO"].includes(item.andamento)
       ? "green.200"
-      : item.pause && user?.hierarquia === "ADM"
+      : item.pause && session?.user?.hierarquia === "ADM"
       ? "yellow.200"
       : "transparent";
 
@@ -216,6 +218,7 @@ export function TabelaDireto({
               id={item.id}
               distrato={item.distrato ? true : false}
               exclude={!item.ativo ? true : false}
+              session={session}
             />
           </Flex>
         </Td>

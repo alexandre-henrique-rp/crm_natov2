@@ -7,12 +7,17 @@ import { useState, useEffect } from "react"; // Importando useEffect para atuali
 import { SelectComponent } from "../select";
 import { ModalComponent } from "../modal_alert";
 import BotaoPageChamados from "../botoes/btn_page_chamados";
-import { useSession } from "@/hook/useSession";
+import { SessionServer } from "@/types/session";
 
-export default function PerfilHome() {
+interface Props {
+  session: SessionServer | null;
+}
+
+export default function PerfilHome({ session }: Props) {
   const [IdEmpreedimento, setIdEmpreedimento] = useState(0);
   const [IdConstrutora, setIdConstrutora] = useState(0);
-  const user = useSession();
+  const user = session?.user;
+  console.log("🚀 ~ PerfilHome ~ user:", user)
 
   //   setIdEmpreedimento(id);
   // };
@@ -49,7 +54,7 @@ export default function PerfilHome() {
             <ModalComponent />
           </Box>
           <Box w={{ base: "100%", md: "40%" }}>
-            <TextHome SetName="NOME" SetValue={user.name} />
+            <TextHome SetName="NOME" SetValue={user.nome} />
             <TextHome SetName="TELEFONE" SetValue={user.telefone} />
           </Box>
           <Box w={{ base: "100%", md: "40%" }}>

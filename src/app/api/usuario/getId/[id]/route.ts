@@ -28,8 +28,10 @@ export async function GET(
       return new NextResponse("Invalid credentials", { status: 401 });
     }
     const data = await reqest.json();
+    console.log("🚀 ~ data:", data)
     return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
+    console.log("🚀 ~ error:", error)
     return NextResponse.json({ error: error }, { status: 500 });
   }
 }

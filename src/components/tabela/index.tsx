@@ -25,18 +25,19 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
-import { useSession } from "@/hook/useSession";
 import { useEffect, useState } from "react";
 import { FaRunning } from "react-icons/fa";
 import { ImClock } from "react-icons/im";
 import { IoIosArrowForward } from "react-icons/io";
 import { FiAlertTriangle } from "react-icons/fi";
 import { BotoesFunction } from "../botoes/bt_group_function";
+import { SessionServer } from "@/types/session";
 interface TabelaProps {
   ClientData: solictacao.SolicitacaoGetType[];
   total: number | null;
   AtualPage: number;
   SetVewPage: (page: number) => any;
+  session: SessionServer | null;
 }
 
 const rgbBlink = keyframes`
@@ -52,10 +53,10 @@ export function Tabela({
   total,
   AtualPage,
   SetVewPage,
+  session,
 }: TabelaProps) {
   const [SelectPage, setSelectPage] = useState(1);
-  const session = useSession();
-  const user = session;
+  const user = session?.user;
 
   useEffect(() => {
     setSelectPage(AtualPage);
@@ -219,6 +220,7 @@ export function Tabela({
               id={item.id}
               distrato={item.distrato ? true : false}
               exclude={!item.ativo ? true : false}
+              session={session}
             />
           </Flex>
         </Td>

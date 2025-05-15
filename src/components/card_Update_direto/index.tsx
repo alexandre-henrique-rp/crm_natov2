@@ -311,6 +311,7 @@ export function CardUpdateDireto({ setDadosCard, user }: Props) {
               >
                 <CardCreateUpdate.GridObs
                   DataSolicitacao={setDadosCard}
+                  UsuarioLogado={user}
                   w={"100%"}
                 />
               </Flex>
@@ -351,7 +352,7 @@ export function CardUpdateDireto({ setDadosCard, user }: Props) {
               <CardCreateUpdate.GridDistrato Id={setDadosCard.id} User={user} />
             )}
             {!setDadosCard.id_fcw && setDadosCard.ativo && (
-              <CriarFcweb Id={setDadosCard.id} user={user} />
+              <CriarFcweb Dados={setDadosCard} user={user} />
             )}
             {setDadosCard.ativo && (
               <BtCreateAlertCliente

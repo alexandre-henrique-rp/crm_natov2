@@ -1,24 +1,25 @@
-import { IconsMenu } from "@/data/icons/menu";
+"use client";
 import { MenuItem } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
+import { ReactElement } from "react";
 
 type BotaoMobileMenuProps = {
-  name:
-    | "Home"
-    | "Painel adm"
-    | "Nova Solicitação"
-    | "Dashboard"
-    | "FAQ"
-    | "Sair";
+  name: string;
+  path: string;
+  icon: ReactElement;
 };
-export default function BotaoMobileMenu({ name }: BotaoMobileMenuProps) {
+export default function BotaoMobileMenu({
+  name,
+  path,
+  icon,
+}: BotaoMobileMenuProps) {
   const router = useRouter();
-  const obj = IconsMenu.find((icon) => icon.label === name);
-  const path = obj?.path;
+
+
   return (
     <>
       <MenuItem
-        icon={obj?.icon}
+        icon={icon}
         onClick={() => {
           if (name !== "Sair") {
             (async () => {
@@ -26,7 +27,7 @@ export default function BotaoMobileMenu({ name }: BotaoMobileMenuProps) {
             })();
             router.push("/login");
           }
-          router.push(obj?.path || "");
+          router.push(path);
         }}
       >
         {name.toUpperCase()}

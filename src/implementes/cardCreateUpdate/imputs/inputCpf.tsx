@@ -19,21 +19,21 @@ export const InputCpfContext = createContext<InputCpfType>({
   setCpfContex: () => "",
 });
 
-  /**
-   * Input que aceita CPF, aplica a máscara automaticamente e retorna o valor sem máscara.
-   *
-   * @param setValueCpf - valor do CPF sem máscara
-   * @param props - props do Input do Chakra
-   *
-   * @returns componente Input com a máscara de CPF
-   * 
-   */
+/**
+ * Input que aceita CPF, aplica a máscara automaticamente e retorna o valor sem máscara.
+ *
+ * @param setValueCpf - valor do CPF sem máscara
+ * @param props - props do Input do Chakra
+ *
+ * @returns componente Input com a máscara de CPF
+ *
+ */
 export default function InputCpf({ setValueCpf, ...props }: InputCpfProps) {
   const [cpf, setCpf] = useState<string>("");
   const [Mask, setMask] = useState<string>("");
 
   useEffect(() => {
-    if(!setValueCpf) return;
+    if (!setValueCpf) return;
     const valorLimpo = unMask(setValueCpf);
     const maskCpf = mask(valorLimpo, ["999.999.999-99"]);
     setMask(maskCpf);
@@ -51,17 +51,31 @@ export default function InputCpf({ setValueCpf, ...props }: InputCpfProps) {
 
   return (
     <>
-    <InputCpfContext.Provider value={{ CpfContex: cpf, setCpfContex: setCpf }}>
-      {setValueCpf && (
-        <Input {...props} value={Mask} type="text" color={"teal.500"} readOnly _hover={{color:"teal.500"}} _focus={{color:"teal.500", borderColor:"teal.500"}}/>
-      )}
-      {!setValueCpf && (
-        <Input {...props} value={Mask} type="text" onChange={handleChange} />
-      )}
-      <Box hidden>
-        <Input value={cpf} type="text" name="cpf" hidden readOnly />
-      </Box>
-    </InputCpfContext.Provider>
+      <InputCpfContext.Provider
+        value={{ CpfContex: cpf, setCpfContex: setCpf }}
+      >
+        {setValueCpf && (
+          <Input
+            {...props}
+            value={Mask}
+            type="text"
+            color={"teal.500"}
+            readOnly
+            _hover={{ color: "teal.500" }}
+            _focus={{ color: "teal.500", borderColor: "teal.500" }}
+          />
+        )}
+        {!setValueCpf && (
+          <Input {...props} 
+          value={Mask} 
+          type="text" 
+          onChange={handleChange} 
+          />
+        )}
+        <Box hidden>
+          <Input value={cpf} type="text" name="cpf" hidden readOnly />
+        </Box>
+      </InputCpfContext.Provider>
     </>
   );
 }

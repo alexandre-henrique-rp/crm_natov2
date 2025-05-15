@@ -2,6 +2,7 @@ import { BugReport } from "@/components/bug";
 import { FilterRouteDireto } from "@/components/filter/filter_router_direto";
 import ModalPrimeAsses from "@/components/prime_asses";
 import TermosPage from "@/components/termos";
+import { GetSessionServer } from "@/lib/auth_confg";
 import { Box, Flex } from "@chakra-ui/react";
 import { Metadata } from "next";
 
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
+  const session = await GetSessionServer();
   return (
     <Flex
       minH="100vh"
@@ -21,15 +23,15 @@ export default async function HomePage() {
       py="2rem"
     >
       <BugReport />
-      <ModalPrimeAsses />
-      <TermosPage />
+      <ModalPrimeAsses session={session} />
+      <TermosPage session={session} />
       <Box
         w={{ base: "98%", xl: "80%" }}
         alignItems="center"
         justifyContent="space-between"
       >
         <Box>
-          <FilterRouteDireto />
+          <FilterRouteDireto session={session} />
         </Box>
       </Box>
     </Flex>

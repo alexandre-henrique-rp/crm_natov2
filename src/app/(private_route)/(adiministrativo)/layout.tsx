@@ -49,15 +49,12 @@ export default async function PainelAdmLayout({
             justifyContent={{ base: "center", md: "normal" }}
             alignItems={{ base: "center", md: "normal" }}
           >
-            <BotaoAdm name={"Usuarios"} />
-            <BotaoAdm name={"Empreendimentos"} />
-
-            {session?.user.hierarquia === "ADM" && (
-              <>
-                <BotaoAdm name={"Construtora"} />
-                <BotaoAdm name={"CCAs"} />
-              </>
+            {session?.user.role.user && <BotaoAdm name={"Usuarios"} />}
+            {session?.user.role.empreendimento && (
+              <BotaoAdm name={"Empreendimentos"} />
             )}
+            {session?.user.role.construtora && <BotaoAdm name={"Construtora"} />}
+            {session?.user.role.finaceiro && <BotaoAdm name={"CCAs"} />}
           </Flex>
         </Flex>
         <Flex w={{ base: "100%", md: "90%" }} minW={"90%"} h={"100%"}>

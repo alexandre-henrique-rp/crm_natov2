@@ -8,27 +8,24 @@ import {
   MenuButton,
   MenuList,
 } from "@chakra-ui/react";
-  import { useSession } from "@/hook/useSession";
-import { HamburgerIcon } from "@chakra-ui/icons";
 import BotaoMenu from "../bt_menu";
 import BotaoMobileMenu from "../bt_mobile_menu";
-import { useEffect, useState } from "react";
+import { SessionServer } from "@/types/session";
+import { FiFilePlus, FiHome, FiLogOut, FiSettings } from "react-icons/fi";
+import { LuLayoutDashboard } from "react-icons/lu";
+import { CgBriefcase, CgToday } from "react-icons/cg";
+import { RxHamburgerMenu } from "react-icons/rx";
 
-export default function BotaoJuncao() {
-  const [admin, setAdmin] = useState(false);
-  const session = useSession();
-  console.log("🚀 ~ BotaoJuncao ~ but:", session?.hierarquia)
-  useEffect(() => {
-   if (session) {
-    if (session?.hierarquia === "ADM") {
-    setAdmin(true);
-    }
-    if (session?.hierarquia === "GRT") {
-    setAdmin(true);
-    }
-   }
-  }, [session]);
-
+/**
+ * Interface para tipagem das props do componente BotaoJuncao.
+ * session: informações da sessão do usuário, podendo ser nulo.
+ */
+interface BotoesFunctionProps {
+  session: SessionServer | null;
+}
+// Clean Code: Sempre renderize o container principal para evitar erro de hidratação
+// e garantir uma estrutura consistente entre server e client.
+export default function BotaoJuncao({ session }: BotoesFunctionProps) {
   return (
     <Flex
       justifyContent={"space-between"}
@@ -36,42 +33,49 @@ export default function BotaoJuncao() {
       w={"100%"}
       bg={"#00713D"}
       px={40}
+      minH="70px" // Garante altura mínima para evitar layout shift
     >
-      <Flex gap={10} alignItems={"center"}>
-        <Box minW={"100px"} w={"112px"}>
-          <Img src="/SisnatoLogoL.png" alt="Logo" width={"100%"}  />
-        </Box>
-        <Box display={{ base: "flex", md: "none" }}>
-          <Menu>
-            <MenuButton
-              as={IconButton}
-              aria-label="Options"
-              icon={<HamburgerIcon />}
-              variant="outline"
-            />
-            <MenuList>
-              <BotaoMobileMenu name="Home" />
-              <BotaoMobileMenu name="Nova Solicitação" />
-              {admin && <BotaoMobileMenu name="Painel adm" />}
-              <BotaoMobileMenu name="Dashboard" />
-              <BotaoMobileMenu name="FAQ" />
-              <BotaoMobileMenu name="Sair" />
-            </MenuList>
-          </Menu>
-        </Box>
-
-        <Box display={{ base: "none", md: "flex" }} gap={1} w={"85%"}>
-          <BotaoMenu name="Home" />
-          <BotaoMenu name="Nova Solicitação" />
-          {admin && <BotaoMenu name="Painel adm" />}
-          <BotaoMenu name="Dashboard" />
-          <BotaoMenu name="FAQ" />
-          <BotaoMenu name="Direto" />
-        </Box>
-      </Flex>
-
+      {session ? (
+        <>
+          <Flex gap={10} alignItems={"center"}>
+            <Box minW={"100px"} w={"112px"}>
+              <Img src="/SisnatoLogoL.png" alt="Logo" width={"100%"} />
+            </Box>
+            <Box display={{ base: "flex", md: "none" }}>
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  aria-label="Options"
+                  icon={<RxHamburgerMenu />}
+                  variant="outline"
+                />
+                <MenuList>
+                  <BotaoMobileMenu name="Home" path="/" icon={<FiHome />} />
+                  <BotaoMobileMenu name="Nova Solicitação" path="/solicitacoes" icon={<FiFilePlus />} />
+                  {session?.user?.role?.adm && <BotaoMobileMenu name="Painel adm" path="/adm" icon={<FiSettings />} />}
+                  <BotaoMobileMenu name="Dashboard" path="/dashboard" icon={<LuLayoutDashboard />} />
+                  <BotaoMobileMenu name="FAQ" path="/faq" icon={<CgToday />} />
+                  {session?.user?.role?.direto && <BotaoMobileMenu name="Direto" path="/direto" icon={<CgBriefcase />} />}
+                  <BotaoMobileMenu name="Sair" path="/login" icon={<FiLogOut />} />
+                </MenuList>
+              </Menu>
+            </Box>
+            <Box display={{ base: "none", md: "flex" }} gap={1} w={"85%"}>
+              <BotaoMenu name="Home" path="/" icon={<FiHome />} />
+              <BotaoMenu name="Nova Solicitação" path="/solicitacoes" icon={<FiFilePlus />} />
+              {session?.user?.role?.adm && <BotaoMenu name="Painel adm" path="/adm" icon={<FiSettings />} />}
+              <BotaoMenu name="Dashboard" path="/dashboard" icon={<LuLayoutDashboard />} />
+              <BotaoMenu name="FAQ" path="/faq" icon={<CgToday />} />
+              {session?.user?.role?.direto && <BotaoMenu name="Direto" path="/direto" icon={<CgBriefcase />} />}
+            </Box>
+          </Flex>
+        </>
+      ) : (
+        // Placeholder vazio para manter a estrutura do DOM e evitar erro de hidratação
+        <Box w="100%" />
+      )}
       <Box display={{ base: "none", md: "flex" }}>
-        <BotaoMenu name="Sair" />
+        <BotaoMenu name="Sair" path="/login" icon={<FiLogOut />} />
       </Box>
     </Flex>
   );

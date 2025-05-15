@@ -1,6 +1,5 @@
 "use client";
 
-
 import {
   Box,
   Button,
@@ -21,15 +20,17 @@ import { BsBoxArrowUpRight, BsFillTrashFill } from "react-icons/bs";
 import { IoIosArrowBack } from "react-icons/io";
 import BtmDistrato from "../btm_distra";
 import { useRouter } from "next/navigation";
+import { SessionServer } from "@/types/session";
 
 
 interface BotoesFunctionProps {
   id: number;
   distrato: boolean;
   exclude?: boolean;
+  session: SessionServer | null;
 }
 
-export const BotoesFunctionDireto = ({ id, distrato, exclude }: BotoesFunctionProps) => {
+export const BotoesFunctionDireto = ({ id, distrato, exclude, session }: BotoesFunctionProps) => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const route = useRouter();
@@ -90,7 +91,7 @@ export const BotoesFunctionDireto = ({ id, distrato, exclude }: BotoesFunctionPr
             _hover={{ bg: "red.300", color: "white", border: "none" }}
           />
         </Box>
-        <BtmDistrato id={id} distrato={distrato} exclude={exclude} />
+        <BtmDistrato id={id} distrato={distrato} exclude={exclude} session={session} />
       </ButtonGroup>
 
       <Modal isOpen={isOpen} onClose={onClose}>

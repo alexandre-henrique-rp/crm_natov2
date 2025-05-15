@@ -43,21 +43,53 @@ export async function CreateSessionClient(payload = {}) {
 }
 
 export async function GetSessionClient() {
-  const token = cookies().get("session");
-  if (!token) {
+  try {
+    const token = cookies().get("session");
+    if (!token) {
+      return null;
+    }
+    const data = await OpenSessionToken(token.value);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/role/${data.user.id}`);
+    const retorno = await response.json();
+    data.user.role = retorno.role || null;
+    data.user.reset_password = retorno.reset_password || false;
+    data.user.termos = retorno.termos || false;
+    data.user.status = retorno.status || false;
+    data.user.hierarquia = retorno.hierarquia || 'USER';
+    data.user.construtora = retorno.construtora || [];
+    data.user.empreendimento = retorno.empreendimento || [];
+    data.user.Financeira = retorno.Financeira || [];
+    return data.user;
+  } catch (error) {
+    console.log(error);
     return null;
   }
-  const data = await OpenSessionToken(token.value);
-  return data;
 }
 
 export async function GetSessionServer(): Promise<SessionServer | null> {
-  const token = cookies().get("session-token");
-  if (!token) {
+  try {
+    const token = cookies().get("session-token");
+    if (!token) {
+      return null;
+    }
+  
+    const data: any = await OpenSessionToken(token.value);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/user/role/${data.user.id}`);
+    const retorno = await response.json();
+    data.user.role = retorno.role || null;
+    data.user.reset_password = retorno.reset_password || false;
+    data.user.termos = retorno.termos || false;
+    data.user.status = retorno.status || false;
+    data.user.hierarquia = retorno.hierarquia || 'USER';
+    data.user.construtora = retorno.construtora || [];
+    data.user.empreendimento = retorno.empreendimento || [];
+    data.user.Financeira = retorno.Financeira || [];
+
+    return data;
+  } catch (error) {
+    console.log(error);
     return null;
   }
-  const data: any = await OpenSessionToken(token.value);
-  return data;
   
 }
 

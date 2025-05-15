@@ -1,5 +1,4 @@
 "use client";
-import { BotaoRetorno } from "@/components/botoes/btm_retorno";
 import Empreendimentos from "@/components/empreendimentoCard";
 import { useSession } from "@/hook/useSession";
 import {
@@ -58,9 +57,6 @@ export default function EmpreendimentoPage() {
       >
         <Flex w={"100%"} justifyContent={"space-around"}>
           <Flex gap={2}>
-            <Box zIndex={1} alignSelf="baseline" position="initial">
-              <BotaoRetorno rota="/" />
-            </Box>
             <Heading>Empreendimentos</Heading>
           </Flex>
           <Link

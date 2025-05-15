@@ -5,15 +5,16 @@ import { Button, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { BeatLoader } from "react-spinners";
+import { AuthUser } from "@/types/session";
 
 interface BtRemoverDistratoProps {
   id: number;
+  user: AuthUser;
 }
-export default function BtRemoverDistrato({ id }: BtRemoverDistratoProps) {
+export default function BtRemoverDistrato({ id, user }: BtRemoverDistratoProps) {
   const [Loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
-  const session = useSession();
-  const User = session;
+  const User = user;
   const route = useRouter()
 
  
@@ -38,7 +39,7 @@ export default function BtRemoverDistrato({ id }: BtRemoverDistratoProps) {
           distrato: false,
           distrato_id: null,
           distrato_dt: null,
-          logDelete: `${req.logDelete}\nO usuário: ${User?.name}, id: ${
+          logDelete: `${req.logDelete}\nO usuário: ${User?.nome}, id: ${
             User?.id
           } Firmou novo acordo para esse registro em: ${new Date().toLocaleDateString(
             "pt-BR"

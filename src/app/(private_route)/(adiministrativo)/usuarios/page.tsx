@@ -8,7 +8,6 @@ import {
   Flex,
   Heading,
   Link,
-  Text,
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -61,7 +60,6 @@ export default function UsuariosPage() {
     <>
       <Flex
         w={"100%"}
-        // minH={"90.9dvh"}
         px={{ base: 2, md: 5 }}
         py={5}
         flexDir={"column"}

@@ -1,11 +1,12 @@
 "use client";
 
 import BtRemoverDistrato from "@/components/botoes/bt_Remover_Distrato";
+import { AuthUser } from "@/types/session";
 import { Box, BoxProps } from "@chakra-ui/react";
 
 interface CardGridDistratoProps extends BoxProps {
   Id: any;
-  User: any;
+  User: AuthUser;
 }
 
 export default function CardGridDistrato({ Id, User, ...props }: CardGridDistratoProps) {
@@ -15,12 +16,13 @@ export default function CardGridDistrato({ Id, User, ...props }: CardGridDistrat
     <Box {...props}>
       {Hierarquia === "ADM" && (
         <>
-          <BtRemoverDistrato id={Id} />
+          <BtRemoverDistrato id={Id}
+           user={User} />
         </>
       )}
       {Hierarquia === "CCA" && (
         <>
-          <BtRemoverDistrato id={Id} />
+          <BtRemoverDistrato id={Id} user={User} />
         </>
       )}
     </Box>

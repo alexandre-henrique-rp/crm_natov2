@@ -2,12 +2,12 @@
 import React from "react";
 import { Button } from "@chakra-ui/react";
 
-export const BotaoSisapp = ({ body }) => {
+export const BotaoSisapp = ({ body }: { body: any }) => {
   const handleUpdateSolicitacao = async () => {
     try {
 
         // Format date according to the required format
-        const formatDate = (dateString) => {
+        const formatDate = (dateString: string | number | Date) => {
             if (!dateString) return null;
             const date = new Date(dateString);
             return date.toISOString();

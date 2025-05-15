@@ -7,7 +7,9 @@ export async function DELETE(
 ) {
   try {
     const { id } = params;
-
+    if (!id) {
+      return NextResponse.json({ message: "ID da Construtora não fornecido" }, { status: 400 });
+    }
     const session = await GetSessionServer();
 
     if (!session) {

@@ -17,7 +17,11 @@ UserContex: "",
   seUserContex: () => "",
 });
 
+// Clean Code: Filtra a prop 's' para evitar erro de atributo não-booleano no DOM
 export default function InputUser({ setValueUser, ...props }: InputUserProps) {
+  // Remove a prop 's' caso seja passada por engano
+  // Isso evita warnings de React e problemas de hidratação
+  const {...rest } = props;
   const [Usuario, setUsuario] = useState<string>("");
 
   useEffect(() => {
@@ -48,7 +52,7 @@ export default function InputUser({ setValueUser, ...props }: InputUserProps) {
         value={{UserContex: Usuario, seUserContex: setUsuario }}
       >
         <Box>
-          <Input {...props} value={Usuario} type="text" onChange={handleChange} />
+          <Input {...rest} value={Usuario} type="text" onChange={handleChange} />
         </Box>
       </InputUserContext.Provider>
     </>

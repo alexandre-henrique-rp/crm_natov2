@@ -2,13 +2,14 @@
 
 import { Box, Button, Flex, Input, Select } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useSession } from "@/hook/useSession";
+import { SessionServer } from "@/types/session";
 
 interface FiltroGeralProps {
   onData: any;
+  session: SessionServer | null;
 }
 
-export const FiltroComponent = ({ onData }: FiltroGeralProps) => {
+export const FiltroComponent = ({ onData, session }: FiltroGeralProps) => {
   const [FilterNome, setFilterNome] = useState<string>("");
   const [FilterAndamento, setFilterAndamento] = useState<string>("");
   const [FilterEmpreendimento, setFilterEmpreendimento] = useState<number>(0);
@@ -19,8 +20,7 @@ export const FiltroComponent = ({ onData }: FiltroGeralProps) => {
   const [DataConstrutora, setDataConstrutora] = useState<any>([]);
   const [DataFinanceira, setDataFinanceira] = useState<any>([]);
 
-  const session = useSession();
-  const user = session;
+  const user = session?.user;
 
   useEffect(() => {
     if (user?.hierarquia === "ADM") {
@@ -45,36 +45,12 @@ export const FiltroComponent = ({ onData }: FiltroGeralProps) => {
           setDataConstrutora(user?.construtora);
         }
 
-        if (user.construtora.length === 0 && user?.hierarquia === "CONST") {
-          (async () => {
-            const resq = await fetch(`/api/construtora/getall`);
-            const data = await resq.json();
-            setDataConstrutora(data);
-          })();
-        }
-
         if (user.empreendimento.length > 0) {
           setDataEmpreendimento(user?.empreendimento);
         }
 
-        if (user.empreendimento.length === 0 && user?.hierarquia === "CONST") {
-          (async () => {
-            const resq = await fetch(`/api/empreendimento/getall`);
-            const data = await resq.json();
-            setDataEmpreendimento(data);
-          })();
-        }
-
         if (user.Financeira.length > 0) {
           setDataFinanceira(user?.Financeira);
-        }
-
-        if (user.Financeira.length === 0 && user?.hierarquia === "CONST") {
-          (async () => {
-            const resq = await fetch(`/api/financeira/getall`);
-            const data = await resq.json();
-            setDataFinanceira(data);
-          })();
         }
       }
     }

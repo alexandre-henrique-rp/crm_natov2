@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import { Button, ButtonProps, useToast } from "@chakra-ui/react";
 
-interface PatchButtonProps extends Omit<ButtonProps, "onClick"> {
+interface PatchButtonProps extends Omit<ButtonProps, "onClick" | "id"> {
+  id: number;
   body: Record<string, any>;
-  id: string | number;
   onSuccess?: (data: any) => void;
   onError?: (error: any) => void;
 }

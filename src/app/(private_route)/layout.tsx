@@ -1,22 +1,23 @@
 import BotaoJuncao from "@/components/botoes/bt_juncao";
 import FooterComponent from "@/components/footer";
-import { Box, Flex } from "@chakra-ui/react";
+import { GetSessionServer } from "@/lib/auth_confg";
 
 interface PrivateLayoutProps {
   children: React.ReactNode;
 }
 
+export const dynamic = 'force-dynamic';
+
 export default async function PrivateLayout({ children }: PrivateLayoutProps) {
+  const session = await GetSessionServer();
   return (
-    <Flex w="100vw" h="100dvh" justifyContent="space-between" flexDir="column">
-      <BotaoJuncao />
-      <Box
-        h="90dvh"
-        overflowY="auto"
-      >
+
+    <div style={{ display: "flex", flexDirection: "column", height: "100dvh" }}>
+      <BotaoJuncao session={session} />
+      <div style={{ flex: 1, overflowY: "auto" }}>
         {children}
-      </Box>
+      </div>
       <FooterComponent />
-    </Flex>
+    </div>
   );
 }

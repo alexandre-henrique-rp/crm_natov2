@@ -16,16 +16,19 @@ import {
 import { useEffect, useState } from "react";
 import { FiFileText } from "react-icons/fi";
 import { useToast } from "@chakra-ui/react";
-import { useSession } from "@/hook/useSession";
+import { SessionServer } from "@/types/session";
 
-export default function TermosPage() {
+interface Props {
+  session: SessionServer | null;
+}
+
+export default function ModalTermos({ session }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const session = useSession();
   const [check, setCheck] = useState(false);
   const toast = useToast();
 
-  const termosAceitos = session?.termos;
-  const idUser = Number(session?.id);
+  const termosAceitos = session?.user.termos;
+  const idUser = Number(session?.user.id);
 
   useEffect(() => {
     if (session) {

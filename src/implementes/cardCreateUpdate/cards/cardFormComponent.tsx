@@ -22,7 +22,7 @@ export function CardFormComponent(props: CardFormProps) {
   const route = useRouter();
 
   const [state, formAction] = useFormState(props.action, { error: null });
-
+  
   useEffect(() => {
     if (state?.error) {
       setIsError(true);
