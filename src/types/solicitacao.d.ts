@@ -28,7 +28,7 @@ declare namespace solictacao {
    * @param {string} uploadRg
    *
    */
-  interface SolicitacaoGetType {
+  interface SolicitacaoObjectType {
     pixCopiaECola: any;
     qrcode: any;
     txid: any;
@@ -206,5 +206,12 @@ declare namespace solictacao {
     voucher?: string;
     vendedorName?: string;
     obs?: string;
+  }
+
+  interface SolicitacaoGetType {
+    data: SolicitacaoObjectType[];
+    total: number;
+    pagina: number;
+    limite: number;
   }
 }

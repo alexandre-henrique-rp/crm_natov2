@@ -1,0 +1,430 @@
+"use client";
+import { SelectComponent } from "@/components/select";
+import { SessionServer } from "@/types/session";
+import {
+  Box,
+  Button,
+  Flex,
+  FormLabel,
+  Input,
+  Select,
+  Table,
+  Tbody,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { SelectComponentFilterHome } from "../imputs/select";
+import { InputComponentFilterHome } from "../imputs/input";
+import { ImClock } from "react-icons/im";
+import { SelectPgComponent } from "../imputs/selectPg";
+import { TableComponent } from "./table";
+
+interface DadoCompomentListProps {
+  dados: solictacao.SolicitacaoGetType | null;
+  session: SessionServer | null;
+}
+
+interface FirlterDataProps {
+  nome: string | null;
+  andamento: string | null;
+  construtora: number | null;
+  empreedimento: number | null;
+  financeiro: number | null;
+  id: number | null;
+  pagina: number | null;
+}
+
+const FirlterData = async (
+  {
+    nome,
+    andamento,
+    construtora,
+    empreedimento,
+    financeiro,
+    id,
+    pagina,
+  }: FirlterDataProps,
+  session: SessionServer | null
+) => {
+  const filter = [];
+
+  nome && filter.push(`nome=${nome}`);
+  andamento && filter.push(`andamento=${andamento}`);
+  Number(construtora) > 0 && filter.push(`construtora=${construtora}`);
+  Number(empreedimento) > 0 && filter.push(`empreedimento=${empreedimento}`);
+  Number(financeiro) > 0 && filter.push(`financeiro=${financeiro}`);
+  Number(id) > 0 && filter.push(`id=${id}`);
+  Number(pagina) > 0 && filter.push(`pagina=${pagina}`);
+
+  const URL =
+    filter.length > 0
+      ? `/api/solicitacao/getall?${filter.join("&")}`
+      : `/api/solicitacao/getall`;
+
+  const user = await fetch(URL, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session?.token}`,
+    },
+    cache: "no-store",
+  });
+
+  if (!user.ok) {
+    console.error("FirlterData status:", user.status);
+    return null;
+  }
+  const data = await user.json();
+  return data;
+};
+
+const fetchConstrutoraAll = async () => {
+  const resq = await fetch(`/api/construtora/getall`);
+  const data = await resq.json();
+  return data;
+};
+
+const fetchEmpreendimentoAll = async () => {
+  const resq = await fetch(`/api/empreendimento/getall`);
+  const data = await resq.json();
+  return data;
+};
+
+const fetchFinanceiroAll = async () => {
+  const resq = await fetch(`/api/financeira/getall`);
+  const data = await resq.json();
+  return data;
+};
+
+export const DadoCompomentList = ({
+  dados,
+  session,
+}: DadoCompomentListProps) => {
+  const [ListaDados, setListaDados] = useState<
+    solictacao.SolicitacaoObjectType[] | null
+  >(null);
+  const [Nome, setNome] = useState<string | null>(null);
+  const [Andamento, setAndamento] = useState<string | null>(null);
+  const [Construtora, setConstrutora] = useState<number | null>(null);
+  const [DataConstrutora, setDataConstrutora] = useState<any>([]);
+  const [Empreendimento, setEmpreendimento] = useState<number | null>(null);
+  const [DataEmpreendimento, setDataEmpreendimento] = useState<any>([]);
+  const [Financeiro, setFinanceiro] = useState<number | null>(null);
+  const [DataFinanceiro, setDataFinanceiro] = useState<any>([]);
+  const [Id, setId] = useState<number | null>(null);
+  const [Pagina, setPagina] = useState<number | null>(null);
+  const [MesageError, setMesageError] = useState<string | null>(null);
+  const [Total, setTotal] = useState<number>(0);
+  const [PagAtual, setPagAtual] = useState<number>(0);
+  const [Limite, setLimite] = useState<number>(0);
+
+  console.log(dados);
+
+  useEffect(() => {
+    if (dados) {
+      setListaDados(dados.data);
+      setTotal(dados.total);
+      setPagAtual(dados.pagina);
+      setLimite(dados.limite);
+    }
+    if (session?.user) {
+      (async () => {
+        if (session.user.hierarquia === "ADM") {
+          setDataConstrutora(await fetchConstrutoraAll());
+          setDataEmpreendimento(await fetchEmpreendimentoAll());
+          setDataFinanceiro(await fetchFinanceiroAll());
+        } else {
+          session.user.construtora.length > 0 &&
+            setDataConstrutora(session.user.construtora);
+          session.user.empreendimento.length > 0 &&
+            setDataEmpreendimento(session.user.empreendimento);
+          session.user.Financeira.length > 0 &&
+            setDataFinanceiro(session.user.Financeira);
+        }
+      })();
+    }
+  }, [dados, session]);
+
+  const filtroPrimario = async () => {
+    if (!ListaDados) return;
+    const filtro = ListaDados.filter((item) => {
+      item.nome.toLowerCase().includes(Nome?.toLowerCase() || "") &&
+        item.andamento.toLowerCase().includes(Andamento?.toLowerCase() || "") &&
+        item.construtora.id === Construtora &&
+        item.empreedimento.id === Empreendimento &&
+        item.financeiro.id === Financeiro &&
+        item.id === Id;
+    });
+    if (filtro?.length !== 0) {
+      setListaDados(filtro);
+    } else {
+      setListaDados(null);
+      setMesageError("Nenhum dado encontrado");
+    }
+  };
+
+  const filtroSecundario = async () => {
+    const filtro = await FirlterData(
+      {
+        nome: Nome,
+        andamento: Andamento,
+        construtora: Construtora,
+        empreedimento: Empreendimento,
+        financeiro: Financeiro,
+        id: Id,
+        pagina: Pagina,
+      },
+      session
+    );
+
+    if (filtro?.length !== 0) {
+      setListaDados(filtro);
+    } else {
+      setListaDados(null);
+      setMesageError("Nenhum dado encontrado no banco de dados");
+    }
+  };
+
+  const HandleFilterBlank = async () => {
+    setNome(null);
+    setAndamento(null);
+    setConstrutora(null);
+    setEmpreendimento(null);
+    setFinanceiro(null);
+    setId(null);
+    setPagina(null);
+    setListaDados(
+      await FirlterData(
+        {
+          nome: null,
+          andamento: null,
+          construtora: null,
+          empreedimento: null,
+          financeiro: null,
+          id: null,
+          pagina: null,
+        },
+        session
+      )
+    );
+    setMesageError(null);
+  };
+
+  const NextPage = async () => {
+    if (Pagina === null) return;
+    setListaDados(
+      await FirlterData(
+        {
+          nome: null,
+          andamento: null,
+          construtora: null,
+          empreedimento: null,
+          financeiro: null,
+          id: null,
+          pagina: Pagina,
+        },
+        session
+      )
+    );
+    
+  };
+
+  return (
+    <>
+      <Box w={"80%"} h={"100%"} px={4} py={3}>
+        <Flex
+          flexDir={{ base: "column", md: "row" }}
+          justifyContent="center"
+          alignItems="flex-end"
+          gap={{ base: 2, md: 4 }}
+        >
+          <Box>
+            <FormLabel textAlign={{ base: "left", md: "center" }}>Id</FormLabel>
+            <InputComponentFilterHome
+              w={{ base: "100%", md: "5rem" }}
+              textAlign={"center"}
+              type="number"
+              value={Id ?? 0}
+              onChange={(e) => setId(Number(e.target.value))}
+            />
+          </Box>
+          <Box>
+            <FormLabel textAlign={{ base: "left", md: "center" }}>
+              Nome
+            </FormLabel>
+            <InputComponentFilterHome
+              w={{ base: "100%", md: "20rem" }}
+              type="text"
+              value={Nome ?? ""}
+              onChange={(e) => setNome(e.target.value)}
+            />
+          </Box>
+          <Box>
+            <FormLabel textAlign={{ base: "left", md: "center" }}>
+              Andamento
+            </FormLabel>
+            <Select
+              w={{ base: "100%", md: "10rem" }}
+              textColor={"#00713D"}
+              _hover={{ borderColor: "#00613C" }}
+              borderColor={"#00713D"}
+              placeholder="Andamento"
+              size="sm"
+              borderRadius="1rem"
+              value={Andamento ?? ""}
+              onChange={(e) => setAndamento(e.target.value)}
+            >
+              <option></option>
+              <option value="VAZIO">VAZIO</option>
+              <option value="INICIADO">INICIADO</option>
+              <option value="APROVADO">APROVADO</option>
+              <option value="EMITIDO">EMITIDO</option>
+              <option value="REVOGADO">REVOGADO</option>
+            </Select>
+          </Box>
+          <Box>
+            <FormLabel textAlign={{ base: "left", md: "center" }}>
+              Construtora
+            </FormLabel>
+            <SelectComponentFilterHome
+              Data={DataConstrutora}
+              w={{ base: "100%", md: "13rem" }}
+              value={Construtora?.toString() ?? ""}
+              onChange={(e) => setConstrutora(Number(e.target.value))}
+            />
+          </Box>
+          <Box>
+            <FormLabel textAlign={{ base: "left", md: "center" }}>
+              Empreendimento
+            </FormLabel>
+            <SelectComponentFilterHome
+              Data={DataEmpreendimento}
+              w={{ base: "100%", md: "15rem" }}
+              value={Empreendimento?.toString() ?? ""}
+              onChange={(e) => setEmpreendimento(Number(e.target.value))}
+            />
+          </Box>
+          <Box>
+            <FormLabel textAlign={{ base: "left", md: "center" }}>
+              Financeiro
+            </FormLabel>
+            <SelectComponentFilterHome
+              Data={DataFinanceiro}
+              value={Financeiro?.toString() ?? ""}
+              onChange={(e) => setFinanceiro(Number(e.target.value))}
+            />
+          </Box>
+          <Box>
+            <Button
+              bg="#00713D"
+              w={{ base: "100%", md: "auto" }}
+              textColor="white"
+              variant="solid"
+              _hover={{ bg: "#00631B" }}
+              size="md"
+              onClick={filtroPrimario}
+            >
+              Filtrar
+            </Button>
+          </Box>
+          <Box>
+            <Button
+              bg="#00713D"
+              w={{ base: "100%", md: "auto" }}
+              textColor="white"
+              variant="solid"
+              _hover={{ bg: "#00631B" }}
+              size="md"
+              onClick={HandleFilterBlank}
+            >
+              Limpar
+            </Button>
+          </Box>
+        </Flex>
+        {ListaDados?.length === 0 && MesageError && (
+          <>
+            <Flex
+              justifyContent="center"
+              alignItems="center"
+              w="100%"
+              h="78vh"
+              gap={8}
+              p={4}
+            >
+              <Text>{MesageError}</Text>
+              <Button
+                w={{ base: "100%", md: "auto" }}
+                size="lg"
+                colorScheme="green"
+                onClick={filtroSecundario}
+              >
+                Busca Avançada
+              </Button>
+            </Flex>
+          </>
+        )}
+        {ListaDados && (
+          <>
+            <Flex
+              w={"full"}
+              bg={"white"}
+              shadow={"md"}
+              borderRadius={"15px"}
+              p={{ base: "10px", md: "20px" }}
+              alignContent={"center"}
+              justifyContent={"space-evenly"}
+              flexDir={"column"}
+              display={{ base: "none", md: "flex" }}
+            >
+              <Table variant="simple" size="sm">
+                <Thead>
+                  <Tr>
+                    <Th w={"16rem"} textAlign="center">
+                      FUNÇÕES
+                    </Th>
+                    <Th w={"5rem"} bg={"gray.500"} textAlign="center">
+                      ID
+                    </Th>
+                    <Th w={"25rem"} textAlign="center">NOME</Th>
+                    <Th w={"15rem"}>AGENDAMENTO</Th>
+                    <Th w={"15rem"}>Andamento</Th>
+                    <Th w={"5rem"} fontSize={"22px"}>
+                      <Flex justifyContent="center">
+                        <ImClock />
+                      </Flex>
+                    </Th>
+                    {session?.user?.hierarquia === "ADM" && (
+                      <Th w={"25rem"} textAlign="center">CONSTRUTORA</Th>
+                    )}
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {ListaDados?.map((item) => (
+                    <TableComponent key={item.id} />
+                  ))}
+                </Tbody>
+              </Table>
+              <Flex
+                w={"full"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+                pt={3}
+              >
+                <Box>
+                  Total de registros: {Total}
+                </Box>
+                <Flex gap={2}>
+                  paginas:
+                  <SelectPgComponent total={Total || 0} ClientQtd={dados?.data.length || 0} SelectPage={PagAtual} setSelectPage={setPagina} SetVewPage={NextPage} />
+                </Flex>
+              </Flex>
+            </Flex>
+          </>
+        )}
+      </Box>
+    </>
+  );
+};
