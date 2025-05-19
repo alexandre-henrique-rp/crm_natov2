@@ -8,7 +8,7 @@ interface AlertIcomCompomentProps {
 export const AlertIcomCompoment = ({ tag }: AlertIcomCompomentProps) => {
   return (
     <>
-      {tag ? (
+      {tag && tag.length > 0 ? (
         <Popover>
           <PopoverTrigger>
             <IconButton
@@ -23,7 +23,7 @@ export const AlertIcomCompoment = ({ tag }: AlertIcomCompomentProps) => {
               p={0}
             />
           </PopoverTrigger>
-          {tag && (
+          {tag && tag.length > 0 && (
             <Portal>
               <PopoverContent>
                 <PopoverArrow />
@@ -44,7 +44,7 @@ export const AlertIcomCompoment = ({ tag }: AlertIcomCompomentProps) => {
             fontSize={"1.5rem"}
             fontWeight={"900"}
             cursor="not-allowed"
-            m={"auto"}
+            mt={1}
           />
         </Box>
       )}

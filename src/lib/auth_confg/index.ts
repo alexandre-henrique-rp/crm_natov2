@@ -42,7 +42,7 @@ export async function CreateSessionClient(payload = {}) {
   });
 }
 
-export async function GetSessionClient() {
+export async function GetSessionClient(): Promise<SessionNext.Client | null> {
   try {
     const token = cookies().get("session");
     if (!token) {
@@ -66,7 +66,7 @@ export async function GetSessionClient() {
   }
 }
 
-export async function GetSessionServer(): Promise<SessionServer | null> {
+export async function GetSessionServer(): Promise<SessionNext.Server | null> {
   try {
     const token = cookies().get("session-token");
     if (!token) {

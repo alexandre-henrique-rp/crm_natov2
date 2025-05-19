@@ -24,7 +24,7 @@ import { TableComponent } from "./table";
 
 interface DadoCompomentListProps {
   dados: solictacao.SolicitacaoGetType | null;
-  session: SessionServer | null;
+  session: SessionNext.Server | null;
 }
 
 interface FirlterDataProps {
@@ -47,7 +47,7 @@ const FirlterData = async (
     id,
     pagina,
   }: FirlterDataProps,
-  session: SessionServer | null
+  session: SessionServer | SessionNext.Server | null
 ) => {
   const filter = [];
 
@@ -152,9 +152,9 @@ export const DadoCompomentList = ({
     if (!ListaDados) return;
     const filtro = ListaDados.filter((item) => {
       item.nome.toLowerCase().includes(Nome?.toLowerCase() || "") &&
-        item.andamento.toLowerCase().includes(Andamento?.toLowerCase() || "") &&
+        item.andamento?.toLowerCase().includes(Andamento?.toLowerCase() || "") &&
         item.construtora.id === Construtora &&
-        item.empreedimento.id === Empreendimento &&
+        item.empreendimento.id === Empreendimento &&
         item.financeiro.id === Financeiro &&
         item.id === Id;
     });
@@ -379,34 +379,38 @@ export const DadoCompomentList = ({
               flexDir={"column"}
               display={{ base: "none", md: "flex" }}
             >
-              <Table variant="simple" size="sm">
+              <table>
+                
+              </table>
+              {/* <Table variant="simple" size="sm">
                 <Thead>
-                  <Tr>
-                    <Th w={"16rem"} textAlign="center">
+                  <Tr borderColor={"gray.800"}>
+                    <Th w={"17rem"} textAlign="center">
                       FUNÇÕES
                     </Th>
-                    <Th w={"5rem"} bg={"gray.500"} textAlign="center">
+                    <Th w={"5rem"} textAlign="center">
                       ID
                     </Th>
-                    <Th w={"25rem"} textAlign="center">NOME</Th>
-                    <Th w={"15rem"}>AGENDAMENTO</Th>
-                    <Th w={"15rem"}>Andamento</Th>
+                    <Th textAlign="center">NOME</Th>
+                    <Th w={"13rem"}>AGENDAMENTO</Th>
+                    <Th w={"8rem"}>Andamento</Th>
                     <Th w={"5rem"} fontSize={"22px"}>
                       <Flex justifyContent="center">
                         <ImClock />
                       </Flex>
                     </Th>
                     {session?.user?.hierarquia === "ADM" && (
-                      <Th w={"25rem"} textAlign="center">CONSTRUTORA</Th>
+                      <Th w={"15rem"} textAlign="center">CONSTRUTORA</Th>
                     )}
                   </Tr>
                 </Thead>
                 <Tbody>
                   {ListaDados?.map((item) => (
-                    <TableComponent key={item.id} />
+
+                    <TableComponent key={item.id} dados={item} session={session ?? null} />
                   ))}
                 </Tbody>
-              </Table>
+              </Table> */}
               <Flex
                 w={"full"}
                 justifyContent={"space-between"}

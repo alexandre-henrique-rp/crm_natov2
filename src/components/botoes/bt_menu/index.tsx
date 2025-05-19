@@ -24,7 +24,7 @@ export default function BotaoMenu({ name, path, icon }: BotaoMenuProps) {
               (async () => {
                 await fetch("/api/auth/logout");
               })();
-              router.push("/login");
+              // router.push("/login");
             }
             router.push(path);
           }}
@@ -46,7 +46,7 @@ export default function BotaoMenu({ name, path, icon }: BotaoMenuProps) {
                 (async () => {
                   await fetch("/api/auth/logout");
                 })();
-                router.push("/login");
+                // router.push("/login");
               }
               router.push(path);
             }}

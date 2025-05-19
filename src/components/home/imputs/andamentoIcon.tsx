@@ -28,7 +28,7 @@ export const AndamentoIconComponent = ({ andamento }: AndamentoIconComponentProp
             fontSize={"1.5rem"}
             fontWeight={"900"}
             cursor="not-allowed"
-            m={"auto"}
+            mt={1}
           />
         </Box>
       )}

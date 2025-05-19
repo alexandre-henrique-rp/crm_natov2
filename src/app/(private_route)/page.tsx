@@ -1,13 +1,7 @@
-import { BugReport } from "@/components/bug";
-import { FilterRoute } from "@/components/filter/filtro_route";
 import { DadoCompomentList } from "@/components/home/lista";
 import { UserCompomentInfo } from "@/components/home/user";
-import PerfilHome from "@/components/perfil_home";
-import ModalPrimeAsses from "@/components/prime_asses";
-import ModalTermos from "@/components/termos";
 import { GetSessionServer } from "@/lib/auth_confg";
-import { SessionServer } from "@/types/session";
-import { Box, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -16,8 +10,8 @@ export const metadata: Metadata = {
 };
 
 const GetListaDados = async (
-  session: SessionServer | null
-): Promise<solictacao.SolicitacaoGetType[] | null> => {
+  session: SessionNext.Server | null
+): Promise<solictacao.SolicitacaoGetType | null> => {
   const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/solicitacao`;
   const user = await fetch(url, {
     method: "GET",

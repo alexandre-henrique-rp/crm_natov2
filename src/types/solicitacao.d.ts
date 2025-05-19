@@ -29,90 +29,42 @@ declare namespace solictacao {
    *
    */
   interface SolicitacaoObjectType {
-    pixCopiaECola: any;
-    qrcode: any;
-    txid: any;
-    valorcd: any;
-    imagemQrcode: any;
-    status_pgto: any;
-    filter(): unknown;
-    nato_user: any;
     id: number;
-    nome: string;
-    cpf: string;
-    email: string;
-    dt_solicitacao: Date | string | any;
-    andamento: string;
-    dt_aprovacao: string; 
-    dt_agendamento: string;
-    distrato_dt: string;
-    distrato_id: number;
-    hr_agendamento: string;
-    type_validacao: string;
-    corretor: {
+      nome: string;
+      cpf: string;
+      email: string;
+      andamento: string | null;
+      alerts: AlertProps[];
+      distrato: boolean;
+      dt_agendamento: Date | string | any;
+      hr_agendamento: Date | string | any;
+      dt_aprovacao: Date | string | any;
+      hr_aprovacao: Date | string | any;
+      type_validacao: string | null;
+      alertanow: boolean;
+      corretor: {
       id: number;
       nome: string;
     };
     construtora: {
-      length: number;
       id: number;
       fantasia: string;
-    } | any;
-    financeiro: {
-      id: number;
-      fantasia: string;
-    } | any;
-    telefone: string;
-    dt_nascimento: Date | string | any;
-    ass_doc?: string | any;
-    link_doc: string | any;
-    id_fcw: number;
-    fcweb?: {
-      id: number;
-      andamento: string;
-      dt_agenda: string | any;
-      hr_agenda: string | any;
-      valorcd: string;
-      estatos_pgto: string;
-      validacao: string;
-      dt_aprovacao: string | any;
-      vouchersoluti: string | any;
     };
-    obs: string;
-    alert: AlertProps[];
-    empreedimento: {
+    empreendimento:{
       id: number;
       nome: string;
       cidade: string;
-      uf: string;
-      tag: string;
-    } | any;
-    cnh: string;
-    ativo: boolean;
-    distrato: boolean;
-    uploadCnh: string;
-    relacionamento: string[];
-    createdAt: Date | string | any;
-    updatedAt: Date | string | any;
-    telefone2: string;
-    uploadRg: string;
-    distrato_id: number;
-    logDelete: string;
-    user: number;
-    distrato_dt: Date | string | any;
-    status_aprovacao: boolean;
-    distrato_id: number;
-    mult_link: string[];
-    mult_ass_doc: string[];
-    hr_aprovacao: string;
-    tag: {
+    }
+    financeiro: {
       id: number;
-      descricao: string;
-    }[],
-    docSuspenso: string;
-    alertanow: boolean;
-    statusAtendimento: boolean
-    pause: boolean
+      fantasia: string;
+    };
+    id_fcw: number;
+      statusAtendimento: boolean;
+      ativo: boolean;
+      pause: boolean;
+      tags: any;
+      createdAt: string;
   }
 
   /**
