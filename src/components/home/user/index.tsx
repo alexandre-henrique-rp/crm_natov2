@@ -1,8 +1,9 @@
 import { SessionServer } from "@/types/session";
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex, FormLabel, Text } from "@chakra-ui/react";
+import { mask } from "remask";
 
 interface UserCompomentInfoProps {
-  session: SessionServer | null;
+  session: SessionNext.Server | null;
 }
 
 export const UserCompomentInfo = ({ session }: UserCompomentInfoProps) => {
@@ -13,11 +14,102 @@ export const UserCompomentInfo = ({ session }: UserCompomentInfoProps) => {
           display={{ base: "none", md: "flex" }}
           w={"20%"}
           minH={"100%"}
-          bg="#d81010"
+          borderRight="1px solid"
+          borderColor="gray.300"
+          p={3}
+          flexDir="column"
+          gap={4}
         >
-          <pre>{JSON.stringify(session, null, 2)}</pre>
+          <Flex gap={4}>
+            <Flex flexDir="column" py={0} px={2} lineHeight={"1rem"}>
+              <FormLabel fontWeight={"bold"}>Id</FormLabel>
+              <Text>{session.user.id}</Text>
+            </Flex>
+            <Flex flexDir="column" px={2} lineHeight={"1rem"}>
+              <FormLabel fontWeight={"bold"}>Nome</FormLabel>
+              <Text>{session.user.nome}</Text>
+            </Flex>
+            <Flex flexDir="column" px={2} lineHeight={"1rem"}>
+              <FormLabel fontWeight={"bold"}>Cargo</FormLabel>
+              <Text>{session.user.cargo.toUpperCase()}</Text>
+            </Flex>
+          </Flex>
+          <Flex gap={4}>
+            <Flex flexDir="column" px={2} lineHeight={"1rem"}>
+              <FormLabel fontWeight={"bold"}>Telefone</FormLabel>
+              <Text>{mask(session.user.telefone, "(99) 9 9999-9999")}</Text>
+            </Flex>
+            <Flex flexDir="column" px={2} lineHeight={"1rem"}>
+              <FormLabel fontWeight={"bold"}>Hierarquia</FormLabel>
+              <Text>{session.user.hierarquia}</Text>
+            </Flex>
+          </Flex>
+          {session.user.construtora.length > 1 &&
+            session.user.construtora.map(
+              (item: SessionNext.Construtora, index: number) => (
+                <Flex flexDir="column" px={2} lineHeight={"1rem"}>
+                  <FormLabel fontWeight={"bold"}>
+                    Construtora {index + 1}
+                  </FormLabel>
+                  <Text>{item.fantasia}</Text>
+                </Flex>
+              )
+            )}
+          {session.user.construtora.length === 1 &&
+            session.user.construtora.map((item: SessionNext.Construtora) => (
+              <Flex flexDir="column" px={2} lineHeight={"1rem"}>
+                <FormLabel fontWeight={"bold"}>Construtora</FormLabel>
+                <Text>{item.fantasia}</Text>
+              </Flex>
+            ))}
+          {session.user.empreendimento.length > 1 &&
+            session.user.empreendimento.map(
+              (item: SessionNext.Empreendimento, index: number) => (
+                <Flex flexDir="column" px={2} lineHeight={"1rem"}>
+                  <FormLabel fontWeight={"bold"}>
+                    Empreendimento {index + 1}
+                  </FormLabel>
+                  <Text>{item.nome}</Text>
+                </Flex>
+              )
+            )}
+          {session.user.empreendimento.length === 1 &&
+            session.user.empreendimento.map(
+              (item: SessionNext.Empreendimento) => (
+                <Flex flexDir="column" px={2} lineHeight={"1rem"}>
+                  <FormLabel fontWeight={"bold"}>Empreendimento</FormLabel>
+                  <Text>{item.nome}</Text>
+                </Flex>
+              )
+            )}
+          {session.user.Financeira.length > 1 &&
+            session.user.Financeira.map(
+              (item: SessionNext.Financeira, index: number) => (
+                <Flex flexDir="column" px={2} lineHeight={"1rem"}>
+                  <FormLabel fontWeight={"bold"}>
+                    Financeira {index + 1}
+                  </FormLabel>
+                  <Text>{item.fantasia}</Text>
+                </Flex>
+              )
+            )}
+          {session.user.Financeira.length === 1 &&
+            session.user.Financeira.map((item: SessionNext.Financeira) => (
+              <Flex flexDir="column" px={2} lineHeight={"1rem"}>
+                <FormLabel fontWeight={"bold"}>Financeira</FormLabel>
+                <Text>{item.fantasia}</Text>
+              </Flex>
+            ))}
+          
+          {/* <pre>{JSON.stringify(session, null, 2)}</pre> */}
         </Flex>
       )}
     </>
   );
+
+  //TODO:  criar criar contexto do home
+  //TODO:  criar botão para listar o Now
+  //TODO:  criar lista avisos
+  //TODO:  criar lista chamados
+  //TODO:  criar lista alerts ativos
 };

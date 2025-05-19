@@ -27,7 +27,7 @@ export const NowIconComponent = ({ now }: NowIconComponentProps) => {
           as="span"
           fontWeight="bold"
           sx={{
-            transform: "rotate(-45deg)",
+            transform: "rotate(-35deg)",
             textOrientation: "upright",
             animation: `${rgbBlink} 1s infinite`,
           }}
@@ -40,7 +40,7 @@ export const NowIconComponent = ({ now }: NowIconComponentProps) => {
           as="span"
           fontWeight="bold"
           sx={{
-            transform: "rotate(-45deg)",
+            transform: "rotate(-35deg)",
             textOrientation: "upright",
             color: "gray.300",
             cursor: "not-allowed",

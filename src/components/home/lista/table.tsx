@@ -20,7 +20,7 @@ export const TableComponent = ({ dados, session }: TableComponentProps) => {
     ? "red.500"
     : dados.alertanow
     ? "yellow.400"
-    : "transparent";
+    : "white";
 
   const Textcolor = dados.distrato
     ? "white"
@@ -43,7 +43,7 @@ export const TableComponent = ({ dados, session }: TableComponentProps) => {
   return (
     <>
       <Tr bg={Gbcolor}>
-        <Td>
+        <Td p={'0.2rem'} borderBottomColor={'gray.300'}>
           <Flex gap={2}>
             <AlertIcomCompoment tag={dados.alerts} />
             <AndamentoIconComponent andamento={false} />
@@ -61,13 +61,14 @@ export const TableComponent = ({ dados, session }: TableComponentProps) => {
             />
           </Flex>
         </Td>
-        <Td color={Textcolor}>{dados.id}</Td>
-        <Td color={Textcolor}>{dados.nome}</Td>
-        <Td color={Textcolor}>{agendamento}</Td>
-        <Td color={Textcolor}>{dados.andamento}</Td>
-        <Td color={Textcolor}>{timeOut}</Td>
-        {session?.user?.hierarquia === "ADM" && <Td color={Textcolor}>{dados.construtora.fantasia}</Td>}
+        <Td p={'0.2rem'} borderBottomColor={'gray.300'} color={Textcolor}>{dados.id}</Td>
+        <Td p={'0.2rem'} borderBottomColor={'gray.300'} color={Textcolor}>{dados.nome}</Td>
+        <Td p={'0.2rem'} borderBottomColor={'gray.300'} color={Textcolor}>{agendamento}</Td>
+        <Td p={'0.2rem'} borderBottomColor={'gray.300'} color={Textcolor}>{dados.andamento}</Td>
+        <Td p={'0.2rem'} borderBottomColor={'gray.300'} color={Textcolor}>{timeOut}</Td>
+        {session?.user?.hierarquia === "ADM" && <Td p={'0.2rem'} borderBottomColor={'gray.300'} color={Textcolor}>{dados.construtora.fantasia}</Td>}
       </Tr>
+    
     </>
   );
 };

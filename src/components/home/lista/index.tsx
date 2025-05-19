@@ -1,12 +1,10 @@
 "use client";
-import { SelectComponent } from "@/components/select";
 import { SessionServer } from "@/types/session";
 import {
   Box,
   Button,
   Flex,
   FormLabel,
-  Input,
   Select,
   Table,
   Tbody,
@@ -152,7 +150,9 @@ export const DadoCompomentList = ({
     if (!ListaDados) return;
     const filtro = ListaDados.filter((item) => {
       item.nome.toLowerCase().includes(Nome?.toLowerCase() || "") &&
-        item.andamento?.toLowerCase().includes(Andamento?.toLowerCase() || "") &&
+        item.andamento
+          ?.toLowerCase()
+          .includes(Andamento?.toLowerCase() || "") &&
         item.construtora.id === Construtora &&
         item.empreendimento.id === Empreendimento &&
         item.financeiro.id === Financeiro &&
@@ -229,12 +229,19 @@ export const DadoCompomentList = ({
         session
       )
     );
-    
   };
 
   return (
     <>
-      <Box w={"80%"} h={"100%"} px={4} py={3}>
+      <Box
+        display={"flex"}
+        flexDir={"column"}
+        gap={{ base: 2, md: 6 }}
+        w={"80%"}
+        h={"100%"}
+        px={4}
+        py={3}
+      >
         <Flex
           flexDir={{ base: "column", md: "row" }}
           justifyContent="center"
@@ -370,59 +377,113 @@ export const DadoCompomentList = ({
           <>
             <Flex
               w={"full"}
-              bg={"white"}
-              shadow={"md"}
+              bg={"gray.50"}
+              shadow={"lg"}
               borderRadius={"15px"}
               p={{ base: "10px", md: "20px" }}
               alignContent={"center"}
               justifyContent={"space-evenly"}
               flexDir={"column"}
               display={{ base: "none", md: "flex" }}
+              border={"1px solid"}
+              borderColor={"gray.200"}
             >
-              <table>
-                
-              </table>
-              {/* <Table variant="simple" size="sm">
+              <Table
+                variant="simple"
+                size="sm"
+                bg={"gray.100"}
+                borderRadius={"15px"}
+              >
                 <Thead>
-                  <Tr borderColor={"gray.800"}>
-                    <Th w={"17rem"} textAlign="center">
+                  <Tr>
+                    <Th
+                      fontSize={"lg"}
+                      p={"0.8rem"}
+                      borderBottomColor={"gray.300"}
+                      w={"17rem"}
+                      textAlign="center"
+                    >
                       FUNÇÕES
                     </Th>
-                    <Th w={"5rem"} textAlign="center">
+                    <Th
+                      fontSize={"lg"}
+                      p={"0.8rem"}
+                      borderBottomColor={"gray.300"}
+                      w={"5rem"}
+                    >
                       ID
                     </Th>
-                    <Th textAlign="center">NOME</Th>
-                    <Th w={"13rem"}>AGENDAMENTO</Th>
-                    <Th w={"8rem"}>Andamento</Th>
-                    <Th w={"5rem"} fontSize={"22px"}>
+                    <Th
+                      fontSize={"lg"}
+                      p={"0.8rem"}
+                      borderBottomColor={"gray.300"}
+                    >
+                      NOME
+                    </Th>
+                    <Th
+                      fontSize={"lg"}
+                      p={"0.8rem"}
+                      borderBottomColor={"gray.300"}
+                      w={"13rem"}
+                    >
+                      AGENDAMENTO
+                    </Th>
+                    <Th
+                      fontSize={"lg"}
+                      p={"0.8rem"}
+                      borderBottomColor={"gray.300"}
+                      w={"8rem"}
+                    >
+                      Andamento
+                    </Th>
+                    <Th
+                      p={"0.8rem"}
+                      borderBottomColor={"gray.300"}
+                      w={"5rem"}
+                      fontSize={"22px"}
+                    >
                       <Flex justifyContent="center">
                         <ImClock />
                       </Flex>
                     </Th>
                     {session?.user?.hierarquia === "ADM" && (
-                      <Th w={"15rem"} textAlign="center">CONSTRUTORA</Th>
+                      <Th
+                        fontSize={"lg"}
+                        p={"0.8rem"}
+                        borderBottomColor={"gray.300"}
+                        w={"15rem"}
+                      >
+                        CONSTRUTORA
+                      </Th>
                     )}
                   </Tr>
                 </Thead>
                 <Tbody>
                   {ListaDados?.map((item) => (
-
-                    <TableComponent key={item.id} dados={item} session={session ?? null} />
+                    <TableComponent
+                      key={item.id}
+                      dados={item}
+                      session={session ?? null}
+                    />
                   ))}
                 </Tbody>
-              </Table> */}
+              </Table>
               <Flex
                 w={"full"}
                 justifyContent={"space-between"}
                 alignItems={"center"}
                 pt={3}
               >
-                <Box>
-                  Total de registros: {Total}
-                </Box>
+                <Box>Total de registros: {Total}</Box>
                 <Flex gap={2}>
                   paginas:
-                  <SelectPgComponent total={Total || 0} ClientQtd={dados?.data.length || 0} SelectPage={PagAtual} setSelectPage={setPagina} SetVewPage={NextPage} />
+                  <SelectPgComponent
+                    total={Total || 0}
+                    ClientQtd={dados?.data.length || 0}
+                    SelectPage={PagAtual}
+                    setSelectPage={setPagina}
+                    SetVewPage={NextPage}
+                  />
                 </Flex>
               </Flex>
             </Flex>
