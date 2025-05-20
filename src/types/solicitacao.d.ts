@@ -4,49 +4,45 @@ declare namespace solictacao {
    * @param {number} id
    * @param {string} nome
    * @param {string} cpf
-   * @param {string} email
-   * @param {Date | string | any} dt_solicitacao
+   * @param {boolean} distrato
+   * @param {string | Date | null} dt_agendamento
+   * @param {string | Date | null} hr_agendamento
+   * @param {string | Date | null} dt_aprovacao
+   * @param {string | Date | null} hr_aprovacao
+   * @param {string} type_validacao
+   * @param {boolean} alertanow
+   * @param {boolean} ativo
+   * @param {boolean} statusAtendimento
+   * @param {boolean} pause
+   * @param {string} andamento
    * @param {object} corretor { id: number, nome: string }
    * @param {object} construtora { id: number, fantasia: string }
-   * @param {string} telefone
-   * @param {Date | string | any} dt_nascimento
-   * @param {boolean} ass_doc
-   * @param {string} link_doc
+   * @param {object} empreendimento { id: number, nome: string, cidade: string }
+   * @param {object} financeiro { id: number, fantasia: string }
    * @param {number} id_fcw
-   * @param {object} fcweb { id: number, andamento: string, dt_agenda: Date | string, hr_agenda: Date | string, valorcd: string, estatos_pgto: string }
-   * @param {string} obs
-   * @param {object} Financeira { id: number, fantasia: string }
-   * @param {string} alert
-   * @param {number} empreedimento { id: number, fantasia: string }
-   * @param {string} cnh
-   * @param {boolean} ativo
-   * @param {string} uploadCnh
-   * @param {string[]} relacionamento
-   * @param {Date | string | any} createdAt
-   * @param {Date | string | any} updatedAt
-   * @param {string} telefone2
-   * @param {string} uploadRg
-   *
+   * @param {object[]} tags { id: number, solicitacao: number, descricao: string, createdAt: string | Date }
+   * @param {string | Date} createdAt
    */
   interface SolicitacaoObjectType {
     id: number;
     nome: string;
     cpf: string;
-    email: string;
-    andamento: string | null;
-    alerts: AlertProps[];
     distrato: boolean;
-    dt_agendamento: Date | string | any;
-    hr_agendamento: Date | string | any;
-    dt_aprovacao: Date | string | any;
-    hr_aprovacao: Date | string | any;
-    type_validacao: string | null;
+    dt_agendamento: string | Date | null;
+    hr_agendamento: string | Date | null;
+    dt_aprovacao: string | Date | null;
+    hr_aprovacao: string | Date | null;
+    type_validacao: string;
     alertanow: boolean;
+    ativo: boolean;
+    statusAtendimento: boolean;
+    pause: boolean;
+    andamento: string;
     corretor: {
       id: number;
       nome: string;
     };
-    construtora?: {
+    construtora: {
       id: number;
       fantasia: string;
     };
@@ -60,11 +56,15 @@ declare namespace solictacao {
       fantasia: string;
     };
     id_fcw: number;
-    statusAtendimento: boolean;
-    ativo: boolean;
-    pause: boolean;
-    tags: any;
-    createdAt: string;
+    tags: [
+      {
+        id: number;
+        solicitacao: number;
+        descricao: string;
+        createdAt: string | Date;
+      }
+    ];
+    createdAt: string | Date;
   }
 
   /**
@@ -138,6 +138,28 @@ declare namespace solictacao {
     createdAt: Date | string | any;
   }
 
+  /**
+   * SolicitacaoPost
+   * @param {string} url
+   * @param {string} nome
+   * @param {string} telefone
+   * @param {string} cpf
+   * @param {string} telefone2
+   * @param {Date | string | any} dt_nascimento
+   * @param {string} email
+   * @param {string} uploadRg
+   * @param {string} uploadCnh
+   * @param {number} empreedimento
+   * @param {number} construtora
+   * @param {number} financeiro
+   * @param {number} corretor
+   * @param {string[]} relacionamento
+   * @param {string} cpfdois
+   * @param {boolean} rela_quest
+   * @param {string} voucher
+   * @param {string} vendedorName
+   * @param {string} obs
+   */
   interface SolicitacaoPost {
     url?: string;
     nome: string;
@@ -160,6 +182,13 @@ declare namespace solictacao {
     obs?: string;
   }
 
+  /**
+   * SolicitacaoGetType
+   * @param {SolicitacaoObjectType[]} data
+   * @param {number} total
+   * @param {number} pagina
+   * @param {number} limite
+   */
   interface SolicitacaoGetType {
     data: SolicitacaoObjectType[];
     total: number;

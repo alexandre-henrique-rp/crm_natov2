@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { GetSessionServer } from "@/lib/auth_confg";
 
-export async function POST(
+export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
 ) {

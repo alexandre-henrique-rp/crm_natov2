@@ -110,8 +110,6 @@ export const UserCompomentInfo = ({ session }: UserCompomentInfoProps) => {
     </>
   );
 
-  //TODO:  criar lista avisos
   //TODO:  criar lista chamados
   //TODO:  criar lista alerts ativos
-  //TODO:  corrigir roras dos botoes de funções
 };
