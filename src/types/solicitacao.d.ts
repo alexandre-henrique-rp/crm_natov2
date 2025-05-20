@@ -30,41 +30,41 @@ declare namespace solictacao {
    */
   interface SolicitacaoObjectType {
     id: number;
-      nome: string;
-      cpf: string;
-      email: string;
-      andamento: string | null;
-      alerts: AlertProps[];
-      distrato: boolean;
-      dt_agendamento: Date | string | any;
-      hr_agendamento: Date | string | any;
-      dt_aprovacao: Date | string | any;
-      hr_aprovacao: Date | string | any;
-      type_validacao: string | null;
-      alertanow: boolean;
-      corretor: {
+    nome: string;
+    cpf: string;
+    email: string;
+    andamento: string | null;
+    alerts: AlertProps[];
+    distrato: boolean;
+    dt_agendamento: Date | string | any;
+    hr_agendamento: Date | string | any;
+    dt_aprovacao: Date | string | any;
+    hr_aprovacao: Date | string | any;
+    type_validacao: string | null;
+    alertanow: boolean;
+    corretor: {
       id: number;
       nome: string;
     };
-    construtora: {
+    construtora?: {
       id: number;
       fantasia: string;
     };
-    empreendimento:{
+    empreendimento: {
       id: number;
       nome: string;
       cidade: string;
-    }
+    };
     financeiro: {
       id: number;
       fantasia: string;
     };
     id_fcw: number;
-      statusAtendimento: boolean;
-      ativo: boolean;
-      pause: boolean;
-      tags: any;
-      createdAt: string;
+    statusAtendimento: boolean;
+    ativo: boolean;
+    pause: boolean;
+    tags: any;
+    createdAt: string;
   }
 
   /**

@@ -1,6 +1,7 @@
 import { DadoCompomentList } from "@/components/home/lista";
 import { UserCompomentInfo } from "@/components/home/user";
 import { GetSessionServer } from "@/lib/auth_confg";
+import HomeProvider from "@/provider/HomeProvider";
 import { Flex } from "@chakra-ui/react";
 import { Metadata } from "next";
 
@@ -35,27 +36,25 @@ export default async function HomePage() {
 
   return (
     <>
-      <Flex
-        minH="89.8vh"
-        w="100%"
-        bg="#F8F8F8"
-        overflowY="auto"
-        overflowX="hidden"
-      >
-        {/* <ModalPrimeAsses session={session} />
+      <HomeProvider>
+        <Flex
+          minH="89.8vh"
+          w="100%"
+          bg="#F8F8F8"
+          overflowY="auto"
+          overflowX="hidden"
+        >
+          {/* <ModalPrimeAsses session={session} />
         <ModalTermos session={session} /> */}
 
-        {/* dados user */}
-        <UserCompomentInfo session={session} />
-        <DadoCompomentList dados={ListDados} session={session} />
-      </Flex>
+          {/* dados user */}
+          <UserCompomentInfo session={session} />
+          <DadoCompomentList dados={ListDados} session={session} />
+        </Flex>
+      </HomeProvider>
     </>
   );
 }
-
-
-
-
 
 // <Flex
 //   minH="100vh"

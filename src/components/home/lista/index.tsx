@@ -19,6 +19,7 @@ import { InputComponentFilterHome } from "../imputs/input";
 import { ImClock } from "react-icons/im";
 import { SelectPgComponent } from "../imputs/selectPg";
 import { TableComponent } from "./table";
+import useHomeContex from "@/hook/useHomeContex";
 
 interface DadoCompomentListProps {
   dados: solictacao.SolicitacaoGetType | null;
@@ -117,16 +118,21 @@ export const DadoCompomentList = ({
   const [MesageError, setMesageError] = useState<string | null>(null);
   const [Total, setTotal] = useState<number>(0);
   const [PagAtual, setPagAtual] = useState<number>(0);
-  const [Limite, setLimite] = useState<number>(0);
 
-  console.log(dados);
+  const { data } = useHomeContex();
 
   useEffect(() => {
     if (dados) {
       setListaDados(dados.data);
       setTotal(dados.total);
       setPagAtual(dados.pagina);
-      setLimite(dados.limite);
+    }
+    if (data) {
+      if (data.data?.length > 0) {
+        setListaDados(data.data);
+        setTotal(data.total);
+        setPagAtual(data.pagina);
+      }
     }
     if (session?.user) {
       (async () => {
@@ -144,7 +150,7 @@ export const DadoCompomentList = ({
         }
       })();
     }
-  }, [dados, session]);
+  }, [data, dados, session]);
 
   const filtroPrimario = async () => {
     if (!ListaDados) return;
@@ -153,7 +159,7 @@ export const DadoCompomentList = ({
         item.andamento
           ?.toLowerCase()
           .includes(Andamento?.toLowerCase() || "") &&
-        item.construtora.id === Construtora &&
+        item.construtora?.id === Construtora &&
         item.empreendimento.id === Empreendimento &&
         item.financeiro.id === Financeiro &&
         item.id === Id;

@@ -1,6 +1,6 @@
-import { SessionServer } from "@/types/session";
 import { Box, Flex, FormLabel, Text } from "@chakra-ui/react";
 import { mask } from "remask";
+import { BtnListNow } from "../imputs/BtnListNow";
 
 interface UserCompomentInfoProps {
   session: SessionNext.Server | null;
@@ -100,16 +100,17 @@ export const UserCompomentInfo = ({ session }: UserCompomentInfoProps) => {
                 <Text>{item.fantasia}</Text>
               </Flex>
             ))}
-          
+          <BtnListNow />
+
           {/* <pre>{JSON.stringify(session, null, 2)}</pre> */}
         </Flex>
       )}
     </>
   );
 
-  //TODO:  criar criar contexto do home
   //TODO:  criar botão para listar o Now
   //TODO:  criar lista avisos
   //TODO:  criar lista chamados
   //TODO:  criar lista alerts ativos
+  //TODO:  corrigir roras dos botoes de funções
 };
