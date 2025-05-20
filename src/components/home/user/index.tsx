@@ -1,4 +1,5 @@
-import { Box, Flex, FormLabel, Text } from "@chakra-ui/react";
+import { BugReport } from "@/components/bug";
+import { Flex, FormLabel, Text } from "@chakra-ui/react";
 import { mask } from "remask";
 import { BtnListNow } from "../imputs/BtnListNow";
 
@@ -11,7 +12,7 @@ export const UserCompomentInfo = ({ session }: UserCompomentInfoProps) => {
     <>
       {session && (
         <Flex
-          display={{ base: "none", md: "flex" }}
+          display={{ base: "none", "2xl": "flex" }}
           w={"20%"}
           minH={"100%"}
           borderRight="1px solid"
@@ -20,6 +21,7 @@ export const UserCompomentInfo = ({ session }: UserCompomentInfoProps) => {
           flexDir="column"
           gap={4}
         >
+          <BugReport />
           <Flex gap={4}>
             <Flex flexDir="column" py={0} px={2} lineHeight={"1rem"}>
               <FormLabel fontWeight={"bold"}>Id</FormLabel>
@@ -108,7 +110,6 @@ export const UserCompomentInfo = ({ session }: UserCompomentInfoProps) => {
     </>
   );
 
-  //TODO:  criar botão para listar o Now
   //TODO:  criar lista avisos
   //TODO:  criar lista chamados
   //TODO:  criar lista alerts ativos

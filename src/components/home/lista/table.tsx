@@ -1,12 +1,11 @@
 import { Flex, Td, Tr } from "@chakra-ui/react";
 import { AlertIcomCompoment } from "../imputs/alertIcom";
 import { AndamentoIconComponent } from "../imputs/andamentoIcon";
-import { NowIconComponent } from "../imputs/nowIcon";
-import { EditarIconComponent } from "../imputs/editarIcom";
-import { DeletarIconComponent } from "../imputs/removeIcom";
 import { DistratoIconComponent } from "../imputs/distratoIcom";
+import { EditarIconComponent } from "../imputs/editarIcom";
+import { NowIconComponent } from "../imputs/nowIcon";
+import { DeletarIconComponent } from "../imputs/removeIcom";
 import { calcTimeOut } from "../script/calcTimeOut";
-
 
 interface TableComponentProps {
   dados: solictacao.SolicitacaoObjectType;
@@ -20,14 +19,14 @@ export const TableComponent = ({ dados, session }: TableComponentProps) => {
     ? "red.500"
     : dados.alertanow
     ? "yellow.400"
+    : dados.andamento === "APROVADO"
+    ? "green.200"
+    : dados.andamento === "EMITIDO"
+    ? "green.200"
     : "white";
 
-  const Textcolor = dados.distrato
-    ? "white"
-    : !dados.ativo
-    ? "white"
-    : "black";
-    
+  const Textcolor = dados.distrato ? "white" : !dados.ativo ? "white" : "black";
+
   const agendamento =
     dados.dt_agendamento && dados.hr_agendamento
       ? dados.dt_agendamento.split("T")[0].split("-").reverse().join("/") +
@@ -43,7 +42,7 @@ export const TableComponent = ({ dados, session }: TableComponentProps) => {
   return (
     <>
       <Tr bg={Gbcolor}>
-        <Td p={'0.2rem'} borderBottomColor={'gray.300'}>
+        <Td p={"0.2rem"} borderBottomColor={"gray.300"}>
           <Flex gap={2}>
             <AlertIcomCompoment tag={dados.alerts} />
             <AndamentoIconComponent andamento={false} />
@@ -54,21 +53,36 @@ export const TableComponent = ({ dados, session }: TableComponentProps) => {
               aria-label="Deletar solicitação"
               _hover={{ bg: "red.300", color: "white", border: "none" }}
               Block={dados.ativo}
+              andamento={dados.andamento}
             />
             <DistratoIconComponent
               aria-label="Distrato solicitação"
               distrato={!dados.ativo ? true : dados.distrato}
+              andamento={dados.andamento}
             />
           </Flex>
         </Td>
-        <Td p={'0.2rem'} borderBottomColor={'gray.300'} color={Textcolor}>{dados.id}</Td>
-        <Td p={'0.2rem'} borderBottomColor={'gray.300'} color={Textcolor}>{dados.nome}</Td>
-        <Td p={'0.2rem'} borderBottomColor={'gray.300'} color={Textcolor}>{agendamento}</Td>
-        <Td p={'0.2rem'} borderBottomColor={'gray.300'} color={Textcolor}>{dados.andamento}</Td>
-        <Td p={'0.2rem'} borderBottomColor={'gray.300'} color={Textcolor}>{timeOut}</Td>
-        {session?.user?.hierarquia === "ADM" && <Td p={'0.2rem'} borderBottomColor={'gray.300'} color={Textcolor}>{dados.construtora.fantasia}</Td>}
+        <Td p={"0.2rem"} borderBottomColor={"gray.300"} color={Textcolor}>
+          {dados.id}
+        </Td>
+        <Td p={"0.2rem"} borderBottomColor={"gray.300"} color={Textcolor}>
+          {dados.nome}
+        </Td>
+        <Td p={"0.2rem"} borderBottomColor={"gray.300"} color={Textcolor}>
+          {agendamento}
+        </Td>
+        <Td p={"0.2rem"} borderBottomColor={"gray.300"} color={Textcolor}>
+          {dados.andamento}
+        </Td>
+        <Td p={"0.2rem"} borderBottomColor={"gray.300"} color={Textcolor}>
+          {timeOut}
+        </Td>
+        {session?.user?.hierarquia === "ADM" && (
+          <Td p={"0.2rem"} borderBottomColor={"gray.300"} color={Textcolor}>
+            {dados.construtora?.fantasia}
+          </Td>
+        )}
       </Tr>
-    
     </>
   );
 };

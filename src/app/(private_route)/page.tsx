@@ -1,5 +1,7 @@
 import { DadoCompomentList } from "@/components/home/lista";
 import { UserCompomentInfo } from "@/components/home/user";
+import ModalPrimeAsses from "@/components/prime_asses";
+import ModalTermos from "@/components/termos";
 import { GetSessionServer } from "@/lib/auth_confg";
 import HomeProvider from "@/provider/HomeProvider";
 import { Flex } from "@chakra-ui/react";
@@ -44,8 +46,8 @@ export default async function HomePage() {
           overflowY="auto"
           overflowX="hidden"
         >
-          {/* <ModalPrimeAsses session={session} />
-        <ModalTermos session={session} /> */}
+          <ModalPrimeAsses session={session} />
+          <ModalTermos session={session} />
 
           {/* dados user */}
           <UserCompomentInfo session={session} />

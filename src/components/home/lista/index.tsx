@@ -1,4 +1,6 @@
 "use client";
+import { BugReport } from "@/components/bug";
+import useHomeContex from "@/hook/useHomeContex";
 import { SessionServer } from "@/types/session";
 import {
   Box,
@@ -14,12 +16,12 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { SelectComponentFilterHome } from "../imputs/select";
-import { InputComponentFilterHome } from "../imputs/input";
 import { ImClock } from "react-icons/im";
+import { InputComponentFilterHome } from "../imputs/input";
+import { SelectComponentFilterHome } from "../imputs/select";
 import { SelectPgComponent } from "../imputs/selectPg";
+import { CardComponentHome } from "./card";
 import { TableComponent } from "./table";
-import useHomeContex from "@/hook/useHomeContex";
 
 interface DadoCompomentListProps {
   dados: solictacao.SolicitacaoGetType | null;
@@ -242,45 +244,47 @@ export const DadoCompomentList = ({
       <Box
         display={"flex"}
         flexDir={"column"}
-        gap={{ base: 2, md: 6 }}
-        w={"80%"}
+        gap={{ base: 2, "2xl": 6 }}
+        w={{ base: "100%", "2xl": "80%" }}
         h={"100%"}
         px={4}
         py={3}
       >
+        <Box display={{ base: "block", "2xl": "none" }}>
+          <BugReport />
+        </Box>
         <Flex
-          flexDir={{ base: "column", md: "row" }}
+          flexDir={{ base: "column", "2xl": "row" }}
           justifyContent="center"
           alignItems="flex-end"
-          gap={{ base: 2, md: 4 }}
+          gap={{ base: 2, "2xl": 4 }}
         >
-          <Box>
-            <FormLabel textAlign={{ base: "left", md: "center" }}>Id</FormLabel>
+          <Box w={{ base: "100%", "2xl": "5rem" }}>
+            <FormLabel textAlign={{ base: "left", "2xl": "center" }}>
+              Id
+            </FormLabel>
             <InputComponentFilterHome
-              w={{ base: "100%", md: "5rem" }}
               textAlign={"center"}
               type="number"
               value={Id ?? 0}
               onChange={(e) => setId(Number(e.target.value))}
             />
           </Box>
-          <Box>
-            <FormLabel textAlign={{ base: "left", md: "center" }}>
+          <Box w={{ base: "100%", "2xl": "20rem" }}>
+            <FormLabel textAlign={{ base: "left", "2xl": "center" }}>
               Nome
             </FormLabel>
             <InputComponentFilterHome
-              w={{ base: "100%", md: "20rem" }}
               type="text"
               value={Nome ?? ""}
               onChange={(e) => setNome(e.target.value)}
             />
           </Box>
-          <Box>
-            <FormLabel textAlign={{ base: "left", md: "center" }}>
+          <Box w={{ base: "100%", "2xl": "10rem" }}>
+            <FormLabel textAlign={{ base: "left", "2xl": "center" }}>
               Andamento
             </FormLabel>
             <Select
-              w={{ base: "100%", md: "10rem" }}
               textColor={"#00713D"}
               _hover={{ borderColor: "#00613C" }}
               borderColor={"#00713D"}
@@ -298,30 +302,28 @@ export const DadoCompomentList = ({
               <option value="REVOGADO">REVOGADO</option>
             </Select>
           </Box>
-          <Box>
-            <FormLabel textAlign={{ base: "left", md: "center" }}>
+          <Box w={{ base: "100%", "2xl": "13rem" }}>
+            <FormLabel textAlign={{ base: "left", "2xl": "center" }}>
               Construtora
             </FormLabel>
             <SelectComponentFilterHome
               Data={DataConstrutora}
-              w={{ base: "100%", md: "13rem" }}
               value={Construtora?.toString() ?? ""}
               onChange={(e) => setConstrutora(Number(e.target.value))}
             />
           </Box>
-          <Box>
-            <FormLabel textAlign={{ base: "left", md: "center" }}>
+          <Box w={{ base: "100%", "2xl": "15rem" }}>
+            <FormLabel textAlign={{ base: "left", "2xl": "center" }}>
               Empreendimento
             </FormLabel>
             <SelectComponentFilterHome
               Data={DataEmpreendimento}
-              w={{ base: "100%", md: "15rem" }}
               value={Empreendimento?.toString() ?? ""}
               onChange={(e) => setEmpreendimento(Number(e.target.value))}
             />
           </Box>
-          <Box>
-            <FormLabel textAlign={{ base: "left", md: "center" }}>
+          <Box w={{ base: "100%", "2xl": "15rem" }}>
+            <FormLabel textAlign={{ base: "left", "2xl": "center" }}>
               Financeiro
             </FormLabel>
             <SelectComponentFilterHome
@@ -330,10 +332,10 @@ export const DadoCompomentList = ({
               onChange={(e) => setFinanceiro(Number(e.target.value))}
             />
           </Box>
-          <Box>
+          <Box w={{ base: "100%", "2xl": "auto" }}>
             <Button
               bg="#00713D"
-              w={{ base: "100%", md: "auto" }}
+              w={{ base: "100%", "2xl": "auto" }}
               textColor="white"
               variant="solid"
               _hover={{ bg: "#00631B" }}
@@ -343,10 +345,10 @@ export const DadoCompomentList = ({
               Filtrar
             </Button>
           </Box>
-          <Box>
+          <Box w={{ base: "100%", "2xl": "auto" }}>
             <Button
               bg="#00713D"
-              w={{ base: "100%", md: "auto" }}
+              w={{ base: "100%", "2xl": "auto" }}
               textColor="white"
               variant="solid"
               _hover={{ bg: "#00631B" }}
@@ -369,7 +371,7 @@ export const DadoCompomentList = ({
             >
               <Text>{MesageError}</Text>
               <Button
-                w={{ base: "100%", md: "auto" }}
+                w={{ base: "100%", "2xl": "auto" }}
                 size="lg"
                 colorScheme="green"
                 onClick={filtroSecundario}
@@ -386,11 +388,11 @@ export const DadoCompomentList = ({
               bg={"gray.50"}
               shadow={"lg"}
               borderRadius={"15px"}
-              p={{ base: "10px", md: "20px" }}
+              p={{ base: "10px", "2xl": "20px" }}
               alignContent={"center"}
               justifyContent={"space-evenly"}
               flexDir={"column"}
-              display={{ base: "none", md: "flex" }}
+              display={{ base: "none", "2xl": "flex" }}
               border={"1px solid"}
               borderColor={"gray.200"}
             >
@@ -492,6 +494,20 @@ export const DadoCompomentList = ({
                   />
                 </Flex>
               </Flex>
+            </Flex>
+            <Flex
+              display={{ base: "flex", "2xl": "none" }}
+              w={"full"}
+              flexDir={"column"}
+              gap={3}
+            >
+              {ListaDados?.map((item) => (
+                <CardComponentHome
+                  key={item.id}
+                  dados={item}
+                  session={session ?? null}
+                />
+              ))}
             </Flex>
           </>
         )}
