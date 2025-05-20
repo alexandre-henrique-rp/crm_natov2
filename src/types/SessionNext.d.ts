@@ -79,7 +79,7 @@ declare namespace SessionNext {
    * @param {boolean} alert
    * @param {boolean} direto
    * @param {boolean} chamado
-   * @param {boolean} finaceiro
+   * @param {boolean} financeiro
    * @param {boolean} construtora
    * @param {boolean} lista_const
    * @param {boolean} lista_empre
@@ -95,7 +95,7 @@ declare namespace SessionNext {
     alert?: boolean;
     direto?: boolean;
     chamado?: boolean;
-    finaceiro?: boolean;
+    financeiro?: boolean;
     construtora?: boolean;
     lista_const?: boolean;
     lista_empre?: boolean;
