@@ -1,4 +1,5 @@
 "use client";
+import { SessionServer } from "@/types/session";
 import {
   Box,
   Flex,
@@ -8,13 +9,12 @@ import {
   MenuButton,
   MenuList,
 } from "@chakra-ui/react";
-import BotaoMenu from "../bt_menu";
-import BotaoMobileMenu from "../bt_mobile_menu";
-import { SessionServer } from "@/types/session";
+import { CgBriefcase, CgToday } from "react-icons/cg";
 import { FiFilePlus, FiHome, FiLogOut, FiSettings } from "react-icons/fi";
 import { LuLayoutDashboard } from "react-icons/lu";
-import { CgBriefcase, CgToday } from "react-icons/cg";
 import { RxHamburgerMenu } from "react-icons/rx";
+import BotaoMenu from "../bt_menu";
+import BotaoMobileMenu from "../bt_mobile_menu";
 
 /**
  * Interface para tipagem das props do componente BotaoJuncao.
@@ -51,22 +51,66 @@ export default function BotaoJuncao({ session }: BotoesFunctionProps) {
                 />
                 <MenuList>
                   <BotaoMobileMenu name="Home" path="/" icon={<FiHome />} />
-                  <BotaoMobileMenu name="Nova Solicitação" path="/solicitacoes" icon={<FiFilePlus />} />
-                  {session?.user?.role?.adm && <BotaoMobileMenu name="Painel adm" path="/adm" icon={<FiSettings />} />}
-                  <BotaoMobileMenu name="Dashboard" path="/dashboard" icon={<LuLayoutDashboard />} />
+                  <BotaoMobileMenu
+                    name="Nova Solicitação"
+                    path="/solicitacoes"
+                    icon={<FiFilePlus />}
+                  />
+                  {session?.user?.role?.adm && (
+                    <BotaoMobileMenu
+                      name="Painel adm"
+                      path="/adm"
+                      icon={<FiSettings />}
+                    />
+                  )}
+                  <BotaoMobileMenu
+                    name="Dashboard"
+                    path="/dashboard"
+                    icon={<LuLayoutDashboard />}
+                  />
                   <BotaoMobileMenu name="FAQ" path="/faq" icon={<CgToday />} />
-                  {session?.user?.role?.direto && <BotaoMobileMenu name="Direto" path="/direto" icon={<CgBriefcase />} />}
-                  <BotaoMobileMenu name="Sair" path="/login" icon={<FiLogOut />} />
+                  {session?.user?.role?.direto && (
+                    <BotaoMobileMenu
+                      name="Direto"
+                      path="/direto"
+                      icon={<CgBriefcase />}
+                    />
+                  )}
+                  <BotaoMobileMenu
+                    name="Sair"
+                    path="/login"
+                    icon={<FiLogOut />}
+                  />
                 </MenuList>
               </Menu>
             </Box>
             <Box display={{ base: "none", md: "flex" }} gap={1} w={"85%"}>
               <BotaoMenu name="Home" path="/" icon={<FiHome />} />
-              <BotaoMenu name="Nova Solicitação" path="/solicitacoes" icon={<FiFilePlus />} />
-              {session?.user?.role?.adm && <BotaoMenu name="Painel adm" path="/adm" icon={<FiSettings />} />}
-              <BotaoMenu name="Dashboard" path="/dashboard" icon={<LuLayoutDashboard />} />
+              <BotaoMenu
+                name="Nova Solicitação"
+                path="/solicitacoes"
+                icon={<FiFilePlus />}
+              />
+              {session?.user?.role?.adm && (
+                <BotaoMenu
+                  name="Painel adm"
+                  path="/adm"
+                  icon={<FiSettings />}
+                />
+              )}
+              <BotaoMenu
+                name="Dashboard"
+                path="/dashboard"
+                icon={<LuLayoutDashboard />}
+              />
               <BotaoMenu name="FAQ" path="/faq" icon={<CgToday />} />
-              {session?.user?.role?.direto && <BotaoMenu name="Direto" path="/direto" icon={<CgBriefcase />} />}
+              {session?.user?.role?.direto && (
+                <BotaoMenu
+                  name="Direto"
+                  path="/direto"
+                  icon={<CgBriefcase />}
+                />
+              )}
             </Box>
           </Flex>
         </>

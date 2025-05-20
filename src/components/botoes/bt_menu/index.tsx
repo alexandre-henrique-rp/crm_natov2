@@ -13,18 +13,18 @@ export default function BotaoMenu({ name, path, icon }: BotaoMenuProps) {
   const router = useRouter();
   return (
     <>
-      <Box display={{ base: "flex", md: "none" }}>
+      <Box display={{ base: "flex", xl: "none" }}>
         <IconButton
           textColor={"white"}
           variant="link"
-          size={{ sm: "xs", md: "md" }}
+          size={"lg"}
           aria-label={name}
           onClick={() => {
             if (name === "Sair") {
               (async () => {
                 await fetch("/api/auth/logout");
               })();
-              // router.push("/login");
+              router.push("/login");
             }
             router.push(path);
           }}
@@ -34,28 +34,28 @@ export default function BotaoMenu({ name, path, icon }: BotaoMenuProps) {
           _hover={{ bg: "whiteAlpha.800", textColor: "green" }}
         />
       </Box>
-      <Box display={{ base: "none", md: "flex" }}>
-      <Button
-            textColor={"white"}
-            variant="link"
-            size={{ sm: "xs", md: "md" }}
-            fontWeight={"light"}
-            leftIcon={icon}
-            onClick={() => {
-              if (name === "Sair") {
-                (async () => {
-                  await fetch("/api/auth/logout");
-                })();
-                // router.push("/login");
-              }
-              router.push(path);
-            }}
-            px={3}
-            _active={{ bg: "white", textColor: "green.500" }}
-            _hover={{ bg: "whiteAlpha.800", textColor: "green" }}
-          >
-            {name.toUpperCase()}
-          </Button>
+      <Box display={{ base: "none", xl: "flex" }}>
+        <Button
+          textColor={"white"}
+          variant="link"
+          size={{ sm: "xs", md: "md" }}
+          fontWeight={"light"}
+          leftIcon={icon}
+          onClick={() => {
+            if (name === "Sair") {
+              (async () => {
+                await fetch("/api/auth/logout");
+              })();
+              router.push("/login");
+            }
+            router.push(path);
+          }}
+          px={3}
+          _active={{ bg: "white", textColor: "green.500" }}
+          _hover={{ bg: "whiteAlpha.800", textColor: "green" }}
+        >
+          {name.toUpperCase()}
+        </Button>
       </Box>
     </>
   );
