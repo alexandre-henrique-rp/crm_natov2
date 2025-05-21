@@ -65,3 +65,8 @@ export default function CadastrarEmpreendimento() {
     </>
   );
 }
+
+
+//TODO: revisar cadastro de empreendimento
+
+//TODO: relacionar empreendimento com construtora

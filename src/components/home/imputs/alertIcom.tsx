@@ -45,6 +45,7 @@ export const AlertIcomCompoment = ({ tag }: AlertIcomCompomentProps) => {
             fontWeight={"900"}
             cursor="not-allowed"
             mt={1}
+            ms={1.5}
           />
         </Box>
       )}

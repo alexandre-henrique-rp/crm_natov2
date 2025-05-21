@@ -11,7 +11,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     }
     const id = params.id;
 
-    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/system-message/${id}`;
+    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/alert/${id}`;
     const get = await fetch(url, {
       method: "GET",
       headers: {

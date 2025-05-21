@@ -2,6 +2,7 @@ import { GetSessionServer } from "@/lib/auth_confg";
 import { NextResponse } from "next/server";
 
 
+
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
     const session = await GetSessionServer();
@@ -12,21 +13,21 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     const id = params.id;
     const body = await request.json();
 
-    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/system-message/${id}`;
-    const post = await fetch(url, {
-      method: "PATCH",
+    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/alert/update/${id}`;
+    const get = await fetch(url, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session?.token}`,
       },
       body: JSON.stringify(body),
     });
-    const data = await post.json();
+    const data = await get.json();
 
-    if (!post.ok)
+    if (!get.ok)
       return NextResponse.json(
         { message: data.message },
-        { status: post.status }
+        { status: get.status }
       );
 
     return NextResponse.json(data, { status: 200 });
@@ -35,3 +36,4 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     return NextResponse.json({ message: error.message.join("\n") || error.message }, { status: 500 });
   }
 }
+  

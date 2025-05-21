@@ -9,7 +9,7 @@ export async function GET(request: Request) {
     {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/system-message`;
+    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/alert`;
     const get = await fetch(url, {
       method: "GET",
       headers: {

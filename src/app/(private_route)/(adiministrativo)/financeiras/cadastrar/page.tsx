@@ -76,3 +76,7 @@ export default async function CadastrarFinanceira() {
     </>
   );
 }
+
+
+//TODO: revisar cadastro de financeira
+//TODO: relacionar financeira com construtora

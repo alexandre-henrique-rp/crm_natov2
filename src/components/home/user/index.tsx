@@ -2,6 +2,7 @@ import { BugReport } from "@/components/bug";
 import { Flex, FormLabel, Text } from "@chakra-ui/react";
 import { mask } from "remask";
 import { BtnListNow } from "../imputs/BtnListNow";
+import BtnAlertList from "../imputs/BtnAlertList";
 
 interface UserCompomentInfoProps {
   session: SessionNext.Server | null;
@@ -102,7 +103,10 @@ export const UserCompomentInfo = ({ session }: UserCompomentInfoProps) => {
                 <Text>{item.fantasia}</Text>
               </Flex>
             ))}
-          <BtnListNow />
+          <Flex gap={2} w={"100%"} flexDir={"column"}>
+            <BtnListNow />
+            <BtnAlertList />
+          </Flex>
 
           {/* <pre>{JSON.stringify(session, null, 2)}</pre> */}
         </Flex>
