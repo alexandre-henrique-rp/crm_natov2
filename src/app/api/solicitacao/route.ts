@@ -26,7 +26,7 @@ export async function POST(request: Request) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.token}`,
         },
-        body: JSON.stringify({ ...body, user: session?.user.id }),
+        body: JSON.stringify({ ...body }),
       }
     );
 

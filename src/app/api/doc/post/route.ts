@@ -1,25 +1,41 @@
+import { GetSessionServer } from "@/lib/auth_confg";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
     const File = await request.formData();
+    const typedoc = File.get("type");
+    const arquivo = File.get("file");
+
+    const formData = new FormData();
+
+    if (!arquivo) {
+      throw {
+        message:
+          "Arquivo não informado, por favor entre em contato com o Suporte",
+      };
+    }
+
+    formData.append("file", arquivo);
+
+    const session = await GetSessionServer();
 
     if (!File)
       throw {
         message:
           "Arquivo não informado, por favor entre em contato com o Suporte",
       };
-    const url = `${process.env.FILE_DNS_PUBLIC_STRAPI_API_URL}/upload`;
-    console.log("🚀 ~ POST ~ url:", url);
+    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/file/${typedoc}`;
     const Envio = await fetch(url, {
       method: "POST",
-      body: File,
-      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${session?.token}`,
+      },
+      body: formData,
     });
 
     if (!Envio.ok) {
       const data = await Envio.text();
-      console.log("🚀 ~ POST ~ data:", data);
       throw {
         message:
           "Erro ao enviar o arquivo, por favor entre em contato com o Suporte",
