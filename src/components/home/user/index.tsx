@@ -115,5 +115,4 @@ export const UserCompomentInfo = ({ session }: UserCompomentInfoProps) => {
   );
 
   //TODO:  criar lista chamados
-  //TODO:  criar lista alerts ativos
 };

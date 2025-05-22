@@ -25,7 +25,7 @@ import { SessionClient } from "@/types/session";
 
 
 type Props = {
-  setDadosCard: solictacao.SolicitacaoGetType;
+  setDadosCard: solictacao.SolicitacaoObjectType;
   user: AuthUser;
 };
 

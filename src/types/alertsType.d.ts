@@ -19,10 +19,9 @@ declare namespace AlertsType {
   export interface AlertsProps{
     id?: number;
     titulo: string;
-    texto: string;
+    descricao: string;
     solicitacao_id?: number;
     corretor?: number;
-    tipo: string;
     tag: string;
     status?: boolean;
     empreendimento?: number;

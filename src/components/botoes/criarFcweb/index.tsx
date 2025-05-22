@@ -17,7 +17,7 @@ import { AuthUser } from "@/types/session";
 
 
 interface CriarFcwebProps {
-  Dados: solictacao.SolicitacaoGetType;
+  Dados: solictacao.SolicitacaoObjectType;
   user: AuthUser;
 }
 
