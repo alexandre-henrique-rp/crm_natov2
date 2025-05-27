@@ -1,6 +1,13 @@
-
 import UserCompraProvider from "@/provider/UserCompra";
-import { Alert, AlertIcon, Box, Button, Divider, Flex, Input } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertIcon,
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Input,
+} from "@chakra-ui/react";
 import { UpdateSolicitacao } from "@/actions/solicitacao/service/update";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import { ResendSms } from "@/implementes/cardCreateUpdate/butons/resendSms";
@@ -20,17 +27,12 @@ import BotaoSisapp from "../botoes/bt_sisapp";
 import { cpf } from "cpf-cnpj-validator";
 import { FaNapster } from "react-icons/fa";
 
-
 import { SessionClient } from "@/types/session";
 
-
 type Props = {
-  setDadosCard: solictacao.SolicitacaoObjectType;
+  setDadosCard: any;
   user: AuthUser;
 };
-
-
-
 
 export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
   const HierarquiaUser = user?.hierarquia;
@@ -223,10 +225,9 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
               >
                 <CardCreateUpdate.GridObs
                   DataSolicitacao={setDadosCard}
-                  UsuarioLogado={user} 
+                  UsuarioLogado={user}
                   w="100%"
                 />
-
               </Flex>
               <Flex w={"100%"}>
                 {setDadosCard.distrato && setDadosCard.ativo && (
@@ -287,7 +288,6 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
             py={3}
             wrap={"wrap"}
           >
-
             <BotaoPausar
               id={setDadosCard.id}
               statusPause={setDadosCard.pause}

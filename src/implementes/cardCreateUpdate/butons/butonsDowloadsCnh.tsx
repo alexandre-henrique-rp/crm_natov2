@@ -4,7 +4,6 @@ import { useContext, useEffect, useState } from "react";
 import { DataContext } from "../imputs/inputUpdateCnh";
 import { DownloadDoc } from "@/components/DowloadDoc";
 
-
 interface ButtonsDownloadsCnhProps {
   url?: string;
 }
@@ -17,15 +16,15 @@ export function ButtonsDownloadsCnh({ url }: ButtonsDownloadsCnhProps) {
   const { Data } = useContext(DataContext);
 
   useEffect(() => {
-    if (url) {
-      const Verify = url.startsWith("data:");
-      if (Verify) {
-        setUrlBase64(url);
-        return;
-      } else {
-        setUrlDownloads(url);
-      }
-    }
+    // if (url) {
+    //   const Verify = url.startsWith("data:");
+    //   if (Verify) {
+    //     setUrlBase64(url);
+    //     return;
+    //   } else {
+    //     setUrlDownloads(url);
+    //   }
+    // }
     if (Data) setUrlDownloads(Data);
   }, [url, Data]);
 
@@ -47,7 +46,7 @@ export function ButtonsDownloadsCnh({ url }: ButtonsDownloadsCnhProps) {
               textDecoration={"none"}
               fontWeight="bold"
               _hover={{
-                bg: "green.500"
+                bg: "green.500",
               }}
             >
               Download Do Arquivo

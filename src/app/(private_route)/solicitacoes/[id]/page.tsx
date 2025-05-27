@@ -22,13 +22,13 @@ const Requestes = async (id: string) => {
       return null;
     }
     const data = await res.json();
+    console.log("🚀 ~ Requestes ~ data:", data);
     return JSON.parse(JSON.stringify(data));
   } catch (err) {
     console.error("Erro no Requestes:", err);
     return null;
   }
 };
-
 
 const RequestAlert = async (id: string) => {
   try {
@@ -38,7 +38,7 @@ const RequestAlert = async (id: string) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.token}`
+        Authorization: `Bearer ${session?.token}`,
       },
       cache: "no-store",
     });
@@ -47,7 +47,7 @@ const RequestAlert = async (id: string) => {
       return null;
     }
     const data = await request.json();
- 
+
     return JSON.parse(JSON.stringify(data));
   } catch (error) {
     console.log(error);
@@ -62,22 +62,18 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await Requestes(params.id);
   return {
-    title: data
-      ? `Cliente – ${data.nome}`
-      : "Cliente – não encontrado",
+    title: data ? `Cliente – ${data.nome}` : "Cliente – não encontrado",
   };
 }
-
 
 export default async function perfilPage({ params }: Props) {
   const { id } = params;
   const session = await GetSessionServer();
   const user = session?.user;
 
-  
   const data = await Requestes(id);
+  console.log("🚀 ~ perfilPage ~ data:", data);
   if (!data) {
-   
     notFound();
   }
 
