@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 interface FormSolicitacaoProps {
-  cpf: string;
+  cpf?: string;
 }
 
 export default function FormSolicitacao({ cpf }: FormSolicitacaoProps) {
@@ -43,7 +43,6 @@ export default function FormSolicitacao({ cpf }: FormSolicitacaoProps) {
   console.log("🚀 ~ FormSolicitacao ~ form:", form);
   const [Logwhats, setLogwhats] = useState<string>("");
   const [load, setLoad] = useState<boolean>(false);
-  const [VendedorName, setVendedorName] = useState<string>("");
   const toast = useToast();
   const [options, setOptions] = useState([
     {
@@ -319,7 +318,7 @@ export default function FormSolicitacao({ cpf }: FormSolicitacaoProps) {
           isCpf
           onvalue={(value) => handleChange("cpf", value)}
           Disable
-          value={form.cpf}
+          value={form.cpf ? form.cpf : ""}
           required
           boxWidth="15%"
         />
@@ -538,8 +537,8 @@ export default function FormSolicitacao({ cpf }: FormSolicitacaoProps) {
         {load ? (
           <Spinner size={"sm"} />
         ) : (
-          <Button size={"sm"} colorScheme="blue" onClick={handlesubmit}>
-            CRIAR SOLICITAÇÃO
+          <Button onClick={handlesubmit} colorScheme="green" isLoading={load}>
+            {load ? "Enviando..." : "Salvar Alterações"}
           </Button>
         )}
       </Flex>
