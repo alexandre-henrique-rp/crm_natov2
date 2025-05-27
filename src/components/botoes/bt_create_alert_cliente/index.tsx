@@ -22,7 +22,7 @@ import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 
 interface BtCreateAlertClienteProps {
-  DataSolicitacao: solictacao.SolicitacaoGetType;
+  DataSolicitacao: solictacao.SolicitacaoObjectType;
   user: AuthUser;
 }
 
@@ -31,7 +31,7 @@ export function BtCreateAlertCliente({
   user,
 }: BtCreateAlertClienteProps) {
   const hierarquia = user?.hierarquia;
-  const [Data, setData] = useState<any>();
+  const [Data, setData] = useState<solictacao.SolicitacaoObjectType>();
   const [Loading, setLoading] = useState(false);
   const [Titulo, setTitulo] = useState("");
   const [Descricao, setDescricao] = useState("");
@@ -52,15 +52,12 @@ export function BtCreateAlertCliente({
     e.preventDefault();
     setLoading(true);
     const data: AlertsType.AlertsProps = {
-      tipo: "CORRETOR",
       corretor: Data?.corretor.id,
-      empreendimento: Data?.empreedimento.id,
+      empreendimento: Data?.empreendimento?.id || 1,
       solicitacao_id: Data?.id,
       tag: "warning",
-      texto: Descricao,
-      titulo: `${Data?.nome?.split(" ")[0]} ${
-        Data?.nome?.split(" ")[1]
-      } - ${Titulo}`
+      descricao: Descricao,
+      titulo: `${Data?.id} - ${Titulo}`
     };
 
     // Send a POST request to the /api/alerts/create endpoint with the data object.

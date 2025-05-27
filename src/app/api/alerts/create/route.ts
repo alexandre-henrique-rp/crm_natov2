@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     if (!session) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-    const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/alerts`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/alert`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

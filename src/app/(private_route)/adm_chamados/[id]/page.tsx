@@ -17,9 +17,7 @@ import BotaoIniciarChamado from "@/components/botoes/btn_iniciar_chamado";
 import RespostaChamado from "@/components/resposta";
 import { GetSessionServer } from "@/lib/auth_confg";
 
-type Props = {
-  params: { id: string };
-};
+
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const id = params.id;

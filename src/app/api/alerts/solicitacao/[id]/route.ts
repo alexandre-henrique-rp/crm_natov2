@@ -9,7 +9,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
         if (!session)
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
-        const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/alerts/get/cadastro/${id}`;
+        const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/alert/get/cadastro/${id}`;
         const request = await fetch(url, {
             method: "GET",
             headers: {
