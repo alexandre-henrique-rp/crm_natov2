@@ -22,7 +22,7 @@ import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 
 interface BtCreateAlertClienteProps {
-  DataSolicitacao: solictacao.SolicitacaoObjectType;
+  DataSolicitacao: solictacao.SolicitacaoObjectCompleteType;
   user: AuthUser;
 }
 

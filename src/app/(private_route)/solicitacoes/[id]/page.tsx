@@ -22,7 +22,6 @@ const Requestes = async (id: string) => {
       return null;
     }
     const data = await res.json();
-    console.log("🚀 ~ Requestes ~ data:", data);
     return JSON.parse(JSON.stringify(data));
   } catch (err) {
     console.error("Erro no Requestes:", err);
@@ -72,7 +71,7 @@ export default async function perfilPage({ params }: Props) {
   const user = session?.user;
 
   const data = await Requestes(id);
-  console.log("🚀 ~ perfilPage ~ data:", data);
+
   if (!data) {
     notFound();
   }

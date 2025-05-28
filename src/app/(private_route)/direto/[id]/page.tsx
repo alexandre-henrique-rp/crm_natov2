@@ -1,3 +1,5 @@
+"use server";
+
 import { Flex } from "@chakra-ui/react";
 import { GetSessionServer } from "@/lib/auth_confg";
 import { Metadata } from "next";
@@ -7,7 +9,7 @@ import { CardUpdateDireto } from "@/components/card_Update_direto";
 
 const Requestes = async (id: string) => {
   try {
-      const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/direto/${id}`;
+    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/direto/${id}`;
     const session = await GetSessionServer();
     const request = await fetch(url, {
       method: "GET",
@@ -16,9 +18,9 @@ const Requestes = async (id: string) => {
         Authorization: `Bearer ${session?.token}`
       }
     });
-    
+
     const data = await request.json();
-   
+    //console.log(data);
 
     if (!request.ok) {
       throw new Error("Erro");
@@ -105,13 +107,14 @@ export default async function perfilPage({
               p={4}
             >
               <AlertProvider>
-                <CardUpdateDireto setDadosCard={data} user={user} />
+                <CardUpdateDireto params={params} setDadosCard={data!} user={user} />
                 <CardListAlertCliente
                   Id={Number(id)}
-                  DataAlert={dataAlert}
+                  DataAlert={dataAlert ?? []}
                   user={user}
                 />
               </AlertProvider>
+
             </Flex>
           </Flex>
         </>

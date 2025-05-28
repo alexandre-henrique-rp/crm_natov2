@@ -7,6 +7,14 @@ export async function POST(request: Request) {
         const User = process.env.USER_API;
         const Pass = process.env.PASS_API;
         const session = await GetSessionServer();
+
+        const credentials = Buffer
+            .from(`${User}:${Pass}`, "utf-8")
+            .toString("base64");
+
+
+    
+        console.log(credentials)
         if (!session) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
@@ -17,7 +25,7 @@ export async function POST(request: Request) {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Basic ${Buffer.from(`${User}:${Pass}`).toString("base64")}`,
+                    Authorization: `Basic ${credentials}`,
                 },
                 body: JSON.stringify(data),
             }

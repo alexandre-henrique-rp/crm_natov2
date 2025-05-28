@@ -303,16 +303,6 @@ export const DadoCompomentList = ({
               <option value="REVOGADO">REVOGADO</option>
             </Select>
           </Box>
-          <Box w={{ base: "100%", "2xl": "13rem" }}>
-            <FormLabel textAlign={{ base: "left", "2xl": "center" }}>
-              Construtora
-            </FormLabel>
-            <SelectComponentFilterHome
-              Data={DataConstrutora}
-              value={Construtora?.toString() ?? ""}
-              onChange={(e) => setConstrutora(Number(e.target.value))}
-            />
-          </Box>
           <Box w={{ base: "100%", "2xl": "15rem" }}>
             <FormLabel textAlign={{ base: "left", "2xl": "center" }}>
               Empreendimento
@@ -455,16 +445,6 @@ export const DadoCompomentList = ({
                         <ImClock />
                       </Flex>
                     </Th>
-                    {session?.user?.hierarquia === "ADM" && (
-                      <Th
-                        fontSize={"lg"}
-                        p={"0.8rem"}
-                        borderBottomColor={"gray.300"}
-                        w={"15rem"}
-                      >
-                        CONSTRUTORA
-                      </Th>
-                    )}
                   </Tr>
                 </Thead>
                 <Tbody>
