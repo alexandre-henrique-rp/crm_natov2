@@ -9,12 +9,8 @@ export async function POST(request: Request) {
         const session = await GetSessionServer();
 
         const credentials = Buffer
-            .from(`${User}:${Pass}`, "utf-8")
+            .from(`${User}:${Pass}`)
             .toString("base64");
-
-
-    
-        console.log(credentials)
         if (!session) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
@@ -38,7 +34,7 @@ export async function POST(request: Request) {
                 `Erro ao criar o registro: ${text}`,
                 { status: response.status }
             );
-        }
+        }/*  */
 
         const retorno = await response.json();
         return NextResponse.json(
