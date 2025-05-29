@@ -20,6 +20,71 @@ interface FormSolicitacaoEditProps {
   data: any;
 }
 
+interface SolicitacaoType {
+  id: number | null;
+  nome: string | null;
+  email: string | null;
+  cpf: string | null;
+  telefone: string | null;
+  telefone2: string | null;
+  dt_nascimento: string | null;
+  id_fcw: number | null;
+  obs: string | null;
+  ativo: boolean | null;
+  rela_quest: boolean | null;
+  dt_distrato: Date | null;
+  status_aprovacao: Boolean | null;
+  distrato_id: number | null;
+  andamento: string | null;
+  type_validacao: string | null;
+  dt_aprovacao: Date | null;
+  ht_aprovacao: Date | null;
+  dt_agendamento: Date | null;
+  hr_agendamento: Date | null;
+  estatos_pgto: string | null;
+  valorcd: number | null;
+  situacao_pgto: number | null;
+  freqSms: number | null;
+  alertanow: boolean | null;
+  dt_criacao_now: Date | null;
+  statusAtendimento: boolean | null;
+  pause: boolean | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+  relacionamento: {
+    id: number | null;
+    nome: string | null;
+  };
+  dt_revogacao: Date | null;
+  direto: boolean | null;
+  txid: string | null;
+  chamados: [
+    {
+      id: number | null;
+      descricao: string | null;
+    }
+  ];
+  construtora: {
+    id: number;
+    fantasia: string;
+  };
+  empreendimento: {
+    id: number;
+    nome: string;
+  };
+  financeira: {
+    id: number;
+    fantasia: string;
+  };
+  corretor: {
+    id: number;
+    nome: string;
+  };
+  uploadCnh: any | null;
+  uploadRg: any | null;
+  distrato: boolean | null;
+}
+
 export default function FormSolicitacaoEdit({
   id,
   data,
@@ -29,112 +94,113 @@ export default function FormSolicitacaoEdit({
   const isAdmin = user?.hierarquia === "ADM";
   const [tagsOptions, setTagsOptions] = useState([] as any[]);
   const [Tags, setTags] = useState([] as any[]);
-  const [form, setForm] = useState({
-    id: null as number | null,
-    nome: null as string | null,
-    email: null as string | null,
-    cpf: null as string | null,
-    telefone: null as string | null,
-    telefone2: null as string | null,
-    dt_nascimento: null as string | null,
-    id_fcw: null as number | null,
-    obs: null as string | null,
-    ativo: null as boolean | null,
-    rela_quest: null as boolean | null,
-    dt_distrato: null as Date | null,
-    status_aprovacao: null as Boolean | null,
-    distrato_id: null as number | null,
-    andamento: null as string | null,
-    type_validacao: null as string | null,
-    dt_aprovacao: null as Date | null,
-    ht_aprovacao: null as Date | null,
-    dt_agendamento: null as Date | null,
-    hr_agendamento: null as Date | null,
-    estatos_pgto: null as string | null,
-    valorcd: null as number | null,
-    situacao_pgto: null as number | null,
-    freqSms: null as number | null,
-    alertanow: null as boolean | null,
-    dt_criacao_now: null as Date | null,
-    statusAtendimento: null as boolean | null,
-    pause: null as boolean | null,
-    createdAt: null as string | null,
-    updatedAt: null as string | null,
+  const [form, setForm] = useState<SolicitacaoType>({
+    id: 0,
+    nome: "",
+    email: "",
+    cpf: "",
+    telefone: "",
+    telefone2: "",
+    dt_nascimento: "",
+    id_fcw: 0,
+    obs: "",
+    ativo: false,
+    rela_quest: false,
+    dt_distrato: null,
+    status_aprovacao: false,
+    distrato_id: 0,
+    andamento: "",
+    type_validacao: "",
+    dt_aprovacao: null,
+    ht_aprovacao: null,
+    dt_agendamento: null,
+    hr_agendamento: null,
+    estatos_pgto: "",
+    valorcd: 0,
+    situacao_pgto: 0,
+    freqSms: 0,
+    alertanow: false,
+    dt_criacao_now: null,
+    statusAtendimento: false,
+    pause: false,
+    createdAt: "",
+    updatedAt: "",
     relacionamento: {
-      id: null as number | null,
-      nome: null as string | null,
+      id: 0,
+      nome: "",
     },
-    dt_revogacao: null as Date | null,
-    direto: null as boolean | null,
-    txid: null as string | null,
+    dt_revogacao: null,
+    direto: false,
+    txid: "",
     chamados: [
       {
-        id: null as number | null,
-        descricao: null as string | null,
+        id: 0,
+        descricao: "",
       },
     ],
     construtora: {
-      id: 0 as number,
-      fantasia: "" as string,
+      id: 0,
+      fantasia: "",
     },
     empreendimento: {
-      id: 0 as number,
-      nome: "" as string,
+      id: 0,
+      nome: "",
     },
     financeira: {
-      id: 0 as number,
-      fantasia: "" as string,
+      id: 0,
+      fantasia: "",
     },
     corretor: {
-      id: 0 as number,
-      nome: "" as string,
+      id: 0,
+      nome: "",
     },
-    uploadCnh: null as {} | null,
-    uploadRg: null as {} | null,
-    distrato: null as boolean | null,
+    uploadCnh: null,
+    uploadRg: null,
+    distrato: null,
   });
   const [options, setOptions] = useState([
     {
-      id: null as number | null,
-      fantasia: null as string | null,
+      id: 0,
+      fantasia: "",
       empreendimentos: [
         {
-          id: null as number | null,
-          nome: null as string | null,
+          id: 0,
+          nome: "",
         },
-      ] as any[],
+      ],
       financeiros: [
         {
           financeiro: {
-            id: null as number | null,
-            fantasia: null as string | null,
+            id: 0,
+            fantasia: "",
           },
         },
-      ] as any[],
+      ],
       colaboradores: [
         {
-          id: null as number | null,
-          nome: null as string | null,
+          id: 0,
+          nome: "",
         },
       ],
     },
   ]);
+  console.log("🚀 ~ options:", options);
   const [empreendimentos, setEmpreendimentos] = useState([
     {
-      id: 0 as number,
-      nome: "" as string,
+      id: 0,
+      nome: "",
     },
   ]);
   const [financeiras, setFinanceiras] = useState([
     {
-      id: null as number | null,
-      fantasia: null as string | null,
+      id: 0,
+      fantasia: "",
     },
   ]);
   const [corretores, setCorretores] = useState([
     {
-      id: null as number | null,
-      nome: null as string | null,
+      id: 0,
+      nome: "",
     },
   ]);
 
@@ -147,33 +213,35 @@ export default function FormSolicitacaoEdit({
         fetchADM();
         setTagsOptions(TagsOptions);
       }
-
       if (data.construtora?.id) {
-        const construtoraSelecionada = options.find(
-          (e) => e.id === Number(data.construtora.id)
+        const construtoraSelecionada = options.find((e) => {
+          return e.id === data.construtora?.id;
+        });
+        console.log(
+          "🚀 ~ construtoraSelecionada ~ construtoraSelecionada:",
+          construtoraSelecionada
         );
 
         if (construtoraSelecionada) {
-          setEmpreendimentos(construtoraSelecionada.empreendimentos || []);
+          setEmpreendimentos(construtoraSelecionada.empreendimentos);
           setFinanceiras(
-            construtoraSelecionada.financeiros.map((f: any) => f.financeiro) ||
-              []
+            construtoraSelecionada.financeiros.map((f: any) => f.financeiro)
           );
           setCorretores(
             construtoraSelecionada.colaboradores.map((colab: any) => ({
               id: colab.user.id,
               nome: colab.user.nome,
-            })) || []
+            }))
           );
         }
       }
     }
-  }, [session, id, data]);
+  }, [id, session, data]);
 
   const fetchADM = async () => {
     const req = await fetch("/api/adm/getoptions");
-    const data = await req.json();
-    setOptions(data);
+    const res = await req.json();
+    setOptions(res);
   };
 
   const handleChange = (field: keyof typeof form, value: any) => {
@@ -363,7 +431,7 @@ export default function FormSolicitacaoEdit({
                 empreendimentoSelecionado ?? { id: null, nome: "" }
               );
             }}
-            value={form.empreendimento ? form.empreendimento.id : ""}
+            value={form.empreendimento ? form.empreendimento.id : 0}
             required
             isDisabled={!form.construtora}
             options={empreendimentos.map((e) => ({
