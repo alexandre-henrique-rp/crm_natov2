@@ -2,7 +2,6 @@
 
 import UserCompraProvider from "@/provider/UserCompra";
 import { Alert, AlertIcon, Box, Button, Divider, Flex, FormControl, FormLabel, Grid, Input } from "@chakra-ui/react";
-import { UpdateSolicitacao } from "@/actions/solicitacao/service/update";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import { ResendSms } from "@/implementes/cardCreateUpdate/butons/resendSms";
 import { AuthUser } from "@/types/session";
@@ -11,44 +10,67 @@ import CreateChamado from "../botoes/btn_chamado";
 import BtnIniciarAtendimento from "../botoes/btn_iniciar_atendimento";
 import BotaoReativarSolicitacao from "../botoes/btn_reativar_solicitacao";
 import { CriarFcweb } from "../botoes/criarFcweb";
-import BtnAlertNow from "../btn_alerta_now";
 import DistratoAlertPrint from "../Distrato_alert_print";
 import BotaoPausar from "../botoes/btn_pausar";
-import PatchButton from "../botoes/sendbt";
+import { useEffect, useState } from "react";
+import { UpdateSolicitacaoDireto } from "@/actions/direto/update/update";
+import { SaveBtm } from "@/implementes/cardCreateUpdate/butons/saveBtm";
+
 
 
 type Props = {
-  setDadosCard: solictacao.SolicitacaoGetType;
+  setDadosCard: solictacao.SolicitacaoObjectCompleteType;
   user: AuthUser;
+  params: { id: string };
 };
 
+interface DadosApi {
+  id: number;
+  nome: string;
+  cpf: string;
+  telefone: string;
+  email: string;
+  dt_nascimento: string;
+  createdAt: string;
+  updatedAt: string;
+  imagemQrcode: string;
+  pixCopiaECola: string;
+  qrcode: string;
+  txid: string;
+  valor: number;
+  status_pgto: string;
+}
 
-export function CardUpdateDireto({ setDadosCard, user }: Props) {
+
+export function CardUpdateDireto({ setDadosCard, user, params }: Props) {
   const HierarquiaUser = user?.hierarquia;
   const readonly = HierarquiaUser === "ADM" ? false : true;
-  const { construtora } = setDadosCard;
-  // não essta recebendo o financeira
+  const id = params.id;
+  const [dadosUser, setDadosUser] = useState<DadosApi | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-
-  const body = {
-    nome: setDadosCard.nome,
-    cpf: setDadosCard.cpf,
-    telefone: setDadosCard.telefone,
-    email: setDadosCard.email,
-    dt_nascimento:
-      typeof setDadosCard.dt_nascimento === "string"
-        ? setDadosCard.dt_nascimento
-        : new Date(setDadosCard.dt_nascimento)
-          .toISOString()
-          .split("T")[0],
-    financeiro: 5,
-    pixCopiaECola: setDadosCard.pixCopiaECola,
-    qrcode: setDadosCard.qrcode,
-    txid: setDadosCard.txid,
-    valorcd: setDadosCard.valorcd,
-    imagemQrcode: setDadosCard.imagemQrcode,
-    status_pgto: setDadosCard.status_pgto,
+  async function fetchDados() {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/direto/getone/${id}`);
+      if (!response.ok) throw new Error("Erro ao carregar dados");
+      const data: DadosApi = await response.json();
+      setDadosUser(data);
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
   }
+
+  useEffect(() => {
+    if (id) {
+      fetchDados();
+    }
+    console.log(setDadosCard);
+  }, [id]);
+
 
 
   return (
@@ -57,15 +79,11 @@ export function CardUpdateDireto({ setDadosCard, user }: Props) {
         <CardCreateUpdate.Headers SetDados={setDadosCard} />
         <Divider borderColor="#00713D" my={4} />
 
-        <CardCreateUpdate.Form action={UpdateSolicitacao}>
+        <CardCreateUpdate.Form action={UpdateSolicitacaoDireto}>
           <UserCompraProvider>
             <Box hidden>
               <Input value={setDadosCard.id} name="id_cliente" readOnly />
-              <Input
-                value={setDadosCard.ativo.toString()}
-                name="ativo"
-                readOnly
-              />
+              <Input value={String(setDadosCard.ativo)} name="ativo" readOnly />
             </Box>
             <Flex flexDir={"column"} gap={6} w={"100%"} h={"100%"} py={10}>
               <Flex
@@ -106,33 +124,25 @@ export function CardUpdateDireto({ setDadosCard, user }: Props) {
                 px={4}
                 justifyContent={{ base: "center", md: "space-between" }}
               >
-
+                <CardCreateUpdate.GridEmail
+                  type="register"
+                  email={setDadosCard.email}
+                  w={{ base: "100%", md: "25rem" }}
+                  readonly={readonly}
+                />
                 <CardCreateUpdate.GridTel
                   index={1}
                   DataSolicitacao={setDadosCard.telefone}
                   w={{ base: "100%", md: "10rem" }}
                   readonly={readonly}
                 />
-                <CardCreateUpdate.GridEmail
-                  email={setDadosCard.email}
-                  type="register"
-                  readonly={readonly}
-                  w={{ base: "100%", md: "25rem" }}
-                />
-
                 <CardCreateUpdate.GridTel
                   index={2}
                   DataSolicitacao={setDadosCard.telefone2}
                   w={{ base: "100%", md: "10rem" }}
                   readonly={readonly}
                 />
-                {construtora && (
-                  <CardCreateUpdate.GridConstrutora
-                    user={user}
-                    DataSolicitacao={setDadosCard}
-                    w={{ base: "100%", md: "12rem" }}
-                  />
-                )}
+
               </Flex>
               <Flex
                 flexDir={{ base: "column", md: "row" }}
@@ -180,82 +190,7 @@ export function CardUpdateDireto({ setDadosCard, user }: Props) {
                   w={{ base: "100%", md: "16rem" }}
                 />
               </Flex>
-              <Box px={4} mt={6}>
-                <FormLabel fontSize="sm" fontWeight="md" mb={2}>
-                  Detalhes de Pagamento
-                </FormLabel>
 
-                <Grid
-                  templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
-                  gap={4}
-                >
-                  <FormControl>
-                    <FormLabel fontSize="xs" color="gray.600">
-                      Pix Copia & Cola
-                    </FormLabel>
-                    <Input
-                      name="pixCopiaECola"
-                      value={setDadosCard.pixCopiaECola}
-                      isReadOnly={readonly}
-                      size="sm"
-                      bg="gray.100"
-                    />
-                  </FormControl>
-
-                  <FormControl>
-                    <FormLabel fontSize="xs" color="gray.600">
-                      QR Code
-                    </FormLabel>
-                    <Input
-                      name="qrcode"
-                      value={setDadosCard.qrcode}
-                      isReadOnly={readonly}
-                      size="sm"
-                      bg="gray.100"
-                    />
-                  </FormControl>
-
-                  <FormControl>
-                    <FormLabel fontSize="xs" color="gray.600">
-                      TXID
-                    </FormLabel>
-                    <Input
-                      name="txid"
-                      value={setDadosCard.txid}
-                      isReadOnly={readonly}
-                      size="sm"
-                      bg="gray.100"
-                    />
-                  </FormControl>
-
-                  <FormControl>
-                    <FormLabel fontSize="xs" color="gray.600">
-                      Valor (R$)
-                    </FormLabel>
-                    <Input
-                      name="valorcd"
-                      type="number"
-                      value={String(setDadosCard.valorcd)}
-                      isReadOnly={readonly}
-                      size="sm"
-                      bg="gray.100"
-                    />
-                  </FormControl>
-
-                  <FormControl>
-                    <FormLabel fontSize="xs" color="gray.600">
-                      Status Pagamento
-                    </FormLabel>
-                    <Input
-                      name="status_pgto"
-                      value={setDadosCard.status_pgto}
-                      isReadOnly={readonly}
-                      size="sm"
-                      bg="gray.100"
-                    />
-                  </FormControl>
-                </Grid>
-              </Box>
               <Box>
                 <Alert status="info" variant="left-accent">
                   <AlertIcon />
@@ -283,26 +218,7 @@ export function CardUpdateDireto({ setDadosCard, user }: Props) {
                   Hierarquia={!HierarquiaUser ? "USER" : HierarquiaUser}
                 />
               </Flex>
-              {construtora?.id === 5 && (
-                <Box>
-                  <Alert
-                    justifyContent="space-between"
-                    status="warning"
-                    variant="left-accent"
-                  >
-                    <AlertIcon />
-                    Apenas para clientes presentes no Plantão de Venda.
-                    <BtnAlertNow
-                      id={setDadosCard.id}
-                      andamento={setDadosCard.andamento}
-                      ativo={setDadosCard.ativo}
-                      distrato={setDadosCard.distrato}
-                      construtora={setDadosCard.construtora}
-                      alertanow={setDadosCard.alertanow}
-                    />
-                  </Alert>
-                </Box>
-              )}
+
               <Flex
                 flexDir={{ base: "column", md: "row" }}
                 gap={10}
@@ -312,8 +228,9 @@ export function CardUpdateDireto({ setDadosCard, user }: Props) {
                 <CardCreateUpdate.GridObs
                   DataSolicitacao={setDadosCard}
                   UsuarioLogado={user}
-                  w={"100%"}
+                  w="100%"
                 />
+
               </Flex>
               <Flex w={"100%"}>
                 {setDadosCard.distrato && setDadosCard.ativo && (
@@ -386,14 +303,14 @@ export function CardUpdateDireto({ setDadosCard, user }: Props) {
               aprovacao={setDadosCard.andamento}
               id={setDadosCard.id}
             />
-            <PatchButton
-              id={setDadosCard.id}
-              body={ body}
-              colorScheme="blue"
-              size="sm"
+            <SaveBtm
+              colorScheme="green"
+              textColor={"black"}
+              size={"sm"}
+              type="submit"
             >
-              Atualizar Direto
-            </PatchButton>
+              SALVAR
+            </SaveBtm>
 
             {!setDadosCard.ativo && HierarquiaUser === "ADM" ? (
               <BotaoReativarSolicitacao id={setDadosCard.id} />

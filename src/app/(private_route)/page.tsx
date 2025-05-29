@@ -25,6 +25,7 @@ const GetListaDados = async (
     cache: "no-store",
   });
   const data = await user.json();
+  console.log(data);
   if (!user.ok) {
     console.error("GetListaDados status:", data.message);
     return null;

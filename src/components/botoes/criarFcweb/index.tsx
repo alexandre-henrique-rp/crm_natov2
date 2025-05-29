@@ -17,7 +17,7 @@ import { AuthUser } from "@/types/session";
 
 
 interface CriarFcwebProps {
-  Dados: solictacao.SolicitacaoObjectType;
+  Dados: solictacao.SolicitacaoObjectCompleteType;
   user: AuthUser;
 }
 
@@ -36,7 +36,10 @@ export function CriarFcweb({ Dados, user }: CriarFcwebProps) {
     try {
       const response = await fetch("/api/fcweb", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+        
+         },
+        
         body: JSON.stringify({
           s_alerta: "ATIVADO",
           referencia: `${new Date().toISOString().split("T")[0].split("-").reverse().join("-")}.${new Date().toLocaleTimeString()}`,
@@ -45,8 +48,12 @@ export function CriarFcweb({ Dados, user }: CriarFcwebProps) {
           cpf: Dados?.cpf,
           nome: Dados?.nome,
           contador: "NATO_",
-          obscont:
-            `Criado Por: ${user?.nome} - Empreendimento: ${Dados?.empreedimento.nome} - vendedor: ${Dados?.corretor.nome} - ( ${new Date().toLocaleDateString('pt-BR') } ${new Date().toLocaleTimeString('pt-BR')} )`,
+          obscont: [
+            `Criado Por: ${user?.nome ?? '-'}`,
+            `Empreendimento: ${Dados?.empreendimento?.nome ?? '-'}`,
+            `vendedor: ${Dados?.corretor?.nome ?? '-'}`,
+            `(${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')})`
+          ].join(' - '),
           tipocd: "A3PF Bird5000",
           valorcd: Dados?.valorcd,
           formapgto: "PENDURA",
@@ -69,6 +76,7 @@ export function CriarFcweb({ Dados, user }: CriarFcwebProps) {
       }
 
       const json = await response.json();
+
       toast({
         title: "Sucesso!",
         description: json.message,

@@ -3,7 +3,7 @@ import { InputTextObs } from "../imputs/imputTextObs";
 import { AuthUser } from "@/types/session";
 
 interface CardGridUpdateCnhProps extends BoxProps {
-  DataSolicitacao?: solictacao.SolicitacaoGetType;
+  DataSolicitacao?: solictacao.SolicitacaoUserType;
   UsuarioLogado: AuthUser;
 }
 

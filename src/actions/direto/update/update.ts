@@ -15,64 +15,26 @@ export async function UpdateSolicitacaoDireto(_: any, data: FormData) {
 
 
   const id = Number(data.get("id_cliente"));
-  const Ativo = data.get("StatusAtivo") === "true" ? true : false;
-  const hierarquia = session?.user?.hierarquia;
-  const avaliar = !Ativo  && hierarquia === "ADM" ? true : false;
-  const Avaliar2 =
-    !Ativo && hierarquia !== "ADM" ? true : false;
-
   const TagsArray = data.get("Tags") as any;
   await PostTags(TagsArray, id);
 
   const DateNascimento = data.get("DataNascimento")?.toString() || "";
   const Dados = {
-    ...(Ativo && { ativo: Ativo }),
-    ...(Ativo &&
-      session?.user?.hierarquia !== "ADM" && {
-        corretor: Number(session.user.id)
-      }),
-    ...(Avaliar2 && {
-      corretor: Number(session.user.id),
-      ativo: true
-    }),
-    ...(Ativo &&
-      session?.user?.hierarquia === "ADM" && {
-        corretor: Number(data.get("corretor"))
-      }),
-    ...(avaliar && {
-      corretor: Number(data.get("corretor")),
-      ativo: true
-    }),
-    ...(data.get("cpf") && { cpf: data.get("cpf") }),
     ...(data.get("nome") && { nome: data.get("nome") }),
+    ...(data.get("cpf") && { cpf: data.get("cpf") }),
     ...(data.get("telefones1") && { telefone: data.get("telefones1") }),
-    ...(data.get("telefones2") && { telefone2: data.get("telefones2") }),
     ...(data.get("email") && { email: data.get("email") }),
-    ...(data.get("update_RG") && { uploadRg: data.get("update_RG") }),
-    ...(data.get("update_CNH") && { uploadCnh: data.get("update_CNH") }),
-    ...(data.get("DataNascimento") && {
-      dt_nascimento: DateNascimento
-    }),
-    ...(data.get("Obs") && { obs: data.get("Obs") }),
-    ...(data.get("empreendimento") && {
-      empreedimento: Number(data.get("empreendimento"))
-    }),
-    
-    ...(data.get("financeiro") && {
-      financeiro: Number(data.get("financeiro"))
-    }),
-    ...(data.get("links") && {
-      mult_link: data.get("links")
-        ? data.get("links")?.toString().split(", ")
-        : []
-    }),
-    ...(data.get("Relacionamento") && {
-      relacionamento: data.get("Relacionamento")
-        ? JSON.parse(data.get("Relacionamento")?.toString() || "")
-        : []
-    }),
-    ...(data.get("Relacionamento") && { rela_quest: true })
+    ...(data.get("DataNascimento") && { dt_nascimento: DateNascimento }),
+    ...(data.get("financeiro") && { financeiro: Number(data.get("financeiro")) }),
+    ...(data.get("pixCopiaECola") && { pixCopiaECola: data.get("pixCopiaECola") }),
+    ...(data.get("qrcode") && { qrcode: data.get("qrcode") }),
+    ...(data.get("txid") && { txid: data.get("txid") }),
+    ...(data.get("valorcd") && { valorcd: Number(data.get("valorcd")) }),
+    ...(data.get("imagemQrcode") && { imagemQrcode: data.get("imagemQrcode") }),
+    ...(data.get("status_pgto") && { status_pgto: data.get("status_pgto") }),
   };
+
+  console.log("🚀 ~ UpdateSolicitacaoDireto ~ Dados:", Dados)
   
   const request = await fetch(
     `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/direto/${id}`,
