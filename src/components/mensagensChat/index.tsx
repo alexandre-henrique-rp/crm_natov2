@@ -104,8 +104,8 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
     <>
       {!id ? (
         <Box
-          h={"100%"}
-          w={"100%"}
+          h={"full"}
+          w={"full"}
           display="flex"
           bg="gray.100"
           borderRadius="1rem"
@@ -123,7 +123,7 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
               bg={"green.200"}
               p={2}
               borderRadius="1rem"
-              w={"100%"}
+              w={"full"}
               h={"25rem"}
               overflowY="auto"
               mb={{ base: "4", md: "8" }}
@@ -157,8 +157,8 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
         </Box>
       ) : (
         <Box
-          h={"100%"}
-          w={"100%"}
+          h={"full"}
+          w={"full"}
           display="flex"
           bg="gray.100"
           borderRadius="1rem"
@@ -176,7 +176,7 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
               bg={"green.200"}
               p={2}
               borderRadius="1rem"
-              w={"100%"}
+              w={"full"}
               h={"25rem"}
               overflowY="auto"
               mb={{ base: "4", md: "8" }}

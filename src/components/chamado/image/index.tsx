@@ -1,120 +1,81 @@
-"use client";
-import {
-  Box,
-  Button,
-  Divider,
-  Flex,
-  FormLabel,
-  Heading,
-  Select,
-  Textarea,
-} from "@chakra-ui/react";
-import HistoricoComponent from "../historico";
-import MensagensChat from "../mensagensChat";
+import { Box, Button, Flex, FormLabel, Grid, Icon, Input, Text, useToast, Image, Select, Select } from "@chakra-ui/react"
+import { ChangeEvent, DragEvent, useCallback, useState } from "react"; 
+import { FiUpload, FiX } from "react-icons/fi";
 
-interface ChamadoProps {
-  data: TypeChamado | null;
-  session: SessionNext.Client;
-}
 
-type TypeChamado = {
-  id: number;
-  descricao?: string;
-  status: string;
-  idUser?: number;
-  idResposta?: number;
-  resposta?: string;
-  createAt: string;
-  updatedAt?: string;
-  solicitacaoId?: number;
-  temp: any[];
-  chat: any[];
-  images: any[];
-  images_adm: any[];
-  respostaData?: any;
-  User?: any;
-  solicitacaoData: any;
-};
 
-export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
-  const SaveChat = (chat: any) => {};
-
-  return (
-    <>
-      <Flex
-        w="full"
-        h="full"
-        bg="gray.500"
-        p={4}
-        gap={4}
-        flexDir={{ base: "column", md: "row" }}
-      >
-        <Box
-          display={"flex"}
-          flexDir={"column"}
-          w={{ base: "full", md: "70%" }}
-          h={"full"}
-          bg="white"
-          borderRadius="1rem"
-          boxShadow="md"
-          border="1px solid"
-          borderColor="gray.200"
-          p={4}
-          gap={4}
-          justifyContent={"space-between"}
-        >
-          <Flex w="full" justifyContent="space-between" alignItems="center">
-            <Flex gap={3} pl={8} alignItems="end" justifyContent="flex-start">
-              <Heading>Chamado</Heading>
-              {data?.id && <Heading size="lg">Id: {data?.id}</Heading>}
-            </Flex>
-            <Flex gap={2} pe={10}>
-              {session?.role.adm ? (
-                <>
-                  {data?.status && (
-                    <Flex>
-                      <Heading size="lg">Status</Heading>
-                      <Select value={data?.status || "ABERTO"} name="status">
-                        <option value="ABERTO">Aberto</option>
-                        <option value="EM_ANDAMENTO">Em andamento</option>
-                        <option value="LV2">Enviado para nível 2</option>
-                        <option value="CONCLUIDO">Concluído</option>
-                      </Select>
-                    </Flex>
-                  )}
-                </>
-              ) : (
-                <>
-                  {data?.status && (
-                    <Heading size="lg">Status: {data?.status}</Heading>
-                  )}
-                </>
-              )}
-            </Flex>
-          </Flex>
-          <Divider border={"1px solid"} borderColor="gray.300" my={4} />
-
-          <Flex w="full" justifyContent="center">
-                <Flex w={"90%"} gap={2} flexDir="column">
-                  <FormLabel>Descrição do chamado</FormLabel>
-                  <Textarea
-                    placeholder="Descrição"
-                    w="full"
-                    h={"18rem"}
-                    resize="none"
-                    borderRadius="1rem"
-                    border="1px solid"
-                    borderColor="gray.300"
-                    _hover={{ borderColor: "gray.300" }}
-                    _focus={{ borderColor: "blue.500" }}
-                  />
-                </Flex>
-              </Flex>
-              {/* <Flex w="100%" h="25rem" justifyContent="center" gap={10}>
-                <Flex w={"44%"} gap={2} h="100%" flexDir="column">
+export const ImageComponent = () => {
+    const [images, setImages] = useState<File[]>([]);
+    const [previews, setPreviews] = useState<string[]>([]);
+    const toast = useToast();
+    const MAX_IMAGES = 5;
+  
+    const handleDrop = useCallback((e: DragEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      const files = Array.from(e.dataTransfer.files);
+      handleFiles(files);
+    }, []);
+  
+    const handleDragOver = useCallback((e: DragEvent<HTMLDivElement>) => {
+      e.preventDefault();
+    }, []);
+  
+    const handleFileSelect = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        const files = Array.from(e.target.files);
+        handleFiles(files);
+      }
+    }, []);
+  
+    const handleFiles = useCallback(
+      (files: File[]) => {
+        const validFiles = files.filter((file) => file.type.startsWith("image/"));
+  
+        if (validFiles.length !== files.length) {
+          toast({
+            title: "Arquivo inválido",
+            description: "Por favor, selecione apenas imagens",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+  
+        if (images.length + validFiles.length > MAX_IMAGES) {
+          toast({
+            title: "Limite excedido",
+            description: `Você pode adicionar no máximo ${MAX_IMAGES} imagens`,
+            status: "warning",
+            duration: 3000,
+            isClosable: true,
+          });
+          return;
+        }
+  
+        setImages((prev) => [...prev, ...validFiles]);
+        validFiles.forEach((file) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setPreviews((prev) => [...prev, reader.result as string]);
+          };
+          reader.readAsDataURL(file);
+        });
+      },
+      [toast]
+    );
+  
+    const removeImage = useCallback((index: number) => {
+      setImages((prev) => prev.filter((_, i) => i !== index));
+      setPreviews((prev) => prev.filter((_, i) => i !== index));
+    }, []);
+  
+    return (
+        <>
+         <Flex w="full" h="25rem" justifyContent="center" gap={10}>
+                <Flex w={"44%"} gap={2} h="full" flexDir="column">
                   <FormLabel>Imagens</FormLabel>
                   <Flex
-                    w={"100%"}
+                    w={"full"}
                     minH="150px"
                     border="2px dashed"
                     borderColor="gray.300"
@@ -235,32 +196,7 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
                     </Box>
                   </Flex>
                 </Flex>
-              </Flex> */}
-              <Flex w="full" justifyContent={"flex-end"}>
-                <Button colorScheme="green">Salvar</Button>
               </Flex>
-        </Box>
-
-        <Flex
-          w={{ base: "full", md: "30%" }}
-          h={"full"}
-          flexDir="column"
-          gap={4}
-        >
-          <Box h={"65%"} w={"full"}>
-            <MensagensChat
-              id={data?.id || 0}
-              data={data?.chat || []}
-              session={session}
-              onSend={SaveChat}
-            />
-          </Box>
-
-          <Box h={"35%"} w={"full"}>
-            <HistoricoComponent data={data?.temp || []} />
-          </Box>
-        </Flex>
-      </Flex>
-    </>
-  );
-};
+        </>
+    )
+}
