@@ -55,7 +55,7 @@ interface SolicitacaoType {
     id: number | null;
     nome: string | null;
   };
-  dt_revogacao: Date | null;
+  dt_revogacao: Date | null | string;
   direto: boolean | null;
   txid: string | null;
   chamados: [
@@ -90,6 +90,7 @@ export default function FormSolicitacaoEdit({
   data,
 }: FormSolicitacaoEditProps) {
   const user = useSession();
+  console.log("🚀 ~ data:", data);
   const hierarquia = user?.hierarquia ? user.hierarquia : null;
   const isAdmin = user?.hierarquia === "ADM";
   const [tagsOptions, setTagsOptions] = useState([] as any[]);
@@ -106,7 +107,7 @@ export default function FormSolicitacaoEdit({
     obs: "",
     ativo: false,
     rela_quest: false,
-    dt_distrato: null,
+    dt_distrato: null ,
     status_aprovacao: false,
     distrato_id: 0,
     andamento: "",
@@ -129,7 +130,7 @@ export default function FormSolicitacaoEdit({
       id: 0,
       nome: "",
     },
-    dt_revogacao: null,
+    dt_revogacao: "",
     direto: false,
     txid: "",
     chamados: [
@@ -213,14 +214,13 @@ export default function FormSolicitacaoEdit({
         fetchADM();
         setTagsOptions(TagsOptions);
       }
-      if (data.construtora?.id) {
+
+
+
+      if (data.construtora?.id && options.length > 0) {
         const construtoraSelecionada = options.find((e) => {
           return e.id === data.construtora?.id;
         });
-        console.log(
-          "🚀 ~ construtoraSelecionada ~ construtoraSelecionada:",
-          construtoraSelecionada
-        );
 
         if (construtoraSelecionada) {
           setEmpreendimentos(construtoraSelecionada.empreendimentos);
@@ -419,11 +419,35 @@ export default function FormSolicitacaoEdit({
             }))}
           />
 
-          <SelectBasic
-            label="Empreendimento"
-            id="empreendimento"
-            onvalue={(value) => {
-              const empreendimentoSelecionado = empreendimentos.find(
+          {options
+            .filter((c) => c.id === form.construtora?.id)
+            .map((c) => (
+              <SelectBasic
+                label="Empreendimento"
+                id="empreendimento"
+                onvalue={(value) => {
+                  const empreendimentoSelecionado = empreendimentos.find(
+                    (e) => e.id === value
+                  );
+                  handleChange(
+                    "empreendimento",
+                    empreendimentoSelecionado ?? { id: null, nome: "" }
+                  );
+                }}
+                value={form.empreendimento ? form.empreendimento.id : ""}
+                required
+                isDisabled={!form.construtora}
+                options={c.empreendimentos.map((e) => ({
+                  id: e.id!,
+                  fantasia: e.nome!,
+                }))}
+              />
+            ))}
+            {/* <SelectBasic
+              label="Empreendimento"
+              id="empreendimento"
+              onvalue={(value) => {
+                const empreendimentoSelecionado = empreendimentos.find(
                 (e) => e.id === value
               );
               handleChange(
@@ -438,7 +462,7 @@ export default function FormSolicitacaoEdit({
               id: e.id!,
               fantasia: e.nome!,
             }))}
-          />
+          /> */}
 
           <SelectBasic
             label="Financeira"
