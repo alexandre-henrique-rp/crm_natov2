@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 
 interface CardGridUpdateCnhProps extends BoxProps {
-  DataSolicitacao: solictacao.SolicitacaoGetType;
+  DataSolicitacao: solictacao.SolicitacaoObjectCompleteType;
   user: any;
 }
 

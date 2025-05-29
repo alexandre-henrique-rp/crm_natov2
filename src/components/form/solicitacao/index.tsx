@@ -20,15 +20,17 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+
 interface FormSolicitacaoProps {
   cpf?: string;
+  onSuccess?: () => void; // Callback para quando o formulário for enviado com sucesso
 }
 
-export default function FormSolicitacao({ cpf }: FormSolicitacaoProps) {
+export default function FormSolicitacao({ cpf, onSuccess }: FormSolicitacaoProps) {
   const [form, setForm] = useState({
     cpf: cpf,
     nome: "",
-    datanascimento: null as Date | null,
+    datanascimento: "" ,
     telefone: "",
     telefone2: "",
     email: "",
@@ -40,6 +42,7 @@ export default function FormSolicitacao({ cpf }: FormSolicitacaoProps) {
     uploadCnh: "",
     relacionamento: "",
   });
+
   console.log("🚀 ~ FormSolicitacao ~ form:", form);
   const [Logwhats, setLogwhats] = useState<string>("");
   const [load, setLoad] = useState<boolean>(false);
@@ -138,6 +141,29 @@ export default function FormSolicitacao({ cpf }: FormSolicitacaoProps) {
     }
   };
 
+  // Função para redirecionamento seguro
+  const redirectToHome = () => {
+    if (onSuccess) {
+      onSuccess();
+    } else if (typeof window !== 'undefined') {
+      // Tentar usar o router do Next.js se disponível
+      const tryNextRouter = async () => {
+        try {
+          const { useRouter } = await import('next/router');
+          const router = useRouter();
+          if (router?.push) {
+            router.push('/');
+          } else {
+            window.location.href = '/';
+          }
+        } catch {
+          window.location.href = '/';
+        }
+      };
+      tryNextRouter();
+    }
+  };
+
   const handlesubmit = async () => {
     if (
       !form.nome ||
@@ -213,7 +239,7 @@ export default function FormSolicitacao({ cpf }: FormSolicitacaoProps) {
         });
       } else {
         const data: any = {
-          url: window.location.origin,
+          url: typeof window !== 'undefined' ? window.location.origin : '',
           nome: form.nome.toUpperCase(),
           telefone: form.telefone.replace(/\W+/g, ""),
           cpf: form.cpf.replace(/\W+/g, ""),
@@ -253,7 +279,9 @@ export default function FormSolicitacao({ cpf }: FormSolicitacaoProps) {
               body: JSON.stringify(data),
             }
           );
+          console.log(response);
           const retorno = await response.json();
+          console.log(retorno);
           if (response.ok) {
             toast({
               title: "Sucesso",
@@ -263,7 +291,7 @@ export default function FormSolicitacao({ cpf }: FormSolicitacaoProps) {
               isClosable: true,
             });
             setLoad(false);
-            window.location.replace("/");
+            redirectToHome();
           } else {
             toast({
               title: "Erro",

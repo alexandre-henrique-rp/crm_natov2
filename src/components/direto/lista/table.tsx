@@ -1,10 +1,7 @@
 "use client";
 import { Flex, Td, Tr, useToast } from "@chakra-ui/react";
 import { AlertIcomCompoment } from "../imputs/alertIcom";
-import { AndamentoIconComponent } from "../imputs/andamentoIcon";
-import { DistratoIconComponent } from "../imputs/distratoIcom";
 import { EditarIconComponent } from "../imputs/editarIcom";
-import { NowIconComponent } from "../imputs/nowIcon";
 import { DeletarIconComponent } from "../imputs/removeIcom";
 import { calcTimeOut } from "../script/calcTimeOut";
 import { useRouter } from "next/navigation";
@@ -18,17 +15,16 @@ export const TableComponent = ({ dados, session }: TableComponentProps) => {
   const router = useRouter();
   const toast = useToast();
   const Gbcolor = dados.distrato
-    ? "gray.500"
+    ? "gray.600"
     : !dados.ativo
-    ? "red.300"
-    : dados.alertanow
-    ? "yellow.200"
-    : dados.andamento === "APROVADO"
-    ? "green.200"
-    : dados.andamento === "EMITIDO"
-    ? "green.200"
-    : "white";
-
+      ? "red.500"
+      : dados.alertanow
+        ? "yellow.400"
+        : dados.andamento === "APROVADO"
+          ? "green.200"
+          : dados.andamento === "EMITIDO"
+            ? "green.200"
+            : "white";
 
   const Textcolor = dados.distrato ? "white" : !dados.ativo ? "white" : "black";
 
@@ -45,17 +41,16 @@ export const TableComponent = ({ dados, session }: TableComponentProps) => {
     dados.hr_aprovacao?.toString() || null
   );
 
+
   return (
     <>
       <Tr bg={Gbcolor}>
         <Td p={"0.2rem"} borderBottomColor={"gray.300"}>
           <Flex gap={2}>
             <AlertIcomCompoment tag={dados.tags} />
-            <AndamentoIconComponent andamento={dados.statusAtendimento} />
-            <NowIconComponent now={dados.alertanow} />
             <EditarIconComponent
               aria-label="Editar solicitação"
-              onClick={() => router.push(`/solicitacoes/${dados.id}`)}
+              onClick={() => router.push(`/direto/${dados.id}`)}
             />
             <DeletarIconComponent
               aria-label="Deletar solicitação"
@@ -64,7 +59,7 @@ export const TableComponent = ({ dados, session }: TableComponentProps) => {
               andamento={dados.andamento}
               onClick={() => {
                 (async () => {
-                  const res = await fetch(`/api/solicitacao/delete/${dados.id}`, {
+                  const res = await fetch(`/api/direto/delete/${dados.id}`, {
                     method: "DELETE",
                   });
                   if (!res.ok) {
@@ -87,38 +82,7 @@ export const TableComponent = ({ dados, session }: TableComponentProps) => {
                 })();
               }}
             />
-            <DistratoIconComponent
-              aria-label="Distrato solicitação"
-              distrato={!dados.ativo ? true : dados.distrato}
-              andamento={dados.andamento}
-              onClick={() => {
-                (async () => {
-                  const res = await fetch(
-                    `/api/solicitacao/distrato/${dados.id}`,
-                    {
-                      method: "PUT",
-                    }
-                  );
-                  if (!res.ok) {
-                    toast({
-                      title: "Erro",
-                      description: "Erro ao solicitar o distrato",
-                      status: "error",
-                      duration: 5000,
-                      isClosable: true,
-                    });
-                  }
-                  toast({
-                    title: "Sucesso",
-                    description: "Distrato realizado com sucesso",
-                    status: "success",
-                    duration: 5000,
-                    isClosable: true,
-                  });
-                  router.refresh();
-                })();
-              }}
-            />
+            
           </Flex>
         </Td>
         <Td p={"0.2rem"} borderBottomColor={"gray.300"} color={Textcolor}>
@@ -136,11 +100,7 @@ export const TableComponent = ({ dados, session }: TableComponentProps) => {
         <Td p={"0.2rem"} borderBottomColor={"gray.300"} color={Textcolor}>
           {timeOut}
         </Td>
-        {session?.user?.hierarquia === "ADM" && (
-          <Td p={"0.2rem"} borderBottomColor={"gray.300"} color={Textcolor}>
-            {dados.construtora?.fantasia}
-          </Td>
-        )}
+        
       </Tr>
     </>
   );

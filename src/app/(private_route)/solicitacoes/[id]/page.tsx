@@ -71,7 +71,7 @@ export default async function perfilPage({ params }: Props) {
   const user = session?.user;
 
   const data = await Requestes(id);
-  console.log("🚀 ~ perfilPage ~ data:", data);
+
   if (!data) {
     notFound();
   }

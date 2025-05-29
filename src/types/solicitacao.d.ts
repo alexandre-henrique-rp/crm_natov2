@@ -66,6 +66,75 @@ declare namespace solictacao {
     ];
     createdAt: string | Date;
   }
+  interface SolicitacaoObjectCompleteType {
+  id: number;
+  nome: string;
+  cpf: string;
+
+  ativo: boolean;
+  statusAtendimento: boolean;
+  pause: boolean;
+  andamento: string;
+
+  valorcd: number | null;
+  dt_nascimento: string;               // ISO string recebida do back-end
+  telefone?: string | null;
+  telefone2?: string | null;
+  email?: string | null;
+
+  corretor?: {
+    id: number;
+    nome: string;
+  } | null;
+
+  construtora?: {
+    id: number;
+    fantasia: string;
+  } | null;
+
+  empreendimento?: {
+    id: number;
+    nome: string;
+    cidade?: string;
+  } | null;
+
+  financeiro?: {
+    id: number;
+    fantasia: string;
+  } | null;
+
+  id_fcw: number | null;
+
+  distrato?: boolean;
+  distrato_id?: number | null;
+  distrato_dt?: string | null;
+
+  alertanow: boolean;
+
+  // coleções
+  tags: {
+    id: number;
+    solicitacao: number;
+    descricao: string;
+    createdAt: string;
+  }[];
+
+  // datas
+  createdAt: string;
+  dt_agendamento: string | null;
+  hr_agendamento: string | null;
+  dt_aprovacao: string | null;
+  hr_aprovacao: string | null;
+
+  // uploads & docs
+  docSuspenso?: boolean;
+  uploadCnh?: string | null;
+  uploadRg?: string | null;
+
+  // logs
+  logDelete?: React.JSX.Element;
+
+  }
 
   /**
    * SolicitacaoPutType
@@ -195,4 +264,22 @@ declare namespace solictacao {
     pagina: number;
     limite: number;
   }
+  
+}
+
+interface DadosApi {
+  id: number;
+  nome: string;
+  cpf: string;
+  telefone: string;
+  email: string;
+  dt_nascimento: string;
+  createdAt: string;
+  updatedAt: string;
+  imagemQrcode: string;
+  pixCopiaECola: string;
+  qrcode: string;
+  txid: string;
+  valor: number;
+  status_pgto: string;
 }

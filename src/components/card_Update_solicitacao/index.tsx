@@ -30,7 +30,7 @@ import { FaNapster } from "react-icons/fa";
 import { SessionClient } from "@/types/session";
 
 type Props = {
-  setDadosCard: any;
+  setDadosCard: solictacao.SolicitacaoObjectCompleteType;
   user: AuthUser;
 };
 
@@ -40,8 +40,6 @@ export function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
 
   const { construtora } = setDadosCard;
 
-  console.log("setDadosCard", setDadosCard);
-  console.log("user", user);
   return (
     <>
       <CardCreateUpdate.Root>

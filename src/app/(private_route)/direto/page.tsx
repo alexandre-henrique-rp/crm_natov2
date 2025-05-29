@@ -1,39 +1,61 @@
-import { BugReport } from "@/components/bug";
-import { FilterRouteDireto } from "@/components/filter/filter_router_direto";
+import { DadoCompomentList } from "@/components/direto/lista";
+import { UserCompomentInfo } from "@/components/direto/user";
 import ModalPrimeAsses from "@/components/prime_asses";
-import TermosPage from "@/components/termos";
+import ModalTermos from "@/components/termos";
 import { GetSessionServer } from "@/lib/auth_confg";
-import { Box, Flex } from "@chakra-ui/react";
+import HomeProvider from "@/provider/HomeProvider";
+import { Flex } from "@chakra-ui/react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "HOME",
+  title: "HOME DIRETO",
   description: "sistema de gestão de vendas de imóveis",
 };
 
-export default async function HomePage() {
+const GetListaDados = async (
+  session: SessionNext.Server | null
+): Promise<solictacao.SolicitacaoGetType | null> => {
+  const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/direto`;
+  const user = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session?.token}`,
+    },
+    cache: "no-store",
+  });
+  const data = await user.json();
+  // console.log(data); OK  
+  
+  if (!user.ok) {
+    console.error("GetListaDados status:", data.message);
+    return null;
+  }
+  return data;
+};
+
+export default async function DiretoPage() {
   const session = await GetSessionServer();
+  const ListDados = await GetListaDados(session);
+
   return (
-    <Flex
-      minH="100vh"
-      w="100%"
-      justifyContent="center"
-      alignItems="center"
-      bg="#F8F8F8"
-      py="2rem"
-    >
-      <BugReport />
-      <ModalPrimeAsses session={session} />
-      <TermosPage session={session} />
-      <Box
-        w={{ base: "98%", xl: "80%" }}
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <Box>
-          <FilterRouteDireto session={session} />
-        </Box>
-      </Box>
-    </Flex>
+    <>
+      <HomeProvider>
+        <Flex
+          minH="89.8vh"
+          w="100%"
+          bg="#F8F8F8"
+          overflowY="auto"
+          overflowX="hidden"
+        >
+          <ModalPrimeAsses session={session} />
+          <ModalTermos session={session} />
+
+          <UserCompomentInfo session={session} />
+          <DadoCompomentList dados={ListDados} session={session} />
+        </Flex>
+      </HomeProvider>
+    </>
   );
 }
+
