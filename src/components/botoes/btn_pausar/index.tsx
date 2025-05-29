@@ -3,8 +3,8 @@ import { Button, Tooltip, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 
 interface BotaoPausarProps {
-  id: number;
-  statusPause: boolean;
+  id: number | null;
+  statusPause: boolean | null;
 }
 
 export default function BotaoPausar({ id, statusPause }: BotaoPausarProps) {

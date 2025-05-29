@@ -1,6 +1,6 @@
 "use server";
 
-import { GetSessionClient } from "@/lib/auth_confg";
+import { GetSessionClient, GetSessionServer } from "@/lib/auth_confg";
 import { redirect } from "next/navigation";
 
 export default async function FinanceiraCreate(_: any, data: FormData) {
@@ -18,7 +18,7 @@ export default async function FinanceiraCreate(_: any, data: FormData) {
 
   const telefone = tel.replace(/[^0-9]/g, "");
 
-  const session = await GetSessionClient();
+  const session = await GetSessionServer();
 
   if (!session) {
     return { error: true, message: "Unauthorized", data: null, status: 401 };

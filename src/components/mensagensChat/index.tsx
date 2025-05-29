@@ -20,13 +20,13 @@ type MensagemObj = {
 };
 
 const formatarData = (data: string) => {
-  return new Date(data).toLocaleDateString('pt-BR');
+  return new Date(data).toLocaleDateString("pt-BR");
 };
 
 const formatarHora = (hora: string) => {
-  return new Date(hora).toLocaleTimeString('pt-BR', {
-    hour: '2-digit',
-    minute: '2-digit'
+  return new Date(hora).toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 
@@ -37,7 +37,12 @@ const formatarHora = (hora: string) => {
  * @param onSend função para enviar mensagem separada do componente
  * @returns JSX.Element
  */
-export default function MensagensChat({ id, data, session, onSend }: MensagensProps) {
+export default function MensagensChat({
+  id,
+  data,
+  session,
+  onSend,
+}: MensagensProps) {
   const [message, setMessage] = useState("");
   const chat: MensagemObj[] = data || [];
 
@@ -50,7 +55,7 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
       data: new Date().toISOString(),
       hora: new Date().toISOString(),
       autor: session.nome,
-      autor_id: session.id
+      autor_id: session.id,
     };
 
     onSend([...chat, newMessage]);
@@ -62,18 +67,18 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
     if (item.autor_id === session?.id) {
       return (
         <Flex key={item.id} gap={2} justifyContent="flex-end">
-          <Box
-            bg="blue.100"
-            p={2}
-            borderRadius="1rem"
-          >
+          <Box bg="blue.100" p={2} borderRadius="1rem">
             <Text fontSize="xs" color="gray.500">
               {item.autor}
             </Text>
             <Text>{item.mensagem}</Text>
             <Flex gap={2}>
-              <Text fontSize="xs" color="gray.500">{formatarData(item.data)}</Text>
-              <Text fontSize="xs" color="gray.500">{formatarHora(item.hora)}</Text>
+              <Text fontSize="xs" color="gray.500">
+                {formatarData(item.data)}
+              </Text>
+              <Text fontSize="xs" color="gray.500">
+                {formatarHora(item.hora)}
+              </Text>
             </Flex>
           </Box>
         </Flex>
@@ -81,18 +86,18 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
     } else {
       return (
         <Flex key={item.id} gap={2} justifyContent="flex-start">
-          <Box
-            bg="gray.100"
-            p={2}
-            borderRadius="1rem"
-          >
+          <Box bg="gray.100" p={2} borderRadius="1rem">
             <Text fontSize="xs" color="gray.500">
               {item.autor}
             </Text>
             <Text>{item.mensagem}</Text>
             <Flex gap={2}>
-              <Text fontSize="xs" color="gray.500">{formatarData(item.data)}</Text>
-              <Text fontSize="xs" color="gray.500">{formatarHora(item.hora)}</Text>
+              <Text fontSize="xs" color="gray.500">
+                {formatarData(item.data)}
+              </Text>
+              <Text fontSize="xs" color="gray.500">
+                {formatarHora(item.hora)}
+              </Text>
             </Flex>
           </Box>
         </Flex>
@@ -141,13 +146,13 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
               borderColor="gray.300"
               _hover={{ borderColor: !id ? "gray.300" : "gray.400" }}
               _focus={{ borderColor: !id ? "gray.300" : "blue.500" }}
-              value={message} 
+              value={message}
               onChange={(e) => setMessage(e.target.value)}
               isDisabled={!id}
             />
-            <Button 
-              leftIcon={<FiSend />} 
-              colorScheme="green" 
+            <Button
+              leftIcon={<FiSend />}
+              colorScheme="green"
               onClick={handleSend}
               isDisabled={!id || !message.trim()}
             >
