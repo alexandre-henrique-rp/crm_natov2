@@ -14,7 +14,6 @@ interface Option {
 interface SelectBasicProps extends SelectProps {
   id: string;
   onvalue: (value: any) => void;
-  value: any;
   Disable?: boolean;
   label: string;
   required?: boolean;
@@ -58,7 +57,6 @@ export default function SelectBasic({
         isDisabled={Disable}
         border="1px solid #b8b8b8cc"
         onChange={handleOnChange}
-        value={props.value}
         placeholder="Selecione"
       >
         {options.map((item) => (

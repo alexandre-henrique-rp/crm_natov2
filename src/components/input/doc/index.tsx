@@ -9,7 +9,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
+import { DownloadIcon } from "@chakra-ui/icons";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 interface InputFileUploadProps {
@@ -36,7 +36,7 @@ export default function InputFileUpload({
   const [fileName, setFileName] = useState<string>("Nenhum arquivo escolhido");
 
   useEffect(() => {
-    if (value) {
+    if (value?.url_view) {
       const parts = value.url_view.split("/");
       setFileName(parts[parts.length - 1]);
     }
@@ -53,7 +53,6 @@ export default function InputFileUpload({
     try {
       const response = await fetch(`/api/doc/post`, {
         method: "POST",
-
         body: formData,
       });
 
@@ -116,6 +115,21 @@ export default function InputFileUpload({
           {fileName}
         </Text>
       </Flex>
+
+      {value?.url_download && (
+        <Button
+          mt={2}
+          size="sm"
+          leftIcon={<DownloadIcon />}
+          colorScheme="blue"
+          as="a"
+          href={value.url_download}
+          target="_blank"
+          download
+        >
+          Baixar arquivo
+        </Button>
+      )}
     </FormControl>
   );
 }

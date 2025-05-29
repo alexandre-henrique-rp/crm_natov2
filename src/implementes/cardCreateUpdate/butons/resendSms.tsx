@@ -6,7 +6,7 @@ import { useState } from "react";
 import { BeatLoader } from "react-spinners";
 
 interface ResendSmsProps {
-  id: number;
+  id: number | null;
 }
 
 export function ResendSms({ id }: ResendSmsProps) {
@@ -18,8 +18,8 @@ export function ResendSms({ id }: ResendSmsProps) {
     setLoading(true);
     const request = await fetch(`/api/ResendSms/${id}`, {
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     });
     const data = await request.json();
     if (request.ok) {
@@ -28,7 +28,7 @@ export function ResendSms({ id }: ResendSmsProps) {
         description: data.message,
         status: "success",
         duration: 3000,
-        isClosable: true
+        isClosable: true,
       });
       setLoading(false);
     }
@@ -38,7 +38,7 @@ export function ResendSms({ id }: ResendSmsProps) {
         description: "Erro ao reenviar SMS",
         status: "error",
         duration: 3000,
-        isClosable: true
+        isClosable: true,
       });
       setLoading(false);
     }
@@ -46,13 +46,13 @@ export function ResendSms({ id }: ResendSmsProps) {
   return (
     <>
       <Button
-        size={'sm'}
+        size={"sm"}
         colorScheme="blue"
-        textColor={'black'}
+        textColor={"black"}
         onClick={handleResendSms}
         isLoading={Loading}
         spinner={<BeatLoader size={8} color="white" />}
-      > 
+      >
         REENVIAR SMS
       </Button>
     </>
