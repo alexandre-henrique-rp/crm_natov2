@@ -8,16 +8,18 @@ import { BeatLoader } from "react-spinners";
 import { AuthUser } from "@/types/session";
 
 interface BtRemoverDistratoProps {
-  id: number;
-  user: AuthUser;
+  id: number | null;
+  user: any;
 }
-export default function BtRemoverDistrato({ id, user }: BtRemoverDistratoProps) {
+export default function BtRemoverDistrato({
+  id,
+  user,
+}: BtRemoverDistratoProps) {
   const [Loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
   const User = user;
-  const route = useRouter()
+  const route = useRouter();
 
- 
   const handleClick = async () => {
     setLoading(true);
     try {
@@ -44,9 +46,15 @@ export default function BtRemoverDistrato({ id, user }: BtRemoverDistratoProps) 
           } Firmou novo acordo para esse registro em: ${new Date().toLocaleDateString(
             "pt-BR"
           )} as ${new Date().toLocaleTimeString("pt-BR")}`,
-          obs: req.obs? `${req.obs}\nNovo Acordo firmado em: ${new Date().toLocaleDateString(
-            "pt-BR"
-          )} as ${new Date().toLocaleTimeString("pt-BR")}` : `Novo Acordo firmado em: ${new Date().toLocaleDateString("pt-BR")} as ${new Date().toLocaleTimeString("pt-BR")}`,
+          obs: req.obs
+            ? `${
+                req.obs
+              }\nNovo Acordo firmado em: ${new Date().toLocaleDateString(
+                "pt-BR"
+              )} as ${new Date().toLocaleTimeString("pt-BR")}`
+            : `Novo Acordo firmado em: ${new Date().toLocaleDateString(
+                "pt-BR"
+              )} as ${new Date().toLocaleTimeString("pt-BR")}`,
         }),
       });
 
@@ -58,7 +66,7 @@ export default function BtRemoverDistrato({ id, user }: BtRemoverDistratoProps) 
           isClosable: true,
         });
         // window.location.reload();
-        route.refresh()
+        route.refresh();
         setLoading(false);
       }
     } catch (error) {
@@ -76,7 +84,7 @@ export default function BtRemoverDistrato({ id, user }: BtRemoverDistratoProps) 
 
   return (
     <Button
-      size={'sm'}
+      size={"sm"}
       colorScheme="cyan"
       variant="solid"
       onClick={handleClick}

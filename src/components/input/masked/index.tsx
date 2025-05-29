@@ -39,12 +39,11 @@ export default function MaskedInput({
   ...props
 }: MaskedInputProps) {
   const [localValue, setLocalValue] = useState(value || "");
-  console.log("🚀 ~ value:", value);
   const [isInvalidWhatsapp, setIsInvalidWhatsapp] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
-    const safeValue = value ?? ""; 
+    const safeValue = value ?? "";
     setLocalValue(
       mask ? remask(safeValue, Array.isArray(mask) ? mask : [mask]) : safeValue
     );
