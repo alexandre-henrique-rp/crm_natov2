@@ -31,11 +31,11 @@ export const CardComponentHome = ({
   const router = useRouter();
   const toast = useToast();
   const Gbcolor = dados.distrato
-    ? "gray.600"
+    ? "gray.300"
     : !dados.ativo
-    ? "red.500"
+    ? "red.300"
     : dados.alertanow
-    ? "yellow.400"
+    ? "yellow.300"
     : dados.andamento === "APROVADO"
     ? "green.200"
     : dados.andamento === "EMITIDO"

@@ -57,26 +57,3 @@ export default async function HomePage() {
     </>
   );
 }
-
-// <Flex
-//   minH="100vh"
-//   w="100%"
-//   justifyContent="center"
-//   bg="#F8F8F8"
-//   py="2rem"
-// >
-//   <ModalPrimeAsses session={session} />
-//   <ModalTermos session={session} />
-//   <Box
-//     w={{ base: "98%", xl: "80%" }}
-//     justifyContent="space-between"
-//   >
-//     <BugReport />
-//     <Box justifyContent="center" alignItems="center">
-//       <PerfilHome session={session} />
-//     </Box>
-//     <Box>
-//       <FilterRoute session={session} />
-//     </Box>
-//   </Box>
-// </Flex>

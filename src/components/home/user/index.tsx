@@ -1,8 +1,9 @@
 import { BugReport } from "@/components/bug";
-import { Flex, FormLabel, Text } from "@chakra-ui/react";
+import { Flex, FormLabel, Link, Text } from "@chakra-ui/react";
 import { mask } from "remask";
 import { BtnListNow } from "../imputs/BtnListNow";
 import BtnAlertList from "../imputs/BtnAlertList";
+
 
 interface UserCompomentInfoProps {
   session: SessionNext.Server | null;
@@ -106,6 +107,20 @@ export const UserCompomentInfo = ({ session }: UserCompomentInfoProps) => {
           <Flex gap={2} w={"100%"} flexDir={"column"}>
             <BtnListNow />
             <BtnAlertList />
+            <Link
+              w={"100%"}
+              color="white"
+              textAlign="center"
+              p={"8px"}
+              href="/chamado"
+              bg="blue.500"
+              fontWeight="bold"
+              borderRadius="md"
+              fontSize={"1rem"}
+              _hover={{ bg: "blue.600" }}
+            >
+              Chamados
+            </Link>
           </Flex>
 
           {/* <pre>{JSON.stringify(session, null, 2)}</pre> */}
