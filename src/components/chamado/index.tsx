@@ -226,18 +226,28 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
                 <Button colorScheme="red">Cancelar</Button>
               </Flex> */}
         </Box>
+
+
         <Flex
           w={{ base: "100%", md: "30%" }}
           h={"100%"}
           flexDir="column"
           gap={4}
         >
-          <MensagensChat
-            id={data.id}
-            data={data.chat}
-            session={session}
-            onSend={SaveChat}
-          />
+          <Box h={"65%"} w={"100%"}>
+            <MensagensChat
+              id={data?.id || 0}
+              data={data?.chat || []}
+              session={session}
+              onSend={SaveChat}
+            />
+          </Box>
+
+          <Box h={"35%"} w={"100%"}>
+
+          </Box>
+
+
           <Box
             h={"35%"}
             w={"100%"}

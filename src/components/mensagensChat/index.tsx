@@ -16,6 +16,7 @@ type MensagemObj = {
   data: string;
   hora: string;
   autor: string;
+  autor_id: number;
 };
 
 const formatarData = (data: string) => {
@@ -31,7 +32,7 @@ const formatarHora = (hora: string) => {
 
 /**
  * @param id id do chamado ou solicitacao para liberar o chat
- * @param data [{id: string, mensagem: string, data: string, hora: string, autor: string}] array de mensagens deve conter id, mensagem, data, hora e autor
+ * @param data [{id: string, mensagem: string, data: string, hora: string, autor: string, autor_id: number}] array de mensagens deve conter id, mensagem, data, hora, autor e autor_id
  * @param session dados do usuario logado
  * @param onSend função para enviar mensagem separada do componente
  * @returns JSX.Element
@@ -48,7 +49,8 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
       mensagem: message.trim(),
       data: new Date().toISOString(),
       hora: new Date().toISOString(),
-      autor: session.nome
+      autor: session.nome,
+      autor_id: session.id
     };
 
     onSend([...chat, newMessage]);
@@ -57,7 +59,7 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
 
   // Renderiza as mensagens separando por autor
   const mensagens = chat.map((item: MensagemObj) => {
-    if (item.autor === session?.nome) {
+    if (item.autor_id === session?.id) {
       return (
         <Flex key={item.id} gap={2} justifyContent="flex-end">
           <Box
@@ -100,9 +102,9 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
 
   return (
     <>
-      {id ? (
+      {!id ? (
         <Box
-          h={"65%"}
+          h={"100%"}
           w={"100%"}
           display="flex"
           bg="gray.100"
@@ -114,7 +116,7 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
           py={8}
           flexDir="column"
           justifyContent="space-between"
-          position="relative"
+          // position="relative"
         >
           <Box>
             <Flex
@@ -122,8 +124,9 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
               p={2}
               borderRadius="1rem"
               w={"100%"}
-              h={"28rem"}
+              h={"25rem"}
               overflowY="auto"
+              mb={{ base: "4", md: "8" }}
             >
               {mensagens}
             </Flex>
@@ -140,13 +143,13 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
               _focus={{ borderColor: !id ? "gray.300" : "blue.500" }}
               value={message} 
               onChange={(e) => setMessage(e.target.value)}
-              isDisabled={!id}
+              // isDisabled={!id}
             />
             <Button 
               leftIcon={<FiSend />} 
               colorScheme="green" 
               onClick={handleSend}
-              isDisabled={!id || !message.trim()}
+              // isDisabled={!id || !message.trim()}
             >
               Enviar
             </Button>
@@ -154,7 +157,7 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
         </Box>
       ) : (
         <Box
-          h={"65%"}
+          h={"100%"}
           w={"100%"}
           display="flex"
           bg="gray.100"
