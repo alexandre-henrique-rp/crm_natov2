@@ -18,16 +18,17 @@ export const TableComponent = ({ dados, session }: TableComponentProps) => {
   const router = useRouter();
   const toast = useToast();
   const Gbcolor = dados.distrato
-    ? "gray.600"
+    ? "gray.500"
     : !dados.ativo
-      ? "red.500"
-      : dados.alertanow
-        ? "yellow.400"
-        : dados.andamento === "APROVADO"
-          ? "green.200"
-          : dados.andamento === "EMITIDO"
-            ? "green.200"
-            : "white";
+    ? "red.300"
+    : dados.alertanow
+    ? "yellow.200"
+    : dados.andamento === "APROVADO"
+    ? "green.200"
+    : dados.andamento === "EMITIDO"
+    ? "green.200"
+    : "white";
+
 
   const Textcolor = dados.distrato ? "white" : !dados.ativo ? "white" : "black";
 

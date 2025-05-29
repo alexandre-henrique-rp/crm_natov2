@@ -6,27 +6,29 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
     const session = await GetSessionServer();
+    const { id } = params;
 
-    if (!session) {
-      return new NextResponse("Unauthorized", { status: 401 });
+    if (!session?.token) {
+      console.log("Unauthorized");
+      return new NextResponse("Unauthorized2", { status: 401 });
     }
 
-    const request = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/empreendimento/${id}`,
+    const reqest = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/empreendimento/filter/${id}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.token}`,
+          Authorization: `Bearer ${session?.token}`
         },
+        next: { revalidate: 5 },
       }
     );
-    if (!request.ok) {
+    if (!reqest.ok) {
       return new NextResponse("Invalid credentials", { status: 401 });
     }
-    const data = await request.json();
+    const data = await reqest.json();
     return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({ error: error }, { status: 500 });

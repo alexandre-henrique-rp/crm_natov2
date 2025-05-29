@@ -5,9 +5,9 @@ import {
   Code,
   Divider,
   Flex,
-  FormLabel,
   Heading,
   Input,
+  Link,
   Select,
   Text,
 } from "@chakra-ui/react";
@@ -44,7 +44,7 @@ export default function ChamadoPage() {
               </Flex>
             </Box>
             <Flex>
-              <Button colorScheme="green">Novo Chamado</Button>
+              <Button as={Link} href="/chamado/novo" colorScheme="green">Novo Chamado</Button>
             </Flex>
           </Flex>
 

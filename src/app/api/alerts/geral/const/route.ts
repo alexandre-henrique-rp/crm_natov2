@@ -17,6 +17,7 @@ export const GET = async () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.token}`,
         },
+        next: { revalidate: 5 },
       });
       const data = await get.json();
       console.log("🚀 ~ GET ~ data:", data)
