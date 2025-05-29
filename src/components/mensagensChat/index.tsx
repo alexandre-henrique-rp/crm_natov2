@@ -116,7 +116,7 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
           py={8}
           flexDir="column"
           justifyContent="space-between"
-          // position="relative"
+          position="relative"
         >
           <Box>
             <Flex
@@ -143,13 +143,13 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
               _focus={{ borderColor: !id ? "gray.300" : "blue.500" }}
               value={message} 
               onChange={(e) => setMessage(e.target.value)}
-              // isDisabled={!id}
+              isDisabled={!id}
             />
             <Button 
               leftIcon={<FiSend />} 
               colorScheme="green" 
               onClick={handleSend}
-              // isDisabled={!id || !message.trim()}
+              isDisabled={!id || !message.trim()}
             >
               Enviar
             </Button>
@@ -177,8 +177,9 @@ export default function MensagensChat({ id, data, session, onSend }: MensagensPr
               p={2}
               borderRadius="1rem"
               w={"100%"}
-              h={"28rem"}
+              h={"25rem"}
               overflowY="auto"
+              mb={{ base: "4", md: "8" }}
             >
               {" "}
             </Flex>
