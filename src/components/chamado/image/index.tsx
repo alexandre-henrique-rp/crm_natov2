@@ -11,7 +11,14 @@ import {
   useToast,
   Image,
 } from "@chakra-ui/react";
-import React, { ChangeEvent, DragEvent, useCallback, useEffect, useState, useRef } from "react";
+import React, {
+  ChangeEvent,
+  DragEvent,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import { FiUpload, FiX } from "react-icons/fi";
 
 // Interface para as imagens existentes passadas como prop
@@ -51,25 +58,23 @@ export const ImageComponent = ({
 
   // Efeito para inicializar/atualizar 'managedImages' quando 'DataImages' mudar
   useEffect(() => {
-    const existingImages = DataImages.map(
-      (img, index) => ({
-        id: img.url_view || `existing-${index}-${Date.now()}`,
-        url_view: img.url_view,
-        url_download: img.url_download,
-        isNew: false,
-      })
-    );
+    const existingImages = DataImages.map((img, index) => ({
+      id: img.url_view || `existing-${index}-${Date.now()}`,
+      url_view: img.url_view,
+      url_download: img.url_download,
+      isNew: false,
+    }));
 
-    setManagedImages(prevManagedImages => {
-      const currentExistingImageIds = new Set(prevManagedImages
-        .filter(img => !img.isNew)
-        .map(img => img.id));
-
-      const newExistingImagesToAdd = existingImages.filter(img =>
-        !currentExistingImageIds.has(img.id)
+    setManagedImages((prevManagedImages) => {
+      const currentExistingImageIds = new Set(
+        prevManagedImages.filter((img) => !img.isNew).map((img) => img.id)
       );
 
-      const newImagesFromUser = prevManagedImages.filter(img => img.isNew);
+      const newExistingImagesToAdd = existingImages.filter(
+        (img) => !currentExistingImageIds.has(img.id)
+      );
+
+      const newImagesFromUser = prevManagedImages.filter((img) => img.isNew);
 
       return [...newImagesFromUser, ...existingImages];
     });
@@ -83,20 +88,17 @@ export const ImageComponent = ({
   // Efeito para limpar blob URLs ao desmontar o componente
   useEffect(() => {
     return () => {
-      managedImages.forEach(img => {
-        if (img.isNew && img.url_view.startsWith('blob:')) {
+      managedImages.forEach((img) => {
+        if (img.isNew && img.url_view.startsWith("blob:")) {
           URL.revokeObjectURL(img.url_view);
         }
       });
     };
   }, [managedImages]);
 
-
   const handleAddFiles = useCallback(
     (files: File[]) => {
-      const validFiles = files.filter((file) =>
-        file.type.startsWith("image/")
-      );
+      const validFiles = files.filter((file) => file.type.startsWith("image/"));
 
       if (validFiles.length !== files.length) {
         toast({
@@ -156,21 +158,24 @@ export const ImageComponent = ({
     [handleAddFiles]
   );
 
-  const removeImage = useCallback((idToRemove: string) => {
-    setManagedImages((prev) =>
-      prev.filter((img) => {
-        if (img.id === idToRemove) {
-          if (img.isNew && img.url_view.startsWith('blob:')) {
-            URL.revokeObjectURL(img.url_view); // Limpar blob URL
-          } else if (!img.isNew && onRemoveExistingImage) {
-            onRemoveExistingImage(img.id, img.url_view); // Chamar onRemove para imagens existentes
+  const removeImage = useCallback(
+    (idToRemove: string) => {
+      setManagedImages((prev) =>
+        prev.filter((img) => {
+          if (img.id === idToRemove) {
+            if (img.isNew && img.url_view.startsWith("blob:")) {
+              URL.revokeObjectURL(img.url_view); // Limpar blob URL
+            } else if (!img.isNew && onRemoveExistingImage) {
+              onRemoveExistingImage(img.id, img.url_view); // Chamar onRemove para imagens existentes
+            }
+            return false;
           }
-          return false;
-        }
-        return true;
-      })
-    );
-  }, [onRemoveExistingImage]);
+          return true;
+        })
+      );
+    },
+    [onRemoveExistingImage]
+  );
 
   const handleReplaceFileSelect = useCallback(
     (idToReplace: string, e: ChangeEvent<HTMLInputElement>) => {
@@ -179,7 +184,8 @@ export const ImageComponent = ({
         if (!newFile.type.startsWith("image/")) {
           toast({
             title: "Arquivo inválido",
-            description: "Por favor, selecione um arquivo de imagem para substituir.",
+            description:
+              "Por favor, selecione um arquivo de imagem para substituir.",
             status: "error",
             duration: 3000,
             isClosable: true,
@@ -192,7 +198,7 @@ export const ImageComponent = ({
           prev.map((img) => {
             if (img.id === idToReplace) {
               // Limpar blob URL antiga se for uma nova imagem
-              if (img.isNew && img.url_view.startsWith('blob:')) {
+              if (img.isNew && img.url_view.startsWith("blob:")) {
                 URL.revokeObjectURL(img.url_view);
               }
               return {
@@ -230,7 +236,8 @@ export const ImageComponent = ({
         onDragOver={handleDragOver}
         bg={managedImages.length >= maxImages ? "gray.200" : "gray.50"}
         _hover={{
-          borderColor: managedImages.length >= maxImages ? "gray.300" : "blue.500",
+          borderColor:
+            managedImages.length >= maxImages ? "gray.300" : "blue.500",
           bg: managedImages.length >= maxImages ? "gray.200" : "gray.100",
         }}
         transition="all 0.2s"
@@ -288,12 +295,7 @@ export const ImageComponent = ({
                 w="full"
                 h="full"
               />
-              <Flex
-                position="absolute"
-                top={1}
-                right={1}
-                gap={1}
-              >
+              <Flex position="absolute" top={1} right={1} gap={1}>
                 <Button
                   size="xs"
                   colorScheme="red"
@@ -325,7 +327,9 @@ export const ImageComponent = ({
                     accept="image/*"
                     onChange={(e) => handleReplaceFileSelect(image.id, e)}
                     display="none"
-                    ref={(el) => { fileInputRefs.current[image.id] = el; }}
+                    ref={(el) => {
+                      fileInputRefs.current[image.id] = el;
+                    }}
                   />
                 </Button>
               </Flex>

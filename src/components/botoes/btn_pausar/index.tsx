@@ -9,6 +9,7 @@ interface BotaoPausarProps {
 
 export default function BotaoPausar({ id, statusPause }: BotaoPausarProps) {
   const [pause, setPause] = useState(statusPause);
+  console.log("🚀 ~ BotaoPausar ~ pause:", pause);
 
   const toast = useToast();
 

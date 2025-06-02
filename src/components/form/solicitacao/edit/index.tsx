@@ -2,6 +2,7 @@
 import BtRemoverDistrato from "@/components/botoes/bt_Remover_Distrato";
 import BtnIniciarAtendimento from "@/components/botoes/btn_iniciar_atendimento";
 import BotaoPausar from "@/components/botoes/btn_pausar";
+import { CriarFcweb } from "@/components/botoes/criarFcweb";
 import BoxBasic from "@/components/box/link";
 import BtnBasicSave from "@/components/buttons/save";
 import InputBasic from "@/components/input/basic";
@@ -72,7 +73,7 @@ interface SolicitacaoType {
     id: number;
     nome: string;
   };
-  financeira: {
+  financeiro: {
     id: number;
     fantasia: string;
   };
@@ -80,6 +81,10 @@ interface SolicitacaoType {
     id: number;
     nome: string;
   };
+  construtoraId: number | null;
+  empreendimentoId: number | null;
+  financeiroId: number | null;
+  corretorId: number | null;
   uploadCnh: any | null;
   uploadRg: any | null;
   distrato: boolean | null;
@@ -89,12 +94,14 @@ export default function FormSolicitacaoEdit({
   id,
   data,
 }: FormSolicitacaoEditProps) {
-  const user = useSession();
+  const session = useSession();
+  console.log("🚀 ~ session:", session);
   console.log("🚀 ~ data:", data);
-  const hierarquia = user?.hierarquia ? user.hierarquia : null;
-  const isAdmin = user?.hierarquia === "ADM";
+  const hierarquia = session?.hierarquia ? session.hierarquia : null;
+  const isAdmin = session?.hierarquia === "ADM";
   const [tagsOptions, setTagsOptions] = useState([] as any[]);
   const [Tags, setTags] = useState([] as any[]);
+  console.log("🚀 ~ Tags:", Tags);
   const [form, setForm] = useState<SolicitacaoType>({
     id: 0,
     nome: "",
@@ -107,7 +114,7 @@ export default function FormSolicitacaoEdit({
     obs: "",
     ativo: false,
     rela_quest: false,
-    dt_distrato: null ,
+    dt_distrato: null,
     status_aprovacao: false,
     distrato_id: 0,
     andamento: "",
@@ -147,7 +154,7 @@ export default function FormSolicitacaoEdit({
       id: 0,
       nome: "",
     },
-    financeira: {
+    financeiro: {
       id: 0,
       fantasia: "",
     },
@@ -155,10 +162,15 @@ export default function FormSolicitacaoEdit({
       id: 0,
       nome: "",
     },
+    construtoraId: 0,
+    empreendimentoId: 0,
+    financeiroId: 0,
+    corretorId: 0,
     uploadCnh: null,
     uploadRg: null,
     distrato: null,
   });
+  console.log("🚀 ~ form:", form);
   const [options, setOptions] = useState([
     {
       id: 0,
@@ -185,27 +197,6 @@ export default function FormSolicitacaoEdit({
       ],
     },
   ]);
-  console.log("🚀 ~ options:", options);
-  const [empreendimentos, setEmpreendimentos] = useState([
-    {
-      id: 0,
-      nome: "",
-    },
-  ]);
-  const [financeiras, setFinanceiras] = useState([
-    {
-      id: 0,
-      fantasia: "",
-    },
-  ]);
-  const [corretores, setCorretores] = useState([
-    {
-      id: 0,
-      nome: "",
-    },
-  ]);
-
-  const session = useSession();
 
   useEffect(() => {
     if (session) {
@@ -214,28 +205,8 @@ export default function FormSolicitacaoEdit({
         fetchADM();
         setTagsOptions(TagsOptions);
       }
-
-
-
-      if (data.construtora?.id && options.length > 0) {
-        const construtoraSelecionada = options.find((e) => {
-          return e.id === data.construtora?.id;
-        });
-
-        if (construtoraSelecionada) {
-          setEmpreendimentos(construtoraSelecionada.empreendimentos);
-          setFinanceiras(
-            construtoraSelecionada.financeiros.map((f: any) => f.financeiro)
-          );
-          setCorretores(
-            construtoraSelecionada.colaboradores.map((colab: any) => ({
-              id: colab.user.id,
-              nome: colab.user.nome,
-            }))
-          );
-        }
-      }
     }
+    setTags(data?.tags || []);
   }, [id, session, data]);
 
   const fetchADM = async () => {
@@ -249,36 +220,42 @@ export default function FormSolicitacaoEdit({
   };
 
   const handleSelectConstrutora = (value: number) => {
-    const construtoraSelecionada = options.find((e) => e.id === Number(value));
+    if (isAdmin) {
+      const construtoraSelecionada = options.find(
+        (e) => e.id === Number(value)
+      );
+      if (construtoraSelecionada) {
+        handleChange("construtora", {
+          id: construtoraSelecionada.id,
+          fantasia: construtoraSelecionada.fantasia,
+        });
+        handleChange("construtoraId", construtoraSelecionada.id);
+      }
 
-    if (construtoraSelecionada) {
-      handleChange("construtora", {
-        id: construtoraSelecionada.id,
-        fantasia: construtoraSelecionada.fantasia,
-      });
-      setEmpreendimentos(construtoraSelecionada.empreendimentos || []);
-      setFinanceiras(
-        construtoraSelecionada.financeiros.map((f: any) => f.financeiro) || []
-      );
-      setCorretores(
-        construtoraSelecionada.colaboradores.map((colab: any) => ({
-          id: colab.user.id,
-          nome: colab.user.nome,
-        })) || []
-      );
+      handleChange("empreendimento", { id: null, nome: "" });
+      handleChange("financeiro", { id: null, fantasia: "" });
+      handleChange("corretor", { id: null, nome: "" });
     } else {
-      handleChange("construtora", { id: null, fantasia: "" });
-      setEmpreendimentos([]);
-      setFinanceiras([]);
-      setCorretores([]);
+      handleChange("construtoraId", Number(value));
+      handleChange("construtora", {
+        id: Number(value),
+        fantasia: "",
+      });
+      handleChange("empreendimento", { id: null, nome: "" });
+      handleChange("financeiro", { id: null, fantasia: "" });
+      handleChange("corretor", { id: null, nome: "" });
     }
-
-    handleChange("empreendimento", { id: null, nome: "" });
-    handleChange("financeira", { id: null, fantasia: "" });
-    handleChange("corretor", { id: null, nome: "" });
   };
 
-  const handlesubmit = async () => {};
+  const handlesubmit = async () => {
+    const req = await fetch(`/api/solicitacao/update/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({ form, Tags }),
+    });
+    if (!req.ok) {
+    }
+    const res = await req.json();
+  };
 
   const Msg =
     form.andamento !== "EMITIDO" &&
@@ -291,7 +268,7 @@ export default function FormSolicitacaoEdit({
 
   return (
     <Flex
-      w={"100%"}
+      w={"full"}
       rounded={"md"}
       border={"1px solid #E8E8E8"}
       alignItems={"center"}
@@ -299,7 +276,7 @@ export default function FormSolicitacaoEdit({
       flexWrap={{ base: "nowrap", md: "nowrap" }}
       gap={2}
       shadow={"lg"}
-      h={"full"}
+      h={"fit-content"}
     >
       <Flex
         p={4}
@@ -337,6 +314,7 @@ export default function FormSolicitacaoEdit({
               ? form.corretor.nome
               : "Corretor Não Cadastrado"}
           </Text>
+          <Text fontSize={{ base: "md", md: "md" }}>Andamento: {Msg}</Text>
         </Flex>
       </Flex>
       <Divider borderColor="#00713D" />
@@ -358,6 +336,7 @@ export default function FormSolicitacaoEdit({
             value={form.cpf || ""}
             onvalue={(value) => handleChange("cpf", value)}
             required
+            Disable
           />
           <InputBasic
             id="nome"
@@ -366,6 +345,7 @@ export default function FormSolicitacaoEdit({
             value={form.nome || ""}
             onvalue={(value) => handleChange("nome", value)}
             required
+            isReadOnly={!isAdmin}
           />
           <InputBasic
             boxWidth="40%"
@@ -375,6 +355,7 @@ export default function FormSolicitacaoEdit({
             value={form.dt_nascimento ? form.dt_nascimento.split("T")[0] : ""}
             onvalue={(value) => handleChange("dt_nascimento", value)}
             required
+            isReadOnly={!isAdmin}
           />
         </Flex>
         <Flex gap={2}>
@@ -385,6 +366,7 @@ export default function FormSolicitacaoEdit({
             value={form.email || ""}
             onvalue={(value) => handleChange("email", value)}
             required
+            isReadOnly={!isAdmin}
           />
           <MaskedInput
             id="telefone"
@@ -395,6 +377,7 @@ export default function FormSolicitacaoEdit({
             onvalue={(value) => handleChange("telefone", value)}
             required
             isWhatsapp
+            isReadOnly={!isAdmin}
           />
           <MaskedInput
             id="telefone2"
@@ -413,100 +396,125 @@ export default function FormSolicitacaoEdit({
             onvalue={(value) => handleSelectConstrutora(value)}
             value={form.construtora ? form.construtora.id : ""}
             required
-            options={options.map((construtora: any) => ({
-              id: construtora.id,
-              fantasia: construtora.fantasia,
-            }))}
+            options={
+              isAdmin
+                ? options.map((construtora: any) => ({
+                    id: construtora.id,
+                    fantasia: construtora.fantasia,
+                  }))
+                : session?.construtora
+                ? session?.construtora.map((construtora: any) => ({
+                    id: construtora.id,
+                    fantasia: construtora.fantasia,
+                  }))
+                : []
+            }
           />
 
-          {options
-            .filter((c) => c.id === form.construtora?.id)
-            .map((c) => (
-              <SelectBasic
-                label="Empreendimento"
-                id="empreendimento"
-                onvalue={(value) => {
-                  const empreendimentoSelecionado = empreendimentos.find(
-                    (e) => e.id === value
-                  );
-                  handleChange(
-                    "empreendimento",
-                    empreendimentoSelecionado ?? { id: null, nome: "" }
-                  );
-                }}
-                value={form.empreendimento ? form.empreendimento.id : ""}
-                required
-                isDisabled={!form.construtora}
-                options={c.empreendimentos.map((e) => ({
-                  id: e.id!,
-                  fantasia: e.nome!,
-                }))}
-              />
-            ))}
-            {/* <SelectBasic
+          {isAdmin ? (
+            options
+              .filter((c) => c.id === form.construtora?.id)
+              .map((c) => (
+                <SelectBasic
+                  label="Empreendimento"
+                  id="empreendimento"
+                  onvalue={(value) => {
+                    handleChange("empreendimento", Number(value));
+                    handleChange("empreendimentoId", +value);
+                  }}
+                  value={form.empreendimento ? form.empreendimento.id : ""}
+                  required
+                  isDisabled={!form.construtora}
+                  options={c.empreendimentos.map((e) => ({
+                    id: e.id!,
+                    fantasia: e.nome!,
+                  }))}
+                />
+              ))
+          ) : (
+            <SelectBasic
               label="Empreendimento"
               id="empreendimento"
               onvalue={(value) => {
-                const empreendimentoSelecionado = empreendimentos.find(
-                (e) => e.id === value
-              );
-              handleChange(
-                "empreendimento",
-                empreendimentoSelecionado ?? { id: null, nome: "" }
-              );
-            }}
-            value={form.empreendimento ? form.empreendimento.id : 0}
-            required
-            isDisabled={!form.construtora}
-            options={empreendimentos.map((e) => ({
-              id: e.id!,
-              fantasia: e.nome!,
-            }))}
-          /> */}
-
-          <SelectBasic
-            label="Financeira"
-            id="financeira"
-            onvalue={(value) => {
-              const financeiraSelecionada = financeiras.find(
-                (f) => f.id === value
-              );
-              handleChange(
-                "financeira",
-                financeiraSelecionada ?? { id: null, fantasia: "" }
-              );
-            }}
-            value={form.financeira ? form.financeira.id : ""}
-            required
-            isDisabled={!form.construtora}
-            options={financeiras.map((f) => ({
-              id: f.id!,
-              fantasia: f.fantasia!,
-            }))}
-          />
-
-          {session?.hierarquia === "ADM" && (
-            <SelectBasic
-              label="Corretor"
-              id="corretor"
-              onvalue={(value) => {
-                const corretorSelecionado = corretores.find(
-                  (c) => c.id === value
-                );
-                handleChange(
-                  "corretor",
-                  corretorSelecionado ?? { id: null, nome: "" }
-                );
+                handleChange("empreendimento", value);
+                handleChange("empreendimentoId", +value);
               }}
-              value={form.corretor ? form.corretor.id : ""}
+              value={form.empreendimento ? form.empreendimento.id : ""}
               required
               isDisabled={!form.construtora}
-              options={corretores.map((c) => ({
-                id: c.id!,
-                fantasia: c.nome!,
-              }))}
+              options={
+                session?.empreendimento
+                  ? session.empreendimento.map((e) => ({
+                      id: e.id,
+                      fantasia: e.nome,
+                    }))
+                  : []
+              }
             />
           )}
+
+          {isAdmin ? (
+            options
+              .filter((c) => c.id === form.construtora?.id)
+              .map((f) => (
+                <SelectBasic
+                  label="Financeira"
+                  id="financeira"
+                  onvalue={(value) => {
+                    handleChange("financeiro", Number(value));
+                    handleChange("financeiroId", +value);
+                  }}
+                  value={form.financeiro ? form.financeiro.id : ""}
+                  required
+                  isDisabled={!form.construtora}
+                  options={f.financeiros.map((f) => ({
+                    id: f.financeiro.id!,
+                    fantasia: f.financeiro.fantasia!,
+                  }))}
+                />
+              ))
+          ) : (
+            <SelectBasic
+              label="Financeira"
+              id="financeira"
+              onvalue={(value) => {
+                handleChange("financeiro", value);
+                handleChange("financeiroId", +value);
+              }}
+              value={form.financeiro ? form.financeiro.id : ""}
+              required
+              isDisabled={!form.construtora}
+              options={
+                session?.Financeira
+                  ? session.Financeira.map((f) => ({
+                      id: f.id,
+                      fantasia: f.fantasia,
+                    }))
+                  : []
+              }
+            />
+          )}
+
+          {session?.hierarquia === "ADM" &&
+            options
+              .filter((c) => c.id === form.construtora?.id)
+              .map((c) => (
+                <SelectBasic
+                  label="Corretor"
+                  id="corretor"
+                  onvalue={(value) => {
+                    handleChange("corretor", value);
+                    handleChange("corretorId", +value);
+                  }}
+                  value={form.corretor ? form.corretor.id : ""}
+                  required
+                  isDisabled={!form.construtora}
+                  options={c.colaboradores.map((c) => ({
+                    id: c.id!,
+                    fantasia: c.nome!,
+                  }))}
+                />
+              ))}
         </Flex>
         <Flex gap={2}>
           <BoxBasic
@@ -525,15 +533,18 @@ export default function FormSolicitacaoEdit({
             label="Andamento"
             value={form.andamento || ""}
           />
-          <SelectMultiItem
-            id="tags"
-            label="Tags"
-            fetchUrlGet={`/api/tags/getallid/${form.id}`}
-            fetchUrlDelete={(id) => `/api/tags/delete/${id}`}
-            options={tagsOptions}
-            onChange={(items) => setTags(items)}
-            required
-          />
+          {isAdmin && (
+            <SelectMultiItem
+              id="tags"
+              label="Tags"
+              fetchUrlGet={`/api/tags/getallid/${form.id}`}
+              fetchUrlDelete={(id) => `/api/tags/delete/${id}`}
+              defaultValue={Tags}
+              options={tagsOptions}
+              onChange={(items) => setTags(items)}
+              required
+            />
+          )}
         </Flex>
         <Box>
           <Text fontWeight="bold" fontSize="md" mb={2}>
@@ -556,7 +567,7 @@ export default function FormSolicitacaoEdit({
           </Flex>
         </Box>
 
-        <Flex gap={2}>
+        <Flex gap={6}>
           <InputFileUpload
             id="cnh"
             label="CNH"
@@ -570,41 +581,41 @@ export default function FormSolicitacaoEdit({
             onvalue={(value) => handleChange("uploadRg", value)}
           />
         </Flex>
+      </Flex>
 
-        <Flex gap={2} justifyContent={"flex-end"}>
-          {form.distrato &&
-            form.ativo &&
-            ((hierarquia === "ADM" && (
+      <Flex gap={2} w={"full"} p={2} justifyContent={"flex-end"}>
+        {form.distrato &&
+          form.ativo &&
+          ((hierarquia === "ADM" && (
+            <>
+              <BtRemoverDistrato id={form.id} user={session} />
+            </>
+          )) ||
+            (hierarquia === "CCA" && (
               <>
-                <BtRemoverDistrato id={form.id} user={user} />
+                <BtRemoverDistrato id={form.id} user={session} />
               </>
-            )) ||
-              (hierarquia === "CCA" && (
-                <>
-                  <BtRemoverDistrato id={form.id} user={user} />
-                </>
-              )))}
-          {/* {!form.id_fcw && form.ativo && (
-            <CriarFcweb Dados={form} user={user} />
-          )} */}
-          {form.ativo && hierarquia === "ADM" && <ResendSms id={form.id} />}
-          <BotaoPausar id={form.id} statusPause={form.statusAtendimento} />
-          <BtnIniciarAtendimento
-            hierarquia={hierarquia}
-            status={form.statusAtendimento}
-            aprovacao={form.andamento}
-            id={form.id}
-          />
-          <BtnBasicSave
-            size={"sm"}
-            bg={"green.500"}
-            color={"white"}
-            onClick={handlesubmit}
-            _hover={{ bg: "green.600" }}
-          >
-            Salvar
-          </BtnBasicSave>
-        </Flex>
+            )))}
+        {!form.id_fcw && form.ativo && (
+          <CriarFcweb Dados={form} user={session!} />
+        )}
+        {form.ativo && hierarquia === "ADM" && <ResendSms id={form.id} />}
+        <BotaoPausar id={form.id} statusPause={data.pause} />
+        <BtnIniciarAtendimento
+          hierarquia={hierarquia}
+          status={form.statusAtendimento}
+          aprovacao={form.andamento}
+          id={form.id}
+        />
+        <BtnBasicSave
+          size={"sm"}
+          bg={"green.500"}
+          color={"white"}
+          onClick={handlesubmit}
+          _hover={{ bg: "green.600" }}
+        >
+          Salvar
+        </BtnBasicSave>
       </Flex>
     </Flex>
   );

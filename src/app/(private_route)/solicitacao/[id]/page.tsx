@@ -12,6 +12,14 @@ interface Props {
     id: string;
   };
 }
+type MensagemObj = {
+  id: string;
+  mensagem: string;
+  data: string;
+  hora: string;
+  autor: string;
+  autor_id: number;
+};
 
 export default function PageSolicitacoes({ params }: Props) {
   const { id } = params;
@@ -35,7 +43,18 @@ export default function PageSolicitacoes({ params }: Props) {
     return <Loading />;
   }
 
-  const handleMsg = () => {};
+  const handleMsg = async (value: MensagemObj[]) => {
+    const req = await fetch(`/api/solicitacao/chat/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        obs: value,
+      }),
+    });
+    if (req.ok) {
+      const res = await req.json();
+      setData((data.obs = res.obs));
+    }
+  };
   return (
     <Flex gap={2} h={"full"} p={2}>
       <Flex w={"60%"} h={"full"}>
