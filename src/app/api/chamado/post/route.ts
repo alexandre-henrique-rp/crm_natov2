@@ -5,7 +5,6 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   try {
     const formData = await request.json();
-    console.log("🚀 ~ POST ~ formData:", formData);
 
     const session = await GetSessionServer();
     if (!session) {

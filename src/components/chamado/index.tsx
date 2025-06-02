@@ -149,6 +149,7 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
     try {
       // Primeiro faz upload das imagens e aguarda o resultado
       const uploadedImages = await SaveImage();
+      console.log("🚀 ~ handleSave ~ uploadedImages:", uploadedImages)
 
       // Preparar dados do chamado com as imagens já processadas
       const data = {
@@ -159,7 +160,7 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
         status,
         solicitacaoId,
         idUser: session.id,
-        images: uploadedImages, // Usa diretamente o resultado do upload
+        images: !DadosChamado?.id ? uploadedImages : [...DadosChamado?.images, ...uploadedImages], // Usa diretamente o resultado do upload
         temp: !DadosChamado?.id ? [
           {
             id: new Date().getTime().toString(),
@@ -174,7 +175,7 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
       };
 
       const url = !DadosChamado?.id ? "/api/chamado/post" : `/api/chamado/put/${DadosChamado?.id}`;
-      const methodSet = !DadosChamado?.id ? "POST" : "PATCH ";
+      const methodSet = !DadosChamado?.id ? "POST" : "PATCH";
       // Enviar dados do chamado
       const response = await fetch( url, {
         method: methodSet,
@@ -194,7 +195,10 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
         isClosable: true,
       });
 
-      router.push(`/chamado/${result.data.id}`);
+      if(methodSet === "POST"){
+        router.push(`/chamado/${result.data.id}`);
+      }
+      setDadosChamado(result);
     } catch (error: any) {
       toast({
         title: "Erro",
@@ -217,6 +221,9 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
       }
       if(!DadosChamado){
         setDadosChamado(data);
+      }
+      if(data.status){
+        setStatus(data.status);
       }
     }
   }, [data]);
