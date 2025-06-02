@@ -21,7 +21,7 @@ import BotaoMobileMenu from "../bt_mobile_menu";
  * session: informações da sessão do usuário, podendo ser nulo.
  */
 interface BotoesFunctionProps {
-  session: SessionServer | null;
+  session: SessionNext.Client;
 }
 // Clean Code: Sempre renderize o container principal para evitar erro de hidratação
 // e garantir uma estrutura consistente entre server e client.
@@ -56,7 +56,7 @@ export default function BotaoJuncao({ session }: BotoesFunctionProps) {
                     path="/solicitacoes"
                     icon={<FiFilePlus />}
                   />
-                  {session?.user?.role?.adm && (
+                  {session?.role?.adm && (
                     <BotaoMobileMenu
                       name="Painel adm"
                       path="/adm"
@@ -69,7 +69,7 @@ export default function BotaoJuncao({ session }: BotoesFunctionProps) {
                     icon={<LuLayoutDashboard />}
                   />
                   <BotaoMobileMenu name="FAQ" path="/faq" icon={<CgToday />} />
-                  {session?.user?.role?.direto && (
+                  {session?.role?.direto && (
                     <BotaoMobileMenu
                       name="Direto"
                       path="/direto"
@@ -91,7 +91,7 @@ export default function BotaoJuncao({ session }: BotoesFunctionProps) {
                 path="/solicitacoes"
                 icon={<FiFilePlus />}
               />
-              {session?.user?.role?.adm && (
+              {session?.role?.adm && (
                 <BotaoMenu
                   name="Painel adm"
                   path="/adm"
@@ -104,7 +104,7 @@ export default function BotaoJuncao({ session }: BotoesFunctionProps) {
                 icon={<LuLayoutDashboard />}
               />
               <BotaoMenu name="FAQ" path="/faq" icon={<CgToday />} />
-              {session?.user?.role?.direto && (
+              {session?.role?.direto && (
                 <BotaoMenu
                   name="Direto"
                   path="/direto"

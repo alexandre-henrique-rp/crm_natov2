@@ -16,10 +16,9 @@ import {
 import { useEffect, useState } from "react";
 import { FiFileText } from "react-icons/fi";
 import { useToast } from "@chakra-ui/react";
-import { SessionServer } from "@/types/session";
 
 interface Props {
-  session: SessionServer | null;
+  session: SessionNext.Client;
 }
 
 export default function ModalTermos({ session }: Props) {
@@ -27,8 +26,8 @@ export default function ModalTermos({ session }: Props) {
   const [check, setCheck] = useState(false);
   const toast = useToast();
 
-  const termosAceitos = session?.user.termos;
-  const idUser = Number(session?.user.id);
+  const termosAceitos = session.termos;
+  const idUser = Number(session.id);
 
   useEffect(() => {
     if (session) {

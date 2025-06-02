@@ -4,7 +4,8 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const formData = await request.formData();
+    const formData = await request.json();
+    console.log("🚀 ~ POST ~ formData:", formData);
 
     const session = await GetSessionServer();
     if (!session) {
@@ -15,10 +16,11 @@ export async function POST(request: Request) {
       `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado`,
       {
         method: "POST",
-        body: formData,
         headers: {
           Authorization: `Bearer ${session?.token}`,
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify(formData),
       }
     );
 

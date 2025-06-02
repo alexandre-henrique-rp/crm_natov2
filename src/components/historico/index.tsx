@@ -6,12 +6,8 @@ interface HistoricoPropsComponent {
 
 type HistoricoProps = {
   id: number;
-  User: number;
-  EffectId: number;
   descricao: string;
   createAt: Date | string | any;
-  updatedAt: Date | string | any | null;
-  rota: string;
 };
 
 export default function HistoricoComponent({
@@ -20,7 +16,7 @@ export default function HistoricoComponent({
   return (
     <>
       <Box
-        h={"full"}
+        h={{ base: "25rem", lg: "full" }}
         w={"full"}
         bg="gray.100"
         borderRadius="1rem"
@@ -33,7 +29,7 @@ export default function HistoricoComponent({
         <Box mb={4}>
           <Heading fontSize={"lg"}>Linha do tempo</Heading>
         </Box>
-        <Box overflowY="auto" h={"full"}>
+        <Box w="full" overflowY="auto" h={"full"}>
           {data.map((item) => (
             <Box
               key={item.id}

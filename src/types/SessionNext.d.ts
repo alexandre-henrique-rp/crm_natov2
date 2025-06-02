@@ -22,7 +22,7 @@ declare namespace SessionNext {
     empreendimento: Empreendimento[];
     hierarquia: "ADM" | "CCA" | "GRT" | "CONST" | "USER";
     cargo: string;
-    role: UserRoler;
+    role: UserRoler | null;
     reset_password: boolean;
     termos: boolean;
   }

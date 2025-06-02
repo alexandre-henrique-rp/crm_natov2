@@ -8,9 +8,15 @@ import {
   Heading,
   Select,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import HistoricoComponent from "../historico";
 import MensagensChat from "../mensagensChat";
+import { ImageComponent } from "./image";
+import { useEffect, useState } from "react";
+import { DetalhesChamadoComponent } from "./detalhes";
+import { useRouter } from "next/navigation";
+import ImageViewComponent from "./image_view";
 
 interface ChamadoProps {
   data: TypeChamado | null;
@@ -37,23 +43,199 @@ type TypeChamado = {
 };
 
 export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
-  const SaveChat = (chat: any) => {};
+  const [images, setImages] = useState<File[]>([]);
+  const [departamento, setDepartamento] = useState<string>("");
+  const [prioridade, setPrioridade] = useState<string>("");
+  const [dth_qru, setDthQru] = useState<string>("");
+  const [descricao, setDescricao] = useState<string>("");
+  const [status, setStatus] = useState<string>("ABERTO");
+  const [solicitacaoId, setSolicitacaoId] = useState<number>(0);
+  const [DadosChamado, setDadosChamado] = useState<TypeChamado | null>(null);
+
+  const toast = useToast();
+  const router = useRouter();
+
+  const SaveChat = async(chat: any) => {
+    try {
+      if(!DadosChamado?.id){
+        throw new Error("Chamado não encontrado");
+      }
+      const dataChat = {
+        chat,
+        temp: [ ...DadosChamado?.temp,{
+          id: new Date().getTime().toString(),
+          descricao: `Mensagem enviada por ${session.nome}`,
+          createAt: new Date().toISOString(),
+        }],
+      };
+      const response = await fetch(`/api/chamado/put/${DadosChamado?.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataChat),
+      });
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message);
+      }
+
+      setDadosChamado(result);
+      toast({
+        title: "Sucesso",
+        description: "Mensagem enviada com sucesso!",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message || error || "Erro ao salvar mensagem",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const SaveImage = async () => {
+    if (images.length === 0) return [];
+
+    try {
+      // Usar Promise.all para aguardar todas as imagens serem enviadas
+      const uploadPromises = images.map(async (image) => {
+        const formData = new FormData();
+        formData.append("file", image);
+        formData.append("type", "chamado");
+
+        const response = await fetch("/api/doc/post", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message);
+        }
+
+        // Verifica se result.data existe e não é null
+        if (!result.data) {
+          console.error("Upload falhou - resultado inválido:", result);
+          return null;
+        }
+
+        return result.data;
+      });
+
+      const uploadedImages = await Promise.all(uploadPromises);
+      // Filtra quaisquer resultados nulos
+      const validImages = uploadedImages.filter((img) => img !== null);
+
+      if (validImages.length === 0 && images.length > 0) {
+        throw new Error("Nenhuma imagem foi enviada com sucesso");
+      }
+
+      return validImages;
+    } catch (error) {
+      console.error("Erro ao enviar imagens:", error);
+      throw error;
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      // Primeiro faz upload das imagens e aguarda o resultado
+      const uploadedImages = await SaveImage();
+
+      // Preparar dados do chamado com as imagens já processadas
+      const data = {
+        departamento,
+        prioridade,
+        dth_qru: new Date(dth_qru).toISOString(),
+        descricao,
+        status,
+        solicitacaoId,
+        idUser: session.id,
+        images: uploadedImages, // Usa diretamente o resultado do upload
+        temp: !DadosChamado?.id ? [
+          {
+            id: new Date().getTime().toString(),
+            descricao: `Chamado criado por ${session.nome}`,
+            createAt: new Date().toISOString(),
+          },
+        ] : [...DadosChamado?.temp, {
+          id: new Date().getTime().toString(),
+          descricao: `Chamado atualizado por ${session.nome}`,
+          createAt: new Date().toISOString(),
+        }],
+      };
+
+      const url = !DadosChamado?.id ? "/api/chamado/post" : `/api/chamado/put/${DadosChamado?.id}`;
+      const methodSet = !DadosChamado?.id ? "POST" : "PATCH ";
+      // Enviar dados do chamado
+      const response = await fetch( url, {
+        method: methodSet,
+        body: JSON.stringify(data),
+      });
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message);
+      }
+
+      toast({
+        title: "Sucesso",
+        description: "Chamado salvo com sucesso!",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+
+      router.push(`/chamado/${result.data.id}`);
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const handleSetImage = (files: File[]) => {
+    setImages(files);
+  };
+
+  useEffect(() => {
+    if(data){
+      if(!descricao) {
+        setDescricao(data.descricao || "");
+      }
+      if(!DadosChamado){
+        setDadosChamado(data);
+      }
+    }
+  }, [data]);
 
   return (
     <>
       <Flex
         w="full"
-        h="full"
+        h={{ base: "auto", lg: "full" }}
         bg="gray.500"
         p={4}
         gap={4}
-        flexDir={{ base: "column", md: "row" }}
+        flexDir={{ base: "column", lg: "row" }}
       >
         <Box
           display={"flex"}
           flexDir={"column"}
-          w={{ base: "full", md: "70%" }}
-          h={"full"}
+          w={{ base: "full", lg: "70%" }}
+          h={{ base: "auto", lg: "full" }}
           bg="white"
           borderRadius="1rem"
           boxShadow="md"
@@ -66,15 +248,20 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
           <Flex w="full" justifyContent="space-between" alignItems="center">
             <Flex gap={3} pl={8} alignItems="end" justifyContent="flex-start">
               <Heading>Chamado</Heading>
-              {data?.id && <Heading size="lg">Id: {data?.id}</Heading>}
+              {DadosChamado?.id && <Heading size="lg">Id: {DadosChamado?.id}</Heading>}
             </Flex>
             <Flex gap={2} pe={10}>
-              {session?.role.adm ? (
+              {session?.role?.adm ? (
                 <>
-                  {data?.status && (
-                    <Flex>
+                  {DadosChamado?.status && (
+                    <Flex gap={2} alignItems="center">
                       <Heading size="lg">Status</Heading>
-                      <Select value={data?.status || "ABERTO"} name="status">
+                      <Select
+                        value={status}
+                        name="status"
+                        size="sm"
+                        onChange={(e) => setStatus(e.target.value)}
+                      >
                         <option value="ABERTO">Aberto</option>
                         <option value="EM_ANDAMENTO">Em andamento</option>
                         <option value="LV2">Enviado para nível 2</option>
@@ -85,8 +272,8 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
                 </>
               ) : (
                 <>
-                  {data?.status && (
-                    <Heading size="lg">Status: {data?.status}</Heading>
+                  {DadosChamado?.status && (
+                    <Heading size="lg">Status: {DadosChamado?.status}</Heading>
                   )}
                 </>
               )}
@@ -94,170 +281,75 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
           </Flex>
           <Divider border={"1px solid"} borderColor="gray.300" my={4} />
 
-          <Flex w="full" justifyContent="center">
-                <Flex w={"90%"} gap={2} flexDir="column">
-                  <FormLabel>Descrição do chamado</FormLabel>
-                  <Textarea
-                    placeholder="Descrição"
-                    w="full"
-                    h={"18rem"}
-                    resize="none"
-                    borderRadius="1rem"
-                    border="1px solid"
-                    borderColor="gray.300"
-                    _hover={{ borderColor: "gray.300" }}
-                    _focus={{ borderColor: "blue.500" }}
-                  />
-                </Flex>
-              </Flex>
-              {/* <Flex w="100%" h="25rem" justifyContent="center" gap={10}>
-                <Flex w={"44%"} gap={2} h="100%" flexDir="column">
-                  <FormLabel>Imagens</FormLabel>
-                  <Flex
-                    w={"100%"}
-                    minH="150px"
-                    border="2px dashed"
-                    borderColor="gray.300"
-                    borderRadius="lg"
-                    p={4}
-                    justifyContent="center"
-                    alignItems="center"
-                    flexDir="column"
-                    gap={4}
-                    onDrop={handleDrop}
-                    onDragOver={handleDragOver}
-                    bg="gray.50"
-                    _hover={{ borderColor: "blue.500", bg: "gray.100" }}
-                    transition="all 0.2s"
-                  >
-                    <Icon as={FiUpload} w={8} h={8} color="gray.400" />
-                    <Text color="gray.500" textAlign="center">
-                      Arraste e solte suas imagens aqui ou
-                    </Text>
-                    <Text color="gray.400" fontSize="sm">
-                      Limite: {images.length}/{MAX_IMAGES} imagens
-                    </Text>
-                    <Button
-                      as="label"
-                      htmlFor="file-upload"
-                      colorScheme="blue"
-                      isDisabled={images.length >= MAX_IMAGES}
-                      cursor="pointer"
-                    >
-                      Selecione do computador
-                      <Input
-                        id="file-upload"
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={handleFileSelect}
-                        display="none"
-                      />
-                    </Button>
-                  </Flex>
-      
-                  {previews.length > 0 && (
-                    <Grid
-                      templateColumns="repeat(auto-fill, minmax(100px, 1fr))"
-                      gap={4}
-                      mt={4}
-                      h="100%"
-                    >
-                      {previews.map((preview, index) => (
-                        <Box key={index} position="relative">
-                          <Image
-                            src={preview}
-                            alt={`Preview ${index + 1}`}
-                            borderRadius="md"
-                            objectFit="cover"
-                            w="80%"
-                            h="80px"
-                          />
-                          <Button
-                            position="absolute"
-                            top={-2}
-                            right={-2}
-                            size="sm"
-                            colorScheme="red"
-                            borderRadius="full"
-                            onClick={() => removeImage(index)}
-                            p={0}
-                            minW="20px"
-                            h="20px"
-                          >
-                            <Icon as={FiX} w={3} h={3} />
-                          </Button>
-                        </Box>
-                      ))}
-                    </Grid>
+          <Flex
+            w="full"
+            alignItems="center"
+            justifyContent="flex-start"
+            gap={8}
+            flexDir={"column"}
+          >
+            <Flex w={"90%"} h={"20rem"} gap={2} flexDir="column">
+              <FormLabel>Descrição do chamado</FormLabel>
+              <Textarea
+                placeholder="Descrição"
+                w="full"
+                h="full"
+                resize="none"
+                borderRadius="1rem"
+                border="1px solid"
+                borderColor="gray.300"
+                _hover={{ borderColor: "gray.300" }}
+                _focus={{ borderColor: "blue.500" }}
+                value={descricao}
+                onChange={(e) => setDescricao(e.target.value)}
+              />
+            </Flex>
+            <Flex w={"90%"} h={"25rem"} gap={8}>
+              {!DadosChamado?.id && <ImageComponent onChange={handleSetImage} />}
+              {DadosChamado?.id && (
+                <Flex gap={2} w="full" h="full" flexWrap="wrap">
+                  {DadosChamado?.images?.map(
+                    (image: { url_view: string; url_download: string }) => (
+                      <>
+                        <ImageViewComponent imageUrl={image.url_view} />
+                      </>
+                    )
                   )}
                 </Flex>
-      
-                <Flex w={"44%"} gap={4} flexDir="column">
-                  <Box>
-                    <FormLabel>Departamento</FormLabel>
-                    <Input
-                      borderColor="gray.300"
-                      placeholder="Departamento"
-                      w={"100%"}
-                    />
-                  </Box>
-                  <Box>
-                    <FormLabel>Prioridade</FormLabel>
-                    <Select
-                      borderColor="gray.300"
-                      placeholder="Prioridade"
-                      w={"100%"}
-                    >
-                      <option value="baixa">Baixa</option>
-                      <option value="media">Media</option>
-                      <option value="alta">Alta</option>
-                    </Select>
-                  </Box>
-                  <Flex gap={4}>
-                    <Box>
-                      <FormLabel>Data e hora do ocorrido</FormLabel>
-                      <Input
-                        borderColor="gray.300"
-                        type="datetime-local"
-                        placeholder="Data e hora do ocorrido"
-                        w={"100%"}
-                      />
-                    </Box>
-                    <Box>
-                      <FormLabel>Id da solicitação</FormLabel>
-                      <Input
-                        borderColor="gray.300"
-                        type="number"
-                        placeholder="Id da solicitação"
-                        w={"100%"}
-                      />
-                    </Box>
-                  </Flex>
-                </Flex>
-              </Flex> */}
-              <Flex w="full" justifyContent={"flex-end"}>
-                <Button colorScheme="green">Salvar</Button>
-              </Flex>
+              )}
+              <DetalhesChamadoComponent
+                Departamento={setDepartamento}
+                Prioridade={setPrioridade}
+                DthQru={setDthQru}
+                cliente={setSolicitacaoId}
+                data={DadosChamado}
+              />
+            </Flex>
+          </Flex>
+          <Flex w="full" justifyContent={"flex-end"}>
+            <Button colorScheme="green" onClick={handleSave}>
+              Salvar
+            </Button>
+          </Flex>
         </Box>
 
         <Flex
-          w={{ base: "full", md: "30%" }}
-          h={"full"}
+          w={{ base: "full", lg: "30%" }}
+          h={{ base: "auto", lg: "full" }}
           flexDir="column"
           gap={4}
         >
           <Box h={"65%"} w={"full"}>
             <MensagensChat
-              id={data?.id || 0}
-              data={data?.chat || []}
+              id={DadosChamado?.id || 0}
+              data={DadosChamado?.chat || []}
               session={session}
               onSend={SaveChat}
             />
           </Box>
 
           <Box h={"35%"} w={"full"}>
-            <HistoricoComponent data={data?.temp || []} />
+            <HistoricoComponent data={DadosChamado?.temp || []} />
           </Box>
         </Flex>
       </Flex>

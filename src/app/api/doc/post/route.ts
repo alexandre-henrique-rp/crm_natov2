@@ -15,6 +15,12 @@ export async function POST(request: Request) {
           "Arquivo não informado, por favor entre em contato com o Suporte",
       };
     }
+    if (!typedoc) {
+      throw {
+        message:
+          "Tipo de arquivo não informado, por favor entre em contato com o Suporte",
+      };
+    }
 
     formData.append("file", arquivo);
 
@@ -34,14 +40,14 @@ export async function POST(request: Request) {
       body: formData,
     });
 
+    const retornoArquivo = await Envio.json();
+    console.log("🚀 ~ POST ~ retornoArquivo:", retornoArquivo)
     if (!Envio.ok) {
-      const data = await Envio.text();
       throw {
         message:
           "Erro ao enviar o arquivo, por favor entre em contato com o Suporte",
       };
     }
-    const retornoArquivo = await Envio.json();
 
     return NextResponse.json(
       { data: retornoArquivo, message: "Arquivo enviado com sucesso" },

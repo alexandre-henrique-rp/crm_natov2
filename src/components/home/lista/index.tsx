@@ -124,7 +124,7 @@ export const DadoCompomentList = ({
   const { data } = useHomeContex();
 
   useEffect(() => {
-    console.log("data", dados);
+    // console.log("data", dados);
     if (dados) {
       setListaDados(dados.data);
       setTotal(dados.total);

@@ -16,10 +16,9 @@ import {
 } from "@chakra-ui/react";
 import { SetStateAction, useEffect, useState } from "react";
 import { SenhaComponent } from "../Senha";
-import { SessionServer } from "@/types/session";
 
 interface Props {
-  session: SessionServer | null;
+  session: SessionNext.Client;
 }
 
 export default function ModalPrimeAsses({ session }: Props) {
@@ -28,8 +27,8 @@ export default function ModalPrimeAsses({ session }: Props) {
   const toast = useToast();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const primeiro_asseso = session?.user.reset_password;
-  const ID = session?.user.id;
+  const primeiro_asseso = session.reset_password;
+  const ID = session.id;
 
   useEffect(() => {
     if (primeiro_asseso) {
@@ -65,7 +64,7 @@ export default function ModalPrimeAsses({ session }: Props) {
       password: Senha,
     };
 
-    const ID = session?.user.id;
+    const ID = session.id;
 
     const request = await fetch(`/api/reset_password/${ID}`, {
       method: "PUT",

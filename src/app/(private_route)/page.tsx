@@ -25,7 +25,7 @@ const GetListaDados = async (
     cache: "no-store",
   });
   const data = await user.json();
-  console.log(data);
+  // console.log(data);
   if (!user.ok) {
     console.error("GetListaDados status:", data.message);
     return null;
@@ -47,11 +47,11 @@ export default async function HomePage() {
           overflowY="auto"
           overflowX="hidden"
         >
-          <ModalPrimeAsses session={session} />
-          <ModalTermos session={session} />
+          {session && <ModalPrimeAsses session={session.user} />}
+          {session && <ModalTermos session={session.user} />}
 
           {/* dados user */}
-          <UserCompomentInfo session={session} />
+          {session && <UserCompomentInfo session={session.user} />}
           <DadoCompomentList dados={ListDados} session={session} />
         </Flex>
       </HomeProvider>

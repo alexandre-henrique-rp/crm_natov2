@@ -1,12 +1,13 @@
 import { GetSessionServer } from "@/lib/auth_confg";
 import { NextResponse } from "next/server";
 
-
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await GetSessionServer();
-    if (!session)
-    {
+    if (!session) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
     const id = params.id;
@@ -31,6 +32,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
     return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
     console.log(error);
-    return NextResponse.json({ message: error.message.join("\n") || error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: error.message.join("\n") || error.message },
+      { status: 500 }
+    );
   }
 }

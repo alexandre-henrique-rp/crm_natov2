@@ -18,28 +18,35 @@ import { useEffect, useState } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { TbAlertSquareRounded } from "react-icons/tb";
 
-export default function BtnAlertList() {
+interface BtnAlertListProps {
+  session: SessionNext.Client;
+}
+
+export default function BtnAlertList({ session }: BtnAlertListProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [Cont, setCont] = useState(0);
   const [Data, setData] = useState([]);
   const router = useRouter();
 
-
   const ConstTotalAlertas = async () => {
-    const url = "/api/alerts/geral/const";
-    const req = await fetch(url);
-    const res = await req.json();
-    if (req.ok) {
-      setCont(res);
+    if (session.role?.alert) {
+      const url = "/api/alerts/geral/const";
+      const req = await fetch(url);
+      const res = await req.json();
+      if (req.ok) {
+        setCont(res);
+      }
     }
   };
 
   const HandleAlertasList = async () => {
-    const url = "/api/alerts/geral/findAll";
-    const req = await fetch(url);
-    const res = await req.json();
-    if (req.ok) {
-      setData(res);
+    if (session.role?.alert) {
+      const url = "/api/alerts/geral/findAll";
+      const req = await fetch(url);
+      const res = await req.json();
+      if (req.ok) {
+        setData(res);
+      }
     }
   };
 
@@ -72,7 +79,14 @@ export default function BtnAlertList() {
           <ModalHeader>Lista De Alertas</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Flex w={"100%"} h={"100%"} flexDir={"column"} gap={2} px={2} overflowY={"auto"}>
+            <Flex
+              w={"100%"}
+              h={"100%"}
+              flexDir={"column"}
+              gap={2}
+              px={2}
+              overflowY={"auto"}
+            >
               {Data.map((item: any) => (
                 <Flex
                   key={item.id}
@@ -82,13 +96,24 @@ export default function BtnAlertList() {
                   bg={"yellow.100"}
                   cursor={"pointer"}
                   _hover={{ bg: "yellow.200" }}
-                  onClick={() => router.push(`/solicitacoes/${item.solicitacao_id}`)}  
+                  onClick={() =>
+                    router.push(`/solicitacoes/${item.solicitacao_id}`)
+                  }
                 >
                   <Flex w={"2rem"} alignItems={"center"}>
-                    <FaExclamationTriangle style={{ margin: "auto" }} size={14} color="#daa300" />
+                    <FaExclamationTriangle
+                      style={{ margin: "auto" }}
+                      size={14}
+                      color="#daa300"
+                    />
                   </Flex>
-                  <Text fontSize={"sm"} fontWeight={"bold"}>{item.titulo}</Text>
-                  <Text fontSize={"sm"}>{item.descricao.slice(0, 40)}{item.descricao.length > 40 ? "......." : ""}</Text>
+                  <Text fontSize={"sm"} fontWeight={"bold"}>
+                    {item.titulo}
+                  </Text>
+                  <Text fontSize={"sm"}>
+                    {item.descricao.slice(0, 40)}
+                    {item.descricao.length > 40 ? "......." : ""}
+                  </Text>
                 </Flex>
               ))}
             </Flex>

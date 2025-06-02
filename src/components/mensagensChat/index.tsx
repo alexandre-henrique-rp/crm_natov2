@@ -2,6 +2,7 @@
 import { Box, Button, Flex, Text, Textarea } from "@chakra-ui/react";
 import { useState } from "react";
 import { FiSend } from "react-icons/fi";
+import React from "react";
 
 interface MensagensProps {
   id: number;
@@ -42,7 +43,7 @@ export default function MensagensChat({
   data,
   session,
   onSend,
-}: MensagensProps) {
+}: MensagensProps): React.ReactElement {
   const [message, setMessage] = useState("");
   const chat: MensagemObj[] = data || [];
 
@@ -52,8 +53,11 @@ export default function MensagensChat({
     const newMessage: MensagemObj = {
       id: new Date().getTime().toString(),
       mensagem: message.trim(),
-      data: new Date().toISOString(),
-      hora: new Date().toISOString(),
+      data: new Date().toLocaleDateString("pt-BR"),
+      hora: new Date().toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
       autor: session.nome,
       autor_id: session.id,
     };
@@ -64,50 +68,43 @@ export default function MensagensChat({
 
   // Renderiza as mensagens separando por autor
   const mensagens = chat.map((item: MensagemObj) => {
-    if (item.autor_id === session?.id) {
-      return (
-        <Flex key={item.id} gap={2} justifyContent="flex-end">
-          <Box bg="blue.100" p={2} borderRadius="1rem">
-            <Text fontSize="xs" color="gray.500">
+    if (!session?.id) return null;
+    const isCurrentUser = item.autor_id === session?.id;
+    
+    return (
+      <Flex 
+        key={item.id} 
+        justifyContent={isCurrentUser ? "flex-end" : "flex-start"} 
+        width="100%"
+        mb={2}
+        px={2}
+      >
+        <Box 
+          maxW={{ base: "85%", md: "70%" }}
+          bg={isCurrentUser ? "blue.100" : "gray.100"} 
+          p={3} 
+          borderRadius="1rem"
+          boxShadow="sm"
+        >
+          {!isCurrentUser && (
+            <Text fontSize="xs" color="gray.500" mb={1}>
               {item.autor}
             </Text>
-            <Text>{item.mensagem}</Text>
-            <Flex gap={2}>
-              <Text fontSize="xs" color="gray.500">
-                {formatarData(item.data)}
-              </Text>
-              <Text fontSize="xs" color="gray.500">
-                {formatarHora(item.hora)}
-              </Text>
-            </Flex>
-          </Box>
-        </Flex>
-      );
-    } else {
-      return (
-        <Flex key={item.id} gap={2} justifyContent="flex-start">
-          <Box bg="gray.100" p={2} borderRadius="1rem">
+          )}
+          <Text mb={1} wordBreak="break-word">{item.mensagem}</Text>
+          <Flex gap={2} justifyContent="flex-end">
             <Text fontSize="xs" color="gray.500">
-              {item.autor}
+              {item.hora}
             </Text>
-            <Text>{item.mensagem}</Text>
-            <Flex gap={2}>
-              <Text fontSize="xs" color="gray.500">
-                {formatarData(item.data)}
-              </Text>
-              <Text fontSize="xs" color="gray.500">
-                {formatarHora(item.hora)}
-              </Text>
-            </Flex>
-          </Box>
-        </Flex>
-      );
-    }
+          </Flex>
+        </Box>
+      </Flex>
+    );
   });
 
   return (
     <>
-      {!id ? (
+      {id ? (
         <Box
           h={"full"}
           w={"full"}
@@ -123,33 +120,48 @@ export default function MensagensChat({
           justifyContent="space-between"
           position="relative"
         >
-          <Box>
-            <Flex
-              bg={"green.200"}
-              p={2}
-              borderRadius="1rem"
-              w={"full"}
-              h={"25rem"}
-              overflowY="auto"
-              mb={{ base: "4", md: "8" }}
-            >
+          <Box 
+            bg="green.200"
+            p={4}
+            borderRadius="1rem"
+            h={{base: "25rem", lg: "30rem"}}
+            overflowY="auto"
+            mb={3}
+            boxShadow="inner"
+            display="flex"
+            flexDirection="column"
+            justifyContent="flex-end"
+          >
+            <Flex flexDirection="column" gap={2} width="100%">
               {mensagens}
             </Flex>
           </Box>
-          <Flex gap={2} alignItems="end">
-            <Textarea
-              placeholder="Mensagem"
-              h={"4rem"}
-              resize="none"
-              borderRadius="1rem"
-              border="1px solid"
-              borderColor="gray.300"
-              _hover={{ borderColor: !id ? "gray.300" : "gray.400" }}
-              _focus={{ borderColor: !id ? "gray.300" : "blue.500" }}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              isDisabled={!id}
-            />
+          <Flex gap={2} alignItems="flex-end">
+            <Box flex={1}>
+              <Textarea
+                placeholder="Digite sua mensagem..."
+                h="4.5rem"
+                minH="4.5rem"
+                resize="none"
+                borderRadius="1rem"
+                border="1px solid"
+                borderColor="gray.300"
+                _hover={{ borderColor: !id ? "gray.300" : "gray.400" }}
+                _focus={{ 
+                  borderColor: !id ? "gray.300" : "blue.500",
+                  boxShadow: "0 0 0 1px var(--chakra-colors-blue-500)"
+                }}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                isDisabled={!id}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                  }
+                }}
+              />
+            </Box>
             <Button
               leftIcon={<FiSend />}
               colorScheme="green"
