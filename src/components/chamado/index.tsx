@@ -12,11 +12,10 @@ import {
 } from "@chakra-ui/react";
 import HistoricoComponent from "../historico";
 import MensagensChat from "../mensagensChat";
-import { ImageComponent } from "./image";
-import { useEffect, useState } from "react";
+import { ImageComponent, ExistingImageInput } from "./image";
+import { useCallback, useEffect, useState } from "react";
 import { DetalhesChamadoComponent } from "./detalhes";
 import { useRouter } from "next/navigation";
-import ImageViewComponent from "./image_view";
 
 interface ChamadoProps {
   data: TypeChamado | null;
@@ -42,8 +41,22 @@ type TypeChamado = {
   solicitacaoData: any;
 };
 
+type ManagedImage = {
+  url_view: string;
+  url_download?: string;
+  isNew: boolean;
+  id: string;
+  file?: File;
+};
+
+type ListImage = {
+  url_view: string;
+  url_download?: string;
+};
+
 export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
-  const [images, setImages] = useState<File[]>([]);
+  const [images, setImages] = useState<ManagedImage[]>([]);
+  const [imagesView, setImagesView] = useState<ExistingImageInput[]>([]);
   const [departamento, setDepartamento] = useState<string>("");
   const [prioridade, setPrioridade] = useState<string>("");
   const [dth_qru, setDthQru] = useState<string>("");
@@ -55,18 +68,26 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
   const toast = useToast();
   const router = useRouter();
 
-  const SaveChat = async(chat: any) => {
+  const handleRemoveExistingImage = useCallback((imageId: string, imageUrl: string) => {
+    console.log(`Imagem existente removida: ID - ${imageId}, URL - ${imageUrl}`);
+    setImagesView(prevImages => prevImages.filter(img => img.url_view !== imageUrl));
+  }, []);
+
+  const SaveChat = async (chat: any) => {
     try {
-      if(!DadosChamado?.id){
+      if (!DadosChamado?.id) {
         throw new Error("Chamado não encontrado");
       }
       const dataChat = {
         chat,
-        temp: [ ...DadosChamado?.temp,{
-          id: new Date().getTime().toString(),
-          descricao: `Mensagem enviada por ${session.nome}`,
-          createAt: new Date().toISOString(),
-        }],
+        temp: [
+          ...DadosChamado?.temp,
+          {
+            id: new Date().getTime().toString(),
+            descricao: `Mensagem enviada por ${session.nome}`,
+            createAt: new Date().toISOString(),
+          },
+        ],
       };
       const response = await fetch(`/api/chamado/put/${DadosChamado?.id}`, {
         method: "PATCH",
@@ -101,13 +122,17 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
   };
 
   const SaveImage = async () => {
-    if (images.length === 0) return [];
+    const newImagesToUpload = images.filter(img => img.isNew && img.file);
+    const existingImagesToKeep = images.filter(img => !img.isNew);
+
+    if (newImagesToUpload.length === 0) {
+      return existingImagesToKeep;
+    }
 
     try {
-      // Usar Promise.all para aguardar todas as imagens serem enviadas
-      const uploadPromises = images.map(async (image) => {
+      const uploadPromises = newImagesToUpload.map(async (image) => {
         const formData = new FormData();
-        formData.append("file", image);
+        formData.append("file", image.file as File);
         formData.append("type", "chamado");
 
         const response = await fetch("/api/doc/post", {
@@ -121,7 +146,6 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
           throw new Error(result.message);
         }
 
-        // Verifica se result.data existe e não é null
         if (!result.data) {
           console.error("Upload falhou - resultado inválido:", result);
           return null;
@@ -131,14 +155,14 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
       });
 
       const uploadedImages = await Promise.all(uploadPromises);
-      // Filtra quaisquer resultados nulos
-      const validImages = uploadedImages.filter((img) => img !== null);
+      const validUploadedImages = uploadedImages.filter((img) => img !== null);
 
-      if (validImages.length === 0 && images.length > 0) {
-        throw new Error("Nenhuma imagem foi enviada com sucesso");
+      if (validUploadedImages.length === 0 && newImagesToUpload.length > 0) {
+        throw new Error("Nenhuma imagem nova foi enviada com sucesso");
       }
+      
+      return [...existingImagesToKeep, ...validUploadedImages];
 
-      return validImages;
     } catch (error) {
       console.error("Erro ao enviar imagens:", error);
       throw error;
@@ -147,11 +171,8 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
 
   const handleSave = async () => {
     try {
-      // Primeiro faz upload das imagens e aguarda o resultado
-      const uploadedImages = await SaveImage();
-      console.log("🚀 ~ handleSave ~ uploadedImages:", uploadedImages)
+      const finalImages = await SaveImage();
 
-      // Preparar dados do chamado com as imagens já processadas
       const data = {
         departamento,
         prioridade,
@@ -160,24 +181,31 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
         status,
         solicitacaoId,
         idUser: session.id,
-        images: !DadosChamado?.id ? uploadedImages : [...DadosChamado?.images, ...uploadedImages], // Usa diretamente o resultado do upload
-        temp: !DadosChamado?.id ? [
-          {
-            id: new Date().getTime().toString(),
-            descricao: `Chamado criado por ${session.nome}`,
-            createAt: new Date().toISOString(),
-          },
-        ] : [...DadosChamado?.temp, {
-          id: new Date().getTime().toString(),
-          descricao: `Chamado atualizado por ${session.nome}`,
-          createAt: new Date().toISOString(),
-        }],
+        images: finalImages,
+        temp: !DadosChamado?.id
+          ? [
+              {
+                id: new Date().getTime().toString(),
+                descricao: `Chamado criado por ${session.nome}`,
+                createAt: new Date().toISOString(),
+              },
+            ]
+          : [
+              ...DadosChamado?.temp,
+              {
+                id: new Date().getTime().toString(),
+                descricao: `Chamado atualizado por ${session.nome}`,
+                createAt: new Date().toISOString(),
+              },
+            ],
       };
 
-      const url = !DadosChamado?.id ? "/api/chamado/post" : `/api/chamado/put/${DadosChamado?.id}`;
+      const url = !DadosChamado?.id
+        ? "/api/chamado/post"
+        : `/api/chamado/put/${DadosChamado?.id}`;
       const methodSet = !DadosChamado?.id ? "POST" : "PATCH";
       // Enviar dados do chamado
-      const response = await fetch( url, {
+      const response = await fetch(url, {
         method: methodSet,
         body: JSON.stringify(data),
       });
@@ -195,10 +223,10 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
         isClosable: true,
       });
 
-      if(methodSet === "POST"){
+      if (methodSet === "POST") {
         router.push(`/chamado/${result.data.id}`);
       }
-      setDadosChamado(result);
+      router.refresh();
     } catch (error: any) {
       toast({
         title: "Erro",
@@ -210,20 +238,23 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
     }
   };
 
-  const handleSetImage = (files: File[]) => {
-    setImages(files);
+  const handleSetImage = (images: ManagedImage[]) => {
+    setImages(images);
   };
 
   useEffect(() => {
-    if(data){
-      if(!descricao) {
+    if (data) {
+      if (!descricao) {
         setDescricao(data.descricao || "");
       }
-      if(!DadosChamado){
+      if (!DadosChamado) {
         setDadosChamado(data);
       }
-      if(data.status){
+      if (data.status) {
         setStatus(data.status);
+      }
+      if (data.images) {
+        setImagesView(data.images);
       }
     }
   }, [data]);
@@ -255,7 +286,9 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
           <Flex w="full" justifyContent="space-between" alignItems="center">
             <Flex gap={3} pl={8} alignItems="end" justifyContent="flex-start">
               <Heading>Chamado</Heading>
-              {DadosChamado?.id && <Heading size="lg">Id: {DadosChamado?.id}</Heading>}
+              {DadosChamado?.id && (
+                <Heading size="lg">Id: {DadosChamado?.id}</Heading>
+              )}
             </Flex>
             <Flex gap={2} pe={10}>
               {session?.role?.adm ? (
@@ -312,17 +345,26 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
               />
             </Flex>
             <Flex w={"90%"} h={"25rem"} gap={8}>
-              {!DadosChamado?.id && <ImageComponent onChange={handleSetImage} />}
+              {!DadosChamado?.id && (
+                <ImageComponent
+                  onChange={setImages}
+                  DataImages={imagesView}
+                  onRemoveExistingImage={handleRemoveExistingImage}
+                />
+              )}
               {DadosChamado?.id && (
-                <Flex gap={2} w="full" h="full" flexWrap="wrap">
-                  {DadosChamado?.images?.map(
-                    (image: { url_view: string; url_download: string }) => (
-                      <>
-                        <ImageViewComponent imageUrl={image.url_view} />
-                      </>
-                    )
-                  )}
-                </Flex>
+                <>
+                  <ImageComponent onChange={handleSetImage} maxImages={5} DataImages={DadosChamado?.images} />
+                  {/* <Flex gap={2} w="full" h="full" flexWrap="wrap">
+                    {DadosChamado?.images?.map(
+                      (image: { url_view: string; url_download: string }) => (
+                        <>
+                          <ImageViewComponent imageUrl={image.url_view} />
+                        </>
+                      )
+                    )}
+                  </Flex> */}
+                </>
               )}
               <DetalhesChamadoComponent
                 Departamento={setDepartamento}

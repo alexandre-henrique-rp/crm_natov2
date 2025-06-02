@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     });
 
     const retornoArquivo = await Envio.json();
-    console.log("🚀 ~ POST ~ retornoArquivo:", retornoArquivo)
+    
     if (!Envio.ok) {
       throw {
         message:
