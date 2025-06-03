@@ -5,6 +5,8 @@ import BtnIniciarAtendimento from "@/components/botoes/btn_iniciar_atendimento";
 import BotaoPausar from "@/components/botoes/btn_pausar";
 import { CriarFcweb } from "@/components/botoes/criarFcweb";
 import BoxBasic from "@/components/box/link";
+import ReativarButton from "@/components/buttons/reativar";
+import { ResendSms } from "@/components/buttons/resendSms";
 import BtnBasicSave from "@/components/buttons/save";
 import InputBasic from "@/components/input/basic";
 import InputFileUpload from "@/components/input/doc";
@@ -13,7 +15,6 @@ import SelectBasic from "@/components/input/select-basic";
 import SelectMultiItem from "@/components/input/select-multi-itens";
 import { TagsOptions } from "@/data/tags";
 import { useSession } from "@/hook/useSession";
-import { ResendSms } from "@/implementes/cardCreateUpdate/butons/resendSms";
 import { Box, Divider, Flex, Icon, Text, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
@@ -96,6 +97,7 @@ export default function FormSolicitacaoEdit({
   data,
 }: FormSolicitacaoEditProps) {
   const session = useSession();
+  const toast = useToast();
   const hierarquia = session?.hierarquia ? session.hierarquia : null;
   const isAdmin = session?.hierarquia === "ADM";
   const [tagsOptions, setTagsOptions] = useState([] as any[]);
@@ -249,9 +251,26 @@ export default function FormSolicitacaoEdit({
       method: "PUT",
       body: JSON.stringify({ form, Tags }),
     });
-    if (!req.ok) {
-    }
     const res = await req.json();
+    if (!req.ok) {
+      toast({
+        title: "Erro ao editar solicitação",
+        description: res.message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+    toast({
+      title: "Solicitação editada com sucesso",
+      status: "success",
+      duration: 9000,
+      isClosable: true,
+    });
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
   };
 
   const Msg =
@@ -600,19 +619,30 @@ export default function FormSolicitacaoEdit({
         <BotaoPausar id={form.id} statusPause={data.pause} />
         <BtnIniciarAtendimento
           hierarquia={hierarquia}
-          status={form.statusAtendimento}
+          status={
+            data.statusAtendimento
+              ? data.statusAtendimento
+              : form.statusAtendimento
+          }
           aprovacao={form.andamento}
           id={form.id}
         />
-        <BtnBasicSave
-          size={"sm"}
-          bg={"green.500"}
-          color={"white"}
-          onClick={handlesubmit}
-          _hover={{ bg: "green.600" }}
-        >
-          Salvar
-        </BtnBasicSave>
+        {session?.hierarquia === "ADM" && !data.ativo && (
+          <ReativarButton size={"sm"} colorScheme="orange" solicitacaoId={id}>
+            Reativar
+          </ReativarButton>
+        )}
+        {!data.distrato && (
+          <BtnBasicSave
+            size={"sm"}
+            bg={"green.500"}
+            color={"white"}
+            onClick={handlesubmit}
+            _hover={{ bg: "green.600" }}
+          >
+            Salvar
+          </BtnBasicSave>
+        )}
       </Flex>
     </Flex>
   );

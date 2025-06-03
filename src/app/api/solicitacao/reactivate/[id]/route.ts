@@ -26,6 +26,7 @@ export async function PUT(
       return new NextResponse("Invalid credentials", { status: 401 });
     }
     const data = await user.json();
+    console.log("🚀 ~ data:", data);
 
     return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
