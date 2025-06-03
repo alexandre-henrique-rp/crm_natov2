@@ -13,8 +13,21 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
+interface AlertasProps {
+  id: number;
+  titulo: string;
+  solicitacao_id: number;
+  corretor: number;
+  tag: string;
+  empreendimento: number;
+  status: boolean;
+  createdAt?: string;
+  updatedAt: string;
+  descricao: string;
+}
+
 export default function Alertas() {
-  const [alertas, setAlertas] = useState([]);
+  const [alertas, setAlertas] = useState<AlertasProps[]>([]);
   const toast = useToast();
 
   useEffect(() => {
@@ -72,7 +85,7 @@ export default function Alertas() {
         </Text>
         <Divider borderColor="gray.300" my={2} />
         <Flex h={"19.5rem"} overflowY="auto" flexDirection="column" gap={3}>
-          {alertas.map((alerta: any) => (
+          {alertas.map((alerta: AlertasProps) => (
             <Card
               direction="row"
               key={alerta.id}
@@ -84,18 +97,14 @@ export default function Alertas() {
               alignItems="center"
             >
               <CardHeader>
-                <Heading size="md">{alerta.tipo}</Heading>
+                <Heading size="md">{alerta.tag}</Heading>
               </CardHeader>
               <CardBody>
                 <Text>
-                  {alerta.message} -{" "}
-                  {alerta.createAt
-                    .toString()
-                    .split("T")[0]
-                    .split("-")
-                    .reverse()
-                    .join("/")}{" "}
-                  às {alerta.createAt.toString().split("T")[1].split(".")[0]}
+                  {alerta.titulo} -{" "}
+                  {alerta.createdAt && alerta.createdAt.split("T")[0].split("-").reverse().join("/")}
+                  {" "}
+                  {alerta.updatedAt && alerta.updatedAt.split("T")[1].split(".")[0]}
                 </Text>
               </CardBody>
               <CardFooter>

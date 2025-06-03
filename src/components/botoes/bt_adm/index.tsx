@@ -4,7 +4,7 @@ import { Flex, Button } from "@chakra-ui/react";
 import { usePathname, useRouter } from "next/navigation";
 
 type BotaoAdmProps = {
-  name: "Usuarios" | "Empreendimentos" | "Construtora" | "CCAs" | "Home" | "Painel" | "Add Usuario" | "Add Empreendimento" | "Add Construtora" | "Add CCA";
+  name: "Usuarios" | "Empreendimentos" | "Construtora" | "CCAs" | "Tags";
 }
 /**
  * Botão de navegação para o painel administrativo
@@ -20,9 +20,9 @@ export default function BotaoAdm({ name }: BotaoAdmProps) {
 
   const isActive = path === pathname;
 
-  const display = name === "Home" || name === "Painel" ? "none" : "flex";
+
   return (
-    <Flex display={{ md: display }}>
+    <Flex display={{ md: "flex" }}>
       {padrão && (
       <Button
         bg={"white"}
