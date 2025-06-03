@@ -56,33 +56,37 @@ export const ImageComponent = ({
   const toast = useToast();
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
-  // Efeito para inicializar/atualizar 'managedImages' quando 'DataImages' mudar
+  // Efeito para inicializar/atualizar 
   useEffect(() => {
-    const existingImages = DataImages.map((img, index) => ({
-      id: img.url_view || `existing-${index}-${Date.now()}`,
-      url_view: img.url_view,
-      url_download: img.url_download,
-      isNew: false,
-    }));
+    if (DataImages && DataImages.length > 0) {
+      const currentManagedImageUrls = new Set(managedImages.map(img => img.url_view));
 
-    setManagedImages((prevManagedImages) => {
-      const currentExistingImageIds = new Set(
-        prevManagedImages.filter((img) => !img.isNew).map((img) => img.id)
-      );
+      const newExistingImages = DataImages.filter(
+        dataImg => !currentManagedImageUrls.has(dataImg.url_view)
+      ).map(img => ({
+        id: img.url_view,
+        url_view: img.url_view,
+        url_download: img.url_download,
+        isNew: false,
+      }));
 
-      const newExistingImagesToAdd = existingImages.filter(
-        (img) => !currentExistingImageIds.has(img.id)
-      );
+      if (newExistingImages.length > 0) {
+        setManagedImages(prevImages => {
+          return [...prevImages.filter(img => img.isNew), ...newExistingImages];
+        });
+      }
+    }
+  }, [DataImages, managedImages]);
 
-      const newImagesFromUser = prevManagedImages.filter((img) => img.isNew);
+  const currentNewImagesRef = useRef<ManagedImage[]>([]);
 
-      return [...newImagesFromUser, ...existingImages];
-    });
-  }, [DataImages]);
-
-  // Efeito para chamar onChange quando managedImages mudar
   useEffect(() => {
-    onChange(managedImages);
+    const newImagesForCallback = managedImages.filter(img => img.isNew && img.file);
+
+    if (JSON.stringify(newImagesForCallback) !== JSON.stringify(currentNewImagesRef.current)) {
+      onChange(newImagesForCallback);
+      currentNewImagesRef.current = newImagesForCallback;
+    }
   }, [managedImages, onChange]);
 
   // Efeito para limpar blob URLs ao desmontar o componente

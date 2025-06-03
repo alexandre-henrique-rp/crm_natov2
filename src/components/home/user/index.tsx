@@ -47,60 +47,62 @@ export const UserCompomentInfo = ({ session }: UserCompomentInfoProps) => {
               <Text>{session.hierarquia}</Text>
             </Flex>
           </Flex>
-          {session.construtora.length > 1 &&
-            session.construtora.map(
-              (item: SessionNext.Construtora, index: number) => (
+          <Flex gap={2} flexWrap={"wrap"}>
+            {session.construtora.length > 1 &&
+              session.construtora.map(
+                (item: SessionNext.Construtora, index: number) => (
+                  <Flex flexDir="column" px={2} lineHeight={"1rem"}>
+                    <FormLabel fontWeight={"bold"}>
+                      Construtora {index + 1}
+                    </FormLabel>
+                    <Text>{item.fantasia}</Text>
+                  </Flex>
+                )
+              )}
+            {session.construtora.length === 1 &&
+              session.construtora.map((item: SessionNext.Construtora) => (
                 <Flex flexDir="column" px={2} lineHeight={"1rem"}>
-                  <FormLabel fontWeight={"bold"}>
-                    Construtora {index + 1}
-                  </FormLabel>
+                  <FormLabel fontWeight={"bold"}>Construtora</FormLabel>
                   <Text>{item.fantasia}</Text>
                 </Flex>
-              )
-            )}
-          {session.construtora.length === 1 &&
-            session.construtora.map((item: SessionNext.Construtora) => (
-              <Flex flexDir="column" px={2} lineHeight={"1rem"}>
-                <FormLabel fontWeight={"bold"}>Construtora</FormLabel>
-                <Text>{item.fantasia}</Text>
-              </Flex>
-            ))}
-          {session.empreendimento.length > 1 &&
-            session.empreendimento.map(
-              (item: SessionNext.Empreendimento, index: number) => (
+              ))}
+            {session.empreendimento.length > 1 &&
+              session.empreendimento.map(
+                (item: SessionNext.Empreendimento, index: number) => (
+                  <Flex flexDir="column" px={2} lineHeight={"1rem"}>
+                    <FormLabel fontWeight={"bold"}>
+                      Empreendimento {index + 1}
+                    </FormLabel>
+                    <Text>{item.nome}</Text>
+                  </Flex>
+                )
+              )}
+            {session.empreendimento.length === 1 &&
+              session.empreendimento.map((item: SessionNext.Empreendimento) => (
                 <Flex flexDir="column" px={2} lineHeight={"1rem"}>
-                  <FormLabel fontWeight={"bold"}>
-                    Empreendimento {index + 1}
-                  </FormLabel>
+                  <FormLabel fontWeight={"bold"}>Empreendimento</FormLabel>
                   <Text>{item.nome}</Text>
                 </Flex>
-              )
-            )}
-          {session.empreendimento.length === 1 &&
-            session.empreendimento.map((item: SessionNext.Empreendimento) => (
-              <Flex flexDir="column" px={2} lineHeight={"1rem"}>
-                <FormLabel fontWeight={"bold"}>Empreendimento</FormLabel>
-                <Text>{item.nome}</Text>
-              </Flex>
-            ))}
-          {session.Financeira.length > 1 &&
-            session.Financeira.map(
-              (item: SessionNext.Financeira, index: number) => (
+              ))}
+            {session.Financeira.length > 1 &&
+              session.Financeira.map(
+                (item: SessionNext.Financeira, index: number) => (
+                  <Flex flexDir="column" px={2} lineHeight={"1rem"}>
+                    <FormLabel fontWeight={"bold"}>
+                      Financeira {index + 1}
+                    </FormLabel>
+                    <Text>{item.fantasia}</Text>
+                  </Flex>
+                )
+              )}
+            {session.Financeira.length === 1 &&
+              session.Financeira.map((item: SessionNext.Financeira) => (
                 <Flex flexDir="column" px={2} lineHeight={"1rem"}>
-                  <FormLabel fontWeight={"bold"}>
-                    Financeira {index + 1}
-                  </FormLabel>
+                  <FormLabel fontWeight={"bold"}>Financeira</FormLabel>
                   <Text>{item.fantasia}</Text>
                 </Flex>
-              )
-            )}
-          {session.Financeira.length === 1 &&
-            session.Financeira.map((item: SessionNext.Financeira) => (
-              <Flex flexDir="column" px={2} lineHeight={"1rem"}>
-                <FormLabel fontWeight={"bold"}>Financeira</FormLabel>
-                <Text>{item.fantasia}</Text>
-              </Flex>
-            ))}
+              ))}
+          </Flex>
           <Flex gap={2} w={"100%"} flexDir={"column"}>
             {session.role?.now && <BtnListNow session={session} />}
             {session.role?.alert && <BtnAlertList session={session} />}

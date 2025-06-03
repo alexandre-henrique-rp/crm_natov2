@@ -1,3 +1,5 @@
+import BtnChamado from "@/components/chamado/btn";
+import { GetSessionServer } from "@/lib/auth_confg";
 import {
   Badge,
   Box,
@@ -12,7 +14,47 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-export default function ChamadoPage() {
+interface TypeChamado {
+  id: number;
+  titulo: string;
+  descricao: string;
+  status: string;
+  departamento: string;
+  prioridade: string;
+  dth_qru: string;
+  idUser: number;
+  solicitacaoId: number;
+  temp: any[];
+  chat: any[];
+  images: any[];
+  createAt: string;
+  updatedAt?: string;
+}
+
+async function getChamadosAll(session: SessionNext.Server | null) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/chamado`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session?.token}`,
+    },
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    console.error("getChamadosAll status:", response.status);
+    return [];
+  }
+
+  const data = await response.json();
+  return data ?? [];
+}
+
+
+export default async function ChamadoPage() {
+  const session = await GetSessionServer();
+  const chamados = session ? await getChamadosAll(session) : [];
+  console.log("🚀 ~ ChamadoPage ~ chamados:", chamados)
   return (
     <>
       <Flex
@@ -37,10 +79,10 @@ export default function ChamadoPage() {
             <Box>
               <Heading>Chamados de Suporte</Heading>
               <Flex gap={2}>
-                <Text>6 chamados</Text>
-                <Badge colorScheme="red">2 críticos</Badge>
-                <Badge colorScheme="green">3 abertos</Badge>
-                <Badge colorScheme="yellow">1 aguardando</Badge>
+                <Text>{chamados.length} chamados</Text>
+                <Badge colorScheme="red">{chamados.filter((item: any) => item.prioridade === "alta").length} críticos</Badge>
+                <Badge colorScheme="green">{chamados.filter((item: any) => item.status === "EM_ANDAMENTO").length} abertos</Badge>
+                <Badge colorScheme="yellow">{chamados.filter((item: any) => item.status === "LV2").length} nível 2</Badge>
               </Flex>
             </Box>
             <Flex>
@@ -76,8 +118,9 @@ export default function ChamadoPage() {
           <Divider my={4} borderColor="gray.300" />
 
           {/* 3 */}
-          <Flex>
+          <Flex flexDir={"column"} gap={2}>
             {/* card */}
+            {chamados.map((item: any) => (
             <Box
               p={4}
               borderRadius="15px"
@@ -92,29 +135,27 @@ export default function ChamadoPage() {
               <Flex justifyContent={"space-between"} alignItems={"start"}>
                 <Flex flexDir={"column"} gap={4}>
                   <Flex gap={2} alignItems={"center"}>
-                    <Text fontSize={"md"} fontWeight={"bold"}>Problemas com acesso ao sistema financeiro</Text>
-                    <Badge colorScheme="blue">ABERTO</Badge>
-                    <Badge colorScheme="yellow">ALTA</Badge>
+                    <Text fontSize={"md"} fontWeight={"bold"}>{item.titulo}</Text>
+                    <Badge colorScheme="blue">{item.status}</Badge>
+                    <Badge colorScheme="yellow">{item.prioridade}</Badge>
                   </Flex>
                   <Flex gap={2}>
-                    <Text fontSize={"sm"}>Solicitante: João Silva</Text>•
-                    <Text fontSize={"sm"}>Departamento: Financeiro</Text>
+                    <Text fontSize={"sm"}>Solicitante: {item.user_nome}</Text>•
+                    <Text fontSize={"sm"}>Departamento: {item.departamento}</Text>
                   </Flex>
                   <Flex gap={4}>
-                    <Code children='ID: TK-2023-001' />
-                    <Code children='Aberto em: 21/05/2025' />
-                    <Code children='Última atualização: 13/05/2023' />
+                    <Code children={`ID: ${item.id}`} />
+                    <Code children={`Aberto em: ${item.createAt}`} />
+                    <Code children={`Última atualização: ${item.updatedAt}`} />
                   </Flex>
                 </Flex>
                 <Flex gap={2}>
-                  <Button colorScheme="green">Ver</Button>
-                  <Button colorScheme="blue" variant="outline">
-                    Editar
-                  </Button>
-                  <Button colorScheme="red">Excluir</Button>
+                <BtnChamado name="Editar" id={item.id} type="edit"/>
+                <BtnChamado name="Excluir" id={item.id} type="delete"/>
                 </Flex>
               </Flex>
             </Box>
+          ))}
           </Flex>
         </Flex>
       </Flex>
