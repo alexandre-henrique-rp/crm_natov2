@@ -6,7 +6,6 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -16,14 +15,14 @@ import {
   ModalOverlay,
   Textarea,
   useDisclosure,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 
 interface BtCreateAlertClienteProps {
   DataSolicitacao: solictacao.SolicitacaoObjectCompleteType;
-  user: AuthUser;
+  user: AuthUser | null;
 }
 
 export function BtCreateAlertCliente({
@@ -31,9 +30,10 @@ export function BtCreateAlertCliente({
   user,
 }: BtCreateAlertClienteProps) {
   const hierarquia = user?.hierarquia;
-  const [Data, setData] = useState<solictacao.SolicitacaoObjectType>();
+  const [Data, setData] = useState<
+    solictacao.SolicitacaoObjectCompleteType | undefined
+  >();
   const [Loading, setLoading] = useState(false);
-  const [Titulo, setTitulo] = useState("");
   const [Descricao, setDescricao] = useState("");
   const toast = useToast();
 
@@ -52,21 +52,18 @@ export function BtCreateAlertCliente({
     e.preventDefault();
     setLoading(true);
     const data: AlertsType.AlertsProps = {
-      corretor: Data?.corretor.id,
-      empreendimento: Data?.empreendimento?.id || 1,
+      corretor_id: Data?.corretor?.id,
       solicitacao_id: Data?.id,
-      tag: "warning",
       descricao: Descricao,
-      titulo: `${Data?.id} - ${Titulo}`
     };
 
     // Send a POST request to the /api/alerts/create endpoint with the data object.
     const request = await fetch(`/api/alerts/create`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
 
     // If the request was successful, show a success toast message.
@@ -76,7 +73,7 @@ export function BtCreateAlertCliente({
         description: "Alerta criado com sucesso!",
         status: "success",
         duration: 3000,
-        isClosable: true
+        isClosable: true,
       });
 
       setAlert(true);
@@ -95,7 +92,7 @@ export function BtCreateAlertCliente({
         description: "Erro ao criar alerta!",
         status: "error",
         duration: 3000,
-        isClosable: true
+        isClosable: true,
       });
       setLoading(false);
     }
@@ -106,7 +103,6 @@ export function BtCreateAlertCliente({
       {hierarquia === "ADM" && (
         <>
           <Button
-          
             colorScheme="yellow"
             variant="solid"
             size="sm"
@@ -128,15 +124,6 @@ export function BtCreateAlertCliente({
               <ModalCloseButton />
               <FormControl>
                 <ModalBody>
-                  <FormControl id="title" isRequired mt={4}>
-                    <FormLabel>Título</FormLabel>
-                    <Input
-                      value={Titulo}
-                      onChange={(e) => setTitulo(e.target.value)}
-                      placeholder="Digite o título"
-                    />
-                  </FormControl>
-
                   <FormControl id="text" isRequired mt={4}>
                     <FormLabel>Descrição</FormLabel>
                     <Textarea

@@ -10,14 +10,18 @@ interface SetDataProps {
   user?: any;
 }
 
-export default function CardListAlertCliente({ Id, DataAlert, user}: SetDataProps) {
+export default function CardListAlertCliente({
+  Id,
+  DataAlert,
+  user,
+}: SetDataProps) {
   const [Data, setData] = useState<any>([]);
   const hierarquia = user?.hierarquia;
   const { Alert } = useAlertContext();
 
   useEffect(() => {
     if (Alert) RequesteAlert();
-    if (DataAlert &&DataAlert.length > 0) {
+    if (DataAlert && DataAlert.length > 0) {
       setData(DataAlert);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -27,9 +31,9 @@ export default function CardListAlertCliente({ Id, DataAlert, user}: SetDataProp
     const req = await fetch(`/api/alerts/solicitacao/${Id}`, {
       method: "GET",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      cache: "no-store"
+      cache: "no-store",
     });
     if (req.ok) {
       const res = await req.json();
@@ -44,7 +48,7 @@ export default function CardListAlertCliente({ Id, DataAlert, user}: SetDataProp
   return (
     <>
       <Box
-        w={{ base: "95%", md: "65%" }} // Ajuste a largura conforme necessário
+        w={{ base: "full", md: "full" }} // Ajuste a largura conforme necessário
         p={6} // Padding interno
         bg="white"
         borderRadius={8}
@@ -63,7 +67,7 @@ export default function CardListAlertCliente({ Id, DataAlert, user}: SetDataProp
                   month: "numeric",
                   year: "numeric",
                   hour: "numeric",
-                  minute: "numeric"
+                  minute: "numeric",
                 }
               );
               console.log(item);

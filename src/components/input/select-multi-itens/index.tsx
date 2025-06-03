@@ -27,7 +27,6 @@ interface SelectMultiItemProps {
   required?: boolean;
   boxWidth?: string;
   options: Option[];
-  defaultValue?: Option[]; // ⬅️ adicionada
   fetchUrlGet?: string;
   fetchUrlDelete?: (id: string | number) => string;
   onChange?: (items: Option[]) => void;
@@ -40,15 +39,13 @@ export default function SelectMultiItem({
   label,
   boxWidth,
   options,
-  defaultValue = [],
   fetchUrlGet,
   fetchUrlDelete,
   onChange,
   ...selectProps
 }: SelectMultiItemProps) {
   const [selected, setSelected] = useState<number | string>("");
-  const [items, setItems] = useState<Option[]>(defaultValue);
-  console.log("🚀 ~ items:", items);
+  const [items, setItems] = useState<Option[]>([]);
   const toast = useToast();
 
   const handleAddItem = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -121,12 +118,6 @@ export default function SelectMultiItem({
       })();
     }
   }, [fetchUrlGet]);
-
-  useEffect(() => {
-    if (defaultValue) {
-      setItems(defaultValue);
-    }
-  }, [defaultValue]);
 
   return (
     <FormControl w={boxWidth}>

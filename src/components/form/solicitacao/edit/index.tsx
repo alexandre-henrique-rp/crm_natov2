@@ -1,4 +1,5 @@
 "use client";
+import { BtCreateAlertCliente } from "@/components/botoes/bt_create_alert_cliente";
 import BtRemoverDistrato from "@/components/botoes/bt_Remover_Distrato";
 import BtnIniciarAtendimento from "@/components/botoes/btn_iniciar_atendimento";
 import BotaoPausar from "@/components/botoes/btn_pausar";
@@ -95,13 +96,10 @@ export default function FormSolicitacaoEdit({
   data,
 }: FormSolicitacaoEditProps) {
   const session = useSession();
-  console.log("🚀 ~ session:", session);
-  console.log("🚀 ~ data:", data);
   const hierarquia = session?.hierarquia ? session.hierarquia : null;
   const isAdmin = session?.hierarquia === "ADM";
   const [tagsOptions, setTagsOptions] = useState([] as any[]);
   const [Tags, setTags] = useState([] as any[]);
-  console.log("🚀 ~ Tags:", Tags);
   const [form, setForm] = useState<SolicitacaoType>({
     id: 0,
     nome: "",
@@ -170,7 +168,6 @@ export default function FormSolicitacaoEdit({
     uploadRg: null,
     distrato: null,
   });
-  console.log("🚀 ~ form:", form);
   const [options, setOptions] = useState([
     {
       id: 0,
@@ -537,9 +534,8 @@ export default function FormSolicitacaoEdit({
             <SelectMultiItem
               id="tags"
               label="Tags"
-              fetchUrlGet={`/api/tags/getallid/${form.id}`}
+              fetchUrlGet={`/api/tags/getallid/${id}`}
               fetchUrlDelete={(id) => `/api/tags/delete/${id}`}
-              defaultValue={Tags}
               options={tagsOptions}
               onChange={(items) => setTags(items)}
               required
@@ -584,6 +580,7 @@ export default function FormSolicitacaoEdit({
       </Flex>
 
       <Flex gap={2} w={"full"} p={2} justifyContent={"flex-end"}>
+        <BtCreateAlertCliente DataSolicitacao={data} user={session} />
         {form.distrato &&
           form.ativo &&
           ((hierarquia === "ADM" && (
