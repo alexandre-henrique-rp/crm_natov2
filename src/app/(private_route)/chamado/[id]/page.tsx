@@ -26,7 +26,6 @@ export default async function NewChamadoPage({ params }: Props) {
   const session = await GetSessionServer();
 
   const data = session && (await Requestes(id, session?.token));
-
   if (!data) {
     return <div>Chamado não encontrado</div>;
   }

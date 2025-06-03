@@ -6,6 +6,7 @@ import {
   Flex,
   FormLabel,
   Heading,
+  Input,
   Select,
   Textarea,
   useToast,
@@ -24,6 +25,7 @@ interface ChamadoProps {
 
 type TypeChamado = {
   id: number;
+  titulo?: string;
   descricao?: string;
   status: string;
   idUser?: number;
@@ -35,6 +37,9 @@ type TypeChamado = {
   temp: any[];
   chat: any[];
   images: any[];
+  departamento: string;
+  prioridade: string;
+  dth_qru: string;
   images_adm: any[];
   respostaData?: any;
   User?: any;
@@ -49,11 +54,6 @@ type ManagedImage = {
   file?: File;
 };
 
-type ListImage = {
-  url_view: string;
-  url_download?: string;
-};
-
 export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
   const [images, setImages] = useState<ManagedImage[]>([]);
   const [imagesView, setImagesView] = useState<ExistingImageInput[]>([]);
@@ -64,14 +64,22 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
   const [status, setStatus] = useState<string>("ABERTO");
   const [solicitacaoId, setSolicitacaoId] = useState<number>(0);
   const [DadosChamado, setDadosChamado] = useState<TypeChamado | null>(null);
+  const [titulo, setTitulo] = useState<string>("");
 
   const toast = useToast();
   const router = useRouter();
 
-  const handleRemoveExistingImage = useCallback((imageId: string, imageUrl: string) => {
-    console.log(`Imagem existente removida: ID - ${imageId}, URL - ${imageUrl}`);
-    setImagesView(prevImages => prevImages.filter(img => img.url_view !== imageUrl));
-  }, []);
+  const handleRemoveExistingImage = useCallback(
+    (imageId: string, imageUrl: string) => {
+      console.log(
+        `Imagem existente removida: ID - ${imageId}, URL - ${imageUrl}`
+      );
+      setImagesView((prevImages) =>
+        prevImages.filter((img) => img.url_view !== imageUrl)
+      );
+    },
+    []
+  );
 
   const SaveChat = async (chat: any) => {
     try {
@@ -122,8 +130,8 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
   };
 
   const SaveImage = async () => {
-    const newImagesToUpload = images.filter(img => img.isNew && img.file);
-    const existingImagesToKeep = images.filter(img => !img.isNew);
+    const newImagesToUpload = images.filter((img) => img.isNew && img.file);
+    const existingImagesToKeep = images.filter((img) => !img.isNew);
 
     if (newImagesToUpload.length === 0) {
       return existingImagesToKeep;
@@ -160,9 +168,8 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
       if (validUploadedImages.length === 0 && newImagesToUpload.length > 0) {
         throw new Error("Nenhuma imagem nova foi enviada com sucesso");
       }
-      
-      return [...existingImagesToKeep, ...validUploadedImages];
 
+      return [...existingImagesToKeep, ...validUploadedImages];
     } catch (error) {
       console.error("Erro ao enviar imagens:", error);
       throw error;
@@ -173,10 +180,21 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
     try {
       const finalImages = await SaveImage();
 
+      // Validação e formatação da data dth_qru
+      let formattedDthQru = DadosChamado?.dth_qru || null;
+      if (dth_qru) {
+        try {
+          formattedDthQru = new Date(dth_qru).toISOString();
+        } catch (error) {
+          console.error('Data inválida:', error);
+        }
+      }
+
       const data = {
+        titulo,
         departamento,
         prioridade,
-        dth_qru: new Date(dth_qru).toISOString(),
+        dth_qru: formattedDthQru,
         descricao,
         status,
         solicitacaoId,
@@ -244,16 +262,23 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
 
   useEffect(() => {
     if (data) {
-      if (!descricao) {
+      if (data.titulo !== titulo) {
+        setTitulo(data.titulo || "");
+      }
+      if (data.descricao !== descricao) {
         setDescricao(data.descricao || "");
       }
-      if (!DadosChamado) {
-        setDadosChamado(data);
-      }
-      if (data.status) {
+      if (data.status !== status) {
         setStatus(data.status);
       }
-      if (data.images) {
+      if (!DadosChamado || DadosChamado.id !== data.id) {
+        setDadosChamado(data);
+      }
+      if (
+        data.images &&
+        (imagesView.length === 0 ||
+          JSON.stringify(imagesView) !== JSON.stringify(data.images))
+      ) {
         setImagesView(data.images);
       }
     }
@@ -319,16 +344,30 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
               )}
             </Flex>
           </Flex>
-          <Divider border={"1px solid"} borderColor="gray.300" my={4} />
+          <Divider border={"1px solid"} borderColor="gray.300" my={2} />
 
           <Flex
             w="full"
             alignItems="center"
             justifyContent="flex-start"
-            gap={8}
+            gap={2}
             flexDir={"column"}
           >
-            <Flex w={"90%"} h={"20rem"} gap={2} flexDir="column">
+            <Flex w={"90%"} gap={2} flexDir="column">
+              <FormLabel>Motivo do chamado</FormLabel>
+              <Input
+                placeholder="Descreva o motivo do chamado"
+                w="full"
+                borderRadius="1rem"
+                border="1px solid"
+                borderColor="gray.300"
+                _hover={{ borderColor: "gray.300" }}
+                _focus={{ borderColor: "blue.500" }}
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+              />
+            </Flex>
+            <Flex w={"90%"} h={"15rem"} gap={2} flexDir="column">
               <FormLabel>Descrição do chamado</FormLabel>
               <Textarea
                 placeholder="Descrição"
@@ -354,16 +393,15 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
               )}
               {DadosChamado?.id && (
                 <>
-                  <ImageComponent onChange={handleSetImage} maxImages={5} DataImages={DadosChamado?.images} />
-                  {/* <Flex gap={2} w="full" h="full" flexWrap="wrap">
-                    {DadosChamado?.images?.map(
-                      (image: { url_view: string; url_download: string }) => (
-                        <>
-                          <ImageViewComponent imageUrl={image.url_view} />
-                        </>
-                      )
-                    )}
-                  </Flex> */}
+                  <ImageComponent
+                    onChange={handleSetImage}
+                    maxImages={5}
+                    DataImages={
+                      DadosChamado?.images.length > 0
+                        ? DadosChamado?.images
+                        : []
+                    }
+                  />
                 </>
               )}
               <DetalhesChamadoComponent

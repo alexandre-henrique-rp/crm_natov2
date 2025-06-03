@@ -30,26 +30,30 @@ export const DetalhesChamadoComponent = ({
     if (IdParams) {
       setSolicitacaoId(Number(IdParams));
     }
-    Departamento(departamento);
-    Prioridade(prioridade);
-    DthQru(dthQru);
-    cliente(solicitacaoId);
-  }, [IdParams, departamento, prioridade, dthQru, solicitacaoId]);
+  }, [IdParams]);
 
-  if (data && data.id) {
-    if (!departamento) {
-      setDepartamento(data.departamento);
+  useEffect(() => {
+    if (data && data.id) {
+      if (data.departamento && data.departamento !== departamento) {
+        setDepartamento(data.departamento);
+      }
+      if (data.prioridade && data.prioridade !== prioridade) {
+        setPrioridade(data.prioridade);
+      }
+      if (data.dth_qru && data.dth_qru !== dthQru) {
+        // Converte a data ISO para o formato datetime-local
+        const date = new Date(data.dth_qru);
+        const localDateTime = new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
+          .toISOString()
+          .slice(0, 16);
+        setDthQru(localDateTime);
+      }
+      if (data.solicitacaoId && data.solicitacaoId !== solicitacaoId) {
+        setSolicitacaoId(data.solicitacaoId);
+      }
     }
-    if (!prioridade) {
-      setPrioridade(data.prioridade);
-    }
-    if (!dthQru) {
-      setDthQru(data.dth_qru.split(":00")[0]);
-    }
-    if (!solicitacaoId) {
-      setSolicitacaoId(data.solicitacaoId);
-    }
-  }
+  }, [data, departamento, prioridade, dthQru, solicitacaoId]);
+
   return (
     <>
       <Flex w={"full"} gap={4} flexDir="column">
@@ -98,14 +102,14 @@ export const DetalhesChamadoComponent = ({
                 </Text>
               }
             >
-              <Input
+            {solicitacaoId > 0 && <Input
                 borderColor="gray.300"
                 type="text"
                 placeholder="Id da solicitação"
                 w={"100%"}
                 value={solicitacaoId.toString()}
                 onChange={(e) => setSolicitacaoId(Number(e.target.value))}
-              />
+              />}
             </Suspense>
           </Box>
         </Flex>
