@@ -18,13 +18,10 @@ declare namespace AlertsType {
    */
   export interface AlertsProps{
     id?: number;
-    titulo: string;
     descricao: string;
     solicitacao_id?: number;
-    corretor?: number;
-    tag: string;
+    corretor_id?: number;
     status?: boolean;
-    empreendimento?: number;
     createdAt?: Date | string |any;
     updatedAt?: Date | string | any | null;
   }

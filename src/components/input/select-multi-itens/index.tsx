@@ -7,7 +7,6 @@ import {
   Text,
   IconButton,
   Flex,
-  Icon,
   useToast,
   SelectProps,
   Tag,

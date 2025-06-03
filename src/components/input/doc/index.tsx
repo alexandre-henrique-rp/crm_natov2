@@ -6,11 +6,12 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  Image,
   Text,
   useToast,
 } from "@chakra-ui/react";
 import { DownloadIcon } from "@chakra-ui/icons";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, DragEvent, useEffect, useRef, useState } from "react";
 
 interface InputFileUploadProps {
   label: string;
@@ -34,6 +35,9 @@ export default function InputFileUpload({
   const toast = useToast();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState<string>("Nenhum arquivo escolhido");
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+
+  const isImage = (url: string) => url?.match(/\.(jpeg|jpg|png)$/i) !== null;
 
   useEffect(() => {
     if (value?.url_view) {
@@ -42,10 +46,7 @@ export default function InputFileUpload({
     }
   }, [value]);
 
-  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+  const handleFile = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("type", id);
@@ -59,8 +60,7 @@ export default function InputFileUpload({
       const fileUrl = await response.json();
       onvalue(fileUrl.data);
 
-      const uploadedName = file.name;
-      setFileName(uploadedName);
+      setFileName(file.name);
 
       toast({
         title: "Arquivo salvo",
@@ -79,6 +79,25 @@ export default function InputFileUpload({
     }
   };
 
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) handleFile(file);
+  };
+
+  const handleDrop = (event: DragEvent) => {
+    event.preventDefault();
+    setIsDragging(false);
+    const file = event.dataTransfer.files?.[0];
+    if (file) handleFile(file);
+  };
+
+  const handleDragOver = (event: DragEvent) => {
+    event.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => setIsDragging(false);
+
   const triggerFileInput = () => {
     inputRef.current?.click();
   };
@@ -91,34 +110,58 @@ export default function InputFileUpload({
       w={boxWidth}
     >
       <FormLabel fontSize="sm">{label}</FormLabel>
-      <Flex align="center" rounded={"md"} border={"1px solid #ccc"}>
+
+      <Box
+        border="2px dashed"
+        borderColor={isDragging ? "blue.400" : "gray.300"}
+        p={4}
+        rounded="md"
+        textAlign="center"
+        bg={isDragging ? "gray.50" : "white"}
+        cursor="pointer"
+        onClick={triggerFileInput}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+      >
         <input
           type="file"
           ref={inputRef}
-          accept=".jpg, .png, .pdf"
+          accept=".jpg, .jpeg, .png, .pdf"
           onChange={handleFileChange}
           style={{ display: "none" }}
         />
-        <Flex
-          p={1}
-          roundedStart={"md"}
-          h={"full"}
-          bg={"gray.100"}
-          onClick={triggerFileInput}
-          _hover={{ cursor: "pointer", bg: "gray.200" }}
-          mr={2}
-          fontSize={"sm"}
-        >
-          Selecionar arquivo
-        </Flex>
-        <Text p={1} fontSize="sm" color="gray.600" noOfLines={1}>
-          {fileName}
+        <Text fontSize="sm" color="gray.600">
+          {isDragging
+            ? "Solte o arquivo aqui..."
+            : "Arraste um arquivo aqui ou clique para selecionar"}
         </Text>
-      </Flex>
+        <Text mt={1} fontSize="xs" color="gray.500">
+          (Formatos permitidos: .jpg, .jpeg, .png, .pdf)
+        </Text>
+
+        {fileName && fileName !== "Nenhum arquivo escolhido" && (
+          <Text mt={2} fontSize="sm" color="gray.700">
+            Arquivo selecionado: <strong>{fileName}</strong>
+          </Text>
+        )}
+      </Box>
+
+      {value?.url_view && isImage(value.url_view) && (
+        <Box mt={3}>
+          <Image
+            src={value.url_view}
+            alt="Pré-visualização"
+            maxH="150px"
+            borderRadius="md"
+            objectFit="contain"
+          />
+        </Box>
+      )}
 
       {value?.url_download && (
         <Button
-          mt={2}
+          mt={3}
           size="sm"
           leftIcon={<DownloadIcon />}
           colorScheme="blue"

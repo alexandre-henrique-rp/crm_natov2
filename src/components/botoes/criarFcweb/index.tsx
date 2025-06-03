@@ -15,9 +15,8 @@ import { useRouter } from "next/navigation";
 import React, { FormEventHandler, useState, useRef } from "react";
 import { AuthUser } from "@/types/session";
 
-
 interface CriarFcwebProps {
-  Dados: solictacao.SolicitacaoObjectCompleteType;
+  Dados: solictacao.SolicitacaoObjectCompleteType | any;
   user: AuthUser;
 }
 
@@ -36,24 +35,29 @@ export function CriarFcweb({ Dados, user }: CriarFcwebProps) {
     try {
       const response = await fetch("/api/fcweb", {
         method: "POST",
-        headers: { "Content-Type": "application/json",
-        
-         },
-        
+        headers: { "Content-Type": "application/json" },
+
         body: JSON.stringify({
           s_alerta: "ATIVADO",
-          referencia: `${new Date().toISOString().split("T")[0].split("-").reverse().join("-")}.${new Date().toLocaleTimeString()}`,
+          referencia: `${new Date()
+            .toISOString()
+            .split("T")[0]
+            .split("-")
+            .reverse()
+            .join("-")}.${new Date().toLocaleTimeString()}`,
           unidade: "1",
           criou_fc: "API",
           cpf: Dados?.cpf,
           nome: Dados?.nome,
           contador: "NATO_",
           obscont: [
-            `Criado Por: ${user?.nome ?? '-'}`,
-            `Empreendimento: ${Dados?.empreendimento?.nome ?? '-'}`,
-            `vendedor: ${Dados?.corretor?.nome ?? '-'}`,
-            `(${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')})`
-          ].join(' - '),
+            `Criado Por: ${user?.nome ?? "-"}`,
+            `Empreendimento: ${Dados?.empreendimento?.nome ?? "-"}`,
+            `vendedor: ${Dados?.corretor?.nome ?? "-"}`,
+            `(${new Date().toLocaleDateString(
+              "pt-BR"
+            )} ${new Date().toLocaleTimeString("pt-BR")})`,
+          ].join(" - "),
           tipocd: "A3PF Bird5000",
           valorcd: Dados?.valorcd,
           formapgto: "PENDURA",

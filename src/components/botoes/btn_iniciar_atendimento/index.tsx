@@ -29,7 +29,7 @@ export default function BtnIniciarAtendimento({
     const res = await req.json();
     if (!req.ok) {
       toast({
-        title: res.message,
+        title: "Erro ao iniciar atendimento",
         status: "error",
         duration: 2000,
         isClosable: true,
@@ -39,7 +39,7 @@ export default function BtnIniciarAtendimento({
     }
 
     toast({
-      title: res.message,
+      title: "Atendimento iniciado com sucesso",
       status: "success",
       duration: 2000,
       isClosable: true,
@@ -59,7 +59,7 @@ export default function BtnIniciarAtendimento({
     const res = await req.json();
     if (!req.ok) {
       toast({
-        title: res.message,
+        title: "Erro ao cancelar atendimento",
         status: "error",
         duration: 2000,
         isClosable: true,
@@ -69,7 +69,7 @@ export default function BtnIniciarAtendimento({
     }
 
     toast({
-      title: res.message,
+      title: "Atendimento cancelado com sucesso",
       status: "warning",
       duration: 2000,
       isClosable: true,
