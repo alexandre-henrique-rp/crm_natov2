@@ -8,7 +8,6 @@ export async function PUT(
   try {
     const { id } = params;
     const req = await request.json();
-    console.log("🚀 ~ req:", req);
     const body = req.form ? req.form : req;
     const tags = req.Tags ? req.Tags : [];
 
@@ -27,28 +26,64 @@ export async function PUT(
       ...(body.empreendimentoId && { empreendimento: body.empreendimentoId }),
       ...(body.relacionamento && { relacionamentos: body.relacionamento.cpf }),
     };
-    console.log("🚀 ~ dataSend:", dataSend);
-
     const session = await GetSessionServer();
 
-    if (tags) {
-      tags.map(async (tag: any) => {
-        const req = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/tag`,
+    if (tags && tags.length > 0) {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/tag/solicitacao/${id}`,
           {
-            method: "POST",
+            method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${session?.token}`,
             },
-            body: JSON.stringify({
-              descricao: tag.label,
-              solicitacao: +id,
-            }),
           }
         );
-        console.log("🚀 ~ req:", await req.json());
-      });
+
+        if (!response.ok) {
+          throw new Error(`Erro ao buscar tags salvas: ${response.statusText}`);
+        }
+
+        const tagsSalvas = await response.json();
+
+        const tagsSalvasDescriptions = new Set(
+          tagsSalvas.map((tagSalva: any) => tagSalva.descricao)
+        );
+
+        const newTagsToCreate = tags.filter(
+          (novaTag: any) => !tagsSalvasDescriptions.has(novaTag.label)
+        );
+
+        if (newTagsToCreate.length > 0) {
+          newTagsToCreate.map(async (tagToCreate: any) => {
+            const createResponse = await fetch(
+              `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/tag`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${session?.token}`,
+                },
+                body: JSON.stringify({
+                  descricao: tagToCreate.label,
+                  solicitacao: +id,
+                }),
+              }
+            );
+
+            if (!createResponse.ok) {
+              throw new Error(
+                `Erro ao criar tag "${tagToCreate.label}": ${createResponse.statusText}`
+              );
+            }
+
+            return createResponse.json();
+          });
+        }
+      } catch (error) {
+        console.error("Erro no processo de gerenciamento de tags:", error);
+      }
     }
     if (!session) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -69,11 +104,9 @@ export async function PUT(
       return new NextResponse("Invalid credentials", { status: 401 });
     }
     const data = await user.json();
-    console.log("🚀 ~ data:", data);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log("🚀 ~ error:", error);
     return NextResponse.json(error, { status: 500 });
   }
 }
