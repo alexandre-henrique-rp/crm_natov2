@@ -1,9 +1,7 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle, Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { FaCircleInfo } from "react-icons/fa6";
 import { GoAlertFill } from "react-icons/go";
-import { TiDelete } from "react-icons/ti";
 
 interface BugType {
   id: number;
@@ -51,33 +49,13 @@ export const BugReport = () => {
   const MapBug = bug?.map((bug: any) => {
     return (
       <>
-        <Alert status={bug.tipo} rounded={"lg"}>
-          {bug.tipo === "warning" ? (
-            <GoAlertFill
-              fontSize={"1.3rem"}
-              color="#daa300"
-              style={{ marginRight: "1rem" }}
-            />
-          ) : bug.tipo === "error" ? (
-            <TiDelete
-              fontSize={"2rem"}
-              color="#f30101"
-              style={{ marginRight: "0.7rem", marginLeft: "-6px" }}
-            />
-          ) : (
-            <FaCircleInfo
-              fontSize={"1.3rem"}
-              color="#0066cc"
-              style={{ marginRight: "1rem" }}
-            />
-          )}
-          <AlertTitle>
-            {bug.tipo === "warning"
-              ? "Alerta"
-              : bug.tipo === "error"
-              ? "Erro"
-              : "Informação"}
-          </AlertTitle>
+        <Alert status={"warning"} rounded={"lg"}>
+          <GoAlertFill
+            fontSize={"2rem"}
+            color="#daa300"
+            style={{ marginRight: "1rem" }}
+          />
+          <AlertTitle>Alerta</AlertTitle>
           <AlertDescription>{bug.message}</AlertDescription>
         </Alert>
       </>
