@@ -1,16 +1,12 @@
-// "use client";
-"use server";
 import {
   Box,
   Button,
-  Checkbox,
   Divider,
   Flex,
-  FormLabel,
   Heading,
   Spacer,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import UserRegisterProvider from "@/provider/UserRegister";
 import BotaoCancelar from "@/components/botoes/btn_cancelar";
@@ -18,6 +14,7 @@ import { UpdateUser } from "@/actions/user/service";
 import Loading from "@/app/loading";
 import { GetSessionServer } from "@/lib/auth_confg";
 import Permissoes from "@/components/usuarios_component/permissoes";
+import MaskedInput from "@/components/input/masked";
 
 type Props = {
   params: { id: string };
@@ -107,46 +104,86 @@ export default async function EditarUsuario({ params }: Props) {
                 align={{ base: "stretch", md: "start" }}
               >
                 <UserRegisterProvider>
-                  <CardCreateUpdate.GridCpf
+                  <MaskedInput
+                    id="cpf"
+                    isCpf={true}
+                    name="cpf"
+                    label="CPF"
+                    mask="999.999.999-99"
+                    value={data?.cpf ?? ""}
                     w={{ base: "100%", md: "15rem" }}
-                    idUser={id}
-                    CPF={data?.cpf ?? ""}
                   />
-                  <CardCreateUpdate.GridName
+                  <MaskedInput
+                    id="nome"
+                    name="nome"
+                    label="Nome"
+                    mask={""}
+                    value={data?.nome ?? ""}
                     w={{ base: "100%", md: "35rem" }}
-                    Nome={data?.nome ?? ""}
                   />
-                  <CardCreateUpdate.GridUser
+                  <MaskedInput
+                    id="username"
+                    name="username"
+                    label="Username"
+                    mask={""}
+                    value={data?.username ?? ""}
                     w={{ base: "100%", md: "15rem" }}
-                    Usuario={data?.username ?? ""}
                   />
-                  <CardCreateUpdate.GridRegisterTel
+                  <MaskedInput
+                    id="telefone"
+                    name="telefone"
+                    label="Telefone"
+                    mask="(99) 99999-9999"
+                    value={data?.telefone ?? ""}
                     w={{ base: "100%", md: "10rem" }}
-                    tell={data?.telefone ?? ""}
                   />
-                  <CardCreateUpdate.GridEmail
+                  <MaskedInput
+                    id="email"
+                    name="email"
+                    label="Email"
+                    mask={""}
+                    value={data?.email ?? ""}
                     w={{ base: "100%", md: "25rem" }}
-                    email={data?.email ?? ""}
                   />
-                  <CardCreateUpdate.GridUserConstrutora
+                  <MaskedInput
+                    id="construtoras"
+                    name="construtoras"
+                    label="Construtoras"
+                    mask={""}
+                    value={data?.construtoras ?? ""}
                     w={{ base: "100%", md: "23rem" }}
-                    UserConstrutora={data?.construtoras ?? ""}
                   />
-                  <CardCreateUpdate.GridUserEmpreendimento
+                  <MaskedInput
+                    id="empreendimentos"
+                    name="empreendimentos"
+                    label="Empreendimentos"
+                    mask={""}
+                    value={data?.empreendimentos ?? ""}
                     w={{ base: "100%", md: "25rem" }}
-                    UserEmpreedimento={data?.empreendimentos ?? ""}
                   />
-                  <CardCreateUpdate.GridUserFinanceiro
+                  <MaskedInput
+                    id="financeiros"
+                    name="financeiros"
+                    label="Financeiros"
+                    mask={""}
+                    value={data?.financeiros ?? ""}
                     w={{ base: "100%", md: "23rem" }}
-                    UserFinanceira={data?.financeiros ?? ""}
                   />
-                  <CardCreateUpdate.GridUserCargo
+                  <MaskedInput
+                    id="cargo"
+                    name="cargo"
+                    label="Cargo"
+                    mask={""}
+                    value={data?.cargo ?? ""}
                     w={{ base: "100%", md: "20rem" }}
-                    UserCargo={data?.cargo ?? ""}
                   />
-                  <CardCreateUpdate.GridUserHierarquia
+                  <MaskedInput
+                    id="hierarquia"
+                    name="hierarquia"
+                    label="Hierarquia"
+                    mask={""}
+                    value={data?.hierarquia ?? ""}
                     w={{ base: "100%", md: "20rem" }}
-                    UserHierarquia={data?.hierarquia ?? ""}
                   />
                   <Permissoes data={data?.role ?? null} />
                 </UserRegisterProvider>
@@ -176,6 +213,3 @@ export default async function EditarUsuario({ params }: Props) {
     </>
   );
 }
-
-
-//TODO: revisar cadastro de usuario
