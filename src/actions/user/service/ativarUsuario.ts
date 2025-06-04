@@ -1,6 +1,7 @@
 "use server";
 
 import { GetSessionServer } from "@/lib/auth_confg";
+import { revalidateTag } from "next/cache";
 
 export async function ativarUsuario(id: number) {
 
@@ -26,6 +27,7 @@ export async function ativarUsuario(id: number) {
   if(!req.ok){
     return { error: true, message: res.message};
   }
+  revalidateTag("usuarios_list");
 
   return { error: false, message: 'Usuário ativado com sucesso'}
   
