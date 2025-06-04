@@ -179,8 +179,6 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
   const handleSave = async () => {
     try {
       const finalImages = await SaveImage();
-
-      // Validação e formatação da data dth_qru
       let formattedDthQru = DadosChamado?.dth_qru || null;
       if (dth_qru) {
         try {
@@ -222,7 +220,6 @@ export const ChamadoRootComponent = ({ data, session }: ChamadoProps) => {
         ? "/api/chamado/post"
         : `/api/chamado/put/${DadosChamado?.id}`;
       const methodSet = !DadosChamado?.id ? "POST" : "PATCH";
-      // Enviar dados do chamado
       const response = await fetch(url, {
         method: methodSet,
         body: JSON.stringify(data),

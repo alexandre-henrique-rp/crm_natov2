@@ -13,6 +13,7 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
+import { redirect } from "next/navigation";
 
 interface TypeChamado {
   id: number;
@@ -29,6 +30,16 @@ interface TypeChamado {
   images: any[];
   createAt: string;
   updatedAt?: string;
+  user_nome?: string;
+}
+
+interface PageProps {
+  searchParams: {
+    busca?: string;
+    status?: string;
+    prioridade?: string;
+    departamento?: string;
+  };
 }
 
 async function getChamadosAll(session: SessionNext.Server | null) {
@@ -50,11 +61,65 @@ async function getChamadosAll(session: SessionNext.Server | null) {
   return data ?? [];
 }
 
+// Função para filtrar chamados
+function filtrarChamados(chamados: TypeChamado[], filtros: PageProps['searchParams']) {
+  let resultado = chamados;
 
-export default async function ChamadoPage() {
+  if (filtros.busca?.trim()) {
+    resultado = resultado.filter(chamado =>
+      chamado.titulo.toLowerCase().includes(filtros.busca!.toLowerCase()) ||
+      chamado.descricao?.toLowerCase().includes(filtros.busca!.toLowerCase()) ||
+      chamado.user_nome?.toLowerCase().includes(filtros.busca!.toLowerCase())
+    );
+  }
+
+  if (filtros.status) {
+    resultado = resultado.filter(chamado => chamado.status === filtros.status);
+  }
+
+  if (filtros.prioridade) {
+    resultado = resultado.filter(chamado => chamado.prioridade === filtros.prioridade);
+  }
+
+  if (filtros.departamento) {
+    resultado = resultado.filter(chamado => chamado.departamento === filtros.departamento);
+  }
+
+  return resultado;
+}
+
+// Server Action para filtros
+async function handleFilter(formData: FormData) {
+  "use server";
+  
+  const busca = formData.get("busca") as string;
+  const status = formData.get("status") as string;
+  const prioridade = formData.get("prioridade") as string;
+  const departamento = formData.get("departamento") as string;
+
+  const params = new URLSearchParams();
+  
+  if (busca?.trim()) params.set("busca", busca);
+  if (status) params.set("status", status);
+  if (prioridade) params.set("prioridade", prioridade);
+  if (departamento) params.set("departamento", departamento);
+
+  const queryString = params.toString();
+  redirect(`/chamado${queryString ? `?${queryString}` : ""}`);
+}
+
+export default async function ChamadoPage({ searchParams = {} }: { searchParams?: PageProps['searchParams'] }) {
   const session = await GetSessionServer();
-  const chamados = session ? await getChamadosAll(session) : [];
-  console.log("🚀 ~ ChamadoPage ~ chamados:", chamados)
+  const chamadosTodos = session ? await getChamadosAll(session) : [];
+  const chamados = filtrarChamados(chamadosTodos, searchParams);
+  
+  // Obter valores únicos para os selects
+  const statusUnicos = [...new Set(chamadosTodos.map(c => c.status))].filter(Boolean);
+  const prioridadesUnicas = [...new Set(chamadosTodos.map(c => c.prioridade))].filter(Boolean);
+  const departamentosUnicos = [...new Set(chamadosTodos.map(c => c.departamento))].filter(Boolean);
+
+  console.log("🚀 ~ ChamadoPage ~ chamados:", chamados);
+
   return (
     <>
       <Flex
@@ -91,30 +156,65 @@ export default async function ChamadoPage() {
           </Flex>
 
           {/* 2 */}
-          <Flex
-            w={"100%"}
-            gap={2}
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            <Box w={"25rem"}>
-              <Input type="text" placeholder="Buscar chamados" w={"100%"} />
-            </Box>
-            <Box w={"15rem"}>
-              <Select placeholder="status" w={"100%"} />
-            </Box>
-            <Box w={"15rem"}>
-              <Select placeholder="prioridade" w={"100%"} />
-            </Box>
-            <Box w={"15rem"}>
-              <Select placeholder="Departamento" w={"100%"} />
-            </Box>
-            <Box w={"10rem"}>
-              <Button colorScheme="green" w={"100%"}>
-                Filtrar
-              </Button>
-            </Box>
-          </Flex>
+          <form action={handleFilter}>
+            <Flex
+              w={"100%"}
+              gap={2}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <Box w={"25rem"}>
+                <Input 
+                  name="busca"
+                  type="text" 
+                  placeholder="Buscar chamados" 
+                  w={"100%"} 
+                  defaultValue={searchParams.busca || ""}
+                />
+              </Box>
+              <Box w={"15rem"}>
+                <Select 
+                  name="status"
+                  placeholder="status" 
+                  w={"100%"}
+                  defaultValue={searchParams.status || ""}
+                >
+                  {statusUnicos.map(status => (
+                    <option key={status} value={status}>{status}</option>
+                  ))}
+                </Select>
+              </Box>
+              <Box w={"15rem"}>
+                <Select 
+                  name="prioridade"
+                  placeholder="prioridade" 
+                  w={"100%"}
+                  defaultValue={searchParams.prioridade || ""}
+                >
+                  {prioridadesUnicas.map(prioridade => (
+                    <option key={prioridade} value={prioridade}>{prioridade}</option>
+                  ))}
+                </Select>
+              </Box>
+              <Box w={"15rem"}>
+                <Select 
+                  name="departamento"
+                  placeholder="Departamento" 
+                  w={"100%"}
+                  defaultValue={searchParams.departamento || ""}
+                >
+                  {departamentosUnicos.map(departamento => (
+                    <option key={departamento} value={departamento}>{departamento}</option>
+                  ))}
+                </Select>
+              </Box>
+              <Box w={"10rem"}>
+                <Button type="submit" colorScheme="green" w={"100%"}>
+                  Filtrar
+                </Button>
+              </Box>
+            </Flex>
+          </form>
           <Divider my={4} borderColor="gray.300" />
 
           {/* 3 */}
@@ -122,6 +222,7 @@ export default async function ChamadoPage() {
             {/* card */}
             {chamados.map((item: any) => (
             <Box
+              key={item.id}
               p={4}
               borderRadius="15px"
               shadow="md"
