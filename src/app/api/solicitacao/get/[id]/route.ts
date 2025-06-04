@@ -14,6 +14,7 @@ export async function GET(request: Request,{ params }: { params: { id: string } 
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session?.token}`
+        
       }
     });
     const data = await request.json();
