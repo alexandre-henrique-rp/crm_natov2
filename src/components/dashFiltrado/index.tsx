@@ -142,33 +142,73 @@ export default function DashFiltrado({
     }
   };
 
+ 
+  const renderValue = (value: any) => {
+    if (value === null || value === undefined) return "N/A";
+    if (typeof value === 'object') return JSON.stringify(value);
+    return String(value);
+  };
+
+
+  const processTagData = (tagData: any) => {
+    if (!tagData || !Array.isArray(tagData)) return { labels: [], values: [] };
+    
+    return tagData.reduce((acc, item) => {
+      if (typeof item === 'string' && item.includes(' = ')) {
+        const [label, value] = item.split(' = ');
+        const numValue = Number(value);
+        if (!isNaN(numValue)) {
+          acc.labels.push(label);
+          acc.values.push(numValue);
+        }
+      }
+      return acc;
+    }, { labels: [], values: [] });
+  };
+
   return (
     <>
-      {/* filtro apenas para adm */}
+
       {hierarquia == "ADM" && (
         <>
           <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} gap={4} w={"full"}>
-            <Input placeholder='Select Date and Time' width={"fit-content"} size='md' type='date' onChange={(e) => setDataInicio(e.target.value)} />
-            <Input placeholder='Select Date and Time' w={'fit-content'} size='md' type='date' onChange={(e) => setDataFim(e.target.value)} />
+            <Input 
+              placeholder='Data Início' 
+              width={"fit-content"} 
+              size='md' 
+              type='date' 
+              value={dataInicio || ""}
+              onChange={(e) => setDataInicio(e.target.value || null)} 
+            />
+            <Input 
+              placeholder='Data Fim' 
+              w={'fit-content'} 
+              size='md' 
+              type='date' 
+              value={dataFim || ""}
+              onChange={(e) => setDataFim(e.target.value || null)} 
+            />
             <Select w={"200px"} value={construtora || ""} onChange={(e) => setConstrutora(e.target.value || null)}>
               <option value="">Construtora</option>
-              {construtoras?.map((construtora: any) => (
-                <option key={construtora.id} value={construtora.id}>
-                  {construtora.fantasia}
+              {Array.isArray(construtoras) && construtoras.map((construtora: any) => (
+                <option key={construtora?.id || Math.random()} value={construtora?.id || ""}>
+                  {construtora?.fantasia || "Nome não disponível"}
                 </option>
               ))}
             </Select>
-            <Select w={"200px"} placeholder="Empreendimento" onChange={(e) => setEmpreendimento(e.target.value)}>
-              {empreendimentos?.map((empreendimento: any) => (
-                <option key={empreendimento.id} value={empreendimento.id}>
-                  {empreendimento.nome}
+            <Select w={"200px"} value={empreedimento || ""} onChange={(e) => setEmpreendimento(e.target.value || null)}>
+              <option value="">Empreendimento</option>
+              {Array.isArray(empreendimentos) && empreendimentos.map((empreendimento: any) => (
+                <option key={empreendimento?.id || Math.random()} value={empreendimento?.id || ""}>
+                  {empreendimento?.nome || "Nome não disponível"}
                 </option>
               ))}
             </Select>
-            <Select w={"200px"} placeholder="Financeira" onChange={(e) => setFinanceira(e.target.value)}>
-              {financeiras?.map((financeira: any) => (
-                <option key={financeira.id} value={financeira.id}>
-                  {financeira.fantasia}
+            <Select w={"200px"} value={financeiro || ""} onChange={(e) => setFinanceira(e.target.value || null)}>
+              <option value="">Financeira</option>
+              {Array.isArray(financeiras) && financeiras.map((financeira: any) => (
+                <option key={financeira?.id || Math.random()} value={financeira?.id || ""}>
+                  {financeira?.fantasia || "Nome não disponível"}
                 </option>
               ))}
             </Select>
@@ -182,25 +222,39 @@ export default function DashFiltrado({
         </>
       )}
 
-      {/* filtro para todos */}
+
       {hierarquia !== "ADM" && (
         <>
           <Box display={"flex"} justifyContent={"center"} gap={2} w={"100%"}>
-            <Input placeholder='Select Date and Time' width={"fit-content"} size='md' type='date' onChange={(e) => setDataInicio(e.target.value)} />
-            <Input placeholder='Select Date and Time' w={'fit-content'} size='md' type='date' onChange={(e) => setDataFim(e.target.value)} />
+            <Input 
+              placeholder='Data Início' 
+              width={"fit-content"} 
+              size='md' 
+              type='date' 
+              value={dataInicio || ""}
+              onChange={(e) => setDataInicio(e.target.value || null)} 
+            />
+            <Input 
+              placeholder='Data Fim' 
+              w={'fit-content'} 
+              size='md' 
+              type='date' 
+              value={dataFim || ""}
+              onChange={(e) => setDataFim(e.target.value || null)} 
+            />
             <Select w={"200px"} value={construtora || ""} onChange={(e) => setConstrutora(e.target.value || null)}>
               <option value="">Construtora</option>
-              {construtoras?.map((construtora: any) => (
-                <option key={construtora.id} value={construtora.id}>
-                  {construtora.fantasia}
+              {Array.isArray(construtoras) && construtoras.map((construtora: any) => (
+                <option key={construtora?.id || Math.random()} value={construtora?.id || ""}>
+                  {construtora?.fantasia || "Nome não disponível"}
                 </option>
               ))}
             </Select>
             <Select w={"200px"} value={empreedimento || ""} onChange={(e) => setEmpreendimento(e.target.value || null)}>
               <option value="">Empreendimento</option>
-              {empreendimentos?.map((empreendimento: any) => (
-                <option key={empreendimento.id} value={empreendimento.id}>
-                  {empreendimento.nome}
+              {Array.isArray(empreendimentos) && empreendimentos.map((empreendimento: any) => (
+                <option key={empreendimento?.id || Math.random()} value={empreendimento?.id || ""}>
+                  {empreendimento?.nome || "Nome não disponível"}
                 </option>
               ))}
             </Select>
@@ -246,7 +300,7 @@ export default function DashFiltrado({
                     Quantidade de Certificados:
                   </Text>
                   <Text fontSize="xl" color={"#1D1D1B"}>
-                    {dados ? dados.total_solicitacao : null}
+                    {renderValue(dados?.total_solicitacao)}
                   </Text>
                 </Flex>
                 <Flex flexDirection={"row"} gap={1}>
@@ -254,16 +308,15 @@ export default function DashFiltrado({
                     Media de Horas/Certificado:
                   </Text>
                   <Text fontSize="xl" color={"#1D1D1B"}>
-                    {dados ? dados.time : null}
+                    {renderValue(dados?.time)}
                   </Text>
                 </Flex>
               </Box>
             </Flex>
           </>
         ) : null}
-        <Divider />
         
-        {/* Gráficos de Pizza */}
+        <Divider />
         {dados ? (
           <Flex
             flexDirection="row"
@@ -276,58 +329,44 @@ export default function DashFiltrado({
               title="Quantidade de RG e CNH"
               colors={["#1D1D1B", "#00713C"]}
               labels={["RG", "CNH"]}
-              dataValues={dados ? [dados.rg, dados.cnh] : []}
+              dataValues={[
+                Number(dados?.rg) || 0, 
+                Number(dados?.cnh) || 0
+              ]}
             />
-            {dados.suporte ? (
+            
+            {dados?.suporte && Number(dados.suporte) > 0 ? (
               <Box w="60%" h="250px">
                 <DoughnutChart
-                  labels={
-                    dados.suporte_tag
-                      ? dados.suporte_tag.map(
-                          (item: string) => item.split(" = ")[0]
-                        )
-                      : null
-                  }
-                  dataValues={
-                    dados.suporte_tag
-                      ? dados.suporte_tag.map((item: string) =>
-                          Number(item.split(" = ")[1])
-                        )
-                      : null
-                  }
-                  title={`Total Suporte : ${dados.suporte ? dados.suporte : 0}`}
+                  labels={processTagData(dados?.suporte_tag).labels}
+                  dataValues={processTagData(dados?.suporte_tag).values}
+                  title={`Total Suporte: ${renderValue(dados?.suporte)}`}
                 />
               </Box>
             ) : null}
+            
             <PieChart
               title="Video Conferencia e Presencial"
               colors={["#00713C", "#1D1D1B"]}
               labels={["Video Conf.", "Presencial"]}
-              dataValues={dados ? [dados.total_vc, dados.total_int] : []}
+              dataValues={[
+                Number(dados?.total_vc) || 0, 
+                Number(dados?.total_int) || 0
+              ]}
             />
-            {dados.erros ? (
+            
+            {dados?.erros && Number(dados.erros) > 0 ? (
               <Box w="60%" h="250px">
                 <DoughnutChart
-                  labels={
-                    dados.erros_tag
-                      ? dados.erros_tag.map(
-                          (item: string) => item.split(" = ")[0]
-                        )
-                      : null
-                  }
-                  dataValues={
-                    dados.erros_tag
-                      ? dados.erros_tag.map((item: string) =>
-                          Number(item.split(" = ")[1])
-                        )
-                      : null
-                  }
-                  title={`Total Erros : ${dados.erros ? dados.erros : 0}`}
+                  labels={processTagData(dados?.erros_tag).labels}
+                  dataValues={processTagData(dados?.erros_tag).values}
+                  title={`Total Erros: ${renderValue(dados?.erros)}`}
                 />
               </Box>
             ) : null}
           </Flex>
         ) : null}
+        
         {loading ? (
           <Spinner
             thickness="6px"
