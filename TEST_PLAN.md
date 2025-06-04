@@ -9,7 +9,6 @@ Este documento descreve os cenários de teste manuais para o projeto CRM Natov2.
 - [ ] Tentar login com email inválido.
 - [ ] Tentar login com senha inválida.
 - [ ] Tentar login com campos em branco.
-- [ ] Verificar se o link "Esqueci minha senha" (se existir) funciona.
 
 ### 2. Página de Suporte/FAQ
 - [ ] Acessar a página de Suporte/FAQ.
