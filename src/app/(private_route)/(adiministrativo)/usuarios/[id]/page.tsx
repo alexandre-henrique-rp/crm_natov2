@@ -56,18 +56,24 @@ export default async function EditarUsuario({ params }: Props) {
       {!data && <Loading />}
       {data && (
         <Flex
-          // minH="90.9dvh" // Removido ou ajustado conforme necessidade
+          minH="100vh" // ou minH={{ base: "auto", md: "100vh" }}
+          w="full"
           bg="gray.100"
           py={{ base: 4, md: 8 }}
           px={{ base: 2, md: 2 }}
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="flex-start"
         >
           <Box
-            w={"100%"}
+            w={"full"}
+            maxWidth="container.xl"
             bg="gray.50"
             borderRadius="1rem"
             boxShadow="lg"
-            h={"100%"}
+            // h={{ base: "auto", md: "full" }} // REMOVIDO
             p={{ base: 4, md: 8 }}
+            my={{ md: 8 }}
           >
             <Flex
               direction={{ base: "column", md: "row" }}
@@ -90,7 +96,7 @@ export default async function EditarUsuario({ params }: Props) {
                     <Heading as="h3" size="md" mb={3} fontWeight="semibold">
                       Dados Pessoais
                     </Heading>
-                    <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
+                    <SimpleGrid columns={{ base: 1, sm: 2, md: 2, lg: 3 }} spacing={4}>
                       <CardCreateUpdate.GridCpf idUser={id} CPF={data?.cpf ?? ""} />
                       <CardCreateUpdate.GridName Nome={data?.nome ?? ""} />
                       <CardCreateUpdate.GridUser Usuario={data?.username ?? ""} />
@@ -104,7 +110,7 @@ export default async function EditarUsuario({ params }: Props) {
                     <Heading as="h3" size="md" mb={3} fontWeight="semibold">
                       Associações
                     </Heading>
-                    <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
+                    <SimpleGrid columns={{ base: 1, sm: 2, md: 2, lg: 3 }} spacing={4}>
                       <CardCreateUpdate.GridUserConstrutora UserConstrutora={data?.construtoras ?? ""} />
                       <CardCreateUpdate.GridUserEmpreendimento UserEmpreedimento={data?.empreendimentos ?? ""} />
                       <CardCreateUpdate.GridUserFinanceiro UserFinanceira={data?.financeiros ?? ""} />
