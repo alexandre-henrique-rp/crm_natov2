@@ -7,35 +7,93 @@ import {
   Heading,
   Input,
   VStack,
-  Text,
-  Tag as ChakraTag, // Renomeando para evitar conflito com o nome da função
 } from "@chakra-ui/react";
 import { GetSessionServer } from "@/lib/auth_confg";
+import { Metadata } from "next";
+import { TagList } from "@/components/tag/tag-list"; // Importando o novo Client Component
+import { revalidateTag } from "next/cache"; // Importando para revalidação
 
-const metadata: Metadata = {
-  title: "",
-}
+export const metadata: Metadata = {
+  title: "Tags",
+};
+
+const getTags = async (session: SessionNext.Server) => {
+  try {
+    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/tag-list`;
+    const req = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.token}`,
+      },
+      cache: "force-cache",
+      next: {
+        tags: ["get_tags"],
+      },
+    });
+    const res = await req.json();
+    if (!req.ok) {
+      throw new Error("Erro");
+    }
+    return res;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+type TagType = {
+  id: number;
+  label: string;
+  createdAt: string;
+};
 
 export default async function Tags() {
-  const session = await GetSessionServer();
-  const handleCreateTag = async (_: any, formData: FormData) => {
-    'use server';
-    // Lógica para criar a tag (ex: enviar para API)
-    console.log("Nova tag:", formData.get("tag"));
-    // Idealmente, aqui você invalidaria o cache ou faria um re-fetch das tags
-  };
+  const session = (await GetSessionServer()) as SessionNext.Server;
+  const tags = (await getTags(session)) as TagType[];
 
-  // Exemplo de dados para a lista de tags (substitua com seus dados reais)
-  const exampleTags = [
-    { id: "1", name: "Importante" },
-    { id: "2", name: "Urgente" },
-    { id: "3", name: "Desenvolvimento" },
-    { id: "4", name: "Marketing" },
-  ];
+  const handleCreateTag = async (_: any, formData: FormData) => {
+    "use server";
+    const newTag = formData.get("tag");
+    console.log("Nova tag:", newTag);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/tag-list`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.token}`,
+        },
+        body: JSON.stringify({ label: newTag }),
+      }
+    );
+
+    const data = await response.json();
+    console.log(data);
+
+    if (response.ok) {
+      revalidateTag("get_tags");
+      return {
+        message: "Tag criada com sucesso",
+        status: 200,
+      };
+    } else {
+      // Tratar erro
+      console.error("Erro ao criar tag");
+      return {
+        message: "Erro ao criar tag",
+        status: 500,
+      };
+    }
+  };
 
   return (
     <>
-      <Box w="100%" h="calc(100vh - 80px)" px={4} /* Ajuste h para considerar a navbar */>
+      <Box
+        w="100%"
+        h="calc(100vh - 115px)"
+        px={4} /* Ajuste h para considerar a navbar */
+      >
         <Box
           w="100%"
           h="full"
@@ -44,14 +102,19 @@ export default async function Tags() {
           p={{ base: 4, md: 6, lg: 8 }} // Padding responsivo
           bg="white" // Adicionando um fundo branco para o card principal
         >
-          <Heading as="h1" size="lg" mb={6} textAlign={{ base: "center", md: "left" }}>
+          <Heading
+            as="h1"
+            size="lg"
+            mb={6}
+            textAlign={{ base: "center", md: "left" }}
+          >
             Gerenciamento de Tags
           </Heading>
           <Divider mb={6} borderColor="gray.300" />
 
           <Flex
             w="100%"
-            h="calc(100% - 100px)" // Ajustar altura para caber o título e divider
+            h="calc(100% - 115px)" // Ajustar altura para caber o título e divider
             direction={{ base: "column", md: "row" }} // Coluna em mobile, linha em desktop
             gap={6} // Espaçamento entre as seções
           >
@@ -67,32 +130,7 @@ export default async function Tags() {
               <Heading fontSize="lg" mb={4} textAlign="center">
                 Lista de Tags
               </Heading>
-              <Box h={{ base: "200px", md: "calc(100% - 60px)"}} overflowY="auto" pr={2} /* Adiciona padding à direita para a scrollbar */>
-                {exampleTags.length > 0 ? (
-                  <VStack spacing={3} align="stretch">
-                    {exampleTags.map((tag) => (
-                      <ChakraTag
-                        key={tag.id}
-                        size="lg"
-                        variant="subtle"
-                        colorScheme="blue" // Escolha um colorScheme que combine
-                        p={2}
-                        borderRadius="md"
-                        w="100%"
-                        justifyContent="space-between"
-                      >
-                        <Text>{tag.name}</Text>
-                        {/* Adicionar botões de ação (editar, excluir) aqui se necessário */}
-                        {/* <IconButton aria-label="Excluir tag" icon={<DeleteIcon />} size="sm" /> */}
-                      </ChakraTag>
-                    ))}
-                  </VStack>
-                ) : (
-                  <Text textAlign="center" color="gray.500">
-                    Nenhuma tag cadastrada ainda.
-                  </Text>
-                )}
-              </Box>
+              <TagList tags={tags} />
             </Box>
 
             {/* Seção Cadastrar Tag */}
