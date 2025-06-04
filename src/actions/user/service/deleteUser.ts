@@ -1,6 +1,7 @@
 'use server';
 
 import { GetSessionServer } from "@/lib/auth_confg";
+import { revalidateTag } from "next/cache";
 
 export async function DeleteUser(id: number){
 
@@ -23,6 +24,7 @@ export async function DeleteUser(id: number){
     if(!req.ok){
         return { error: true, message: res.message, data : null };
     }
+    revalidateTag("usuarios_list");
 
     return { error: false, message: "Usuário deletado com sucesso", data: res };
 }

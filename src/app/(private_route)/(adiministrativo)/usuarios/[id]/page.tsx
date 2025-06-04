@@ -4,7 +4,9 @@ import {
   Divider,
   Flex,
   Heading,
+  SimpleGrid,
   Spacer,
+  VStack,
 } from "@chakra-ui/react";
 import React from "react";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
@@ -14,25 +16,10 @@ import { UpdateUser } from "@/actions/user/service";
 import Loading from "@/app/loading";
 import { GetSessionServer } from "@/lib/auth_confg";
 import Permissoes from "@/components/usuarios_component/permissoes";
-import MaskedInput from "@/components/input/masked";
 
 type Props = {
   params: { id: string };
 };
-
-const lista = [
-  { name: "adm", label: "Acesso ao painel administrativo" },
-  { name: "direto", label: "Acesso ao Nato Direto" },
-  { name: "relatorio", label: "Acesso ao relatório" },
-  { name: "cad_financeiro", label: "Pode criar CCA" },
-  { name: "user", label: "Pode criar Usuário" },
-  { name: "cad_construtora", label: "Pode criar Construtora" },
-  { name: "cad_empreendimento", label: "Pode criar Empreendimento" },
-  { name: "now", label: "Pode criar Now" },
-  { name: "alerta", label: "Pode criar e responder Alerta" },
-  { name: "chamado", label: "Pode ver e responder Chamado" },
-  { name: "solicitacao", label: "Pode editar Solicitação" },
-];
 
 const fetchUser = async (id: number, token: string) => {
   try {
@@ -69,7 +56,7 @@ export default async function EditarUsuario({ params }: Props) {
       {!data && <Loading />}
       {data && (
         <Flex
-          minH="90.9dvh"
+          // minH="90.9dvh" // Removido ou ajustado conforme necessidade
           bg="gray.100"
           py={{ base: 4, md: 8 }}
           px={{ base: 2, md: 2 }}
@@ -92,119 +79,60 @@ export default async function EditarUsuario({ params }: Props) {
               <Heading fontSize={{ base: "xl", md: "2xl" }}>
                 Editar Usuário
               </Heading>
-              <Box></Box>
+              <Box /> {/* Espaçador ou para botões de ação no header */}
             </Flex>
             <Divider my={2} borderColor="gray.400" />
             <CardCreateUpdate.Form action={UpdateUser}>
-              <Flex
-                w="full"
-                flexWrap="wrap"
-                gap={4}
-                direction={{ base: "column", md: "row" }}
-                align={{ base: "stretch", md: "start" }}
-              >
-                <UserRegisterProvider>
-                  <MaskedInput
-                    id="cpf"
-                    isCpf={true}
-                    name="cpf"
-                    label="CPF"
-                    mask="999.999.999-99"
-                    value={data?.cpf ?? ""}
-                    w={{ base: "100%", md: "15rem" }}
-                  />
-                  <MaskedInput
-                    id="nome"
-                    name="nome"
-                    label="Nome"
-                    mask={""}
-                    value={data?.nome ?? ""}
-                    w={{ base: "100%", md: "35rem" }}
-                  />
-                  <MaskedInput
-                    id="username"
-                    name="username"
-                    label="Username"
-                    mask={""}
-                    value={data?.username ?? ""}
-                    w={{ base: "100%", md: "15rem" }}
-                  />
-                  <MaskedInput
-                    id="telefone"
-                    name="telefone"
-                    label="Telefone"
-                    mask="(99) 99999-9999"
-                    value={data?.telefone ?? ""}
-                    w={{ base: "100%", md: "10rem" }}
-                  />
-                  <MaskedInput
-                    id="email"
-                    name="email"
-                    label="Email"
-                    mask={""}
-                    value={data?.email ?? ""}
-                    w={{ base: "100%", md: "25rem" }}
-                  />
-                  <MaskedInput
-                    id="construtoras"
-                    name="construtoras"
-                    label="Construtoras"
-                    mask={""}
-                    value={data?.construtoras ?? ""}
-                    w={{ base: "100%", md: "23rem" }}
-                  />
-                  <MaskedInput
-                    id="empreendimentos"
-                    name="empreendimentos"
-                    label="Empreendimentos"
-                    mask={""}
-                    value={data?.empreendimentos ?? ""}
-                    w={{ base: "100%", md: "25rem" }}
-                  />
-                  <MaskedInput
-                    id="financeiros"
-                    name="financeiros"
-                    label="Financeiros"
-                    mask={""}
-                    value={data?.financeiros ?? ""}
-                    w={{ base: "100%", md: "23rem" }}
-                  />
-                  <MaskedInput
-                    id="cargo"
-                    name="cargo"
-                    label="Cargo"
-                    mask={""}
-                    value={data?.cargo ?? ""}
-                    w={{ base: "100%", md: "20rem" }}
-                  />
-                  <MaskedInput
-                    id="hierarquia"
-                    name="hierarquia"
-                    label="Hierarquia"
-                    mask={""}
-                    value={data?.hierarquia ?? ""}
-                    w={{ base: "100%", md: "20rem" }}
-                  />
+              <UserRegisterProvider>
+                <VStack spacing={6} align="stretch" w="full">
+                  {/* Seção Dados Pessoais */}
+                  <Box as="section">
+                    <Heading as="h3" size="md" mb={3} fontWeight="semibold">
+                      Dados Pessoais
+                    </Heading>
+                    <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
+                      <CardCreateUpdate.GridCpf idUser={id} CPF={data?.cpf ?? ""} />
+                      <CardCreateUpdate.GridName Nome={data?.nome ?? ""} />
+                      <CardCreateUpdate.GridUser Usuario={data?.username ?? ""} />
+                      <CardCreateUpdate.GridRegisterTel tell={data?.telefone ?? ""} />
+                      <CardCreateUpdate.GridEmail email={data?.email ?? ""} />
+                    </SimpleGrid>
+                  </Box>
+
+                  {/* Seção Associações */}
+                  <Box as="section">
+                    <Heading as="h3" size="md" mb={3} fontWeight="semibold">
+                      Associações
+                    </Heading>
+                    <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
+                      <CardCreateUpdate.GridUserConstrutora UserConstrutora={data?.construtoras ?? ""} />
+                      <CardCreateUpdate.GridUserEmpreendimento UserEmpreedimento={data?.empreendimentos ?? ""} />
+                      <CardCreateUpdate.GridUserFinanceiro UserFinanceira={data?.financeiros ?? ""} />
+                    </SimpleGrid>
+                  </Box>
+
+                  {/* Seção Acesso e Hierarquia */}
+                  <Box as="section">
+                    <Heading as="h3" size="md" mb={3} fontWeight="semibold">
+                      Acesso e Hierarquia
+                    </Heading>
+                    <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={4}>
+                      <CardCreateUpdate.GridUserCargo UserCargo={data?.cargo ?? ""} />
+                      <CardCreateUpdate.GridUserHierarquia UserHierarquia={data?.hierarquia ?? ""} />
+                    </SimpleGrid>
+                  </Box>
+
+                  {/* Seção Permissões */}
                   <Permissoes data={data?.role ?? null} />
-                </UserRegisterProvider>
-                <Spacer display={{ base: "none", md: "block" }} />
-              </Flex>
-              <Divider my={4} borderColor="gray.300" />
-              <Flex w="full" justify="flex-end" gap={2} mt={2}>
-                <Button
-                  type="submit"
-                  colorScheme="green"
-                  size="lg"
-                  className="btn"
-                >
+                </VStack>
+              </UserRegisterProvider>
+
+              <Divider my={6} borderColor="gray.400" />
+              <Flex w="full" justify="flex-end" gap={4} mb={4}>
+                <Button type="submit" colorScheme="green" size="md" className="btn">
                   Salvar
                 </Button>
-                <BotaoCancelar
-                  colorScheme="red"
-                  variant="outline"
-                  size="lg"
-                  className="btn"
-                />
+                <BotaoCancelar colorScheme="red" variant="outline" size="md" className="btn" />
               </Flex>
             </CardCreateUpdate.Form>
           </Box>

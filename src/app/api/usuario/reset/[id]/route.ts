@@ -1,4 +1,5 @@
 import { GetSessionServer } from "@/lib/auth_confg";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function PUT(
@@ -31,6 +32,7 @@ export async function PUT(
     if (!reqest.ok) {
       return new NextResponse("Invalid credentials", { status: 401 });
     }
+    revalidateTag("usuarios_list");
     return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
     console.log("🚀 ~ error:", error);
