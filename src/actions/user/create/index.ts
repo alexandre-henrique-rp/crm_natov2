@@ -1,10 +1,12 @@
 "use server";
 
 import { GetSessionServer } from "@/lib/auth_confg";
+import { revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 
 // Função responsável por criar um novo usuário a partir dos dados do formulário
 export default async function UserCreate(_: any, data: FormData) {
-  try {
+  
     // Extração dos campos do formulário
     const cpf = data.get("cpf") as string;
     const nome = data.get("nome") as string;
@@ -72,18 +74,12 @@ export default async function UserCreate(_: any, data: FormData) {
       };
     }
 
+    revalidateTag("usuarios_list");
+    redirect(`/usuarios`);
     // Retorno de sucesso padronizado
     return {
       error: false,
       message: res.message || "Usuário cadastrado com sucesso.",
       id: res.data?.id?.toString() || undefined, // Garante que o id seja string ou undefined
     };
-  } catch (e: any) {
-    // Tratamento de erro inesperado
-    return {
-      error: true,
-      message: e?.message || "Erro inesperado no cadastro.",
-      id: undefined,
-    };
-  }
 }

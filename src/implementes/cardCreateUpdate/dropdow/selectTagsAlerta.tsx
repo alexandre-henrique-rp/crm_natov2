@@ -1,5 +1,4 @@
 "use client";
-import { Tag, TagsOptions } from "@/data/tags";
 import {
   Box,
   Flex,
@@ -27,6 +26,19 @@ export function SelectTagsAlerta({
   const [Tags, setTags] = useState<any>([]);
   const toast = useToast();
 
+  const fetchTags = async () => {
+    const request = await fetch(`/api/tag-list`);
+    const response = await request.json();
+    if (!request.ok) {
+      setTags([]);
+      return;
+    }
+    const data = response?.map((item: any) => {
+      return { id: item.id, label: item.descricao };
+    });
+    setTags(data);
+  };
+
   const handleUpdate = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const value = Tag;
@@ -34,6 +46,10 @@ export function SelectTagsAlerta({
     const filter = TagsOptions.filter((item: Tag) => item.id === Number(value));
     setTags([...Tags, ...filter]);
   };
+
+  useEffect(() => {
+    fetchTags();
+  }, []);
 
   const RendBoard = Tags.map((item: Tag) => {
     const DeleteTag = async () => {
