@@ -18,7 +18,7 @@ export default function CardGridConstrutoraTel({
           Telefone {index && index > 0 && index}
         </FormLabel>
         <InputConstrutoraTell
-        maxLength={15}
+          maxLength={16}
           Index={index && index > 0 && index}
           tell={tell}
           px={1}

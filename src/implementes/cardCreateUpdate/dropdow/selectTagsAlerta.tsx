@@ -24,6 +24,7 @@ export function SelectTagsAlerta({
 }: SelectTagsAlertaProps) {
   const [Tag, setTag] = useState<number>(0);
   const [Tags, setTags] = useState<any>([]);
+  const [TagsOptions, setTagsOptions] = useState<any>([]);
   const toast = useToast();
 
   const fetchTags = async () => {
@@ -43,7 +44,7 @@ export function SelectTagsAlerta({
     e.preventDefault();
     const value = Tag;
 
-    const filter = TagsOptions.filter((item: Tag) => item.id === Number(value));
+    const filter = TagsOptions.filter((item: any) => item.id === Number(value));
     setTags([...Tags, ...filter]);
   };
 
@@ -51,7 +52,14 @@ export function SelectTagsAlerta({
     fetchTags();
   }, []);
 
-  const RendBoard = Tags.map((item: Tag) => {
+  useEffect(() => {
+    (async () => {
+      const request = await fetch("/api/tags/getall");
+      const response = await request.json();
+      setTagsOptions(response);
+    })();
+  });
+  const RendBoard = Tags.map((item: any) => {
     const DeleteTag = async () => {
       const request = await fetch(`/api/tags/delete/${item.id}`, {
         method: "DELETE",
@@ -70,10 +78,10 @@ export function SelectTagsAlerta({
           duration: 3000,
           isClosable: true,
         });
-        const filter = Tags.filter((f: Tag) => f.id !== item.id);
+        const filter = Tags.filter((f: any) => f.id !== item.id);
         setTags(filter);
       } else {
-        const filter = Tags.filter((f: Tag) => f.id !== item.id);
+        const filter = Tags.filter((f: any) => f.id !== item.id);
         setTags(filter);
         toast({
           title: "exclusão realizada",
@@ -138,7 +146,7 @@ export function SelectTagsAlerta({
           <option style={styleComponentes} value={0}>
             Selecione uma Tag
           </option>
-          {TagsOptions.map((item: Tag) => (
+          {TagsOptions.map((item: any) => (
             <option style={styleComponentes} key={item.id} value={item.id}>
               {item.label}
             </option>

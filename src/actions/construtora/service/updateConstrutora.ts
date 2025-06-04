@@ -5,11 +5,10 @@ import { redirect } from "next/navigation";
 export default async function UpdateConstrutora(_: any, data: FormData) {
   const id = data.get("id") as string;
   const razaoSocial = data.get("razaosocial") as string;
-  const tel = data.get("telefoneSemMask") as string;
+  const tel = data.get("telefone") as string;
   const email = data.get("email") as string;
   const fantasia = data.get("fantasia") as string;
   const valor_cert = data.get("valorCert") as string;
-  console.log("🚀 ~ UpdateConstrutora ~ valor_cert:", data)
 
   const body = {
     razaosocial: razaoSocial,
@@ -18,7 +17,6 @@ export default async function UpdateConstrutora(_: any, data: FormData) {
     fantasia: fantasia,
     valor_cert: Number(valor_cert),
   };
-  console.log("🚀 ~ UpdateConstrutora ~ body:", body)
 
   const session = await GetSessionServer();
 
