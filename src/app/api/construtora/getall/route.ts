@@ -1,7 +1,8 @@
+import crypto from 'crypto';
 import { DeleteSession, GetSessionServer } from "@/lib/auth_confg";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const session = await GetSessionServer();
     if (!session) {
@@ -9,7 +10,7 @@ export async function GET() {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const request = await fetch(
+    const req = await fetch(
       `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/construtora`,
       {
         method: "GET",
@@ -17,15 +18,33 @@ export async function GET() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.token}`,
         },
-        next: { revalidate: 5 },
       }
     );
-    const data = await request.json();
-    if (!request.ok) {
+
+    const data = await req.json();
+    if (!req.ok) {
       throw new Error(data.message);
     }
 
-    return NextResponse.json(data, { status: 200 });
+
+    const bodyString = JSON.stringify(data);
+    const etag = crypto.createHash('md5').update(bodyString).digest('hex');
+
+
+    const ifNoneMatch = request.headers.get('If-None-Match');
+    if (ifNoneMatch === etag) {
+
+      return new NextResponse(null, { status: 304 });
+    }
+
+
+    return NextResponse.json(data, {
+      status: 200,
+      headers: {
+        'ETag': etag,
+        'Cache-Control': 'private, max-age=0, must-revalidate',
+      }
+    });
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
