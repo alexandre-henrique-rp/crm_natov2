@@ -58,7 +58,7 @@ export default async function PainelAdmLayout({
             {session?.user.hierarquia === "ADM" && <BotaoAdm name={"Tags"} />}
           </Flex>
         </Flex>
-        <Flex w={{ base: "100%", md: "90%" }} minW={"90%"} h={"100%"}>
+        <Flex w={{ base: "100%", md: "90%" }} minW={"90%"} h={"full"}>
           {children}
         </Flex>
       </Flex>

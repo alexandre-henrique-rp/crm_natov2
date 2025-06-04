@@ -39,7 +39,6 @@ export async function POST(request: Request) {
       },
       body: formData,
     });
-
     const retornoArquivo = await Envio.json();
     
     if (!Envio.ok) {

@@ -10,24 +10,28 @@ import Permissoes from "@/components/usuarios_component/permissoes";
 export default function CadastrarUsuario() {
   return (
     <Flex
-      // minH="90.9dvh"
+      minH={{ base: "100vh", md: "auto" }}
+      w="full"
       bg="gray.100"
-      py={{ base: 4, md: 8 }}
-      px={{ base: 2, md: 2 }}
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="flex-start"
     >
       <Box
-        w={"100%"}
+        w={"full"} // Alterado de 100% para full para consistência, mas o efeito é o mesmo
+        maxWidth="container.xl"
         bg="gray.50"
         borderRadius="1rem"
         boxShadow="lg"
-        h={"100%"}
+        // h={"100%"} // REMOVIDO
         p={{ base: 4, md: 8 }}
+        my={{ md: 8 }}
       >
         <Flex
           direction={{ base: "column", md: "row" }}
           justify="space-between"
           align={{ base: "start", md: "center" }}
-          mb={4}
+          // mb={4}
           gap={2}
         >
           <Heading fontSize={{ base: "xl", md: "2xl" }}>Criar Usuário</Heading>
@@ -92,7 +96,7 @@ export default function CadastrarUsuario() {
           </UserRegisterProvider>
 
           <Divider my={6} borderColor="gray.400" />
-          <Flex w="full" justify="flex-end" gap={4} mb={4}>
+          <Flex w="full" justify="flex-end" gap={4}>
             <Button type="submit" colorScheme="green" size="md" className="btn">
               Salvar
             </Button>

@@ -69,13 +69,13 @@ export default function BotaoJuncao({ session }: BotoesFunctionProps) {
                     icon={<LuLayoutDashboard />}
                   />
                   <BotaoMobileMenu name="FAQ" path="/faq" icon={<CgToday />} />
-                  {session?.role?.direto && (
+                  {/* {session?.role?.direto && (
                     <BotaoMobileMenu
                       name="Direto"
                       path="/direto"
                       icon={<CgBriefcase />}
                     />
-                  )}
+                  )} */}
                   <BotaoMobileMenu
                     name="Sair"
                     path="/login"

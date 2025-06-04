@@ -10,16 +10,20 @@ export async function GET(request: Request) {
     if (!session.user?.role?.alert) {
       return NextResponse.json([], { status: 200 });
     }
-    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/alert`;
+    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/alert/geral/alerts/list/bug`;
     const get = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session?.token}`,
       },
-      next: { revalidate: 5 },
+      cache: "force-cache",
+      next: {
+        tags: ["alert-geral-all"],
+      },
     });
     const data = await get.json();
+    console.log("🚀 ~ GET ~ data:", data)
 
     if (!get.ok)
       return NextResponse.json(

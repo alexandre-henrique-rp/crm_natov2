@@ -7,7 +7,14 @@ import RelatorioFinanceiro from "@/components/adm/financeiro/RelatorioFinanceiro
 import ModalAddAlerta from "@/components/adm/modal/add_alerta";
 import ModalAddCobranca from "@/components/adm/modal/add_cobranca";
 import { useSession } from "@/hook/useSession";
-import { Box, Flex, Heading, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  SimpleGrid,
+  VStack,
+  useToast,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { LuBuilding, LuDollarSign, LuFileText, LuUsers } from "react-icons/lu";
 
@@ -57,19 +64,45 @@ export default function PainelAdministrativo() {
   return (
     <>
       {dados && (
-        <Box w={"100%"} px={4} overflow={"auto"}>
-          <Box w={"100%"} borderRadius={"2rem"} boxShadow={"dark-lg"} p={8}>
-            <Box w={"100%"}>
-              <Heading>Painel Administrativo</Heading>
-            </Box>
-            {session?.role.relatorio && (
-              <>
-                <Flex w={"100%"} py={8} justifyContent={"flex-end"} gap={2}>
-                  <ModalAddCobranca />
-                  <ModalAddAlerta />
-                </Flex>
-                <Flex flexDirection={"column"} gap={10} pt={3}>
-                  <Flex w={"100%"} justifyContent={"space-between"} gap={2}>
+        <Box
+          w={"full"}
+          px={{ base: 2, md: 4 }}
+          py={{ base: 4, md: 8 }}
+          overflow={"auto"}
+          bg="white"
+        >
+          <Box
+            w={"full"}
+            maxWidth="container.2xl"
+            mx="auto"
+            bg="gray.50"
+            borderRadius={"1rem"}
+            boxShadow={"2xl"}
+            p={{ base: 4, md: 8 }}
+          >
+            <VStack spacing={{ base: 6, md: 8 }} align="stretch">
+              <Box>
+                <Heading fontSize={{ base: "xl", md: "2xl" }}>
+                  Painel Administrativo
+                </Heading>
+              </Box>
+
+              {session?.role.relatorio && (
+                <>
+                  <Flex
+                    w={"100%"}
+                    justifyContent={{ base: "center", md: "flex-end" }}
+                    gap={2}
+                    wrap="wrap"
+                  >
+                    <ModalAddCobranca />
+                    <ModalAddAlerta />
+                  </Flex>
+
+                  <SimpleGrid
+                    columns={{ base: 1, sm: 2, lg: 4 }}
+                    spacing={{ base: 4, md: 6 }}
+                  >
                     <CardAdmUsuario
                       count={dados.usuarios}
                       title={"Usuários"}
@@ -90,18 +123,22 @@ export default function PainelAdministrativo() {
                       title={"Relatórios Gerados"}
                       icon={<LuFileText size={24} />}
                     />
-                  </Flex>
-                  <Flex w={"100%"} justifyContent={"space-between"} gap={2}>
-                    <Box w={"70%"}>
+                  </SimpleGrid>
+
+                  <Flex
+                    direction={{ base: "column", lg: "row" }}
+                    gap={{ base: 6, md: 8 }}
+                  >
+                    <Box w={{ base: "100%", lg: "70%" }}>
                       <RelatorioFinanceiro onAtualizar={fetchDados} />
                     </Box>
-                    <Box w={"30%"}>
+                    <Box w={{ base: "100%", lg: "30%" }}>
                       <Alertas />
                     </Box>
                   </Flex>
-                </Flex>
-              </>
-            )}
+                </>
+              )}
+            </VStack>
           </Box>
         </Box>
       )}
