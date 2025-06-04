@@ -34,10 +34,9 @@ export default function ModalAddAlerta() {
     try {
       setLoading(true);
       const body = {
-        tipo: TipoAlerta,
-        message: Message,
+        descricao: Message,
       }
-      const response = await fetch("/api/alerts/geral", {
+      const response = await fetch("/api/bug_report/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -94,15 +93,6 @@ export default function ModalAddAlerta() {
           <ModalHeader>Novo Alerta</ModalHeader>
           <ModalCloseButton />
           <ModalBody display={"flex"} flexDirection={"column"} gap={4}>
-            <Box>
-              <Text>Tipo de Alerta</Text>
-              <Select onChange={(e) => setTipoAlerta(e.target.value)}>
-                <option value=""></option>
-                <option value="info">Informação</option>
-                <option value="warning">Alerta</option>
-                <option value="error">Erro</option>
-              </Select>
-            </Box>
             <Box>
               <Text>Informe a Mensagem</Text>
               <Textarea onChange={(e) => setMessage(e.target.value)} />

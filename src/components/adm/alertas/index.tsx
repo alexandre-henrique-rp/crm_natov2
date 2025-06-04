@@ -14,16 +14,11 @@ import {
 import { useEffect, useState } from "react";
 
 interface AlertasProps {
-  id: number;
-  titulo: string;
-  solicitacao_id: number;
-  corretor: number;
-  tag: string;
-  empreendimento: number;
-  status: boolean;
-  createdAt?: string;
-  updatedAt: string;
-  descricao: string;
+    id: number,
+    descricao: string,
+    status: boolean,
+    createAt: string,
+    updatedAt: string
 }
 
 export default function Alertas() {
@@ -36,7 +31,7 @@ export default function Alertas() {
 
   const fetchAlertas = async () => {
     try {
-      const req = await fetch("/api/alerts/geral/findAll");
+      const req = await fetch("/api/bug_report");
       const data = await req.json();
       setAlertas(data);
     } catch (error) {
@@ -46,12 +41,19 @@ export default function Alertas() {
 
   const HandleDelete = async (id: number) => {
     try {
-      const req = await fetch(`/api/alerts/geral/delete/${id}`, {
+      const req = await fetch(`/api/bug_report/delete/${id}`, {
         method: "DELETE",
       });
       const data = await req.json();
       if (!req.ok) {
-        throw new Error(data.message);
+        toast({
+          title: "Erro ao remover alerta",
+          description: data.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        return;
       }
       toast({
         title: "Alerta removido com sucesso!",
@@ -96,15 +98,17 @@ export default function Alertas() {
               p={2}
               alignItems="center"
             >
-              <CardHeader>
-                <Heading size="md">{alerta.tag}</Heading>
-              </CardHeader>
               <CardBody>
                 <Text>
-                  {alerta.titulo} -{" "}
-                  {alerta.createdAt && alerta.createdAt.split("T")[0].split("-").reverse().join("/")}
-                  {" "}
-                  {alerta.updatedAt && alerta.updatedAt.split("T")[1].split(".")[0]}
+                  {alerta.descricao} -{" "}
+                  {alerta.createAt &&
+                    alerta.createAt
+                      .split("T")[0]
+                      .split("-")
+                      .reverse()
+                      .join("/")}{" "}
+                  {alerta.createAt &&
+                    alerta.createAt.split("T")[1].split(".")[0]}
                 </Text>
               </CardBody>
               <CardFooter>

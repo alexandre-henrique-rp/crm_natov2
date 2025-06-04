@@ -21,7 +21,7 @@ export const BugReport = () => {
   // Função responsável por buscar todos os bugs na API de forma segura
   const HandleFindAll = async () => {
     try {
-      const response = await fetch(`/api/alerts/geral/findAll`);
+      const response = await fetch(`/api/bug_report`);
       if (response.ok) {
         // Lê o corpo da resposta como texto
         const text = await response.text();

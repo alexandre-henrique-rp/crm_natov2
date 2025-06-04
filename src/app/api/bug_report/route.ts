@@ -16,7 +16,11 @@ export async function GET() {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.token}`
-        }
+        },
+        cache: "force-cache",
+        next: {
+          tags: ["bug-report-all"],
+        },
       }
     );
 
