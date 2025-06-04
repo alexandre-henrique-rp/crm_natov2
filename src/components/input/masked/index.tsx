@@ -1,3 +1,4 @@
+"use client";
 import {
   FormControl,
   FormLabel,
@@ -13,7 +14,7 @@ import { cpf } from "cpf-cnpj-validator";
 
 interface MaskedInputProps extends InputProps {
   id: string;
-  onvalue: (value: string) => void;
+  onvalue?: (value: string) => void;
   isCpf?: boolean;
   isWhatsapp?: boolean;
   value: string;
@@ -53,7 +54,7 @@ export default function MaskedInput({
     const clean = unMask(input);
     const masked = remask(clean, Array.isArray(mask) ? mask : [mask]);
     setLocalValue(masked);
-    onvalue(clean);
+    onvalue?.(clean);
   };
 
   const handleBlur = async () => {
@@ -81,7 +82,7 @@ export default function MaskedInput({
         setIsInvalidWhatsapp(true);
       } else {
         setIsInvalidWhatsapp(false);
-        onvalue(clean);
+        onvalue?.(clean);
       }
     }
   };

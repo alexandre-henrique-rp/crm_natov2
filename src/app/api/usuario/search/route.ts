@@ -1,4 +1,5 @@
 import { GetSessionServer } from "@/lib/auth_confg";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 
@@ -49,7 +50,7 @@ export async function GET(request: Request) {
         }
         const data = await reqest.json();
         const users = data.filter((user: any) => user.hierarquia !== "ADM");
-
+revalidateTag("usuarios_list");
         return NextResponse.json(users, { status: 200 });
     } catch (error: any) {
         return NextResponse.json({ error: error }, { status: 500 });

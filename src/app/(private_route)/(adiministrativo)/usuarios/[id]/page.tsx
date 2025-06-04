@@ -1,16 +1,14 @@
-// "use client";
-"use server";
 import {
   Box,
   Button,
-  Checkbox,
   Divider,
   Flex,
-  FormLabel,
   Heading,
+  SimpleGrid,
   Spacer,
+  VStack,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
 import UserRegisterProvider from "@/provider/UserRegister";
 import BotaoCancelar from "@/components/botoes/btn_cancelar";
@@ -22,20 +20,6 @@ import Permissoes from "@/components/usuarios_component/permissoes";
 type Props = {
   params: { id: string };
 };
-
-const lista = [
-  { name: "adm", label: "Acesso ao painel administrativo" },
-  { name: "direto", label: "Acesso ao Nato Direto" },
-  { name: "relatorio", label: "Acesso ao relatório" },
-  { name: "cad_financeiro", label: "Pode criar CCA" },
-  { name: "user", label: "Pode criar Usuário" },
-  { name: "cad_construtora", label: "Pode criar Construtora" },
-  { name: "cad_empreendimento", label: "Pode criar Empreendimento" },
-  { name: "now", label: "Pode criar Now" },
-  { name: "alerta", label: "Pode criar e responder Alerta" },
-  { name: "chamado", label: "Pode ver e responder Chamado" },
-  { name: "solicitacao", label: "Pode editar Solicitação" },
-];
 
 const fetchUser = async (id: number, token: string) => {
   try {
@@ -72,7 +56,7 @@ export default async function EditarUsuario({ params }: Props) {
       {!data && <Loading />}
       {data && (
         <Flex
-          minH="90.9dvh"
+          // minH="90.9dvh" // Removido ou ajustado conforme necessidade
           bg="gray.100"
           py={{ base: 4, md: 8 }}
           px={{ base: 2, md: 2 }}
@@ -95,79 +79,60 @@ export default async function EditarUsuario({ params }: Props) {
               <Heading fontSize={{ base: "xl", md: "2xl" }}>
                 Editar Usuário
               </Heading>
-              <Box></Box>
+              <Box /> {/* Espaçador ou para botões de ação no header */}
             </Flex>
             <Divider my={2} borderColor="gray.400" />
             <CardCreateUpdate.Form action={UpdateUser}>
-              <Flex
-                w="full"
-                flexWrap="wrap"
-                gap={4}
-                direction={{ base: "column", md: "row" }}
-                align={{ base: "stretch", md: "start" }}
-              >
-                <UserRegisterProvider>
-                  <CardCreateUpdate.GridCpf
-                    w={{ base: "100%", md: "15rem" }}
-                    idUser={id}
-                    CPF={data?.cpf ?? ""}
-                  />
-                  <CardCreateUpdate.GridName
-                    w={{ base: "100%", md: "35rem" }}
-                    Nome={data?.nome ?? ""}
-                  />
-                  <CardCreateUpdate.GridUser
-                    w={{ base: "100%", md: "15rem" }}
-                    Usuario={data?.username ?? ""}
-                  />
-                  <CardCreateUpdate.GridRegisterTel
-                    w={{ base: "100%", md: "10rem" }}
-                    tell={data?.telefone ?? ""}
-                  />
-                  <CardCreateUpdate.GridEmail
-                    w={{ base: "100%", md: "25rem" }}
-                    email={data?.email ?? ""}
-                  />
-                  <CardCreateUpdate.GridUserConstrutora
-                    w={{ base: "100%", md: "23rem" }}
-                    UserConstrutora={data?.construtoras ?? ""}
-                  />
-                  <CardCreateUpdate.GridUserEmpreendimento
-                    w={{ base: "100%", md: "25rem" }}
-                    UserEmpreedimento={data?.empreendimentos ?? ""}
-                  />
-                  <CardCreateUpdate.GridUserFinanceiro
-                    w={{ base: "100%", md: "23rem" }}
-                    UserFinanceira={data?.financeiros ?? ""}
-                  />
-                  <CardCreateUpdate.GridUserCargo
-                    w={{ base: "100%", md: "20rem" }}
-                    UserCargo={data?.cargo ?? ""}
-                  />
-                  <CardCreateUpdate.GridUserHierarquia
-                    w={{ base: "100%", md: "20rem" }}
-                    UserHierarquia={data?.hierarquia ?? ""}
-                  />
+              <UserRegisterProvider>
+                <VStack spacing={6} align="stretch" w="full">
+                  {/* Seção Dados Pessoais */}
+                  <Box as="section">
+                    <Heading as="h3" size="md" mb={3} fontWeight="semibold">
+                      Dados Pessoais
+                    </Heading>
+                    <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
+                      <CardCreateUpdate.GridCpf idUser={id} CPF={data?.cpf ?? ""} />
+                      <CardCreateUpdate.GridName Nome={data?.nome ?? ""} />
+                      <CardCreateUpdate.GridUser Usuario={data?.username ?? ""} />
+                      <CardCreateUpdate.GridRegisterTel tell={data?.telefone ?? ""} />
+                      <CardCreateUpdate.GridEmail email={data?.email ?? ""} />
+                    </SimpleGrid>
+                  </Box>
+
+                  {/* Seção Associações */}
+                  <Box as="section">
+                    <Heading as="h3" size="md" mb={3} fontWeight="semibold">
+                      Associações
+                    </Heading>
+                    <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
+                      <CardCreateUpdate.GridUserConstrutora UserConstrutora={data?.construtoras ?? ""} />
+                      <CardCreateUpdate.GridUserEmpreendimento UserEmpreedimento={data?.empreendimentos ?? ""} />
+                      <CardCreateUpdate.GridUserFinanceiro UserFinanceira={data?.financeiros ?? ""} />
+                    </SimpleGrid>
+                  </Box>
+
+                  {/* Seção Acesso e Hierarquia */}
+                  <Box as="section">
+                    <Heading as="h3" size="md" mb={3} fontWeight="semibold">
+                      Acesso e Hierarquia
+                    </Heading>
+                    <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={4}>
+                      <CardCreateUpdate.GridUserCargo UserCargo={data?.cargo ?? ""} />
+                      <CardCreateUpdate.GridUserHierarquia UserHierarquia={data?.hierarquia ?? ""} />
+                    </SimpleGrid>
+                  </Box>
+
+                  {/* Seção Permissões */}
                   <Permissoes data={data?.role ?? null} />
-                </UserRegisterProvider>
-                <Spacer display={{ base: "none", md: "block" }} />
-              </Flex>
-              <Divider my={4} borderColor="gray.300" />
-              <Flex w="full" justify="flex-end" gap={2} mt={2}>
-                <Button
-                  type="submit"
-                  colorScheme="green"
-                  size="lg"
-                  className="btn"
-                >
+                </VStack>
+              </UserRegisterProvider>
+
+              <Divider my={6} borderColor="gray.400" />
+              <Flex w="full" justify="flex-end" gap={4} mb={4}>
+                <Button type="submit" colorScheme="green" size="md" className="btn">
                   Salvar
                 </Button>
-                <BotaoCancelar
-                  colorScheme="red"
-                  variant="outline"
-                  size="lg"
-                  className="btn"
-                />
+                <BotaoCancelar colorScheme="red" variant="outline" size="md" className="btn" />
               </Flex>
             </CardCreateUpdate.Form>
           </Box>
@@ -176,6 +141,3 @@ export default async function EditarUsuario({ params }: Props) {
     </>
   );
 }
-
-
-//TODO: revisar cadastro de usuario

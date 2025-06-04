@@ -1,21 +1,14 @@
 "use client";
+import Loading from "@/app/loading";
 import FiltroUser from "@/components/filtroUser";
 import Usuarios from "@/components/usuarios_component";
 import UserProvider from "@/provider/UserProvider";
-import {
-  Box,
-  Divider,
-  Flex,
-  Heading,
-  Link,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Divider, Flex, Heading, Link, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 export default function UsuariosPage() {
   const [Dados, setDados] = useState([]);
   const toast = useToast();
-  
 
   useEffect(() => {
     FetchData();
@@ -58,12 +51,7 @@ export default function UsuariosPage() {
 
   return (
     <>
-      <Flex
-        w={"100%"}
-        px={{ base: 2, md: 5 }}
-        py={5}
-        flexDir={"column"}
-      >
+      <Flex w={"100%"} px={{ base: 2, md: 5 }} py={5} flexDir={"column"}>
         <Flex w={"100%"} justifyContent={"space-between"}>
           <Heading>Usuários</Heading>
           <Link
@@ -91,7 +79,17 @@ export default function UsuariosPage() {
             <Flex w={"100%"} mb={8} justifyContent="center" alignItems="center">
               <FiltroUser />
             </Flex>
-            <Box>{Dados ? <Usuarios data={Dados} /> : <></>}</Box>
+            <Box>
+              {Dados.length > 0 ? (
+                <Usuarios data={Dados} />
+              ) : (
+                <>
+                  <Flex w={"100%"} justifyContent="center" alignItems="center">
+                    <Loading />
+                  </Flex>
+                </>
+              )}
+            </Box>
           </UserProvider>
         </Box>
       </Flex>

@@ -90,11 +90,9 @@ export default function ModalConsultaRegistro({
             "Content-Type": "application/json",
           },
         });
-        console.log("🚀 ~ handleSubmit ~ request:", request);
 
         if (request.ok) {
           const response = await request.json();
-          console.log("🚀 ~ handleSubmit ~ response:", response);
 
           if (response.cpf) {
             setSolicitacoes(response.solicitacoes);
