@@ -18,7 +18,7 @@ export function CardUpdateEmpreendimento({ id, setEmpreendimentoCard }: Props) {
           <EmpreendimentoProvider>
             <CardCreateUpdate.GridEmpreendimentoConstrutora
               EmpreendimentoConstrutora={
-                setEmpreendimentoCard?.construtora ?? 0
+                setEmpreendimentoCard?.construtora?.id ?? 0
               }
               w={"13rem"}
             />

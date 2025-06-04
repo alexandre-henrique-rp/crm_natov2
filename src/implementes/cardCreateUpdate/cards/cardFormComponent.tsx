@@ -22,7 +22,7 @@ export function CardFormComponent(props: CardFormProps) {
   const route = useRouter();
 
   const [state, formAction] = useFormState(props.action, { error: null });
-  
+
   useEffect(() => {
     if (state?.error) {
       setIsError(true);
@@ -44,18 +44,20 @@ export function CardFormComponent(props: CardFormProps) {
         isClosable: true,
         position: "top-right",
       });
-      route.refresh();
+      window.location.reload();
       setIsSuccess(false); // Reset state after showing toast
     }
     if (isError) {
-        toast({
-          title: "Erro ao salvar as informações",
-          description: state?.message || 'Erro inesperado, favor verificar os dados, e tente novamente',
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-          position: "top-right",
-        });
+      toast({
+        title: "Erro ao salvar as informações",
+        description:
+          state?.message ||
+          "Erro inesperado, favor verificar os dados, e tente novamente",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
       setIsError(false); // Reset state after showing toast
     }
   }, [isSuccess, isError, toast, route, state?.message]);

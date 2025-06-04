@@ -6,7 +6,7 @@ export async function UpdateFinanceira(_: any, data: FormData) {
   const id = Number(data.get("id"));
   const razaoSocial = data.get("razaosocial") as string;
   const email = data.get("email") as string;
-  const telefone = data.get("telefoneSemMask") as string;
+  const telefone = data.get("telefone") as string;
   const responsavel = data.get("responsavel") as string;
   const fantasia = data.get("fantasia") as string;
   const construtora = data.get("construtora") as string;

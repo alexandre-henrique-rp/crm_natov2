@@ -13,7 +13,6 @@ import InputFileUpload from "@/components/input/doc";
 import MaskedInput from "@/components/input/masked";
 import SelectBasic from "@/components/input/select-basic";
 import SelectMultiItem from "@/components/input/select-multi-itens";
-import { TagsOptions } from "@/data/tags";
 import { useSession } from "@/hook/useSession";
 import {
   Box,
@@ -212,12 +211,17 @@ export default function FormSolicitacaoEdit({
       setForm(data);
       if (session.hierarquia === "ADM") {
         fetchADM();
-        setTagsOptions(TagsOptions);
+        fetchTags();
       }
     }
     setTags(data?.tags || []);
   }, [id, session, data]);
 
+  const fetchTags = async () => {
+    const req = await fetch("/api/tags/getall");
+    const res = await req.json();
+    setTagsOptions(res);
+  };
   const fetchADM = async () => {
     const req = await fetch("/api/adm/getoptions");
     const res = await req.json();

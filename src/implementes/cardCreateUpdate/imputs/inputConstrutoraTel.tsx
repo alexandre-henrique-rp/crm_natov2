@@ -33,7 +33,10 @@ export const InputConstrutoraTell = ({
     if (e.target) {
       const value = e.target.value;
       const valorLimpo = value.replace(/[^0-9]/g, "");
-      const MaskTel = mask(valorLimpo, ["(99) 9 9999-9999", "(99) 9999-9999"]);
+      const MaskTel = mask(valorLimpo, [
+        "(99) 9 9999-9999",
+        "(99) 9 9999-9999",
+      ]);
       setTelLocal(MaskTel);
     }
   };
@@ -43,7 +46,7 @@ export const InputConstrutoraTell = ({
         type="text"
         value={telLocal}
         onChange={handleChange}
-        placeholder="(__) _____-____"
+        placeholder="(__) _ _____-____"
         name={Index > 0 ? `telefone ${Index}` : "telefone"}
         variant="flushed"
         {...props}

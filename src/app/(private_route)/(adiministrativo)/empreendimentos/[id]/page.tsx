@@ -15,6 +15,7 @@ export default function EditarEmpreendimento({ params }: Props) {
   const fetchEmpreendimento = async (id: number) => {
     const req = await fetch(`/api/empreendimento/get/${id}`);
     const res = await req.json();
+    console.log("🚀 ~ fetchEmpreendimento ~ res:", res);
     setData(res);
   };
 

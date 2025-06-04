@@ -15,20 +15,22 @@ export async function GET(
     }
 
     const reqest = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/empreendimento/filter/${id}`,
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/empreendimento/${id}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.token}`
+          Authorization: `Bearer ${session?.token}`,
         },
         next: { revalidate: 5 },
       }
     );
+    console.log("🚀 ~ reqest:", reqest);
     if (!reqest.ok) {
       return new NextResponse("Invalid credentials", { status: 401 });
     }
     const data = await reqest.json();
+    console.log("🚀 ~ data:", data);
     return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({ error: error }, { status: 500 });
