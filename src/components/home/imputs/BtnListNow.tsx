@@ -46,6 +46,7 @@ export const BtnListNow = ({ session }: BtnListNowProps) => {
       leftIcon={<FaListOl />}
       colorScheme="yellow"
       variant="solid"
+      w="full"
       onClick={HandleFetchNow}
       isLoading={loading}
       spinner={<BeatLoader size={8} color="white" />}
