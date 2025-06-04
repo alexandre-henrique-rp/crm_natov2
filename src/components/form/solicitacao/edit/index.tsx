@@ -15,7 +15,16 @@ import SelectBasic from "@/components/input/select-basic";
 import SelectMultiItem from "@/components/input/select-multi-itens";
 import { TagsOptions } from "@/data/tags";
 import { useSession } from "@/hook/useSession";
-import { Box, Divider, Flex, Icon, Text, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Icon,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 interface FormSolicitacaoEditProps {
@@ -98,6 +107,7 @@ export default function FormSolicitacaoEdit({
 }: FormSolicitacaoEditProps) {
   const session = useSession();
   const toast = useToast();
+  const router = useRouter();
   const hierarquia = session?.hierarquia ? session.hierarquia : null;
   const isAdmin = session?.hierarquia === "ADM";
   const [tagsOptions, setTagsOptions] = useState([] as any[]);
@@ -599,6 +609,13 @@ export default function FormSolicitacaoEdit({
       </Flex>
 
       <Flex gap={2} w={"full"} p={2} justifyContent={"flex-end"}>
+        <Button
+          colorScheme="orange"
+          size={"sm"}
+          onClick={() => router.push(`/chamado/novo?id=${id}`)}
+        >
+          Chamado
+        </Button>
         <BtCreateAlertCliente DataSolicitacao={data} user={session} />
         {form.distrato &&
           form.ativo &&
