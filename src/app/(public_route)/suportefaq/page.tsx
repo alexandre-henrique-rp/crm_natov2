@@ -47,7 +47,7 @@ export default function SuporteFaqHome() {
           </Text>
           <Divider borderColor="gray.300" />
           <Box>
-            <Card color={'blue.900'} bg={'blue.100'}>
+            <Card color={"blue.900"} bg={"blue.100"}>
               <CardHeader>
                 <Flex flexDir="row" gap={2} alignItems="center">
                   <Heading size="md">FAQ / Suporte</Heading>
@@ -59,10 +59,13 @@ export default function SuporteFaqHome() {
                 <Stack divider={<StackDivider />} spacing="4">
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                    duvidas? Precisa de ajuda?
+                      duvidas? Precisa de ajuda?
                     </Heading>
                     <Text pt="2" fontSize="sm">
-                    Confira essa página de "Dúvidas e Perguntas Frequentes" neste Guia de ajuda. Caso ainda precise de ajuda, entre em contato com a nossa equipe através de nossos canais de atendimento.
+                      Confira essa página de "Dúvidas e Perguntas Frequentes"
+                      neste Guia de ajuda. Caso ainda precise de ajuda, entre em
+                      contato com a nossa equipe através de nossos canais de
+                      atendimento.
                     </Text>
                   </Box>
                   <Box>
@@ -78,8 +81,8 @@ export default function SuporteFaqHome() {
                       Horário de atendimento:
                     </Heading>
                     <Text pt="2" fontSize="sm">
-                    Segunda a sexta das 09h às 17h <br />
-                    Sábado das 09h às 12h
+                      Segunda a sexta das 09h às 17h <br />
+                      Sábado das 09h às 12h
                     </Text>
                   </Box>
                 </Stack>

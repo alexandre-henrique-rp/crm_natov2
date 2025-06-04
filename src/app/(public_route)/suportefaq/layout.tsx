@@ -9,13 +9,9 @@ interface PrivateLayoutProps {
 
 export default function PrivateLayout({ children }: PrivateLayoutProps) {
   return (
-    <Flex
-      minW="100vw"
-      minH="100vh"
-      direction="column"
-    >
+    <Flex minW="full" minH="full" direction="column">
       <PublicHeader />
-      <Flex h="90vh" overflowY="auto">
+      <Flex h="full" overflowY="auto">
         <Sidebar />
         <Box flex="1" overflowY="auto">
           {children}
